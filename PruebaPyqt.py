@@ -12,3 +12,6 @@ def window():
     sys.exit(app.exec_())
     
 window()
+
+
+#Simple comentario luego de sincronisar github.
