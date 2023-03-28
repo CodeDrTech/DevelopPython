@@ -6,3 +6,4 @@
 #>>> suma(10,12)
 #22
 #>>> 
+#comprobar rapidez de actualizaion de codigo
