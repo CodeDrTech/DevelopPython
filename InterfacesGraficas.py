@@ -14,6 +14,6 @@ miFrame.pack()
 
 miFrame.config(bg="red")
 
-miFrame.config(width="100", height="100")
+#miFrame.config(width="100", height="100")
 
 raiz.mainloop()
