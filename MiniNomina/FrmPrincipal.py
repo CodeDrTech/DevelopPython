@@ -7,10 +7,12 @@ class VentanaPrincipal(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/PanelPrincipal.ui',self)
         self.setWindowTitle('Panel Principal')
+        self.BtnSalir.clicked.connect(self.fn_Salir)
         
         
         
-        
+    def fn_Salir(self):
+        self.close()
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
