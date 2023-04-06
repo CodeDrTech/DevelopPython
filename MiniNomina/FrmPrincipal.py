@@ -5,7 +5,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 class VentanaPrincipal(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('PanelPrincipal.ui',self)
+        uic.loadUi('MiniNomina/PanelPrincipal.ui',self)
+        self.setWindowTitle('Panel Principal')
+        
+        
         
         
         
