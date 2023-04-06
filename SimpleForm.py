@@ -6,11 +6,15 @@ class SimpleApp(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("appui.ui",self)
+        
+        
         self.BtnDesactivar.setEnabled(False)
         self.BtnActivar.clicked.connect(self.fn_activar)
         self.BtnDesactivar.clicked.connect(self.fn_desactivar)
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnMensaje.clicked.connect(self.fn_Mensaje)
+        
+        
         
     def fn_activar(self):
         self.BtnDesactivar.setEnabled(True)
@@ -21,6 +25,8 @@ class SimpleApp(QMainWindow):
         self.BtnDesactivar.setEnabled(False)
         self.BtnActivar.setEnabled(True)
         self.Etiqueta.setText("DESACTIVADO")
+        
+        
         
     def fn_Salir(self):
         self.close()
