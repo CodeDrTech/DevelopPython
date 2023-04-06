@@ -13,7 +13,7 @@ class VentanaPrincipal(QMainWindow):
         self.setWindowTitle('PANEL PRINCIPAL')
         self.setFixedSize(self.size())
         
-        #para darle funiones a los botones del PANEL PRINCIPAL
+        #Para darle funiones a los botones del PANEL PRINCIPAL
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
         self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
@@ -23,6 +23,7 @@ class VentanaPrincipal(QMainWindow):
         
     def fn_Salir(self):
         self.close()
+        
         
     def abrirFrmEmpleados(self):
         self.llamar_venana_empleados = VentanaEmpleados()
