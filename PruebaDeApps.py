@@ -1,7 +1,16 @@
-#from PyQt5.uic import loadUi
-#from PyQt5.QtWidgets import QMainWindow
+import sys
+from PyQt5 import uic
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 
-#class Ventana(QMainWindow):
-    #def __init__(self):
-    #super(Ventana,self).__init__()
-    #loadUi('FORMULARIO.ui',self)
+class Ventana(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('FORMULARIO.ui',self)
+        
+        
+        
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    GUI = Ventana()
+    GUI.show()
+    sys.exit(app.exec_())
