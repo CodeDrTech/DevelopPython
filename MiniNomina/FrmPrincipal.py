@@ -22,7 +22,7 @@ class VentanaPrincipal(QMainWindow):
         
         
         
-        
+    #Funcuion para cerrar la ventana principal a travez del boton Salir    
     def fn_Salir(self):
         self.close()
         
