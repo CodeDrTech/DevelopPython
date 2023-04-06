@@ -7,7 +7,7 @@ class VentanaEmpleados(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Empleados.ui',self)
         self.setWindowTitle('AGREGAR EMPLEADOS')
-        #self.BtnSalir.clicked.connect(self.fn_Salir)
+        self.BtnSalir.clicked.connect(self.fn_Salir)
         
         
         

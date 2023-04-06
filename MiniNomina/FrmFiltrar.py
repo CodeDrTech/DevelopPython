@@ -7,7 +7,7 @@ class VentanaReportes(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Filtrar.ui',self)
         self.setWindowTitle('FILTRAR REPORTES')
-        #self.BtnSalir.clicked.connect(self.fn_Salir)
+        self.BtnSalir.clicked.connect(self.fn_Salir)
         
         
         
