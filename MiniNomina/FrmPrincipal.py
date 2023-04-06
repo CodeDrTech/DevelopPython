@@ -21,10 +21,14 @@ class VentanaPrincipal(QMainWindow):
         
         
         
+        
+        
     def fn_Salir(self):
         self.close()
         
         
+
+    #Funciones para llamar las ventanas secundarias y mostrarlas    
     def abrirFrmEmpleados(self):
         self.llamar_venana_empleados = VentanaEmpleados()
         self.llamar_venana_empleados.show()
@@ -43,7 +47,7 @@ class VentanaPrincipal(QMainWindow):
         
         
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    app = QApplication(sys.argv)        
     GUI = VentanaPrincipal()
     GUI.show()
     sys.exit(app.exec_())
