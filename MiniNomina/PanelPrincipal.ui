@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>FrmPrincipal</class>
  <widget class="QMainWindow" name="FrmPrincipal">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,7 +17,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="BtnAgregar">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -33,7 +36,7 @@
      <string>Agregar empleado</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="BtnLimpiar">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -52,7 +55,7 @@
      <string>Limpiar datos</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="BtnRegistrar">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -71,7 +74,7 @@
      <string>Registrar faltantes</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="BtnReporte">
     <property name="geometry">
      <rect>
       <x>160</x>
