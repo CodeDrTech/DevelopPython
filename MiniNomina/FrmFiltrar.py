@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 
 class VentanaReportes(QMainWindow):
     def __init__(self):

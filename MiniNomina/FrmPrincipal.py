@@ -1,9 +1,9 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog
-import FrmEmpleados
-import FrmFiltrar
-import FrmFaltantes
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
+from FrmEmpleados import VentanaEmpleados
+from FrmFiltrar import VentanaReportes
+from FrmFaltantes import VentanaFaltantes
 
 
 class VentanaPrincipal(QMainWindow):
@@ -16,11 +16,15 @@ class VentanaPrincipal(QMainWindow):
         
         
         
+        
     def fn_Salir(self):
         self.close()
         
-    def abrirFrmEmpleados():
+    def abrirFrmEmpleados(sefl):
+        llamarvenana = VentanaEmpleados()
+        llamarvenana.show()
         
+               
         
         
         
