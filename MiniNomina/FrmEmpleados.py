@@ -2,12 +2,12 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 
-class VentanaPrincipal(QMainWindow):
+class VentanaEmpleados(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/PanelPrincipal.ui',self)
-        self.setWindowTitle('PANEL PRINCIPAL')
-        self.BtnSalir.clicked.connect(self.fn_Salir)
+        uic.loadUi('MiniNomina/FrmDesign/Empleados.ui',self)
+        self.setWindowTitle('AGREGAR EMPLEADOS')
+        #self.BtnSalir.clicked.connect(self.fn_Salir)
         
         
         
@@ -16,6 +16,6 @@ class VentanaPrincipal(QMainWindow):
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    GUI = VentanaPrincipal()
+    GUI = VentanaEmpleados()
     GUI.show()
     sys.exit(app.exec_())
