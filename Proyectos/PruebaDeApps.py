@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 class Ventana(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('FORMULARIO.ui',self)
+        uic.loadUi('Proyectos/FORMULARIO.ui',self)
         
         
         

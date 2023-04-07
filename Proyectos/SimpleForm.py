@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 class SimpleApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("appui.ui",self)
+        uic.loadUi("Proyectos/appui.ui",self)
         
         
         self.BtnDesactivar.setEnabled(False)
