@@ -1,6 +1,7 @@
 import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
+from Conexion_db import conectar_db
 
 class VentanaEmpleados(QMainWindow):
     def __init__(self):
@@ -11,6 +12,30 @@ class VentanaEmpleados(QMainWindow):
         
         
         self.BtnSalir.clicked.connect(self.fn_Salir)
+        self.BtnAgregar.clicked.connect(self.guardar)
+        
+        
+    def guardar(self):
+        # Obtener los valores de los cuadros de texto
+        Nombre = self.txtNombre.text()
+        Num_banca = self.txtNumbanca.text()
+        Salario = self.txtSalario.text()
+        
+
+        # Conectar a la base de datos
+        conn = conectar_db()
+
+        # Realizar la inserción en la base de datos
+        conn.execute("INSERT INTO empleados (nombre, num_banca, salario) VALUES (?, ?, ?)", (Nombre, Num_banca, Salario))
+        conn.commit()
+
+        # Cerrar la conexión
+        conn.close()
+
+        # Limpiar los cuadros de texto
+        self.txtNombre.setText("")
+        self.txtNumbanca.setText("")
+        self.txtSalario.setText("")
         
         
         
