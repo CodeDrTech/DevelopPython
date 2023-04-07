@@ -161,6 +161,9 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="locale">
+     <locale language="Spanish" country="DominicanRepublic"/>
+    </property>
     <property name="displayFormat">
      <string>dd/mm/yyyy</string>
     </property>

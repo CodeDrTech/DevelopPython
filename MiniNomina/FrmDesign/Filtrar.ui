@@ -99,6 +99,9 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="editable">
+     <bool>true</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

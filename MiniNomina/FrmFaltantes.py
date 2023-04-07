@@ -16,7 +16,7 @@ class VentanaFaltantes(QMainWindow):
         
      
      
-    #Funcion para dotar de eventos a la ventana al cargar.    
+    # Funcion para dotar de eventos a la ventana al cargar.    
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase.
         super().showEvent(event)
