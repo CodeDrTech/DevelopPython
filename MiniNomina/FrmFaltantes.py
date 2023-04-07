@@ -11,11 +11,15 @@ class VentanaFaltantes(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Faltantes.ui',self)
         
-        # propiedades de la ventana
+        # propiedades de la ventana.
         self.setWindowTitle('REGISTRAR FALTANTES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
-        
+        self.setTabOrder(self.cmbEmpleado, self.txtNumbanca)
+        self.setTabOrder(self.txtNumbanca, self.txtAbono)
+        self.setTabOrder(self.txtAbono, self.txtFaltante)
+        self.setTabOrder(self.txtFaltante, self.BtnRegistrar)
+        self.setTabOrder(self.BtnRegistrar, self.BtnSalir)
         
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)        
