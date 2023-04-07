@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>290</width>
     <height>280</height>
    </rect>
   </property>
@@ -173,6 +173,9 @@
       <width>150</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="editable">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

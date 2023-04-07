@@ -14,6 +14,14 @@ class VentanaEmpleados(QMainWindow):
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnAgregar.clicked.connect(self.guardar)
         
+    #Funcion para colocar el foco en el objeto indicado    
+    def showEvent(self, event):
+        # Llamar al método showEvent() de la superclase
+        super().showEvent(event)
+
+        # Establecer el foco en el cuadro de texto txtNombre
+        self.txtNombre.setFocus()
+        
         
     def guardar(self):
         # Obtener los valores de los cuadros de texto
@@ -36,7 +44,7 @@ class VentanaEmpleados(QMainWindow):
         self.txtNombre.setText("")
         self.txtNumbanca.setText("")
         self.txtSalario.setText("")
-        
+        self.txtNombre.setFocus()
         
         
     def fn_Salir(self):
