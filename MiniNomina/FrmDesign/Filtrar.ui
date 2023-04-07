@@ -60,7 +60,7 @@
    <widget class="QPushButton" name="BtnReporteTotal">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>85</x>
       <y>20</y>
       <width>101</width>
       <height>31</height>
@@ -75,6 +75,29 @@
     </property>
     <property name="text">
      <string>Reporte total</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>100</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ELIJA UN NOMBRE</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cmbEmpleado">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>120</y>
+      <width>150</width>
+      <height>20</height>
+     </rect>
     </property>
    </widget>
   </widget>
