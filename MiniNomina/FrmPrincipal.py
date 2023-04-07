@@ -6,6 +6,7 @@ from FrmFiltrar import VentanaReportes
 from FrmFaltantes import VentanaFaltantes
 
 
+
 class VentanaPrincipal(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -41,7 +42,8 @@ class VentanaPrincipal(QMainWindow):
         self.llamar_venana_filtrar = VentanaReportes()
         self.llamar_venana_filtrar.show()
         
-               
+     
+              
         
         
         

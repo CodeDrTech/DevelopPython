@@ -106,7 +106,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>JOSE LUIS PEREZ RAMIREZ</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLineEdit" name="txtNumbanca">
