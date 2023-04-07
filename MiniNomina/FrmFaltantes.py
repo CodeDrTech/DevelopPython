@@ -19,7 +19,7 @@ class VentanaFaltantes(QMainWindow):
         
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)        
-        
+        self.BtnRegistrar.clicked.connect(self.guardar)
      
      
     # Funcion para dotar de eventos a la ventana al cargar.    
@@ -38,8 +38,8 @@ class VentanaFaltantes(QMainWindow):
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
-        Fecha = self.txtFecha.text()
-        Nombre = self.cmbEmpleado.text()
+        Fecha = self.txtFecha.date().toString("dd/MMMM/yyyy")        
+        Nombre = self.cmbEmpleado.currentText()
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
@@ -50,14 +50,14 @@ class VentanaFaltantes(QMainWindow):
         conn = conectar_db()
 
         # Realizar la inserción en la base de datos
-        conn.execute("INSERT INTO empleados (fecha ,nombre, banca, abono, faltante) VALUES (?, ?, ?)", (Fecha, Nombre, Num_banca, Abono, Faltante))
+        conn.execute("INSERT INTO faltantes (fecha ,nombre, banca, abono, faltante) VALUES (?, ?, ?, ?, ?)", (Fecha, Nombre, Num_banca, Abono, Faltante))
         conn.commit()
 
         # Cerrar la conexión
         conn.close()
 
         # Limpiar los cuadros de texto        
-        self.cmbEmpleado.setText("")
+        self.cmbEmpleado.setCurrentText("")
         self.txtNumbanca.setText("")
         self.txtAbono.setText("")
         self.txtFaltante.setText("")
