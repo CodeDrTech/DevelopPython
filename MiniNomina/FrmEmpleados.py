@@ -1,6 +1,7 @@
 import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
+from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
 
 class VentanaEmpleados(QMainWindow):
@@ -9,6 +10,7 @@ class VentanaEmpleados(QMainWindow):
         uic.loadUi('MiniNomina/FrmDesign/Empleados.ui',self)
         self.setWindowTitle('AGREGAR EMPLEADOS')
         self.setFixedSize(self.size())
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
         
         self.BtnSalir.clicked.connect(self.fn_Salir)

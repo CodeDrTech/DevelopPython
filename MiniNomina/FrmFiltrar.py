@@ -1,6 +1,7 @@
 import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
+from PyQt5 import QtWidgets, QtGui
 
 class VentanaReportes(QMainWindow):
     def __init__(self):
@@ -8,6 +9,7 @@ class VentanaReportes(QMainWindow):
         uic.loadUi('MiniNomina/FrmDesign/Filtrar.ui',self)
         self.setWindowTitle('FILTRAR REPORTES')
         self.setFixedSize(self.size())
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
         
         self.BtnSalir.clicked.connect(self.fn_Salir)

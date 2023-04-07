@@ -2,6 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 from PyQt5.QtCore import QDate, Qt, QDateTime, QLocale
+from PyQt5 import QtWidgets, QtGui
 
 
 class VentanaFaltantes(QMainWindow):
@@ -10,6 +11,7 @@ class VentanaFaltantes(QMainWindow):
         uic.loadUi('MiniNomina/FrmDesign/Faltantes.ui',self)
         self.setWindowTitle('REGISTRAR FALTANTES')
         self.setFixedSize(self.size())
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
         
         self.BtnSalir.clicked.connect(self.fn_Salir)        
