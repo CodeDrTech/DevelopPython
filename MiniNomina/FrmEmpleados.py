@@ -22,7 +22,7 @@ class VentanaEmpleados(QMainWindow):
         # Establecer el foco en el cuadro de texto txtNombre
         self.txtNombre.setFocus()
         
-        
+    # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
         Nombre = self.txtNombre.text()
