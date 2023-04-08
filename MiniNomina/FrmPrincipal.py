@@ -13,7 +13,7 @@ class VentanaPrincipal(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/PanelPrincipal.ui',self)
         
-        # propiedades de la ventana
+        # Configuraiones de la ventana principal.
         self.setWindowTitle('PANEL PRINCIPAL')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))

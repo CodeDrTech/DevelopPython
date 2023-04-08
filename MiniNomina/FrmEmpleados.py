@@ -9,7 +9,7 @@ class VentanaEmpleados(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Empleados.ui',self)
         
-        # propiedades de la ventana.
+        # Configuraiones de la ventana Empleados.
         self.setWindowTitle('AGREGAR EMPLEADOS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))

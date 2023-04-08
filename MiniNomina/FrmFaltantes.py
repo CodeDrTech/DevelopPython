@@ -11,7 +11,7 @@ class VentanaFaltantes(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Faltantes.ui',self)
         
-        # propiedades de la ventana.
+        # Configuraiones de la ventana Faltantes.
         self.setWindowTitle('REGISTRAR FALTANTES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
