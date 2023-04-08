@@ -24,8 +24,8 @@ class VentanaReportes(QMainWindow):
     def mostrar_datos(self):
         # Establecer la conexión a la base de datos
         db = conectar_db()
-        #db = QSqlDatabase.addDatabase('QSQLITE')
-        #db.setDatabaseName('C:\\Users\\Jose\\Documents\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db')
+        db = QSqlDatabase.addDatabase('QSQLITE')
+        db.setDatabaseName('MiniNomina.db')
         if not db.open():
             QMessageBox.critical(None, 'Error', 'No se pudo establecer la conexión a la base de datos.', QMessageBox.Cancel)
             return
