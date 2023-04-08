@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
+from Consultas_db import insertar_nuevo_empleados
 
 class VentanaEmpleados(QMainWindow):
     def __init__(self):
@@ -38,15 +39,18 @@ class VentanaEmpleados(QMainWindow):
         Salario = self.txtSalario.text()
         
 
+        insertar_nuevo_empleados(Nombre, Num_banca, Salario)
+        
+        
         # Conectar a la base de datos
-        conn = conectar_db()
+        #conn = conectar_db()
 
         # Realizar la inserción en la base de datos
-        conn.execute("INSERT INTO empleados (nombre, num_banca, salario) VALUES (?, ?, ?)", (Nombre, Num_banca, Salario))
-        conn.commit()
+        #conn.execute("INSERT INTO empleados (nombre, num_banca, salario) VALUES (?, ?, ?)", (Nombre, Num_banca, Salario))
+        #conn.commit()
 
         # Cerrar la conexión
-        conn.close()
+        #conn.close()
 
         # Limpiar los cuadros de texto
         self.txtNombre.setText("")
