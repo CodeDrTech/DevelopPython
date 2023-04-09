@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QTableView
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
-from Conexion_db import conectar_db, conectar_db_db
+from Conexion_db import conectar_db
 
 
 
@@ -31,7 +31,7 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         
 def mostrar_datos_de_faltantes():
     # Conectar a la base de datos
-    conn = conectar_db_db()
+    conn = conectar_db()
 
     # Ejecutar la consulta SELECT
     query = QSqlQuery()
