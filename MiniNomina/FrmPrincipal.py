@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets, QtGui
 from FrmEmpleados import VentanaEmpleados
 from FrmFiltrar import VentanaReportes
 from FrmFaltantes import VentanaFaltantes
+from FrmDatos import VentanaDatos
 
 
 
@@ -23,6 +24,9 @@ class VentanaPrincipal(QMainWindow):
         self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
         self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
         self.BtnReporte.clicked.connect(self.abrirFrmFiltrar)
+        self.BtnLimpiar.clicked.connect(self.abrirFrmDatos)
+        
+        
         
         
         
@@ -45,6 +49,10 @@ class VentanaPrincipal(QMainWindow):
     def abrirFrmFiltrar(self):
         self.llamar_venana_filtrar = VentanaReportes()
         self.llamar_venana_filtrar.show()
+        
+    def abrirFrmDatos(self):
+        self.llamar_venana_datos = VentanaDatos()
+        self.llamar_venana_datos.show()
         
      
               
