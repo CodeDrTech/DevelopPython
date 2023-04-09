@@ -12,22 +12,26 @@ class VentanaDatos(QMainWindow):
         uic.loadUi('MiniNomina/FrmDesign/Datos.ui',self)
         
         # Configuraiones de la ventana Empleados.
-        self.setWindowTitle('VISUALIZAR DATOS')
+        self.setWindowTitle('REPORTE TOTAL')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
         # Conectar a la base de datos
-        db = QSqlDatabase.addDatabase("QSQLITE")
-        db.setDatabaseName("C:/Users/Jose/Documents/GitHub/DevelopPython/Base de datos/MiniNomina.db")
-        if not db.open():
+        db = conectar_db()
+        if not db:
             QMessageBox.critical(None, "Error", "No se pudo conectar a la base de datos")
+            
+        #db = QSqlDatabase.addDatabase("QSQLITE")
+        #db.setDatabaseName("C:/Users/Jose/Documents/GitHub/DevelopPython/Base de datos/MiniNomina.db")
+        #if not db.open():
+            #QMessageBox.critical(None, "Error", "No se pudo conectar a la base de datos")
 
         # Crear el modelo de tabla y establecer la tabla
-        self.tbTablas = QSqlTableModel()
-        self.tbTablas.setTable("faltantes")
+        self.modelo_tabla = QSqlTableModel()
+        self.modelo_tabla.setTable("faltantes")
 
         # Establecer el modelo de tabla en el QTableView
-        self.tbTablas.setModel(self.tbTablas)
+        self.tbTablas.setModel(self.modelo_tabla)
         
         
     def showEvent(self, event):
@@ -35,7 +39,9 @@ class VentanaDatos(QMainWindow):
         super().showEvent(event)  
         
         # Seleccionar los datos de la tabla
-        self.tbTablas.select()
+        self.modelo_tabla.select()
+        
+        
         
         
 if __name__ == '__main__':
