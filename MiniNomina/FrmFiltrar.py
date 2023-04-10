@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton,
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
 from Conexion_db import conectar_db
-from Consultas_db import mostrar_datos_de_faltantes
+from FrmDatos import VentanaDatos
+
 
 
 class VentanaReportes(QMainWindow):
@@ -18,15 +19,15 @@ class VentanaReportes(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
         self.BtnSalir.clicked.connect(self.fn_Salir)
-        self.BtnReporteTotal.clicked.connect(self.mostrar_faltantes)
+        self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)
         
         
         
-    def mostrar_faltantes(self):
-        mostrar_datos_de_faltantes()
+    #Funcione para llamar la ventana secundaria (Ventana de datos)
+    def abrirFrmDatos(self):
+        self.llamar_venana_datos = VentanaDatos()
+        self.llamar_venana_datos.show()   
         
-        
-      
         
     #Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):

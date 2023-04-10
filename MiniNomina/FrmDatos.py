@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QTableView
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
+from Consultas_db import mostrar_datos_de_faltantes
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
 
@@ -24,6 +25,8 @@ class VentanaDatos(QMainWindow):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)  
         
+        
+        mostrar_datos_de_faltantes(self.tbTablas)
         
         
         
