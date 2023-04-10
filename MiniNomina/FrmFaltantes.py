@@ -23,7 +23,9 @@ class VentanaFaltantes(QMainWindow):
         self.setTabOrder(self.BtnRegistrar, self.BtnSalir)
         
         # Llama a la funcion que cierra la ventana
-        self.BtnSalir.clicked.connect(self.fn_Salir)        
+        self.BtnSalir.clicked.connect(self.fn_Salir)
+        
+                
         self.BtnRegistrar.clicked.connect(self.guardar)
      
      

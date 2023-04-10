@@ -27,7 +27,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="BtnReporte">
+   <widget class="QPushButton" name="BtnGuardar">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -67,7 +67,7 @@
      <string>Imprimir</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="BtnReporte_3">
+   <widget class="QPushButton" name="BtnSalir">
     <property name="geometry">
      <rect>
       <x>460</x>

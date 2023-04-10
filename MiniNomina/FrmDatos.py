@@ -18,11 +18,14 @@ class VentanaDatos(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
+        # Llama a la funcion que cierra la ventana
+        self.BtnSalir.clicked.connect(self.fn_Salir)
     
     
     
-    
-    
+    # Funion para cerar la ventana llamado desde el boton Salir.    
+    def fn_Salir(self):
+        self.close()
         
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
