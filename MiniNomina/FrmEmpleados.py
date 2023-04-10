@@ -39,19 +39,9 @@ class VentanaEmpleados(QMainWindow):
         Salario = self.txtSalario.text()
         
 
-        insertar_nuevo_empleados(Nombre, Num_banca, Salario)
+        insertar_nuevo_empleados(Nombre, Num_banca, Salario)        
         
         
-        # Conectar a la base de datos
-        #conn = conectar_db()
-
-        # Realizar la inserción en la base de datos
-        #conn.execute("INSERT INTO empleados (nombre, num_banca, salario) VALUES (?, ?, ?)", (Nombre, Num_banca, Salario))
-        #conn.commit()
-
-        # Cerrar la conexión
-        #conn.close()
-
         # Limpiar los cuadros de texto
         self.txtNombre.setText("")
         self.txtNumbanca.setText("")

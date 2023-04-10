@@ -50,16 +50,8 @@ class VentanaFaltantes(QMainWindow):
         Faltante = self.txtFaltante.text()
         
         insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante)
-
-        # Conectar a la base de datos
-        #conn = conectar_db()
-
-        # Realizar la inserción en la base de datos
-        #conn.execute("INSERT INTO faltantes (fecha ,nombre, banca, abono, faltante) VALUES (?, ?, ?, ?, ?)", (Fecha, Nombre, Num_banca, Abono, Faltante))
-        #conn.commit()
-
-        # Cerrar la conexión
-        #conn.close()
+        
+        
 
         # Limpiar los cuadros de texto        
         self.cmbEmpleado.setCurrentText("")

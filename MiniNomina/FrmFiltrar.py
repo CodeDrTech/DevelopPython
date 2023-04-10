@@ -6,6 +6,7 @@ from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
 from Conexion_db import conectar_db
 from Consultas_db import mostrar_datos_de_faltantes
 
+
 class VentanaReportes(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -20,8 +21,12 @@ class VentanaReportes(QMainWindow):
         self.BtnReporteTotal.clicked.connect(self.mostrar_faltantes)
         
         
+        
     def mostrar_faltantes(self):
-        mostrar_datos_de_faltantes()    
+        mostrar_datos_de_faltantes()
+        
+        
+      
         
     #Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):

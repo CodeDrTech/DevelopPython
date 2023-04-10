@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import QTableView
+from PyQt5.QtWidgets import QTableView, QTabWidget
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from Conexion_db import conectar_db
+from FrmDatos import VentanaDatos
 
 
 
@@ -29,25 +30,21 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         conn.close()
         
         
-def mostrar_datos_de_faltantes():
-    # Conectar a la base de datos
-    conn = conectar_db()
+def mostrar_datos_de_faltantes(tbTablas):
+        # Conectar a la base de datos
+        conn = conectar_db()
 
-    # Ejecutar la consulta SELECT
-    query = QSqlQuery()
-    query.prepare("SELECT * FROM faltantes")
-    if not query.exec():
-        print("Error al ejecutar la consulta:", query.lastError().text())
-        return
+        # Crear el cursor y ejecutar la consulta SELECT
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM faltantes")
 
-    # Crear un modelo de tabla para los resultados de la consulta
-    model = QSqlTableModel()
-    model.setQuery(query)
+        # Obtener los datos y establecerlos en el QTableView
+        datos = cursor.fetchall()
+        tbTablas.setRowCount(len(datos))
+        tbTablas.setColumnCount(len(datos[0]))
+        for fila, registro in enumerate(datos):
+                for columna, valor in enumerate(registro):
+                        tbTablas.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
 
-    # Crear una vista de tabla para mostrar los resultados de la consulta
-    view = QTableView()
-    view.setModel(model)
-    view.show()
-
-    # Cerrar la conexión a la base de datos
-    conn.close()
+        # Cerrar la conexión
+        conn.close()
