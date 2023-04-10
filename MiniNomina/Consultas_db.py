@@ -32,12 +32,14 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         
         
 def mostrar_datos_de_faltantes(tbtabla):
-    # Conectar a la base de datos
+    # Conectar a la base de datos    
     db = QSqlDatabase.addDatabase("QSQLITE")
     db.setDatabaseName("C:\\Users\\acer\\OneDrive\\Documentos\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db")
     if not db.open():
         QMessageBox.critical(None, "Error", "No se pudo abrir la base de datos")
         return
+
+        
     
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
