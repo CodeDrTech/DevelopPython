@@ -28,6 +28,7 @@ class VentanaDatos(QMainWindow):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)          
         
+        mostrar_datos_de_faltantes(self.tbtabla)
         
         
         

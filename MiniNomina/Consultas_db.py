@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetItem, QMessageBox
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
 from Conexion_db import conectar_db
@@ -32,21 +32,23 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         
         
 def mostrar_datos_de_faltantes(tbtabla):
-        # Conectar a la base de datos
-        conn = conectar_db()
+    # Conectar a la base de datos
+    db = QSqlDatabase.addDatabase("QSQLITE")
+    db.setDatabaseName("C:\\Users\\acer\\OneDrive\\Documentos\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db")
+    if not db.open():
+        QMessageBox.critical(None, "Error", "No se pudo abrir la base de datos")
+        return
+    
+    # Crear un modelo de tabla SQL
+    model = QSqlTableModel()
+    model.setTable("faltantes")
+    model.select()
 
-        # Crear el cursor y ejecutar la consulta SELECT
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM faltantes")
+    # Establecer el modelo en la tabla
+    tbtabla.setModel(model)
 
-        # Obtener los datos y establecerlos en el QTableWidget
-        datos = cursor.fetchall()
-        tbtabla.setRowCount(len(datos))
-        tbtabla.setColumnCount(len(datos[0]))
-        for fila, registro in enumerate(datos):
-                for columna, valor in enumerate(registro):
-                 item = QTableWidgetItem(str(valor))
-                tbtabla.setItem(fila, columna, item)
+    # Ajustar el tamaño de las columnas para que se ajusten al contenido
+    tbtabla.resizeColumnsToContents()
 
-        # Cerrar la conexión
-        conn.close()
+    # Cerrar la conexión
+    #db.close() 
