@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QTableView, QTabWidget
+from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetItem
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
 from Conexion_db import conectar_db
@@ -39,13 +39,14 @@ def mostrar_datos_de_faltantes(tbtabla):
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM faltantes")
 
-        # Obtener los datos y establecerlos en el QTableView
+        # Obtener los datos y establecerlos en el QTableWidget
         datos = cursor.fetchall()
         tbtabla.setRowCount(len(datos))
         tbtabla.setColumnCount(len(datos[0]))
         for fila, registro in enumerate(datos):
                 for columna, valor in enumerate(registro):
-                        tbtabla.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
-        
+                 item = QTableWidgetItem(str(valor))
+                tbtabla.setItem(fila, columna, item)
+
         # Cerrar la conexión
         conn.close()

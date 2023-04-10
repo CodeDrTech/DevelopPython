@@ -18,21 +18,23 @@ class VentanaDatos(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
+        # Crear un objeto QSqlTableModel y establecer la tabla de destino para el modelo
+        self.modelo = QSqlTableModel()
+        self.modelo.setTable("faltantes")
         
+        # Establecer el modelo en la tabla QTableView
+        self.tbtabla.setModel(self.modelo)
+        
+        # Mostrar los datos en la tabla QTableView
+        mostrar_datos_de_faltantes(self.tbtabla)   
         
         
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)  
         
-        
-        def mostrar_datos_faltantes(sefl):
-            tbtabla = self.tbTablas()
-            
-            mostrar_datos_de_faltantes(tbtabla)
-            
-            
-            
+                 
+           
         
         
         
