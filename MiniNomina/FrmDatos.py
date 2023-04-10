@@ -26,8 +26,13 @@ class VentanaDatos(QMainWindow):
         super().showEvent(event)  
         
         
-        mostrar_datos_de_faltantes(self.tbTablas)
-        
+        def mostrar_datos_faltantes(sefl):
+            tbtabla = self.tbTablas()
+            
+            mostrar_datos_de_faltantes(tbtabla)
+            
+            
+            
         
         
         

@@ -31,7 +31,7 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         conn.close()
         
         
-def mostrar_datos_de_faltantes(tbTablas):
+def mostrar_datos_de_faltantes(tbtabla):
         # Conectar a la base de datos
         conn = conectar_db()
 
@@ -41,11 +41,11 @@ def mostrar_datos_de_faltantes(tbTablas):
 
         # Obtener los datos y establecerlos en el QTableView
         datos = cursor.fetchall()
-        tbTablas.setRowCount(len(datos))
-        tbTablas.setColumnCount(len(datos[0]))
+        tbtabla.setRowCount(len(datos))
+        tbtabla.setColumnCount(len(datos[0]))
         for fila, registro in enumerate(datos):
                 for columna, valor in enumerate(registro):
-                        tbTablas.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
+                        tbtabla.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
         
         # Cerrar la conexión
         conn.close()
