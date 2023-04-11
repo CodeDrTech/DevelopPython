@@ -18,8 +18,18 @@ class VentanaDatos(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
         
+        
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)
+        
+        # Muestra los datos de la consulta contenida en mostrar_datos_de_faltantes del modulo Consultas_db
+        self.BtnGuardar.clicked.connect(self.datos_en_tabla)
+    
+        
+    def datos_en_tabla(self):    
+        mostrar_datos_de_faltantes(self.tbtabla)
+        
+        
     
     
     
@@ -28,11 +38,14 @@ class VentanaDatos(QMainWindow):
         self.close()
         conn = conectar_db()
         conn.close()
+        
+        
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)          
         
-        mostrar_datos_de_faltantes(self.tbtabla)
+        #mostrar_datos_de_faltantes(self.tbtabla)
+        
         
         
         
