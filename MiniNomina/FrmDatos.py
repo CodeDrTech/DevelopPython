@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QTableView, QTableWidget, QHeaderView, QVBoxLayout
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
-from Consultas_db import mostrar_datos_de_faltantes
+from Consultas_db import mostrar_datos_de_faltantes, mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
 
@@ -26,8 +26,12 @@ class VentanaDatos(QMainWindow):
         
     
     # Muestra los datos de la consulta contenida en mostrar_datos_de_faltantes del modulo Consultas_db    
-    def datos_en_tabla(self):    
+    def datos_en_tabla_faltantes(self):    
         mostrar_datos_de_faltantes(self.tbtabla)
+        
+    # Muestra los datos de la consulta contenida en mostrar_datos_de_empleados del modulo Consultas_db    
+    def datos_en_tabla_empleados(self):    
+        mostrar_datos_de_empleados(self.tbtabla)
         
         
     

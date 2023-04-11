@@ -26,7 +26,7 @@ class VentanaReportes(QMainWindow):
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
-        self.llamar_venana_datos.datos_en_tabla() 
+        self.llamar_venana_datos.datos_en_tabla_faltantes() 
     
     
         

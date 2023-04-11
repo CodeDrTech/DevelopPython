@@ -55,3 +55,28 @@ def mostrar_datos_de_faltantes(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
+    
+    
+def mostrar_datos_de_empleados(tbtabla):
+    # Conectar a la base de datos
+    Ruta = Conexion_db.ruta_database() 
+    db = QSqlDatabase.addDatabase("QSQLITE")
+    db.setDatabaseName(Ruta)
+    if not db.open():
+        QMessageBox.critical(None, "Error de Conexion", "No se pudo abrir la base de datos") # type: ignore
+        return
+
+        
+    
+    # Crear un modelo de tabla SQL
+    model = QSqlTableModel()
+    model.setTable("empleados")
+    model.select()
+    
+    
+
+    # Establecer el modelo en la tabla
+    tbtabla.setModel(model)
+
+    # Ajustar el tamaño de las columnas para que se ajusten al contenido
+    tbtabla.resizeColumnsToContents()
