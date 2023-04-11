@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetIte
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
 from Conexion_db import conectar_db
+import Conexion_db
 
 
 
@@ -32,9 +33,10 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         
         
 def mostrar_datos_de_faltantes(tbtabla):
-    # Conectar a la base de datos    
+    # Conectar a la base de datos
+    Ruta = Conexion_db.ruta_database() 
     db = QSqlDatabase.addDatabase("QSQLITE")
-    db.setDatabaseName("C:\\Users\\acer\\OneDrive\\Documentos\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db")
+    db.setDatabaseName(Ruta)#"C:\\Users\\acer\\OneDrive\\Documentos\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db")
     if not db.open():
         QMessageBox.critical(None, "Error", "No se pudo abrir la base de datos")
         return
@@ -45,6 +47,8 @@ def mostrar_datos_de_faltantes(tbtabla):
     model = QSqlTableModel()
     model.setTable("faltantes")
     model.select()
+    
+    
 
     # Establecer el modelo en la tabla
     tbtabla.setModel(model)
