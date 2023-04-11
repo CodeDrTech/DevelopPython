@@ -13,7 +13,7 @@ def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
         conn = conectar_db()
 
         # Realizar la inserción en la base de datos
-        conn.execute("INSERT INTO empleados (nombre, num_banca, salario) VALUES (?, ?, ?)", (Nombre, Num_banca, Salario))
+        conn.execute("INSERT INTO empleados (nombre, banca, salario) VALUES (?, ?, ?)", (Nombre, Num_banca, Salario))
         conn.commit()
 
         # Cerrar la conexión
