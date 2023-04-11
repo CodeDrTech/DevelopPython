@@ -45,7 +45,7 @@ def mostrar_datos_de_faltantes(tbtabla):
     
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
-    model.setTable("faltantes")
+    model.setTable("empleados")
     model.select()
     
     

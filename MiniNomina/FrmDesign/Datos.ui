@@ -47,7 +47,7 @@
      <string>Guardar</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="BtnReporte_2">
+   <widget class="QPushButton" name="BtnImprimir">
     <property name="geometry">
      <rect>
       <x>230</x>
