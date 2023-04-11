@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
 from Consultas_db import mostrar_datos_de_faltantes
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
-
+import Consultas_db
 
 
 class VentanaDatos(QMainWindow):
@@ -26,7 +26,8 @@ class VentanaDatos(QMainWindow):
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
-        
+        conn = conectar_db()
+        conn.close()
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)          

@@ -36,7 +36,7 @@ def mostrar_datos_de_faltantes(tbtabla):
     # Conectar a la base de datos
     Ruta = Conexion_db.ruta_database() 
     db = QSqlDatabase.addDatabase("QSQLITE")
-    db.setDatabaseName(Ruta)#"C:\\Users\\acer\\OneDrive\\Documentos\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db")
+    db.setDatabaseName(Ruta)
     if not db.open():
         QMessageBox.critical(None, "Error", "No se pudo abrir la base de datos")
         return
@@ -55,6 +55,3 @@ def mostrar_datos_de_faltantes(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
-
-    # Cerrar la conexión
-    #db.close() 
