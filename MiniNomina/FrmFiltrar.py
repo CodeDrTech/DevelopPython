@@ -5,7 +5,6 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
 from Conexion_db import conectar_db
 from FrmDatos import VentanaDatos
-import Consultas_db
 
 
 class VentanaReportes(QMainWindow):
@@ -26,7 +25,8 @@ class VentanaReportes(QMainWindow):
     #Funcione para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatos()
-        self.llamar_venana_datos.show() 
+        self.llamar_venana_datos.show()
+        self.llamar_venana_datos.datos_en_tabla() 
     
     
         

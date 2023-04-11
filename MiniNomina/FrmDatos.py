@@ -22,10 +22,10 @@ class VentanaDatos(QMainWindow):
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)
         
-        # Muestra los datos de la consulta contenida en mostrar_datos_de_faltantes del modulo Consultas_db
-        self.BtnGuardar.clicked.connect(self.datos_en_tabla)
-    
         
+        
+    
+    # Muestra los datos de la consulta contenida en mostrar_datos_de_faltantes del modulo Consultas_db    
     def datos_en_tabla(self):    
         mostrar_datos_de_faltantes(self.tbtabla)
         
