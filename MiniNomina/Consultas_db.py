@@ -38,7 +38,7 @@ def mostrar_datos_de_faltantes(tbtabla):
     db = QSqlDatabase.addDatabase("QSQLITE")
     db.setDatabaseName(Ruta)
     if not db.open():
-        QMessageBox.critical(None, "Error", "No se pudo abrir la base de datos")
+        QMessageBox.critical(None, "Error de Conexion", "No se pudo abrir la base de datos") # type: ignore
         return
 
         
