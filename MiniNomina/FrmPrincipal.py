@@ -1,5 +1,6 @@
 import sys
 from PyQt5 import uic
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 from PyQt5 import QtWidgets, QtGui
 from FrmEmpleados import VentanaEmpleados
@@ -18,6 +19,8 @@ class VentanaPrincipal(QMainWindow):
         self.setWindowTitle('PANEL PRINCIPAL')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
+        
+
         
         #Para darle funiones a los botones del PANEL PRINCIPAL
         self.BtnSalir.clicked.connect(self.fn_Salir)

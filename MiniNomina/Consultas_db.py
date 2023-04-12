@@ -31,7 +31,7 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         # Cerrar la conexión
         conn.close()
         
-        
+# Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
     # Conectar a la base de datos
     Ruta = Conexion_db.ruta_database() 
@@ -56,7 +56,7 @@ def mostrar_datos_de_faltantes(tbtabla):
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
     
-    
+# Función que muestra los datos de los empleados en QTableView del FrmDatos    
 def mostrar_datos_de_empleados(tbtabla):
     # Conectar a la base de datos
     Ruta = Conexion_db.ruta_database() 

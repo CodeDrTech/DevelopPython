@@ -40,15 +40,17 @@ class VentanaDatos(QMainWindow):
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
-        conn = conectar_db()
-        conn.close()
+        #self.cerra_conexion = conectar_db()
+        #self.cerra_conexion.close()
+        
+        
         
         
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)          
         
-        #mostrar_datos_de_faltantes(self.tbtabla)
+        
         
         
         
