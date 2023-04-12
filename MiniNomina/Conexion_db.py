@@ -14,5 +14,4 @@ def conectar_db():
 
 db = QSqlDatabase.addDatabase("QSQLITE")
 db.setDatabaseName(ruta_database())
-if not db.open():
-    QMessageBox.critical(None, "Error de Conexion a base de datos", "No se pudo abrir la base de datos") # type: ignore
+

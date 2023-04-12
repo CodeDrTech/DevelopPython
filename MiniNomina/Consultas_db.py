@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetItem, QMessageBox, QAbstractItemView
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
-from Conexion_db import conectar_db
+from Conexion_db import conectar_db, db
 
     
     
@@ -56,7 +56,7 @@ def mostrar_datos_de_faltantes(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
-    
+                   
     
     
 # Función que muestra los datos de los empleados en QTableView del FrmDatos    
