@@ -55,6 +55,11 @@ def mostrar_datos_de_faltantes(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
+
+    def cierra_conexion_db():    
+        db.close()
+        return cierra_conexion_db()
+    
     
 # Función que muestra los datos de los empleados en QTableView del FrmDatos    
 def mostrar_datos_de_empleados(tbtabla):
