@@ -38,7 +38,7 @@ def mostrar_datos_de_faltantes(tbtabla):
     db = QSqlDatabase.addDatabase("QSQLITE")
     db.setDatabaseName(Ruta)
     if not db.open():
-        QMessageBox.critical(None, "Error de Conexion", "No se pudo abrir la base de datos") # type: ignore
+        QMessageBox.critical(None, "Error de Conexion a base de datos", "No se pudo abrir la base de datos") # type: ignore
         return
 
         
@@ -63,7 +63,7 @@ def mostrar_datos_de_empleados(tbtabla):
     db = QSqlDatabase.addDatabase("QSQLITE")
     db.setDatabaseName(Ruta)
     if not db.open():
-        QMessageBox.critical(None, "Error de Conexion", "No se pudo abrir la base de datos") # type: ignore
+        QMessageBox.critical(None, "Error de Conexion a base de datos", "No se pudo abrir la base de datos") # type: ignore
         return
 
         

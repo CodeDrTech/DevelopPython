@@ -14,9 +14,10 @@ class VentanaDatos(QMainWindow):
         uic.loadUi('MiniNomina/FrmDesign/Datos.ui',self)
         
         # Configuraiones de la ventana Empleados.
-        self.setWindowTitle('REPORTE TOTAL')
+        self.setWindowTitle('PANEL DE DATOS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
+        
         
         
         # Llama a la funcion que cierra la ventana
@@ -40,14 +41,12 @@ class VentanaDatos(QMainWindow):
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
-        #self.cerra_conexion = conectar_db()
-        #self.cerra_conexion.close()
-        
-        
+          
         
         
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
+        # Este se ejecutra cuendo la ventana se abre
         super().showEvent(event)          
         
         
