@@ -27,7 +27,7 @@ class VentanaReportes(QMainWindow):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
         self.llamar_venana_datos.datos_en_tabla_faltantes() 
-    
+        
     
         
     # Funcion para colocar el foco en el objeto indicado    

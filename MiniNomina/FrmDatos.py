@@ -3,7 +3,6 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QTableView, QTableWidget, QHeaderView, QVBoxLayout
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
-import Consultas_db
 from Consultas_db import mostrar_datos_de_faltantes, mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
