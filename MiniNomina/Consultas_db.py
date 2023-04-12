@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets
 from Conexion_db import conectar_db, db
 import PyQt5.QtCore
 from PyQt5.QtGui import QStandardItemModel
+from FrmFiltrar import VentanaReportes #El error esta aqui
 
 
     
@@ -57,6 +58,32 @@ def mostrar_datos_de_empleados(tbtabla):
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("empleados")
+    model.select()
+    
+    # Establecer el modelo en la tabla
+    tbtabla.setModel(model)
+
+    # Ajustar el tamaño de las columnas para que se ajusten al contenido
+    tbtabla.resizeColumnsToContents()
+    
+    
+def ver_datos_de_faltantes_por_nombres(tbtabla):
+        
+        #self.llamar_venana_datos = VentanaDatos()
+        #self.llamar_venana_datos.show()
+        #self.llamar_venana_datos.datos_en_tabla_empleados_por_nombres()
+        
+    llamar_a_combobox = VentanaReportes
+    llamar_a_combobox.currentText()
+            
+    # Crear un modelo de tabla SQL
+    model = QSqlTableModel()
+    model.setTable("faltantes")
+    
+    # Establecer el filtro por nombre
+    model.setFilter(f"nombre = '{llamar_a_combobox}'")
+    
+    # Seleccionar los datos filtrados
     model.select()
     
     # Establecer el modelo en la tabla

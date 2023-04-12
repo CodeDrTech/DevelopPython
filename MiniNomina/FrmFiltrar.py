@@ -20,14 +20,15 @@ class VentanaReportes(QMainWindow):
         
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)
+        self.BtnReporte.clicked.connect(self.abrirFrmDatos_por_nombres)
         
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
-        model.setTable('empleados')
+        model.setTable('faltantes')
         model.select()
         column_data = []
         for i in range(model.rowCount()):
-            column_data.append(model.data(model.index(i, 0)))
+            column_data.append(model.data(model.index(i, 1)))
         
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model = QStandardItemModel()
@@ -39,9 +40,14 @@ class VentanaReportes(QMainWindow):
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
-        self.llamar_venana_datos.datos_en_tabla_faltantes() 
+        self.llamar_venana_datos.datos_en_tabla_faltantes()
         
-    
+        
+    # Funcion para llamar la ventana secundaria (Ventana de datos, datos filtrados)
+    def abrirFrmDatos_por_nombres(self):
+        self.llamar_venana_datos = VentanaDatos()
+        self.llamar_venana_datos.show()
+        self.llamar_venana_datos.datos_en_tabla_empleados_por_nombres()
         
     # Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):
@@ -53,6 +59,10 @@ class VentanaReportes(QMainWindow):
         # Limpiar los cuadros de texto Empleados.
         self.cmbEmpleado.setCurrentText("")
         
+    def ComboBox(self):
+        self.cmbEmpleado.setCurrentText()
+        return
+    
         
     def fn_Salir(self):
         self.close()
