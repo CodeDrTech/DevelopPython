@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QTableView
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from Conexion_db import conectar_db
 from FrmDatos import VentanaDatos
 
@@ -20,7 +21,19 @@ class VentanaReportes(QMainWindow):
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)
         
+        # Obtiene los datos de la columna Nombre de la tabla empleados.
+        model = QSqlTableModel()
+        model.setTable('empleados')
+        model.select()
+        column_data = []
+        for i in range(model.rowCount()):
+            column_data.append(model.data(model.index(i, 0)))
         
+        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+        combo_model = QStandardItemModel()
+        for item in column_data:
+            combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbEmpleado.setModel(combo_model)
         
     # Funcion para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
@@ -37,7 +50,8 @@ class VentanaReportes(QMainWindow):
 
         # Establecer el foco en el cuadro de texto txtNombre
         self.cmbEmpleado.setFocus()
-        
+        # Limpiar los cuadros de texto Empleados.
+        self.cmbEmpleado.setCurrentText("")
         
         
     def fn_Salir(self):

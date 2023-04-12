@@ -93,9 +93,9 @@
    <widget class="QComboBox" name="cmbEmpleado">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>50</x>
       <y>120</y>
-      <width>150</width>
+      <width>170</width>
       <height>20</height>
      </rect>
     </property>
