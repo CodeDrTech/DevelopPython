@@ -50,9 +50,11 @@ class VentanaDatos(QMainWindow):
         super().showEvent(event)          
         
         
+    def closeEvent(self, event):
         
-        
-        
+        super().closeEvent(event)    
+        #conn = conectar_db()
+        #conn.close()
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)

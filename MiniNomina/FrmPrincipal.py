@@ -26,10 +26,7 @@ class VentanaPrincipal(QMainWindow):
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
         self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
-        self.BtnReporte.clicked.connect(self.abrirFrmFiltrar)
-        
-        
-        
+        self.BtnReporte.clicked.connect(self.abrirFrmFiltrar)       
         
         
         
