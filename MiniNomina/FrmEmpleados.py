@@ -60,7 +60,7 @@ class VentanaEmpleados(QMainWindow):
         self.txtSalario.setText("")
         self.txtNombre.setFocus()
         
-        
+    # funcion salir llamada desde el boton BtnSalir.    
     def fn_Salir(self):
         self.close()
         

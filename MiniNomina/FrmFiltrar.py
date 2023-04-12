@@ -22,7 +22,7 @@ class VentanaReportes(QMainWindow):
         
         
         
-    #Funcione para llamar la ventana secundaria (Ventana de datos)
+    # Funcion para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
@@ -30,7 +30,7 @@ class VentanaReportes(QMainWindow):
     
     
         
-    #Funcion para colocar el foco en el objeto indicado    
+    # Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)
