@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetIte
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
 from Conexion_db import conectar_db, db
+import PyQt5.QtCore
+from PyQt5.QtGui import QStandardItemModel
+
 
     
     
@@ -31,23 +34,12 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
-    # Conectar a la base de datos
-    #Ruta = Conexion_db.ruta_database() 
-    #db = QSqlDatabase.addDatabase("QSQLITE")
-    #db.setDatabaseName(Ruta)
-    #if not db.open():
-        #QMessageBox.critical(None, "Error de Conexion a base de datos", "No se pudo abrir la base de datos") # type: ignore
-        #return
-    
         
-    
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("faltantes")
     model.select()
     
-    
-
     # Establecer el modelo en la tabla
     tbtabla.setModel(model)
     
@@ -61,23 +53,12 @@ def mostrar_datos_de_faltantes(tbtabla):
     
 # Función que muestra los datos de los empleados en QTableView del FrmDatos    
 def mostrar_datos_de_empleados(tbtabla):
-    # Conectar a la base de datos
-    #Ruta = Conexion_db.ruta_database() 
-    #db = QSqlDatabase.addDatabase("QSQLITE")
-    #db.setDatabaseName(Ruta)
-    #if not db.open():
-        #QMessageBox.critical(None, "Error de Conexion a base de datos", "No se pudo abrir la base de datos") # type: ignore
-        #return
-
         
-    
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("empleados")
     model.select()
     
-    
-
     # Establecer el modelo en la tabla
     tbtabla.setModel(model)
 
