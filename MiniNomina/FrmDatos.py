@@ -8,6 +8,7 @@ from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
 
 
+
 class VentanaDatos(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -36,7 +37,7 @@ class VentanaDatos(QMainWindow):
         mostrar_datos_de_empleados(self.tbtabla)
         
     
-    def datos_en_tabla_empleados_por_nombres(self):    
+    def datos_en_tabla_faltantes_por_nombres(self):    
         ver_datos_de_faltantes_por_nombres(self.tbtabla)
         
         

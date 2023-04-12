@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets
 from Conexion_db import conectar_db, db
 import PyQt5.QtCore
 from PyQt5.QtGui import QStandardItemModel
-from FrmFiltrar import VentanaReportes #El error esta aqui
+#from FrmDatos import VentanaDatos #El error esta aqui
 
 
     
@@ -73,8 +73,9 @@ def ver_datos_de_faltantes_por_nombres(tbtabla):
         #self.llamar_venana_datos.show()
         #self.llamar_venana_datos.datos_en_tabla_empleados_por_nombres()
         
-    llamar_a_combobox = VentanaReportes
+    llamar_a_combobox = VentanaDatos()
     llamar_a_combobox.currentText()
+    
             
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
