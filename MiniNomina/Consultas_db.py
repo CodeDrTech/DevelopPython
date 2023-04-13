@@ -66,21 +66,21 @@ def mostrar_datos_de_empleados(tbtabla):
     tbtabla.resizeColumnsToContents()
     
     
-#def ver_datos_de_faltantes_por_nombres(tbtabla):
+def mostrar_datos_de_faltantes_por_nombres(tbtabla):
     
             
     # Crear un modelo de tabla SQL
-    #model = QSqlTableModel()
-    #model.setTable("faltantes")
+    model = QSqlTableModel()
+    model.setTable("faltantes")
     
     # Establecer el filtro por nombre
-    #model.setFilter(f"nombre = '{llamar_a_combobox}'")
+    model.setFilter("nombre = 'PRUEBA DE DUPLICADO DOS'")
     
     # Seleccionar los datos filtrados
-    #model.select()
+    model.select()
     
     # Establecer el modelo en la tabla
-    #tbtabla.setModel(model)
+    tbtabla.setModel(model)
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
-    #tbtabla.resizeColumnsToContents()
+    tbtabla.resizeColumnsToContents()

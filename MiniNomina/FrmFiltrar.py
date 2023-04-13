@@ -47,8 +47,12 @@ class VentanaReportes(QMainWindow):
     def abrirFrmDatos_por_nombres(self):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
-        self.llamar_venana_datos.datos_en_tabla_faltantes_por_nombres()
-        #datos_en_tabla_empleados_por_nombres()
+        self.llamar_venana_datos.datos_en_tabla_faltantes_por_nombre()
+        
+        
+        
+        
+        
         
     # Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):
