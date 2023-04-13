@@ -11,31 +11,40 @@ class VentanaEmpleados(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Empleados.ui',self)
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('AGREGAR EMPLEADOS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Esrtabece los focos a los texbox en orden hacia abajo.
         self.setTabOrder(self.txtNombre, self.txtNumbanca)
         self.setTabOrder(self.txtNumbanca, self.txtSalario)
         self.setTabOrder(self.txtSalario, self.BtnAgregar)
         self.setTabOrder(self.BtnAgregar, self.BtnSalir)
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Funciones asignadas al evento click de los botones de este formulario.
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnAgregar.clicked.connect(self.guardar)
         self.BtnEditar.clicked.connect(self.abrirFrmDatos)
         
         
-        
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     # Funcione para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
         self.llamar_venana_datos.datos_en_tabla_empleados()
         
-            
+    
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------        
     # Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
@@ -43,7 +52,9 @@ class VentanaEmpleados(QMainWindow):
 
         # Establecer el foco en el cuadro de texto txtNombre
         self.txtNombre.setFocus()
-        
+    
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):   
         
@@ -61,7 +72,9 @@ class VentanaEmpleados(QMainWindow):
         self.txtNumbanca.setText("")
         self.txtSalario.setText("")
         self.txtNombre.setFocus()
-        
+    
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     # funcion salir llamada desde el boton BtnSalir.    
     def fn_Salir(self):
         self.close()

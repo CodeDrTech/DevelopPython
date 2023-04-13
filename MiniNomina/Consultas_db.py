@@ -7,7 +7,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel
 
     
-    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
 def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
     
         # Conectar a la base de datos
@@ -20,7 +21,8 @@ def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
         # Cerrar la conexión
         conn.close()
         
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
 def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         # Conectar a la base de datos
         conn = conectar_db()
@@ -31,7 +33,9 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 
         # Cerrar la conexión
         conn.close()
-        
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
         
@@ -55,7 +59,8 @@ def mostrar_datos_de_faltantes(tbtabla):
     tbtabla.resizeColumnsToContents()
                    
     
-    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
 # Función que muestra los datos de los empleados en QTableView del FrmDatos    
 def mostrar_datos_de_empleados(tbtabla):
         
@@ -70,26 +75,27 @@ def mostrar_datos_de_empleados(tbtabla):
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
     
-    
-def select_total(tbtabla):
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
+#def select_total(tbtabla):
     
     # Conectar a la base de datos
-    conn = conectar_db()
+    #conn = conectar_db()
 
     # Realizar la inserción en la base de datos
-    cursor = conn.execute("SELECT * FROM faltantes")
-    rows = cursor.fetchall()
+    #cursor = conn.execute("SELECT * FROM faltantes")
+    #rows = cursor.fetchall()
     
     # Crear un modelo de tabla y agregar los datos
-    model = QStandardItemModel(len(rows), len(rows[0]))
-    for i, row in enumerate(rows):
-        for j, col in enumerate(row):
-            item = QStandardItem(str(col))
-            model.setItem(i, j, item)
+    #model = QStandardItemModel(len(rows), len(rows[0]))
+    #for i, row in enumerate(rows):
+        #for j, col in enumerate(row):
+            #item = QStandardItem(str(col))
+            #model.setItem(i, j, item)
 
     # Cerrar la conexión
-    conn.close()
+    #conn.close()
     # Asignar el modelo a tu QTableView
-    tbtabla.setModel(model)
-    tbtabla.resizeColumnsToContents()
-    tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+    #tbtabla.setModel(model)
+    #tbtabla.resizeColumnsToContents()
+    #tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)

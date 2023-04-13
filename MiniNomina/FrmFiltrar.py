@@ -14,15 +14,21 @@ class VentanaReportes(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Filtrar.ui',self)
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Filtrar.
         self.setWindowTitle('FILTRAR REPORTES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)
         self.BtnReporte.clicked.connect(self.reporte_por_cmbEmpleado)
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
         model.setTable('faltantes')
@@ -37,6 +43,8 @@ class VentanaReportes(QMainWindow):
             combo_model.appendRow(QStandardItem(str(item)))
         self.cmbEmpleado.setModel(combo_model)
         
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     # Funcion para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
         self.llamar_tbtabla = VentanaDatos()
@@ -62,7 +70,8 @@ class VentanaReportes(QMainWindow):
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         tbtabla.resizeColumnsToContents()
-        
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     def reporte_por_cmbEmpleado(self):   
         self.llamar_tbtabla = VentanaDatos()
         self.llamar_tbtabla.show()
@@ -85,19 +94,10 @@ class VentanaReportes(QMainWindow):
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         tbtabla.resizeColumnsToContents()
-        tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)        
         
-        
-    def abrirSelectTotal(self):        
-        self.llamar_select_total = VentanaDatos()
-        self.llamar_select_total.show()
-        self.llamar_select_total.datos_de_select()
-        
-        
-        
-        
-        
-        
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     # Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
@@ -111,7 +111,8 @@ class VentanaReportes(QMainWindow):
         
         
     
-        
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     def fn_Salir(self):
         self.close()
         

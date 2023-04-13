@@ -15,11 +15,16 @@ class VentanaFaltantes(QMainWindow):
         super().__init__()
         uic.loadUi('MiniNomina/FrmDesign/Faltantes.ui',self)
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Faltantes.
         self.setWindowTitle('REGISTRAR FALTANTES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
+        
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Esrtabece los focos a los texbox en orden hacia abajo.
         self.setTabOrder(self.cmbEmpleado, self.txtNumbanca)
         self.setTabOrder(self.txtNumbanca, self.txtAbono)
@@ -27,6 +32,8 @@ class VentanaFaltantes(QMainWindow):
         self.setTabOrder(self.txtFaltante, self.BtnRegistrar)
         self.setTabOrder(self.BtnRegistrar, self.BtnSalir)
         
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)
         
@@ -35,6 +42,8 @@ class VentanaFaltantes(QMainWindow):
         
         self.BtnEditar.clicked.connect(self.abrirFrmDatos)
 
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
         model.setTable('empleados')
@@ -48,14 +57,18 @@ class VentanaFaltantes(QMainWindow):
         for item in column_data:
             combo_model.appendRow(QStandardItem(str(item)))
         self.cmbEmpleado.setModel(combo_model)
-        
+    
+    
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     # Funcion para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
         self.llamar_venana_datos.datos_en_tabla_faltantes()
         
-     
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------ 
     # Funcion para dotar de eventos a la ventana al cargar.    
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase.
@@ -68,7 +81,8 @@ class VentanaFaltantes(QMainWindow):
         self.txtFecha.setDisplayFormat("dd/MMMM/yyyy")  # Formato de fecha.
         self.txtFecha.setDate(QDate.currentDate())    # Establecer fecha actual en txtFecha.
         
-        
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
@@ -88,7 +102,8 @@ class VentanaFaltantes(QMainWindow):
         self.txtAbono.setText("")
         self.txtFaltante.setText("")
         self.cmbEmpleado.setFocus()
-
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
