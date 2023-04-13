@@ -1,4 +1,5 @@
 import sys
+import re
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 from PyQt5 import QtWidgets, QtGui
@@ -33,7 +34,17 @@ class VentanaEmpleados(QMainWindow):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
         self.llamar_venana_datos.datos_en_tabla_empleados() 
+    
+    
+    # Supongamos que tienes un QLineEdit llamado "line_edit"
+    # Conecta la señal "textChanged" al siguiente método
+    def soloTexto(self):
+        patron = re.compile("[^0-9]") # Expresión regular que permite solo números
+        nuevo_texto = patron.sub("", self) # Remueve todos los caracteres que no sean números
+        self.txtNombre.setText(nuevo_texto) # Establece el nuevo texto en el QLineEdit
+        #self.txtNombre.textChanged.connect(soloTexto)
         
+            
     # Funcion para colocar el foco en el objeto indicado    
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
@@ -43,9 +54,10 @@ class VentanaEmpleados(QMainWindow):
         self.txtNombre.setFocus()
         
     # Funcion para guardar los datos de los textboxts en la base de los datos    
-    def guardar(self):
+    def guardar(self):   
+        
         # Obtener los valores de los cuadros de texto
-        Nombre = self.txtNombre.text()
+        Nombre = self.txtNombre.text().upper()
         Num_banca = self.txtNumbanca.text()
         Salario = self.txtSalario.text()
         
