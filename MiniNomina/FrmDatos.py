@@ -27,7 +27,7 @@ class VentanaDatos(QMainWindow):
         #------------------------------------------------------------------------------------------------------
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)
-        self.BtnImprimir.clicked.connect(self.datos_de_select)
+        #self.BtnImprimir.clicked.connect(self.datos_de_select)
         
         
     #------------------------------------------------------------------------------------------------------
