@@ -50,6 +50,12 @@ class VentanaReportes(QMainWindow):
         self.llamar_venana_datos.datos_en_tabla_faltantes_por_nombre()
         
         
+    def abrirSelectTotal(self):        
+        self.llamar_select_total = VentanaDatos()
+        self.llamar_select_total.show()
+        self.llamar_select_total.datos_de_select()
+        
+        
         
         
         

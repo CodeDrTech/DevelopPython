@@ -2,9 +2,9 @@ from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetIte
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
 from Conexion_db import conectar_db, db
-import PyQt5.QtCore
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel
-
 
     
     
@@ -74,7 +74,11 @@ def mostrar_datos_de_faltantes_por_nombres(tbtabla):
     model.setTable("faltantes")
     
     # Establecer el filtro por nombre
-    model.setFilter("nombre = 'PRUEBA DE DUPLICADO DOS'")
+    model.setFilter("")
+    
+    # Establecer el orden por nombre en orden ascendente
+    model.setSort(1, Qt.AscendingOrder) # type: ignore
+
     
     # Seleccionar los datos filtrados
     model.select()
@@ -84,3 +88,28 @@ def mostrar_datos_de_faltantes_por_nombres(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
+    tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+    
+    
+def select_total(tbtabla):
+    
+    # Conectar a la base de datos
+    conn = conectar_db()
+
+    # Realizar la inserción en la base de datos
+    cursor = conn.execute("SELECT * FROM faltantes")
+    rows = cursor.fetchall()
+    
+    # Crear un modelo de tabla y agregar los datos
+    model = QStandardItemModel(len(rows), len(rows[0]))
+    for i, row in enumerate(rows):
+        for j, col in enumerate(row):
+            item = QStandardItem(str(col))
+            model.setItem(i, j, item)
+
+    # Cerrar la conexión
+    conn.close()
+    # Asignar el modelo a tu QTableView
+    tbtabla.setModel(model)
+    tbtabla.resizeColumnsToContents()
+    tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
