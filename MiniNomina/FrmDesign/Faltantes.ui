@@ -36,6 +36,16 @@
     <property name="text">
      <string>Salir</string>
     </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/salir.png</normaloff>../ICO/salir.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
+    </property>
    </widget>
    <widget class="QPushButton" name="BtnRegistrar">
     <property name="geometry">
@@ -55,6 +65,16 @@
     </property>
     <property name="text">
      <string>Registrar</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/agregar.png</normaloff>../ICO/agregar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -199,6 +219,16 @@
     </property>
     <property name="text">
      <string>Editar</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/editar.png</normaloff>../ICO/editar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
     </property>
    </widget>
   </widget>
