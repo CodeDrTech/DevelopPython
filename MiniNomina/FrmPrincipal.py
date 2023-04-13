@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtGui import QIcon
 from FrmEmpleados import VentanaEmpleados
 from FrmFiltrar import VentanaReportes
 from FrmFaltantes import VentanaFaltantes
@@ -17,7 +18,8 @@ class VentanaPrincipal(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('PANEL PRINCIPAL')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        
         
 
         
@@ -56,7 +58,7 @@ class VentanaPrincipal(QMainWindow):
         
         
 if __name__ == '__main__':
-    app = QApplication(sys.argv)        
+    app = QApplication(sys.argv)       
     GUI = VentanaPrincipal()
     GUI.show()
     sys.exit(app.exec_())

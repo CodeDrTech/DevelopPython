@@ -14,7 +14,7 @@ class VentanaEmpleados(QMainWindow):
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('AGREGAR EMPLEADOS')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
         # Esrtabece los focos a los texbox en orden hacia abajo.
         self.setTabOrder(self.txtNombre, self.txtNumbanca)
@@ -33,16 +33,7 @@ class VentanaEmpleados(QMainWindow):
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatos()
         self.llamar_venana_datos.show()
-        self.llamar_venana_datos.datos_en_tabla_empleados() 
-    
-    
-    # Supongamos que tienes un QLineEdit llamado "line_edit"
-    # Conecta la señal "textChanged" al siguiente método
-    def soloTexto(self):
-        patron = re.compile("[^0-9]") # Expresión regular que permite solo números
-        nuevo_texto = patron.sub("", self) # Remueve todos los caracteres que no sean números
-        self.txtNombre.setText(nuevo_texto) # Establece el nuevo texto en el QLineEdit
-        #self.txtNombre.textChanged.connect(soloTexto)
+        self.llamar_venana_datos.datos_en_tabla_empleados()
         
             
     # Funcion para colocar el foco en el objeto indicado    

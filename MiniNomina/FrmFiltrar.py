@@ -16,7 +16,7 @@ class VentanaReportes(QMainWindow):
         # Configuraiones de la ventana Filtrar.
         self.setWindowTitle('FILTRAR REPORTES')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)

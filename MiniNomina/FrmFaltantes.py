@@ -17,7 +17,7 @@ class VentanaFaltantes(QMainWindow):
         # Configuraiones de la ventana Faltantes.
         self.setWindowTitle('REGISTRAR FALTANTES')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
         # Esrtabece los focos a los texbox en orden hacia abajo.
         self.setTabOrder(self.cmbEmpleado, self.txtNumbanca)

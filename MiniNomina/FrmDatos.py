@@ -17,7 +17,7 @@ class VentanaDatos(QMainWindow):
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('PANEL DE DATOS')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/lottery.ico'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
         
         
