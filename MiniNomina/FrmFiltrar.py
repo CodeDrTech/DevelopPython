@@ -19,7 +19,7 @@ class VentanaReportes(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
         self.BtnSalir.clicked.connect(self.fn_Salir)
-        self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)
+        #self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)
         self.BtnReporte.clicked.connect(self.abrirFrmDatos_por_nombres)
         
         # Obtiene los datos de la columna Nombre de la tabla empleados.
@@ -37,10 +37,10 @@ class VentanaReportes(QMainWindow):
         self.cmbEmpleado.setModel(combo_model)
         
     # Funcion para llamar la ventana secundaria (Ventana de datos)
-    def abrirFrmDatos(self):
-        self.llamar_venana_datos = VentanaDatos()
-        self.llamar_venana_datos.show()
-        self.llamar_venana_datos.datos_en_tabla_faltantes()
+    #def abrirFrmDatos(self):
+        #self.llamar_venana_datos = VentanaDatos()
+        #self.llamar_venana_datos.show()
+        #self.llamar_venana_datos.datos_en_tabla_faltantes()
         
         
     # Funcion para llamar la ventana secundaria (Ventana de datos, datos filtrados)

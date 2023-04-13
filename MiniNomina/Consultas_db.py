@@ -38,6 +38,11 @@ def mostrar_datos_de_faltantes(tbtabla):
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("faltantes")
+    # Establecer el filtro por nombre
+    model.setFilter("")
+    
+    # Establecer el orden por nombre en orden ascendente
+    model.setSort(0, Qt.DescendingOrder) # type: ignore
     model.select()
     
     # Establecer el modelo en la tabla

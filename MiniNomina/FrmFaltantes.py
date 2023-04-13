@@ -6,6 +6,7 @@ from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
+from FrmDatos import VentanaDatos
 from Consultas_db import insertar_nuevo_faltante
 
 
@@ -31,6 +32,8 @@ class VentanaFaltantes(QMainWindow):
         
          # Llama a la funcion guardar        
         self.BtnRegistrar.clicked.connect(self.guardar)
+        
+        self.BtnEditar.clicked.connect(self.abrirFrmDatos)
 
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
@@ -45,6 +48,12 @@ class VentanaFaltantes(QMainWindow):
         for item in column_data:
             combo_model.appendRow(QStandardItem(str(item)))
         self.cmbEmpleado.setModel(combo_model)
+        
+    # Funcion para llamar la ventana secundaria (Ventana de datos)
+    def abrirFrmDatos(self):
+        self.llamar_venana_datos = VentanaDatos()
+        self.llamar_venana_datos.show()
+        self.llamar_venana_datos.datos_en_tabla_faltantes()
         
      
     # Funcion para dotar de eventos a la ventana al cargar.    
