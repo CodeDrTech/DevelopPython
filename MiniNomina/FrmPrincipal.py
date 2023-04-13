@@ -6,7 +6,6 @@ from PyQt5 import QtWidgets, QtGui
 from FrmEmpleados import VentanaEmpleados
 from FrmFiltrar import VentanaReportes
 from FrmFaltantes import VentanaFaltantes
-from FrmDatos import VentanaDatos
 
 
 

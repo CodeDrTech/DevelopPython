@@ -60,9 +60,8 @@ class VentanaReportes(QMainWindow):
         # Limpiar los cuadros de texto Empleados.
         self.cmbEmpleado.setCurrentText("")
         
-    def ComboBox(self):
-        self.cmbEmpleado.setCurrentText()
-        return
+        
+        
     
         
     def fn_Salir(self):

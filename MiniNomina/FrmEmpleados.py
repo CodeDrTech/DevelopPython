@@ -2,8 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 from PyQt5 import QtWidgets, QtGui
-from Conexion_db import conectar_db
-from Consultas_db import insertar_nuevo_empleados, mostrar_datos_de_empleados
+from Consultas_db import insertar_nuevo_empleados
 from FrmDatos import VentanaDatos
 
 class VentanaEmpleados(QMainWindow):
