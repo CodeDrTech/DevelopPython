@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QAbstractItemView
 from PyQt5.QtCore import QDate, Qt, QDateTime, QLocale
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -61,11 +61,42 @@ class VentanaFaltantes(QMainWindow):
     
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
-    # Funcion para llamar la ventana secundaria (Ventana de datos)
+    # Funcion para llamar la ventana secundaria (Ventana de datos) y editar las informaciones.
     def abrirFrmDatos(self):
-        self.llamar_venana_datos = VentanaDatos()
-        self.llamar_venana_datos.show()
-        self.llamar_venana_datos.datos_en_tabla_faltantes()
+        
+        Empleado = self.cmbEmpleado.currentText()
+        
+        # Validar que cmbEmpleado no esté vacío
+        if not Empleado:
+            
+            self.llamar_venana_datos = VentanaDatos()
+            self.llamar_venana_datos.show()
+            self.llamar_venana_datos.datos_en_tabla_faltantes()
+            
+        else:
+               
+            self.llamar_tbtabla = VentanaDatos()
+            self.llamar_tbtabla.show()
+            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
+        
+        
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+            model.setTable("faltantes")
+    
+            # Establecer el filtro por nombre
+            model.setFilter(f"nombre = '{Empleado}'")
+
+    
+            # Seleccionar los datos filtrados
+            model.select()
+    
+            # Establecer el modelo en la tabla
+            tbtabla.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            tbtabla.resizeColumnsToContents()
+        
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------ 
