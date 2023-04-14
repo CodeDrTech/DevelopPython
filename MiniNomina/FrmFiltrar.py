@@ -31,11 +31,11 @@ class VentanaReportes(QMainWindow):
         #------------------------------------------------------------------------------------------------------
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
-        model.setTable('faltantes')
+        model.setTable('empleados')
         model.select()
         column_data = []
         for i in range(model.rowCount()):
-            column_data.append(model.data(model.index(i, 1)))
+            column_data.append(model.data(model.index(i, 0)))
         
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model = QStandardItemModel()
@@ -72,12 +72,18 @@ class VentanaReportes(QMainWindow):
         tbtabla.resizeColumnsToContents()
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
-    def reporte_por_cmbEmpleado(self):   
+    def reporte_por_cmbEmpleado(self):
+        Empleado = self.cmbEmpleado.currentText()
+        
+        # Validar que cmbEmpleado no esté vacío
+        if not Empleado:
+            QMessageBox.warning(None, "ERROR", "DEBE ELEJIR UN NOMBRE.") # type: ignore
+            return   
         self.llamar_tbtabla = VentanaDatos()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
         
-        Empleado = self.cmbEmpleado.currentText()
+        
         # Crear un modelo de tabla SQL
         model = QSqlTableModel()
         model.setTable("faltantes")

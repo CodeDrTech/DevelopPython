@@ -92,6 +92,11 @@ class VentanaFaltantes(QMainWindow):
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
         
+        # Validar que los campos no estén vacíos
+        if not Fecha or not Nombre or not Num_banca or not Abono and not Faltante:
+            QMessageBox.warning(None, "ERROR", "DEBE COMPLETAR LOS CAMPOS QUE SON OBLIGATORIOS.") # type: ignore
+            return
+        
         insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante)
         
         

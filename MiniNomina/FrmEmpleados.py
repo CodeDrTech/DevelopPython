@@ -63,7 +63,10 @@ class VentanaEmpleados(QMainWindow):
         Num_banca = self.txtNumbanca.text()
         Salario = self.txtSalario.text()
         
-
+        # Validar que los campos no estén vacíos
+        if not Nombre or not Num_banca or not Salario:
+            QMessageBox.warning(None, "ERROR", "DEBE COMPLETAR LOS CAMPOS QUE SON OBLIGATORIOS.") # type: ignore
+            return
         insertar_nuevo_empleados(Nombre, Num_banca, Salario)        
         
         
