@@ -113,7 +113,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>SALARIO QUINCENAL</string>
+     <string>SALARIO</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="txtNombre">
