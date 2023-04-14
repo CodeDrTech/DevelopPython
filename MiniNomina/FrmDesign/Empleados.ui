@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
-    <height>314</height>
+    <width>291</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>260</y>
+      <y>270</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -38,7 +38,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/salir - copia.png</normaloff>../ICO/salir - copia.png</iconset>
+      <normaloff>../ICO/salir2.png</normaloff>../ICO/salir2.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -51,7 +51,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>210</y>
+      <y>220</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -152,8 +152,8 @@
    <widget class="QPushButton" name="BtnEditar">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>210</y>
+      <x>180</x>
+      <y>220</y>
       <width>101</width>
       <height>31</height>
      </rect>

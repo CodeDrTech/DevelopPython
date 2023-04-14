@@ -36,6 +36,16 @@
     <property name="text">
      <string>Salir</string>
     </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/salir2.png</normaloff>../ICO/salir2.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
+    </property>
    </widget>
    <widget class="QPushButton" name="BtnReporte">
     <property name="geometry">
@@ -56,13 +66,23 @@
     <property name="text">
      <string>Reporte</string>
     </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/agregar.png</normaloff>../ICO/agregar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
+    </property>
    </widget>
    <widget class="QPushButton" name="BtnReporteTotal">
     <property name="geometry">
      <rect>
-      <x>85</x>
+      <x>75</x>
       <y>20</y>
-      <width>101</width>
+      <width>125</width>
       <height>31</height>
      </rect>
     </property>
@@ -75,6 +95,16 @@
     </property>
     <property name="text">
      <string>Reporte total</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/Reporte.png</normaloff>../ICO/Reporte.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
