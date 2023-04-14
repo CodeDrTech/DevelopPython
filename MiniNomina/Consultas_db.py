@@ -47,6 +47,8 @@ def mostrar_datos_de_faltantes(tbtabla):
     
     # Establecer el orden por nombre en orden ascendente
     model.setSort(0, Qt.DescendingOrder) # type: ignore
+    
+
     model.select()
     
     # Establecer el modelo en la tabla

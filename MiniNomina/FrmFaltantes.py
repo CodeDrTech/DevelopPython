@@ -92,9 +92,20 @@ class VentanaFaltantes(QMainWindow):
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
         
-        # Validar que los campos no estén vacíos
-        if not Fecha or not Nombre or not Num_banca or not Abono and not Faltante:
-            QMessageBox.warning(None, "ERROR", "DEBE COMPLETAR LOS CAMPOS QUE SON OBLIGATORIOS.") # type: ignore
+        if not Nombre or Nombre.isdigit():
+            QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO NOMBRE.") # type: ignore
+            return 
+        
+        if not Num_banca or not Num_banca.isdigit():
+            QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO BANCA #.") # type: ignore
+            return
+        
+        if not Faltante and not Abono.isdigit():
+            QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO ABONO O FALTANTE.") # type: ignore
+            return
+        
+        if not Abono and not Faltante.isdigit():
+            QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO ABONO O FALTANTE.") # type: ignore
             return
         
         insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante)
