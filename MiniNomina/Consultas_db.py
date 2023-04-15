@@ -38,16 +38,19 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 #------------------------------------------------------------------------------------------------------        
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
-        
+    query = QSqlQuery()
+    query.exec_("SELECT e.NOMBRE, e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS SALARIO_NETO FROM empleados e")
+
+   
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
-    model.setTable("faltantes")
+    #model.setTable("faltantes")#
+    
+    model.setQuery(query)
     
     # Establecer el orden en orden ascendente
-    model.setSort(0, Qt.DescendingOrder) # type: ignore    
-    model.select()
-       
-    
+    #model.setSort(0, Qt.DescendingOrder) # type: ignore    
+    #model.select()   
     
     # Establecer el modelo en la tabla
     tbtabla.setModel(model)
@@ -64,6 +67,7 @@ def mostrar_datos_de_empleados(tbtabla):
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("empleados")
+    
     # Establecer el orden en orden ascendente
     model.setSort(0, Qt.AscendingOrder) # type: ignore
     model.select()
@@ -75,26 +79,4 @@ def mostrar_datos_de_empleados(tbtabla):
     tbtabla.resizeColumnsToContents()
     
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------    
-#def select_total(tbtabla):
-    
-    # Conectar a la base de datos
-    #conn = conectar_db()
-
-    # Realizar la inserción en la base de datos
-    #cursor = conn.execute("SELECT * FROM faltantes")
-    #rows = cursor.fetchall()
-    
-    # Crear un modelo de tabla y agregar los datos
-    #model = QStandardItemModel(len(rows), len(rows[0]))
-    #for i, row in enumerate(rows):
-        #for j, col in enumerate(row):
-            #item = QStandardItem(str(col))
-            #model.setItem(i, j, item)
-
-    # Cerrar la conexión
-    #conn.close()
-    # Asignar el modelo a tu QTableView
-    #tbtabla.setModel(model)
-    #tbtabla.resizeColumnsToContents()
-    #tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
