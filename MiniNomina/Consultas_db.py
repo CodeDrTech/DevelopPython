@@ -42,33 +42,11 @@ def mostrar_datos_de_faltantes(tbtabla):
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("faltantes")
-    # Establecer el filtro por nombre
-    #model.setFilter("")
     
-    # Establecer el orden por nombre en orden ascendente
+    # Establecer el orden en orden ascendente
     model.setSort(0, Qt.DescendingOrder) # type: ignore    
-
     model.select()
-    
-    
-    
-    # Aqui empieza el codigo nuevo-----------------------------------
-    # Agregar una nueva fila al final de la tabla
-    suma_faltante = model.rowCount()
-    model.insertRow(suma_faltante)
-
-    # Calcular la suma de la columna
-    query = QSqlQuery()
-    query.exec_("SELECT SUM(FALTANTE - ABONO) FROM faltantes")
-    if query.next():
-        total = query.value(0)
-    else:
-        total = 0
-
-    # Establecer la suma en la celda correspondiente de la nueva fila
-    model.setData(model.index(suma_faltante, 4), total)
-    # Aqui termina--------------------------------------------------------
-    
+       
     
     
     # Establecer el modelo en la tabla
@@ -76,16 +54,6 @@ def mostrar_datos_de_faltantes(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
-    
-    
-    # Conectar la señal QCloseEvent de la ventana al método de eliminación de la fila de la suma
-    tbtabla.window().closeEvent = lambda event: eliminar_fila_de_suma_faltante(model, suma_faltante, event)
-
-def eliminar_fila_de_suma_faltante(model, suma_faltante, event):
-    # Eliminar la fila de la suma
-    model.removeRow(suma_faltante)
-    # Continuar con el evento de cierre de la ventana
-    event.accept()
                    
     
 #------------------------------------------------------------------------------------------------------
@@ -96,6 +64,8 @@ def mostrar_datos_de_empleados(tbtabla):
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("empleados")
+    # Establecer el orden en orden ascendente
+    model.setSort(0, Qt.AscendingOrder) # type: ignore
     model.select()
     
     # Establecer el modelo en la tabla
