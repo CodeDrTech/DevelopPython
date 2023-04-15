@@ -38,22 +38,13 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 #------------------------------------------------------------------------------------------------------        
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
-    query = QSqlQuery()
-    query.exec_("SELECT e.NOMBRE, 
-       COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_FALTANTES,
-       COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_ABONOS,
-       e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS SALARIO_NETO FROM empleados e;")
-
-   
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
-    #model.setTable("faltantes")#
-    
-    model.setQuery(query)
+    model.setTable("faltantes")
     
     # Establecer el orden en orden ascendente
-    #model.setSort(0, Qt.DescendingOrder) # type: ignore    
-    #model.select()   
+    model.setSort(0, Qt.DescendingOrder) # type: ignore
+    model.select()
     
     # Establecer el modelo en la tabla
     tbtabla.setModel(model)
@@ -83,3 +74,29 @@ def mostrar_datos_de_empleados(tbtabla):
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+def mostrar_datos_totales_por_empleados(tbtabla):
+    
+    
+    
+    query = QSqlQuery()
+    query.exec_("SELECT e.NOMBRE,\
+       COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_FALTANTES,\
+       COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_ABONOS,\
+       e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0)\
+       + COALESCE ((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS SALARIO_NETO FROM empleados e")
+
+   
+    # Crear un modelo de tabla SQL
+    model = QSqlTableModel()
+    
+    model.setQuery(query)   
+    
+    # Establecer el modelo en la tabla
+    tbtabla.setModel(model)
+
+    # Ajustar el tamaño de las columnas para que se ajusten al contenido
+    tbtabla.resizeColumnsToContents()
+                   
+    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    

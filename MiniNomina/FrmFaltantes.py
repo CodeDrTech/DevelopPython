@@ -7,7 +7,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
 from FrmDatos import VentanaDatos
-from Consultas_db import insertar_nuevo_faltante
+from Consultas_db import insertar_nuevo_faltante, mostrar_datos_totales_por_empleados
 
 
 class VentanaFaltantes(QMainWindow):
@@ -149,6 +149,13 @@ class VentanaFaltantes(QMainWindow):
         self.cmbEmpleado.setFocus()
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
+    def datos_totales_por_empleados(self):
+        self.llamar_tbtabla = VentanaDatos()
+        self.llamar_tbtabla.show()
+        tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
+        mostrar_datos_totales_por_empleados(tbtabla)
+            
+            
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
