@@ -39,7 +39,10 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
     query = QSqlQuery()
-    query.exec_("SELECT e.NOMBRE, e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS SALARIO_NETO FROM empleados e")
+    query.exec_("SELECT e.NOMBRE, 
+       COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_FALTANTES,
+       COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_ABONOS,
+       e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS SALARIO_NETO FROM empleados e;")
 
    
     # Crear un modelo de tabla SQL
