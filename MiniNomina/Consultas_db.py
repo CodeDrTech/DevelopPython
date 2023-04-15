@@ -54,13 +54,12 @@ def mostrar_datos_de_faltantes(tbtabla):
     
     # Aqui empieza el codigo nuevo-----------------------------------
     # Agregar una nueva fila al final de la tabla
-
     suma_faltante = model.rowCount()
     model.insertRow(suma_faltante)
 
     # Calcular la suma de la columna
     query = QSqlQuery()
-    query.exec_("SELECT SUM(FALTANTE) FROM faltantes")
+    query.exec_("SELECT SUM(FALTANTE - ABONO) FROM faltantes")
     if query.next():
         total = query.value(0)
     else:

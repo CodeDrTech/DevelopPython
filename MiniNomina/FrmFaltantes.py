@@ -2,7 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QAbstractItemView
 from PyQt5.QtCore import QDate, Qt, QDateTime, QLocale
-from PyQt5.QtSql import QSqlTableModel
+from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
@@ -86,8 +86,7 @@ class VentanaFaltantes(QMainWindow):
     
             # Establecer el filtro por nombre
             model.setFilter(f"nombre = '{Empleado}'")
-
-    
+            
             # Seleccionar los datos filtrados
             model.select()
     
@@ -95,9 +94,8 @@ class VentanaFaltantes(QMainWindow):
             tbtabla.setModel(model)
 
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            tbtabla.resizeColumnsToContents()
-        
-        
+            tbtabla.resizeColumnsToContents()    
+    
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------ 
     # Funcion para dotar de eventos a la ventana al cargar.    
