@@ -3,3 +3,6 @@ FROM empleados e;
 
 
 SELECT SUM(FALTANTE - ABONO) FROM faltantes
+
+SELECT e.NOMBRE, e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS salario_actualizado
+FROM empleados e;
