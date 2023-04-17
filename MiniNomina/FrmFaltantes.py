@@ -42,6 +42,8 @@ class VentanaFaltantes(QMainWindow):
         self.BtnRegistrar.clicked.connect(self.guardar)
         
         self.BtnEditar.clicked.connect(self.abrirFrmDatos)
+        
+        self.BtnReporte.clicked.connect(self.reporte_parcial)
 
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
@@ -162,12 +164,78 @@ class VentanaFaltantes(QMainWindow):
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
         mostrar_datos_totales_por_empleados(tbtabla)
+        
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------    
+    def reporte_parcial(self):
+        Empleado = self.cmbEmpleado.currentText()
+        currency_delegate = CurrencyDelegate()
+        self.llamar_tbtabla = VentanaDatos()
+        self.llamar_tbtabla.show()
+        tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
             
             
+        if not Empleado:
+            query = QSqlQuery()
+            query.exec_("SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
+                    FROM faltantes \
+                    UNION ALL \
+                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+                    FROM faltantes \
+                    GROUP BY 'TOTAL'")
+
+   
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+    
+            model.setQuery(query)   
+    
+            # Establecer el modelo en la tabla
+            tbtabla.setModel(model)
+
+        
+        
+            tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            tbtabla.resizeColumnsToContents()
+            tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers) 
+            
+        else:
+            query = QSqlQuery()
+            query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
+                    FROM faltantes WHERE NOMBRE = '{Empleado}' \
+                    UNION ALL \
+                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+                    FROM faltantes WHERE NOMBRE = '{Empleado}' \
+                    GROUP BY 'TOTAL'")
+
+   
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+    
+            model.setQuery(query)   
+    
+            # Establecer el modelo en la tabla
+            tbtabla.setModel(model)
+
+        
+        
+            tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            tbtabla.resizeColumnsToContents() 
+            tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+               
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------       
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 class CurrencyDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):
         try:
@@ -177,7 +245,8 @@ class CurrencyDelegate(QStyledItemDelegate):
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
             return value 
 
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     GUI = VentanaFaltantes()
