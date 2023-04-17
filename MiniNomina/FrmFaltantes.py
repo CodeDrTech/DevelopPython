@@ -7,6 +7,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
 from FrmDatos import VentanaDatos
+import locale
 from Consultas_db import insertar_nuevo_faltante, mostrar_datos_totales_por_empleados
 
 
@@ -173,7 +174,7 @@ class CurrencyDelegate(QStyledItemDelegate):
             return locale.toCurrencyString(float(value))
         except ValueError:
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
-            return value
+            return value 
 
         
 if __name__ == '__main__':
