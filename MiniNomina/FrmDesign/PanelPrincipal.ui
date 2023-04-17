@@ -112,7 +112,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Reporte faltantes</string>
+     <string>Reporte totales</string>
     </property>
     <property name="icon">
      <iconset>
