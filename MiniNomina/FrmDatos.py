@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QPainter, QPageLayout, QPageSize
-from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
+from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
 from PyQt5.QtCore import QMarginsF
 from Conexion_db import conectar_db
 from Consultas_db import mostrar_datos_de_faltantes, mostrar_datos_de_empleados
@@ -69,7 +69,7 @@ class VentanaDatos(QMainWindow):
             page_size = printer.pageLayout().pageSize()
             if page_size == QPageSize.Custom:
                 page_size = printer.pageRect().size()
-            layout = QPageLayout(QPageSize(page_size), printer.pageLayout().orientation(), QMarginsF(0,0,0,0), printer.pageLayout().units())
+            layout = QPageLayout(QPageSize(page_size), printer.pageLayout().orientation(), QMarginsF(15,15,15,15), printer.pageLayout().units())
             printer.setPageLayout(layout)
 
             # Crear un objeto QPainter y dibujar el contenido del QTableView en el objeto QPrinter
@@ -81,7 +81,7 @@ class VentanaDatos(QMainWindow):
             # Llamar a la función newPage() para comenzar a imprimir en una nueva página si es necesario
             if printer.pageOrder() == QPrinter.LastPageFirst:
                 printer.setPageOrder(QPrinter.FirstPageFirst)
-            if len(printer.supportedPageSizes()) > 1:
+            if len(QPrinter.supportedPageSizes(QPrinter.PageSize)) > 1:
                 printer.newPage()
         
         
