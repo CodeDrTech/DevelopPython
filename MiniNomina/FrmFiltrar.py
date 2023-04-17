@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QTableView, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QStyledItemDelegate
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
@@ -51,7 +51,7 @@ class VentanaReportes(QMainWindow):
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
         
-        
+        currency_delegate = CurrencyDelegate()
         query = QSqlQuery()
         query.exec_("SELECT e.NOMBRE,\
        COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_FALTANTES,\
@@ -67,6 +67,10 @@ class VentanaReportes(QMainWindow):
     
         # Establecer el modelo en la tabla
         tbtabla.setModel(model)
+        
+        tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        tbtabla.setItemDelegateForColumn(2, currency_delegate)
+        tbtabla.setItemDelegateForColumn(1, currency_delegate)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         tbtabla.resizeColumnsToContents()
@@ -74,6 +78,9 @@ class VentanaReportes(QMainWindow):
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------    
     def reporte_por_cmbEmpleado(self):
+        
+        
+        currency_delegate = CurrencyDelegate()
         Empleado = self.cmbEmpleado.currentText()
         
         # Validar que cmbEmpleado no esté vacío
@@ -100,9 +107,14 @@ class VentanaReportes(QMainWindow):
         
         # Establecer el modelo en la tabla
         tbtabla.setModel(model)
+        
+        tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        tbtabla.setItemDelegateForColumn(2, currency_delegate)
+        tbtabla.setItemDelegateForColumn(1, currency_delegate)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         tbtabla.resizeColumnsToContents()
+        
         tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)        
         
     #------------------------------------------------------------------------------------------------------
@@ -125,8 +137,20 @@ class VentanaReportes(QMainWindow):
     def fn_Salir(self):
         self.close()
         
+        
+class CurrencyDelegate(QStyledItemDelegate):
+    def displayText(self, value, locale):
+        try:
+            # Convierte el valor a un formato de moneda
+            return locale.toCurrencyString(float(value))
+        except ValueError:
+            # Si no se puede convertir a un formato de moneda, devuelve el valor original
+            return value
+
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     GUI = VentanaReportes()
     GUI.show()
     sys.exit(app.exec_())
+    

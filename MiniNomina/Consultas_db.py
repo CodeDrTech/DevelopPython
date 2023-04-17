@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QTableView, QTabWidget,QTableWidget, QTableWidgetItem, QMessageBox, QAbstractItemView
+from PyQt5.QtWidgets import QStyledItemDelegate
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
 from Conexion_db import conectar_db, db
@@ -6,7 +6,14 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel
 
-    
+class CurrencyDelegate(QStyledItemDelegate):
+    def displayText(self, value, locale):
+        try:
+            # Convierte el valor a un formato de moneda
+            return locale.toCurrencyString(float(value))
+        except ValueError:
+            # Si no se puede convertir a un formato de moneda, devuelve el valor original
+            return value    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
 def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
@@ -38,6 +45,9 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 #------------------------------------------------------------------------------------------------------        
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
+    
+    currency_delegate = CurrencyDelegate()
+    
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("faltantes")
@@ -51,12 +61,16 @@ def mostrar_datos_de_faltantes(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
+    tbtabla.setItemDelegateForColumn(4, currency_delegate)
+    tbtabla.setItemDelegateForColumn(3, currency_delegate)
                    
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
 # Función que muestra los datos de los empleados en QTableView del FrmDatos    
 def mostrar_datos_de_empleados(tbtabla):
+    
+    currency_delegate = CurrencyDelegate()
         
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
@@ -71,6 +85,7 @@ def mostrar_datos_de_empleados(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
+    tbtabla.setItemDelegateForColumn(2, currency_delegate)
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------

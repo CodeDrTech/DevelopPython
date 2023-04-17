@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QAbstractItemView, QStyledItemDelegate
 from PyQt5.QtCore import QDate, Qt, QDateTime, QLocale
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -65,13 +65,14 @@ class VentanaFaltantes(QMainWindow):
     def abrirFrmDatos(self):
         
         Empleado = self.cmbEmpleado.currentText()
-        
+        currency_delegate = CurrencyDelegate()
         # Validar que cmbEmpleado no esté vacío
         if not Empleado:
             
             self.llamar_venana_datos = VentanaDatos()
             self.llamar_venana_datos.show()
             self.llamar_venana_datos.datos_en_tabla_faltantes()
+            
             
         else:
                
@@ -94,7 +95,12 @@ class VentanaFaltantes(QMainWindow):
             tbtabla.setModel(model)
 
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            tbtabla.resizeColumnsToContents()    
+            tbtabla.resizeColumnsToContents()  
+            
+            # Supongamos que la columna de moneda tiene el índice 4
+            
+            tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            tbtabla.setItemDelegateForColumn(3, currency_delegate)  
     
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------ 
@@ -159,6 +165,16 @@ class VentanaFaltantes(QMainWindow):
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
+
+class CurrencyDelegate(QStyledItemDelegate):
+    def displayText(self, value, locale):
+        try:
+            # Convierte el valor a un formato de moneda
+            return locale.toCurrencyString(float(value))
+        except ValueError:
+            # Si no se puede convertir a un formato de moneda, devuelve el valor original
+            return value
+
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
