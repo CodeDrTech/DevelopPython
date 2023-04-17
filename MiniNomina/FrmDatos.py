@@ -2,7 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QPainter, QPageLayout, QPageSize
+from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
 from PyQt5.QtCore import QMarginsF
 from Conexion_db import conectar_db
@@ -61,7 +61,7 @@ class VentanaDatos(QMainWindow):
         # Crear un objeto QPrintDialog y mostrarlo al usuario
         print_dialog = QPrintDialog(printer)
         if print_dialog.exec_() == QPrintDialog.Accepted:
-            # Configurar el tamaño del QTableView para que quepa en una página
+        # Configurar el tamaño del QTableView para que quepa en una página
             self.tbtabla.resizeColumnsToContents()
             self.tbtabla.setFixedHeight(self.tbtabla.rowHeight(0) * self.tbtabla.model().rowCount() + 20)
 
@@ -69,7 +69,7 @@ class VentanaDatos(QMainWindow):
             page_size = printer.pageLayout().pageSize()
             if page_size == QPageSize.Custom:
                 page_size = printer.pageRect().size()
-            layout = QPageLayout(QPageSize(page_size), printer.pageLayout().orientation(), QMarginsF(15,15,15,15), printer.pageLayout().units())
+            layout = QPageLayout(QPageSize(page_size), printer.pageLayout().orientation(), QMarginsF(5,5,5,5), QPageLayout.Point)
             printer.setPageLayout(layout)
 
             # Crear un objeto QPainter y dibujar el contenido del QTableView en el objeto QPrinter
@@ -81,8 +81,9 @@ class VentanaDatos(QMainWindow):
             # Llamar a la función newPage() para comenzar a imprimir en una nueva página si es necesario
             if printer.pageOrder() == QPrinter.LastPageFirst:
                 printer.setPageOrder(QPrinter.FirstPageFirst)
-            if len(QPrinter.supportedPageSizes(QPrinter.PageSize)) > 1:
+            if printer.paperRect() != printer.pageRect():
                 printer.newPage()
+        
         
         
         

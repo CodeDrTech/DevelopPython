@@ -40,7 +40,7 @@ class VentanaFaltantes(QMainWindow):
          # Llama a la funcion guardar        
         self.BtnRegistrar.clicked.connect(self.guardar)
         
-        self.BtnEditar.clicked.connect(self.datos_totales_por_empleados)
+        self.BtnEditar.clicked.connect(self.abrirFrmDatos)
 
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
