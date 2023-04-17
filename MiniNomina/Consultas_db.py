@@ -52,8 +52,10 @@ def mostrar_datos_de_faltantes(tbtabla):
     model = QSqlTableModel()
     model.setTable("faltantes")
     
-    # Establecer el orden en orden ascendente
+    # Establecer el filtro por nombre
     model.setSort(0, Qt.DescendingOrder) # type: ignore
+            
+    # Seleccionar los datos filtrados
     model.select()
     
     # Establecer el modelo en la tabla

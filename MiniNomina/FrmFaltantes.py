@@ -88,6 +88,7 @@ class VentanaFaltantes(QMainWindow):
     
             # Establecer el filtro por nombre
             model.setFilter(f"nombre = '{Empleado}'")
+            model.setSort(0, Qt.DescendingOrder) # type: ignore
             
             # Seleccionar los datos filtrados
             model.select()
