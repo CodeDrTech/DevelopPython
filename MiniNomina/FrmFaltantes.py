@@ -90,7 +90,7 @@ class VentanaFaltantes(QMainWindow):
     
             # Establecer el filtro por nombre
             model.setFilter(f"nombre = '{Empleado}'")
-            model.setSort(0, Qt.DescendingOrder) # type: ignore
+            #model.setSort(0, Qt.DescendingOrder) # type: ignore
             
             # Seleccionar los datos filtrados
             model.select()
@@ -117,15 +117,15 @@ class VentanaFaltantes(QMainWindow):
         self.cmbEmpleado.setFocus()    
         self.cmbEmpleado.setCurrentText("")
         #Establecer la feha actual.
-        self.txtFecha.setDisplayFormat("d-MMMM-yyyy")  # Formato de fecha.
-        self.txtFecha.setDate(QDate.currentDate())    # Establecer fecha actual en txtFecha.
+        #self.txtFecha.setDisplayFormat("d-MMMM-yyyy")  # Formato de fecha.
+        self.txtFecha.setDate(QDate.currentDate())   # Establecer fecha actual en txtFecha.
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
-        Fecha = self.txtFecha.date().toString("d-MMMM-yyyy")        
+        Fecha = self.txtFecha.date().toString("yyyy-MM-d")        
         Nombre = self.cmbEmpleado.currentText()
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()

@@ -3,8 +3,7 @@ from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5 import QtWidgets
 from Conexion_db import conectar_db, db
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItemModel
+from PyQt5.QtCore import Qt, QDate
 
 class CurrencyDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):
@@ -13,7 +12,14 @@ class CurrencyDelegate(QStyledItemDelegate):
             return locale.toCurrencyString(float(value))
         except ValueError:
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
-            return value    
+            return value 
+        
+        
+class DateDelegate(QStyledItemDelegate):
+    def displayText(self, value, locale):
+        if isinstance(value, QDate):
+            return value.toString("d-MMMM-yyyy")
+        return super().displayText(value, locale)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
 def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
@@ -46,26 +52,29 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
 def mostrar_datos_de_faltantes(tbtabla):
     
-    currency_delegate = CurrencyDelegate()
-    
-    # Crear un modelo de tabla SQL
-    model = QSqlTableModel()
-    model.setTable("faltantes")
-       
-    # Establecer el filtro por nombre
-    #model.setSort(0, Qt.DescendingOrder) # type: ignore
-            
-    # Seleccionar los datos filtrados
-    model.select()
-    
-    # Establecer el modelo en la tabla
-    tbtabla.setModel(model)
+        currency_delegate = CurrencyDelegate()
+        date_delegate = DateDelegate()
 
-    # Ajustar el tamaño de las columnas para que se ajusten al contenido
-    tbtabla.resizeColumnsToContents()
-    tbtabla.setItemDelegateForColumn(4, currency_delegate)
-    tbtabla.setItemDelegateForColumn(3, currency_delegate)
-                   
+    
+        # Crear un modelo de tabla SQL
+        model = QSqlTableModel()
+        model.setTable("faltantes")
+            
+        # Seleccionar los datos filtrados
+        model.select()
+    
+        # Establecer el modelo en la tabla
+        tbtabla.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        tbtabla.resizeColumnsToContents()
+    
+    
+        #tbtabla.setItemDelegateForColumn(1, date_delegate)
+        tbtabla.setItemDelegateForColumn(4, currency_delegate)
+        tbtabla.setItemDelegateForColumn(3, currency_delegate)    
+    
+                       
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
