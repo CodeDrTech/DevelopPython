@@ -23,3 +23,7 @@ FROM faltantes
 GROUP BY 'TOTAL'
 
 
+model.setFilter("strftime('%Y-%m-%d', fecha_registro) = (SELECT strftime('%Y-%m-%d', MAX(fecha_registro)) FROM faltantes) ORDER BY fecha_registro DESC LIMIT 1")
+
+
+

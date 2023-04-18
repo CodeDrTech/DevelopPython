@@ -51,9 +51,11 @@ def mostrar_datos_de_faltantes(tbtabla):
     # Crear un modelo de tabla SQL
     model = QSqlTableModel()
     model.setTable("faltantes")
-    
+    model.setFilter("strftime('%Y-%m-%d', FECHA) = (SELECT strftime('%Y-%m-%d', MAX(FECHA)) FROM faltantes) ORDER BY FECHA DESC LIMIT 1")
+    print(model.filter())
+
     # Establecer el filtro por nombre
-    model.setSort(0, Qt.DescendingOrder) # type: ignore
+    #model.setSort(0, Qt.DescendingOrder) # type: ignore
             
     # Seleccionar los datos filtrados
     model.select()
