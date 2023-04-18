@@ -24,8 +24,8 @@ GROUP BY 'TOTAL'
 
 
 SELECT * FROM faltantes
-WHERE strftime('%Y-%m-%d', FECHA) = 
-    (SELECT strftime('%Y-%m-%d', MAX(FECHA)) FROM faltantes)
+WHERE strftime('%d-%m-%Y', FECHA) = 
+    (SELECT strftime('%d-%m-%Y', MAX(FECHA)) FROM faltantes)
 ORDER BY FECHA DESC LIMIT 1;
 
 
