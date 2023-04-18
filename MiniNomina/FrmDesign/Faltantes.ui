@@ -173,6 +173,9 @@
     </property>
    </widget>
    <widget class="QDateEdit" name="txtFecha">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -184,8 +187,14 @@
     <property name="locale">
      <locale language="Spanish" country="DominicanRepublic"/>
     </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
     <property name="displayFormat">
      <string>dd/mm/yyyy</string>
+    </property>
+    <property name="calendarPopup">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QComboBox" name="cmbEmpleado">
