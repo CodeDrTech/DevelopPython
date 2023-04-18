@@ -17,9 +17,15 @@ class CurrencyDelegate(QStyledItemDelegate):
         
 class DateDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):
-        if isinstance(value, QDate):
-            return value.toString("d-MMMM-yyyy")
-        return super().displayText(value, locale)
+        try:
+            # Convierte el valor a un formato de moneda
+            return locale.dateFormat((value))
+        except ValueError:
+            # Si no se puede convertir a un formato de moneda, devuelve el valor original
+            return value
+    
+    
+    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
 def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
@@ -59,7 +65,7 @@ def mostrar_datos_de_faltantes(tbtabla):
         # Crear un modelo de tabla SQL
         model = QSqlTableModel()
         model.setTable("faltantes")
-        model.setSort(0, Qt.DescendingOrder) # type: ignore    
+        #model.setSort(0, Qt.AscendingOrder) # type: ignore    
         # Seleccionar los datos filtrados
         model.select()
     
@@ -70,7 +76,7 @@ def mostrar_datos_de_faltantes(tbtabla):
         tbtabla.resizeColumnsToContents()
     
     
-        #tbtabla.setItemDelegateForColumn(1, date_delegate)
+        tbtabla.setItemDelegateForColumn(0, date_delegate)
         tbtabla.setItemDelegateForColumn(4, currency_delegate)
         tbtabla.setItemDelegateForColumn(3, currency_delegate)    
     
