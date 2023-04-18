@@ -190,8 +190,14 @@
     <property name="readOnly">
      <bool>false</bool>
     </property>
+    <property name="showGroupSeparator" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="currentSection">
+     <enum>QDateTimeEdit::DaySection</enum>
+    </property>
     <property name="displayFormat">
-     <string>YYYY-MM-DD</string>
+     <string>d-MMMM-yyyy</string>
     </property>
     <property name="calendarPopup">
      <bool>true</bool>
