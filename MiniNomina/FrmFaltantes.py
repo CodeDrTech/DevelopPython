@@ -117,7 +117,7 @@ class VentanaFaltantes(QMainWindow):
         self.cmbEmpleado.setFocus()    
         self.cmbEmpleado.setCurrentText("")
         #Establecer la feha actual.
-        self.txtFecha.setDisplayFormat("dd/MMMM/yyyy")  # Formato de fecha.
+        self.txtFecha.setDisplayFormat("YYYY-MM-DD")  # Formato de fecha.
         self.txtFecha.setDate(QDate.currentDate())    # Establecer fecha actual en txtFecha.
         
     #------------------------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ class VentanaFaltantes(QMainWindow):
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
-        Fecha = self.txtFecha.date().toString("dd/MMMM/yyyy")        
+        Fecha = self.txtFecha.date().toString("YYYY-MM-DD")        
         Nombre = self.cmbEmpleado.currentText()
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()
