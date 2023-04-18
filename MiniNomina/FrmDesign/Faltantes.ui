@@ -248,7 +248,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Reporte</string>
+     <string>Estado</string>
     </property>
     <property name="icon">
      <iconset>
