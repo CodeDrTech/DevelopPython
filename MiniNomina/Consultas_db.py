@@ -19,7 +19,7 @@ class DateDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):
         try:
             # Convierte el valor a un formato de moneda
-            return locale.dateFormat((value))
+            return locale.toString(value,"d-MMMM-yyyy")
         except ValueError:
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
             return value
