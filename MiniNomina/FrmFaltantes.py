@@ -7,7 +7,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
 from FrmDatos import VentanaDatos
-import locale
+import locale, datetime
 from Consultas_db import insertar_nuevo_faltante, mostrar_datos_totales_por_empleados
 
 
@@ -43,7 +43,7 @@ class VentanaFaltantes(QMainWindow):
         
         self.BtnEditar.clicked.connect(self.abrirFrmDatos)
         
-        self.BtnReporte.clicked.connect(self.reporte_parcial)
+        self.BtnEstado.clicked.connect(self.reporte_parcial)
 
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
@@ -101,8 +101,7 @@ class VentanaFaltantes(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             tbtabla.resizeColumnsToContents()  
             
-            # Supongamos que la columna de moneda tiene el índice 4
-            
+            # Convierte a formato moneda los datos que se muesrtan en el tbtabla en la columna abonoy faltante
             tbtabla.setItemDelegateForColumn(4, currency_delegate)
             tbtabla.setItemDelegateForColumn(3, currency_delegate)  
     
@@ -131,7 +130,7 @@ class VentanaFaltantes(QMainWindow):
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
         
-        if not Fecha or not Fecha.isDate():
+        if not Fecha:
             QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO FECHA.") # type: ignore
             return
         
@@ -198,7 +197,7 @@ class VentanaFaltantes(QMainWindow):
             tbtabla.setModel(model)
 
         
-        
+            
             tbtabla.setItemDelegateForColumn(4, currency_delegate)
             tbtabla.setItemDelegateForColumn(3, currency_delegate)
         
@@ -247,8 +246,7 @@ class CurrencyDelegate(QStyledItemDelegate):
             return locale.toCurrencyString(float(value))
         except ValueError:
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
-            return value 
-
+            return value
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
 if __name__ == '__main__':

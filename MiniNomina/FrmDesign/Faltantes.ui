@@ -246,7 +246,7 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="BtnReporte">
+   <widget class="QPushButton" name="BtnEstado">
     <property name="geometry">
      <rect>
       <x>10</x>
