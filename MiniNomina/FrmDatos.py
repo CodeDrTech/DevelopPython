@@ -1,10 +1,10 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont
+from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
-from PyQt5.QtCore import QMarginsF
+from PyQt5.QtCore import QMarginsF, Qt, QRectF
 from Conexion_db import conectar_db
 from Consultas_db import mostrar_datos_de_faltantes, mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
@@ -61,16 +61,22 @@ class VentanaDatos(QMainWindow):
         # Crear un objeto QPrintDialog y mostrarlo al usuario
         print_dialog = QPrintDialog(printer)
         if print_dialog.exec_() == QPrintDialog.Accepted:
-        # Configurar el tamaño del QTableView para que quepa en una página
-            self.tbtabla.resizeColumnsToContents()
-            self.tbtabla.setFixedHeight(self.tbtabla.rowHeight(0) * self.tbtabla.model().rowCount() + 20)
+            # Escalar el tamaño del QTableView para que quepa en una página
+            scale_factor = 1.0
+            while (self.tbtabla.width() * scale_factor > printer.pageRect().width() or
+                self.tbtabla.height() * scale_factor > printer.pageRect().height()):
+                scale_factor *= 0.9
 
             # Configurar la página para que se ajuste al tamaño del QTableView
-            page_size = printer.pageLayout().pageSize()
-            if page_size == QPageSize.Custom:
-                page_size = printer.pageRect().size()
-            layout = QPageLayout(QPageSize(page_size), printer.pageLayout().orientation(), QMarginsF(5,5,5,5), QPageLayout.Point)
+            layout = QPageLayout(printer.pageLayout())
+            layout.setPaintRect(QRectF(0, 0, printer.pageRect().width(), printer.pageRect().height()))
             printer.setPageLayout(layout)
+
+            # Establecer la escala del QTableView
+            self.tbtabla.setTransform(QTransform().scale(scale_factor, scale_factor))
+
+            # Ajustar el tamaño de las columnas
+            self.tbtabla.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
             # Crear un objeto QPainter y dibujar el contenido del QTableView en el objeto QPrinter
             painter = QPainter()
@@ -78,11 +84,9 @@ class VentanaDatos(QMainWindow):
             self.tbtabla.render(painter)
             painter.end()
 
-            # Llamar a la función newPage() para comenzar a imprimir en una nueva página si es necesario
-            if printer.pageOrder() == QPrinter.LastPageFirst:
-                printer.setPageOrder(QPrinter.FirstPageFirst)
-            if printer.paperRect() != printer.pageRect():
-                printer.newPage()
+            # Restaurar la escala y el tamaño de las columnas del QTableView
+            self.tbtabla.setTransform(QTransform())
+            self.tbtabla.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
         
         
         
