@@ -20,16 +20,9 @@ model.select()
 
 
 fecha_actual = QDate.currentDate()
-
 mes_actual = fecha_actual.month()
-
 fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)
-print(fecha_inicio.toString("yyyy-MM-dd"))
-
+DiaDeHoy = fecha_actual.day()
 for row in range(model.rowCount()):
     model.setData(model.index(row, 0), fecha_inicio.toString("yyyy-MM-dd"))
-    fecha_inicio = fecha_inicio.addDays(1)
-    
-    
-    
-print(fecha_inicio.toString("yyyy-MM-dd"))
+fecha_inicio = fecha_inicio.addDays(DiaDeHoy)
