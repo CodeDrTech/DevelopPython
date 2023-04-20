@@ -48,8 +48,6 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 def mostrar_datos_de_faltantes(tbtabla):
     
         currency_delegate = CurrencyDelegate()
-        
-
     
         # Crear un modelo de tabla SQL
         model = QSqlTableModel()

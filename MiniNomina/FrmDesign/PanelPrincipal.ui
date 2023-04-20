@@ -46,7 +46,7 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="BtnLimpiar">
+   <widget class="QPushButton" name="BtnFechas">
     <property name="geometry">
      <rect>
       <x>0</x>

@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
@@ -30,7 +30,10 @@ class VentanaDatos(QMainWindow):
         #------------------------------------------------------------------------------------------------------
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)
+        
         self.BtnImprimir.clicked.connect(self.imprimir_datos_tbtabla)
+        
+        self.BtnEliminar.clicked.connect(self.borrar_fila)
         
         
     #------------------------------------------------------------------------------------------------------
@@ -89,7 +92,21 @@ class VentanaDatos(QMainWindow):
             self.tbtabla.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
         
         
+    def borrar_fila(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbtabla.selectedIndexes()
         
+        if indexes:
+            
+            # Obtener la fila seleccionada de uno de los índices seleccionados
+            index = indexes[0]
+            row = index.row()
+            # Eliminar la fila seleccionada del modelo de datos
+            model = self.tbtabla.model()
+            model.removeRow(row)
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA LA FILA QUE VAS A ELIMINAR.") # type: ignore
+            
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
@@ -104,7 +121,7 @@ class VentanaDatos(QMainWindow):
         # Llamar al método showEvent() de la superclase
         # Este se ejecutra cuendo la ventana se abre
         super().showEvent(event)          
-        
+        self.tbtabla.clearSelection()
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     def closeEvent(self, event):
