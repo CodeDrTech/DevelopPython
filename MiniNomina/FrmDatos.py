@@ -54,7 +54,8 @@ class VentanaDatos(QMainWindow):
     def TableView_de_FrmDatos(self):
         return self.tbtabla      
     
-    
+    def DeshabilitaBtnEliminar(self):
+        return self.BtnEliminar.setEnabled(False)
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
