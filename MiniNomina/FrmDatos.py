@@ -104,8 +104,9 @@ class VentanaDatos(QMainWindow):
             # Eliminar la fila seleccionada del modelo de datos
             model = self.tbtabla.model()
             model.removeRow(row)
+            QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO CIERRE PARA ACTUALIZAR LOS DATOS.")
         else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA LA FILA QUE VAS A ELIMINAR.") # type: ignore
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL REGISTRO QUE VAS A ELIMINAR.")
             
         
     #------------------------------------------------------------------------------------------------------
