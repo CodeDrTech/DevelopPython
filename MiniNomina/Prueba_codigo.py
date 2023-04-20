@@ -12,7 +12,7 @@ date_edit.setDate(QDate.currentDate())
 date_edit.show()
 
 #Obtener la fecha seleccionada y almacenarla en una variable
-fecha_seleccionada = date_edit.date().toString("yyyy-MM-d")
+fecha_seleccionada = date_edit.date().toString("yyyy-MM-dd")
 
 print("Fecha seleccionada:", fecha_seleccionada)
 

@@ -124,7 +124,7 @@ class VentanaFaltantes(QMainWindow):
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
-        Fecha = self.txtFecha.date().toString("yyyy-MM-d")        
+        Fecha = self.txtFecha.date().toString("yyyy-MM-dd")        
         Nombre = self.cmbEmpleado.currentText()
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()
