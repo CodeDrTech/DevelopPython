@@ -176,8 +176,8 @@ class VentanaFaltantes(QMainWindow):
         self.llamar_tbtabla = VentanaDatos()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
-        DeshabilitaBtn = self.llamar_tbtabla.DeshabilitaBtnEliminar()    
-            
+        self.llamar_tbtabla.DeshabilitaBtnEliminar() 
+           
         if not Empleado:
             query = QSqlQuery()
             query.exec_("SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
@@ -204,7 +204,6 @@ class VentanaFaltantes(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             tbtabla.resizeColumnsToContents()
             tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers) 
-            DeshabilitaBtn.setEnabled(False)
         else:
             query = QSqlQuery()
             query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
@@ -231,7 +230,6 @@ class VentanaFaltantes(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             tbtabla.resizeColumnsToContents() 
             tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
-            DeshabilitaBtn.setEnabled(False) 
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------       
     # Funion para cerar la ventana llamado desde el boton Salir.    

@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractIte
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QKeySequence
 from Conexion_db import conectar_db
 from FrmDatos import VentanaDatos
 
@@ -50,7 +50,7 @@ class VentanaReportes(QMainWindow):
         self.llamar_tbtabla = VentanaDatos()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
-        
+        self.llamar_tbtabla.DeshabilitaBtnEliminar() 
         currency_delegate = CurrencyDelegate()
         query = QSqlQuery()
         query.exec_("SELECT e.NOMBRE,\
@@ -90,7 +90,7 @@ class VentanaReportes(QMainWindow):
         self.llamar_tbtabla = VentanaDatos()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
-        
+        self.llamar_tbtabla.DeshabilitaBtnEliminar() 
         
         query = QSqlQuery()
         query.exec_(f"SELECT e.NOMBRE,\

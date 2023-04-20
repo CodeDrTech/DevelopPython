@@ -55,7 +55,7 @@ class VentanaDatos(QMainWindow):
         return self.tbtabla      
     
     def DeshabilitaBtnEliminar(self):
-        return self.BtnEliminar.setEnabled(False)
+         self.BtnEliminar.setEnabled(False)
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
