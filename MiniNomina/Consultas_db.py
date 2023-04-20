@@ -55,6 +55,17 @@ def mostrar_datos_de_faltantes(tbtabla):
         model.setSort(0, Qt.DescendingOrder) # type: ignore    
         # Seleccionar los datos filtrados
         model.select()
+        
+        
+        # fecha_actual = QDate.currentDate()
+        # mes_actual = fecha_actual.month()
+        # fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)
+        # for row in range(model.rowCount()):
+        #     model.setData(model.index(row, 0), fecha_inicio.toString("yyyy-MM-dd"))
+        #     fecha_inicio = fecha_inicio.addDays(1)
+        
+        
+        
     
         # Establecer el modelo en la tabla
         tbtabla.setModel(model)
