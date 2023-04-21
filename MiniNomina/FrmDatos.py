@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
@@ -11,6 +11,17 @@ from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
 
 
+
+
+
+class CurrencyDelegate(QStyledItemDelegate):
+    def displayText(self, value, locale):
+        try:
+            # Convierte el valor a un formato de moneda
+            return locale.toCurrencyString(float(value))
+        except ValueError:
+            # Si no se puede convertir a un formato de moneda, devuelve el valor original
+            return value 
 
 class VentanaDatos(QMainWindow):
     def __init__(self):
@@ -35,6 +46,8 @@ class VentanaDatos(QMainWindow):
         
         self.BtnEliminar.clicked.connect(self.borrar_fila)
         
+        self.BtnBuscar.clicked.connect(self.Filtro_por_fecha)
+        
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
@@ -56,6 +69,29 @@ class VentanaDatos(QMainWindow):
     
     def DeshabilitaBtnEliminar(self):
          self.BtnEliminar.setEnabled(False)
+         
+         
+    def Filtro_por_fecha(self):
+
+        FechaInicio = self.DiaPrimero().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
+        currency_delegate = CurrencyDelegate()
+    
+        # Crear un modelo de tabla SQL
+        model = QSqlTableModel()
+        model.setTable("faltantes")
+        model.setFilter(f"FECHA > '{FechaInicio}' AND FECHA < '{FechaFinal}'")
+        model.setSort(0, Qt.DescendingOrder) # type: ignore    
+        # Seleccionar los datos filtrados
+        model.select()        
+    
+        # Establecer el modelo en la tabla
+        self.tbtabla.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbtabla.resizeColumnsToContents()        
+        self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
+        self.tbtabla.setItemDelegateForColumn(3, currency_delegate) 
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):

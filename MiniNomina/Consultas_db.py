@@ -12,7 +12,7 @@ class CurrencyDelegate(QStyledItemDelegate):
             return locale.toCurrencyString(float(value))
         except ValueError:
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
-            return value    
+            return value  
     
     
 #------------------------------------------------------------------------------------------------------
