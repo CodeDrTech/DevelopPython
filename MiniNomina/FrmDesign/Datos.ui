@@ -46,6 +46,16 @@
     <property name="text">
      <string>Guardar</string>
     </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/imprimir2.png</normaloff>../ICO/imprimir2.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
+    </property>
    </widget>
    <widget class="QPushButton" name="BtnImprimir">
     <property name="geometry">
@@ -105,6 +115,9 @@
       <width>25</width>
       <height>25</height>
      </size>
+    </property>
+    <property name="shortcut">
+     <string>Esc</string>
     </property>
    </widget>
    <widget class="QPushButton" name="BtnEliminar">
@@ -226,6 +239,36 @@
     </property>
     <property name="text">
      <string>HASTA</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BtnBuscar">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>130</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Buscar</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../ICO/Buscar.png</normaloff>../ICO/Buscar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
     </property>
    </widget>
   </widget>

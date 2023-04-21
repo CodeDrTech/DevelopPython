@@ -46,6 +46,9 @@
       <height>25</height>
      </size>
     </property>
+    <property name="shortcut">
+     <string>Esc</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="BtnAgregar">
     <property name="geometry">

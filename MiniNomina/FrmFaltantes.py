@@ -71,7 +71,7 @@ class VentanaFaltantes(QMainWindow):
         FechaInicio = self.llamar_DiaHoy.DiaPrimero().toString("yyyy-MM-dd")
         Empleado = self.cmbEmpleado.currentText()
         currency_delegate = CurrencyDelegate()
-        print(FechaInicio)
+        
         # Validar que cmbEmpleado no esté vacío
         if not Empleado:
             
