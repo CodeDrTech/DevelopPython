@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
-from PyQt5.QtCore import QMarginsF, Qt, QRectF
+from PyQt5.QtCore import QMarginsF, Qt, QRectF, QDate
 from Conexion_db import conectar_db
 from Consultas_db import mostrar_datos_de_faltantes, mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
@@ -122,12 +122,19 @@ class VentanaDatos(QMainWindow):
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         # Este se ejecutra cuendo la ventana se abre
-        super().showEvent(event)          
+        super().showEvent(event)  
+                
         self.tbtabla.clearSelection()
+        
+        fecha_actual = QDate.currentDate()
+        mes_actual = fecha_actual.month()
+        fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)
+        
+        self.txtFechaFinal.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha. 
+        self.txtFechaInicio.setDate(fecha_inicio)
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
-    def closeEvent(self, event):
-        
+    def closeEvent(self, event):        
         super().closeEvent(event)    
         
         

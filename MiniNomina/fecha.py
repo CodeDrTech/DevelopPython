@@ -25,4 +25,7 @@ fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)
 DiaDeHoy = fecha_actual.day()
 for row in range(model.rowCount()):
     model.setData(model.index(row, 0), fecha_inicio.toString("yyyy-MM-dd"))
-fecha_inicio = fecha_inicio.addDays(DiaDeHoy)
+fecha_inicio = fecha_inicio.addDays(DiaDeHoy-1)
+
+
+print(fecha_inicio)
