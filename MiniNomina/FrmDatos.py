@@ -73,8 +73,8 @@ class VentanaDatos(QMainWindow):
          
     def Filtro_por_fecha(self):
 
-        FechaInicio = self.DiaPrimero().toString("yyyy-MM-dd")
-        FechaFinal = self.DiaDeHoy().toString("yyyy-MM-dd")
+        FechaInicio = self.txtFechaInicio.dateText().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFinal.dateText().toString("yyyy-MM-dd")
         currency_delegate = CurrencyDelegate()
     
         # Crear un modelo de tabla SQL
