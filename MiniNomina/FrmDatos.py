@@ -74,13 +74,13 @@ class VentanaDatos(QMainWindow):
     def Filtro_por_fecha(self):
 
         FechaInicio = self.DiaPrimero().toString("yyyy-MM-dd")
-        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
+        FechaFinal = self.DiaDeHoy().toString("yyyy-MM-dd")
         currency_delegate = CurrencyDelegate()
     
         # Crear un modelo de tabla SQL
         model = QSqlTableModel()
         model.setTable("faltantes")
-        model.setFilter(f"FECHA > '{FechaInicio}' AND FECHA < '{FechaFinal}'")
+        model.setFilter(f"FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
         model.setSort(0, Qt.DescendingOrder) # type: ignore    
         # Seleccionar los datos filtrados
         model.select()        
@@ -180,7 +180,7 @@ class VentanaDatos(QMainWindow):
         mes_actual = fecha_actual.month()
         #fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)        
         self.txtFechaFinal.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha. 
-        
+        return fecha_actual
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     def closeEvent(self, event):        

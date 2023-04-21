@@ -44,8 +44,7 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
-# Función que muestra los datos de los faltantes en QTableView del FrmDatos        
-#def mostrar_datos_de_faltantes(tbtabla):
+
     
         
            
