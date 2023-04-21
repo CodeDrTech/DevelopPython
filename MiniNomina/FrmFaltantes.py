@@ -67,29 +67,50 @@ class VentanaFaltantes(QMainWindow):
     # Funcion para llamar la ventana secundaria (Ventana de datos) y editar las informaciones.
     def abrirFrmDatos(self):
         
+        self.llamar_DiaHoy = VentanaDatos()
+        FechaInicio = self.llamar_DiaHoy.DiaPrimero().toString("yyyy-MM-dd")
         Empleado = self.cmbEmpleado.currentText()
         currency_delegate = CurrencyDelegate()
+        print(FechaInicio)
         # Validar que cmbEmpleado no esté vacío
         if not Empleado:
             
-            self.llamar_venana_datos = VentanaDatos()
-            self.llamar_venana_datos.show()
-            self.llamar_venana_datos.datos_en_tabla_faltantes()
+            self.llamar_tbtabla = VentanaDatos()
+            self.llamar_tbtabla.show()
+            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
             
+            currency_delegate = CurrencyDelegate()
+    
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+            model.setTable("faltantes")
+            model.setFilter(f"FECHA >= '{FechaInicio}'")
+            model.setSort(0, Qt.DescendingOrder) # type: ignore    
+            # Seleccionar los datos filtrados
+            model.select()        
+    
+            # Establecer el modelo en la tabla
+            tbtabla.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            tbtabla.resizeColumnsToContents()
+    
+    
+        
+            tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            tbtabla.setItemDelegateForColumn(3, currency_delegate) 
             
         else:
                
             self.llamar_tbtabla = VentanaDatos()
             self.llamar_tbtabla.show()
-            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
-        
-        
+            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
             # Crear un modelo de tabla SQL
             model = QSqlTableModel()
             model.setTable("faltantes")
     
             # Establecer el filtro por nombre
-            model.setFilter(f"nombre = '{Empleado}'")
+            model.setFilter(f"nombre = '{Empleado}' AND FECHA >= '{FechaInicio}'")
             model.setSort(0, Qt.DescendingOrder) # type: ignore
             
             # Seleccionar los datos filtrados

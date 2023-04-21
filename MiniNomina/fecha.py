@@ -28,4 +28,4 @@ for row in range(model.rowCount()):
 fecha_inicio = fecha_inicio.addDays(DiaDeHoy-1)
 
 
-print(fecha_inicio)
+print(fecha_inicio.toString("yyyy-MM-dd"))

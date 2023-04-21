@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
 from PyQt5.QtCore import QMarginsF, Qt, QRectF, QDate
 from Conexion_db import conectar_db
-from Consultas_db import mostrar_datos_de_faltantes, mostrar_datos_de_empleados
+from Consultas_db import mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 
 
@@ -39,8 +39,8 @@ class VentanaDatos(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     # Muestra los datos de la consulta contenida en mostrar_datos_de_faltantes del modulo Consultas_db    
-    def datos_en_tabla_faltantes(self):
-        mostrar_datos_de_faltantes(self.tbtabla)
+    #def datos_en_tabla_faltantes(self):
+    #   mostrar_datos_de_faltantes(self.tbtabla)
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
@@ -125,13 +125,26 @@ class VentanaDatos(QMainWindow):
         super().showEvent(event)  
                 
         self.tbtabla.clearSelection()
+        self.DiaPrimero()
+        self.DiaDeHoy()
+        
+    
+    
+    def DiaPrimero(self):
         
         fecha_actual = QDate.currentDate()
         mes_actual = fecha_actual.month()
         fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)
-        
-        self.txtFechaFinal.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha. 
         self.txtFechaInicio.setDate(fecha_inicio)
+        return fecha_inicio
+            
+    def DiaDeHoy(self):    
+        
+        fecha_actual = QDate.currentDate()
+        mes_actual = fecha_actual.month()
+        #fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)        
+        self.txtFechaFinal.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha. 
+        
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     def closeEvent(self, event):        

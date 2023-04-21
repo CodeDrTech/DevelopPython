@@ -45,27 +45,10 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
 # Función que muestra los datos de los faltantes en QTableView del FrmDatos        
-def mostrar_datos_de_faltantes(tbtabla):
-    
-        currency_delegate = CurrencyDelegate()
-    
-        # Crear un modelo de tabla SQL
-        model = QSqlTableModel()
-        model.setTable("faltantes")
-        model.setSort(0, Qt.DescendingOrder) # type: ignore    
-        # Seleccionar los datos filtrados
-        model.select()        
-    
-        # Establecer el modelo en la tabla
-        tbtabla.setModel(model)
-
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        tbtabla.resizeColumnsToContents()
-    
+#def mostrar_datos_de_faltantes(tbtabla):
     
         
-        tbtabla.setItemDelegateForColumn(4, currency_delegate)
-        tbtabla.setItemDelegateForColumn(3, currency_delegate)    
+           
     
                        
     
