@@ -46,14 +46,10 @@ class VentanaDatosEmpleados(QMainWindow):
         
         self.BtnEliminar.clicked.connect(self.borrar_fila)
         
-        self.BtnBuscar.clicked.connect(self.Filtro_por_fecha)
-        
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
-    # Muestra los datos de la consulta contenida en mostrar_datos_de_faltantes del modulo Consultas_db    
-    #def datos_en_tabla_faltantes(self):
-    #   mostrar_datos_de_faltantes(self.tbtabla)
+    
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
@@ -65,41 +61,8 @@ class VentanaDatosEmpleados(QMainWindow):
     #------------------------------------------------------------------------------------------------------    
     # TableView_de_FrmDatos almacena a tbtabla para visualizr los datos requeridos.    
     def TableView_de_FrmDatos(self):
-        return self.tbtabla      
-    
-    def DeshabilitaBtnEliminar(self):
-         self.BtnEliminar.setEnabled(False)
-    
-    def obtener_fecha_inicio(self):
-        self.txtFechaInicio.date().toString("yyyy-MM-dd")
-             
-    def obtener_fecha_final(self):
-        self.txtFechaFinal.date().toString("yyyy-MM-dd")
-    
-    def DeshabilitaBtnBuscar(self):
-         self.BtnBuscar.setEnabled(False)
-         
-    def Filtro_por_fecha(self):
-
-        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
-        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
-        currency_delegate = CurrencyDelegate()
-    
-        # Crear un modelo de tabla SQL
-        model = QSqlTableModel()
-        model.setTable("faltantes")
-        model.setFilter(f"FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
-        model.setSort(0, Qt.DescendingOrder) # type: ignore    
-        # Seleccionar los datos filtrados
-        model.select()        
-    
-        # Establecer el modelo en la tabla
-        self.tbtabla.setModel(model)
-
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbtabla.resizeColumnsToContents()        
-        self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
-        self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        return self.tbtabla         
+   
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
@@ -169,26 +132,6 @@ class VentanaDatosEmpleados(QMainWindow):
         super().showEvent(event)  
                 
         self.tbtabla.clearSelection()
-        self.DiaPrimero()
-        self.DiaDeHoy()
-        
-    
-    
-    def DiaPrimero(self):
-        
-        fecha_actual = QDate.currentDate()
-        mes_actual = fecha_actual.month()
-        fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)
-        self.txtFechaInicio.setDate(fecha_inicio)
-        return fecha_inicio
-            
-    def DiaDeHoy(self):    
-        
-        fecha_actual = QDate.currentDate()
-        mes_actual = fecha_actual.month()
-        #fecha_inicio = QDate(fecha_actual.year(), mes_actual, 1)        
-        self.txtFechaFinal.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha. 
-        return fecha_actual
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     def closeEvent(self, event):        

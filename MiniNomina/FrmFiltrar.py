@@ -50,7 +50,6 @@ class VentanaReportes(QMainWindow):
         self.llamar_tbtabla = VentanaDatosReportes()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
-        self.llamar_tbtabla.DeshabilitaBtnEliminar() 
         currency_delegate = CurrencyDelegate()
         query = QSqlQuery()
         query.exec_("SELECT e.NOMBRE,\
@@ -90,7 +89,6 @@ class VentanaReportes(QMainWindow):
         self.llamar_tbtabla = VentanaDatosReportes()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
-        self.llamar_tbtabla.DeshabilitaBtnEliminar() 
         
         query = QSqlQuery()
         query.exec_(f"SELECT e.NOMBRE,\
