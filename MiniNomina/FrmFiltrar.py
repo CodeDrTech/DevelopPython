@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QKeySequence
 from Conexion_db import conectar_db
-from FrmDatos import VentanaDatos
+from FrmDatosReportes import VentanaDatosReportes
 
 
 class VentanaReportes(QMainWindow):
@@ -17,7 +17,7 @@ class VentanaReportes(QMainWindow):
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Filtrar.
-        self.setWindowTitle('FILTRAR REPORTES')
+        self.setWindowTitle('CREAR REPORTES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
@@ -47,7 +47,7 @@ class VentanaReportes(QMainWindow):
     #------------------------------------------------------------------------------------------------------    
     # Funcion para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
-        self.llamar_tbtabla = VentanaDatos()
+        self.llamar_tbtabla = VentanaDatosReportes()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
         self.llamar_tbtabla.DeshabilitaBtnEliminar() 
@@ -87,7 +87,7 @@ class VentanaReportes(QMainWindow):
         if not Empleado:
             QMessageBox.warning(None, "ERROR", "DEBE ELEJIR UN NOMBRE.") # type: ignore
             return   
-        self.llamar_tbtabla = VentanaDatos()
+        self.llamar_tbtabla = VentanaDatosReportes()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
         self.llamar_tbtabla.DeshabilitaBtnEliminar() 

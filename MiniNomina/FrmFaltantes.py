@@ -6,7 +6,7 @@ from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
-from FrmDatos import VentanaDatos
+from FrmDatosFaltantes import VentanaDatosFaltantes
 import locale, datetime
 from Consultas_db import insertar_nuevo_faltante, mostrar_datos_totales_por_empleados
 
@@ -72,14 +72,14 @@ class VentanaFaltantes(QMainWindow):
         # Validar que cmbEmpleado no esté vacío
         if not Empleado:
             
-            self.llamar_venana_datos = VentanaDatos()
+            self.llamar_venana_datos = VentanaDatosFaltantes()
             self.llamar_venana_datos.show()
             self.llamar_venana_datos.Filtro_por_fecha()
             
             
         else:
                
-            self.llamar_tbtabla = VentanaDatos()
+            self.llamar_tbtabla = VentanaDatosFaltantes()
             self.llamar_tbtabla.show()
             tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
         
@@ -161,7 +161,7 @@ class VentanaFaltantes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def datos_totales_por_empleados(self):
-        self.llamar_tbtabla = VentanaDatos()
+        self.llamar_tbtabla = VentanaDatosFaltantes()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
         mostrar_datos_totales_por_empleados(tbtabla)
@@ -171,7 +171,7 @@ class VentanaFaltantes(QMainWindow):
     def reporte_parcial(self):
         Empleado = self.cmbEmpleado.currentText()
         currency_delegate = CurrencyDelegate()
-        self.llamar_tbtabla = VentanaDatos()
+        self.llamar_tbtabla = VentanaDatosFaltantes()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
             

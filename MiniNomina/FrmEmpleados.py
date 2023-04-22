@@ -4,7 +4,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget
 from PyQt5 import QtWidgets, QtGui
 from Consultas_db import insertar_nuevo_empleados
-from FrmDatos import VentanaDatos
+from FrmDatosEmpleados import VentanaDatosEmpleados
 
 class VentanaEmpleados(QMainWindow):
     def __init__(self):
@@ -38,7 +38,7 @@ class VentanaEmpleados(QMainWindow):
     #------------------------------------------------------------------------------------------------------    
     # Funcione para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
-        self.llamar_venana_datos = VentanaDatos()
+        self.llamar_venana_datos = VentanaDatosEmpleados()
         self.llamar_venana_datos.show()
         self.llamar_venana_datos.datos_en_tabla_empleados()
         

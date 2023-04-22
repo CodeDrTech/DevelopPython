@@ -23,16 +23,16 @@ class CurrencyDelegate(QStyledItemDelegate):
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
             return value 
 
-class VentanaDatos(QMainWindow):
+class VentanaDatosReportes(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/Datos.ui',self)
+        uic.loadUi('MiniNomina/FrmDesign/DatosFiltrar.ui',self)
         
         
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Empleados.
-        self.setWindowTitle('PANEL DE DATOS')
+        self.setWindowTitle('REPORTES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
@@ -198,6 +198,6 @@ class VentanaDatos(QMainWindow):
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    GUI = VentanaDatos()
+    GUI = VentanaDatosReportes()
     GUI.show()
     sys.exit(app.exec_())
