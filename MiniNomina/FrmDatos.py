@@ -73,8 +73,8 @@ class VentanaDatos(QMainWindow):
          
     def Filtro_por_fecha(self):
 
-        FechaInicio = self.txtFechaInicio.dateText().toString("yyyy-MM-dd")
-        FechaFinal = self.txtFechaFinal.dateText().toString("yyyy-MM-dd")
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         currency_delegate = CurrencyDelegate()
     
         # Crear un modelo de tabla SQL
@@ -91,7 +91,7 @@ class VentanaDatos(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbtabla.resizeColumnsToContents()        
         self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
-        self.tbtabla.setItemDelegateForColumn(3, currency_delegate) 
+        self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):

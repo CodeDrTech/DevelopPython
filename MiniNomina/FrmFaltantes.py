@@ -43,7 +43,7 @@ class VentanaFaltantes(QMainWindow):
         
         self.BtnEditar.clicked.connect(self.abrirFrmDatos)
         
-        self.BtnReporte.clicked.connect(self.reporte_parcial)
+        self.BtnEstado.clicked.connect(self.reporte_parcial)
 
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ class VentanaFaltantes(QMainWindow):
             
             self.llamar_venana_datos = VentanaDatos()
             self.llamar_venana_datos.show()
-            self.llamar_venana_datos.datos_en_tabla_faltantes()
+            self.llamar_venana_datos.Filtro_por_fecha()
             
             
         else:
@@ -117,7 +117,7 @@ class VentanaFaltantes(QMainWindow):
         self.cmbEmpleado.setFocus()    
         self.cmbEmpleado.setCurrentText("")
         #Establecer la feha actual.
-        self.txtFecha.setDisplayFormat("YYYY-MM-DD")  # Formato de fecha.
+        self.txtFecha.setDisplayFormat("yyyy-MM-dd")  # Formato de fecha.
         self.txtFecha.setDate(QDate.currentDate())    # Establecer fecha actual en txtFecha.
         
     #------------------------------------------------------------------------------------------------------
@@ -125,13 +125,13 @@ class VentanaFaltantes(QMainWindow):
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
-        Fecha = self.txtFecha.date().toString("YYYY-MM-DD")     
+        Fecha = self.txtFecha.date().toString("yyyy-MM-dd")     
         Nombre = self.cmbEmpleado.currentText()
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
         
-        if not Nombre or Nombre.isdigit():
+        if not Nombre or not Nombre.isStr():
             QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO NOMBRE.") # type: ignore
             return 
         
