@@ -43,7 +43,7 @@ class VentanaFaltantes(QMainWindow):
         
         self.BtnEditar.clicked.connect(self.abrirFrmDatos)
         
-        self.BtnEstado.clicked.connect(self.reporte_parcial)
+        self.BtnReporte.clicked.connect(self.reporte_parcial)
 
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
@@ -67,54 +67,33 @@ class VentanaFaltantes(QMainWindow):
     # Funcion para llamar la ventana secundaria (Ventana de datos) y editar las informaciones.
     def abrirFrmDatos(self):
         
-        self.llamar_DiaHoy = VentanaDatos()
-        FechaInicio = self.llamar_DiaHoy.DiaPrimero().toString("yyyy-MM-dd")
         Empleado = self.cmbEmpleado.currentText()
         currency_delegate = CurrencyDelegate()
-        
         # Validar que cmbEmpleado no esté vacío
         if not Empleado:
             
-            self.llamar_tbtabla = VentanaDatos()
-            self.llamar_tbtabla.show()
-            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
+            self.llamar_venana_datos = VentanaDatos()
+            self.llamar_venana_datos.show()
+            self.llamar_venana_datos.datos_en_tabla_faltantes()
             
-            currency_delegate = CurrencyDelegate()
-    
-            # Crear un modelo de tabla SQL
-            model = QSqlTableModel()
-            model.setTable("faltantes")
-            model.setFilter(f"FECHA >= '{FechaInicio}'")
-            model.setSort(0, Qt.DescendingOrder) # type: ignore    
-            # Seleccionar los datos filtrados
-            model.select()        
-    
-            # Establecer el modelo en la tabla
-            tbtabla.setModel(model)
-
-            # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            tbtabla.resizeColumnsToContents()
-    
-    
-        
-            tbtabla.setItemDelegateForColumn(4, currency_delegate)
-            tbtabla.setItemDelegateForColumn(3, currency_delegate) 
             
         else:
                
             self.llamar_tbtabla = VentanaDatos()
             self.llamar_tbtabla.show()
-            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
+            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
+        
+        
             # Crear un modelo de tabla SQL
             model = QSqlTableModel()
             model.setTable("faltantes")
     
             # Establecer el filtro por nombre
-            model.setFilter(f"nombre = '{Empleado}' AND FECHA >= '{FechaInicio}'")
+            model.setFilter(f"nombre = '{Empleado}'")
             model.setSort(0, Qt.DescendingOrder) # type: ignore
             
             # Seleccionar los datos filtrados
-            model.select()           
+            model.select()
     
             # Establecer el modelo en la tabla
             tbtabla.setModel(model)
@@ -122,7 +101,8 @@ class VentanaFaltantes(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             tbtabla.resizeColumnsToContents()  
             
-            # Convierte a formato moneda los datos que se muesrtan en el tbtabla en la columna abonoy faltante
+            # Supongamos que la columna de moneda tiene el índice 4
+            
             tbtabla.setItemDelegateForColumn(4, currency_delegate)
             tbtabla.setItemDelegateForColumn(3, currency_delegate)  
     
@@ -137,23 +117,19 @@ class VentanaFaltantes(QMainWindow):
         self.cmbEmpleado.setFocus()    
         self.cmbEmpleado.setCurrentText("")
         #Establecer la feha actual.
-        #self.txtFecha.setDisplayFormat("d-MMMM-yyyy")  # Formato de fecha.
-        self.txtFecha.setDate(QDate.currentDate())   # Establecer fecha actual en txtFecha.
+        self.txtFecha.setDisplayFormat("YYYY-MM-DD")  # Formato de fecha.
+        self.txtFecha.setDate(QDate.currentDate())    # Establecer fecha actual en txtFecha.
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     # Funcion para guardar los datos de los textboxts en la base de los datos    
     def guardar(self):
         # Obtener los valores de los cuadros de texto
-        Fecha = self.txtFecha.date().toString("yyyy-MM-dd")        
+        Fecha = self.txtFecha.date().toString("YYYY-MM-DD")     
         Nombre = self.cmbEmpleado.currentText()
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
-        
-        if not Fecha:
-            QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO FECHA.") # type: ignore
-            return
         
         if not Nombre or Nombre.isdigit():
             QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO NOMBRE.") # type: ignore
@@ -197,8 +173,8 @@ class VentanaFaltantes(QMainWindow):
         self.llamar_tbtabla = VentanaDatos()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
-        self.llamar_tbtabla.DeshabilitaBtnEliminar()
-           
+            
+            
         if not Empleado:
             query = QSqlQuery()
             query.exec_("SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
@@ -218,13 +194,14 @@ class VentanaFaltantes(QMainWindow):
             tbtabla.setModel(model)
 
         
-            
+        
             tbtabla.setItemDelegateForColumn(4, currency_delegate)
             tbtabla.setItemDelegateForColumn(3, currency_delegate)
         
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             tbtabla.resizeColumnsToContents()
             tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers) 
+            
         else:
             query = QSqlQuery()
             query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
@@ -251,6 +228,7 @@ class VentanaFaltantes(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             tbtabla.resizeColumnsToContents() 
             tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+               
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------       
     # Funion para cerar la ventana llamado desde el boton Salir.    
@@ -265,7 +243,8 @@ class CurrencyDelegate(QStyledItemDelegate):
             return locale.toCurrencyString(float(value))
         except ValueError:
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
-            return value
+            return value 
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
 if __name__ == '__main__':
