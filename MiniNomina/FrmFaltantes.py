@@ -7,6 +7,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5 import QtWidgets, QtGui
 from Conexion_db import conectar_db
 from FrmDatosFaltantes import VentanaDatosFaltantes
+from FrmDatosEstados import VentanaDatosEstados
 import locale, datetime
 from Consultas_db import insertar_nuevo_faltante, mostrar_datos_totales_por_empleados
 
@@ -171,7 +172,7 @@ class VentanaFaltantes(QMainWindow):
     def reporte_parcial(self):
         Empleado = self.cmbEmpleado.currentText()
         currency_delegate = CurrencyDelegate()
-        self.llamar_tbtabla = VentanaDatosFaltantes()
+        self.llamar_tbtabla = VentanaDatosEstados()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
             
