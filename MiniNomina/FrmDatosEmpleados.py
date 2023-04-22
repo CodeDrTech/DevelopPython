@@ -69,7 +69,12 @@ class VentanaDatos(QMainWindow):
     
     def DeshabilitaBtnEliminar(self):
          self.BtnEliminar.setEnabled(False)
-         
+    
+    def obtener_fecha_inicio(self):
+        self.txtFechaInicio.date().toString("yyyy-MM-dd")
+             
+    def obtener_fecha_final(self):
+        self.txtFechaFinal.date().toString("yyyy-MM-dd")
     
     def DeshabilitaBtnBuscar(self):
          self.BtnBuscar.setEnabled(False)
