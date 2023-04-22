@@ -131,7 +131,7 @@ class VentanaFaltantes(QMainWindow):
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
         
-        if not Nombre or not Nombre.isStr():
+        if not Nombre or Nombre.isdigit():
             QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO NOMBRE.") # type: ignore
             return 
         
@@ -156,6 +156,7 @@ class VentanaFaltantes(QMainWindow):
         self.txtNumbanca.setText("")
         self.txtAbono.setText("")
         self.txtFaltante.setText("")
+        self.txtFecha.setDate(QDate.currentDate()) 
         self.cmbEmpleado.setFocus()
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------

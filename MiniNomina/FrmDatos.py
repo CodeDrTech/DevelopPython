@@ -70,6 +70,9 @@ class VentanaDatos(QMainWindow):
     def DeshabilitaBtnEliminar(self):
          self.BtnEliminar.setEnabled(False)
          
+    
+    def DeshabilitaBtnBuscar(self):
+         self.BtnBuscar.setEnabled(False)
          
     def Filtro_por_fecha(self):
 
