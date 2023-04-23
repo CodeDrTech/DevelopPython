@@ -131,6 +131,13 @@ class VentanaFaltantes(QMainWindow):
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
+        Hoy = VentanaDatosFaltantes()
+        Hoy.DiaDeHoy().toString("yyyy-MM-dd")
+        
+        
+        if Fecha == Hoy:
+            QMessageBox.warning(None, "ERROR", "ESTAS INGRESANDO UNA FECHA FUTURA.") # type: ignore
+            return 
         
         if not Nombre or Nombre.isdigit():
             QMessageBox.warning(None, "ERROR", "REVISA EL CAMPO NOMBRE.") # type: ignore
