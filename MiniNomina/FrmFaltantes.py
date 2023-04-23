@@ -131,11 +131,12 @@ class VentanaFaltantes(QMainWindow):
         Num_banca = self.txtNumbanca.text()
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
-        Hoy = VentanaDatosFaltantes()
-        Hoy.DiaDeHoy().toString("yyyy-MM-dd")
+        
+        # Almacena la fecha actual en la variable Hoy
+        Hoy = QDate.currentDate()
         
         
-        if Fecha == Hoy:
+        if Fecha > Hoy.toString("yyyy-MM-dd"):
             QMessageBox.warning(None, "ERROR", "ESTAS INGRESANDO UNA FECHA FUTURA.") # type: ignore
             return 
         
