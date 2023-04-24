@@ -183,7 +183,7 @@ class VentanaFaltantes(QMainWindow):
         self.llamar_tbtabla = VentanaDatosEstados()
         self.llamar_tbtabla.show()
         tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
-            
+           
             
         if not Empleado:
             query = QSqlQuery()
@@ -194,7 +194,7 @@ class VentanaFaltantes(QMainWindow):
                     FROM faltantes \
                     GROUP BY 'TOTAL'")
 
-   
+            
             # Crear un modelo de tabla SQL
             model = QSqlTableModel()
     
