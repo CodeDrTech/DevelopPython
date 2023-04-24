@@ -66,47 +66,11 @@ class VentanaFaltantes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     # Funcion para llamar la ventana secundaria (Ventana de datos) y editar las informaciones.
-    def abrirFrmDatos(self):
-        
-        Empleado = self.cmbEmpleado.currentText()
-        currency_delegate = CurrencyDelegate()
-        # Validar que cmbEmpleado no esté vacío
-        if not Empleado:
+    def abrirFrmDatos(self):        
             
-            self.llamar_venana_datos = VentanaDatosFaltantes()
-            self.llamar_venana_datos.show()
-            self.llamar_venana_datos.Filtro_por_fecha()
-            
-            
-        else:
-               
-            self.llamar_tbtabla = VentanaDatosFaltantes()
-            self.llamar_tbtabla.show()
-            tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos() 
-        
-        
-            # Crear un modelo de tabla SQL
-            model = QSqlTableModel()
-            model.setTable("faltantes")
-    
-            # Establecer el filtro por nombre
-            model.setFilter(f"nombre = '{Empleado}'")
-            model.setSort(0, Qt.DescendingOrder) # type: ignore
-            
-            # Seleccionar los datos filtrados
-            model.select()
-    
-            # Establecer el modelo en la tabla
-            tbtabla.setModel(model)
-
-            # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            tbtabla.resizeColumnsToContents()  
-            
-            # Supongamos que la columna de moneda tiene el índice 4
-            
-            tbtabla.setItemDelegateForColumn(4, currency_delegate)
-            tbtabla.setItemDelegateForColumn(3, currency_delegate)  
-    
+        self.llamar_venana_datos = VentanaDatosFaltantes()
+        self.llamar_venana_datos.show()
+        self.llamar_venana_datos.Filtro_por_fecha()
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------ 
     # Funcion para dotar de eventos a la ventana al cargar.    
@@ -178,66 +142,67 @@ class VentanaFaltantes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     def reporte_parcial(self):
-        Empleado = self.cmbEmpleado.currentText()
-        currency_delegate = CurrencyDelegate()
+        # Empleado = self.cmbEmpleado.currentText()
+        # currency_delegate = CurrencyDelegate()
         self.llamar_tbtabla = VentanaDatosEstados()
         self.llamar_tbtabla.show()
-        tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
+        # tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
            
+        self.llamar_tbtabla.estados_por_fechas()    
+        # if not Empleado:
             
-        if not Empleado:
-            query = QSqlQuery()
-            query.exec_("SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
-                    FROM faltantes \
-                    UNION ALL \
-                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
-                    FROM faltantes \
-                    GROUP BY 'TOTAL'")
+        #     query = QSqlQuery()
+        #     query.exec_("SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
+        #             FROM faltantes \
+        #             UNION ALL \
+        #             SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+        #             FROM faltantes \
+        #             GROUP BY 'TOTAL'")
 
             
-            # Crear un modelo de tabla SQL
-            model = QSqlTableModel()
+        #     # Crear un modelo de tabla SQL
+        #     model = QSqlTableModel()
     
-            model.setQuery(query)   
+        #     model.setQuery(query)   
     
-            # Establecer el modelo en la tabla
-            tbtabla.setModel(model)
+        #     # Establecer el modelo en la tabla
+        #     tbtabla.setModel(model)
 
         
         
-            tbtabla.setItemDelegateForColumn(4, currency_delegate)
-            tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        #     tbtabla.setItemDelegateForColumn(4, currency_delegate)
+        #     tbtabla.setItemDelegateForColumn(3, currency_delegate)
         
-            # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            tbtabla.resizeColumnsToContents()
-            tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers) 
+        #     # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        #     tbtabla.resizeColumnsToContents()
+        #     tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers) 
             
-        else:
-            query = QSqlQuery()
-            query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
-                    FROM faltantes WHERE NOMBRE = '{Empleado}' \
-                    UNION ALL \
-                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
-                    FROM faltantes WHERE NOMBRE = '{Empleado}' \
-                    GROUP BY 'TOTAL'")
+        # else:
+        #     query = QSqlQuery()
+        #     query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
+        #             FROM faltantes WHERE NOMBRE = '{Empleado}' \
+        #             UNION ALL \
+        #             SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+        #             FROM faltantes WHERE NOMBRE = '{Empleado}' \
+        #             GROUP BY 'TOTAL'")
 
    
-            # Crear un modelo de tabla SQL
-            model = QSqlTableModel()
+        #     # Crear un modelo de tabla SQL
+        #     model = QSqlTableModel()
     
-            model.setQuery(query)   
+        #     model.setQuery(query)   
     
-            # Establecer el modelo en la tabla
-            tbtabla.setModel(model)
+        #     # Establecer el modelo en la tabla
+        #     tbtabla.setModel(model)
 
         
         
-            tbtabla.setItemDelegateForColumn(4, currency_delegate)
-            tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        #     tbtabla.setItemDelegateForColumn(4, currency_delegate)
+        #     tbtabla.setItemDelegateForColumn(3, currency_delegate)
         
-            # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            tbtabla.resizeColumnsToContents() 
-            tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        #     # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        #     tbtabla.resizeColumnsToContents() 
+        #     tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
                
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------       

@@ -153,6 +153,40 @@ class VentanaDatosEstados(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             self.tbtabla.resizeColumnsToContents() 
             self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------        
+    def estados_por_fechas(self):
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
+        currency_delegate = CurrencyDelegate()
+    
+        
+        query = QSqlQuery()
+        query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
+                    FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
+                    UNION ALL \
+                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+                    FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
+                    GROUP BY 'TOTAL'")
+
+   
+        # Crear un modelo de tabla SQL
+        model = QSqlTableModel()
+    
+        model.setQuery(query)   
+    
+        # Establecer el modelo en la tabla
+        self.tbtabla.setModel(model)
+
+        
+        
+        self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
+        self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbtabla.resizeColumnsToContents()
+        self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):

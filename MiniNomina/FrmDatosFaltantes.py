@@ -2,7 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform
+from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QStandardItemModel, QStandardItem
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
 from PyQt5.QtCore import QMarginsF, Qt, QRectF, QDate
 from Conexion_db import conectar_db
@@ -52,8 +52,18 @@ class VentanaDatosFaltantes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     # Muestra los datos de la consulta contenida en mostrar_datos_de_faltantes del modulo Consultas_db    
-    #def datos_en_tabla_faltantes(self):
-    #   mostrar_datos_de_faltantes(self.tbtabla)
+        model = QSqlTableModel()
+        model.setTable('empleados')
+        model.select()
+        column_data = []
+        for i in range(model.rowCount()):
+            column_data.append(model.data(model.index(i, 0)))
+        
+        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+        combo_model = QStandardItemModel()
+        for item in column_data:
+            combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbEmpleado.setModel(combo_model)
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
@@ -80,26 +90,50 @@ class VentanaDatosFaltantes(QMainWindow):
          self.BtnBuscar.setEnabled(False)
          
     def Filtro_por_fecha(self):
-
+        Empleado = self.cmbEmpleado.currentText()
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         currency_delegate = CurrencyDelegate()
+        if not Empleado:
     
-        # Crear un modelo de tabla SQL
-        model = QSqlTableModel()
-        model.setTable("faltantes")
-        model.setFilter(f"FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
-        model.setSort(0, Qt.DescendingOrder) # type: ignore    
-        # Seleccionar los datos filtrados
-        model.select()        
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+            model.setTable("faltantes")
+            model.setFilter(f"FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
+            model.setSort(0, Qt.DescendingOrder) # type: ignore    
+            # Seleccionar los datos filtrados
+            model.select()        
     
-        # Establecer el modelo en la tabla
-        self.tbtabla.setModel(model)
+            # Establecer el modelo en la tabla
+            self.tbtabla.setModel(model)
 
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbtabla.resizeColumnsToContents()        
-        self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
-        self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbtabla.resizeColumnsToContents()        
+            self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        else:    
+        
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+            model.setTable("faltantes")
+    
+            # Establecer el filtro por nombre
+            model.setFilter(f"nombre = '{Empleado}' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
+            model.setSort(0, Qt.DescendingOrder) # type: ignore
+            
+            # Seleccionar los datos filtrados
+            model.select()
+    
+            # Establecer el modelo en la tabla
+            self.tbtabla.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbtabla.resizeColumnsToContents()  
+            
+            # Supongamos que la columna de moneda tiene el índice 4
+            
+            self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
@@ -171,7 +205,7 @@ class VentanaDatosFaltantes(QMainWindow):
         self.tbtabla.clearSelection()
         self.DiaPrimero()
         self.DiaDeHoy()
-        
+        self.cmbEmpleado.setCurrentText("")
     
     
     def DiaPrimero(self):
