@@ -1,8 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate
+from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QAbstractItemView
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform
+from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QStandardItemModel, QStandardItem
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
 from PyQt5.QtCore import QMarginsF, Qt, QRectF, QDate
 from Conexion_db import conectar_db
@@ -29,16 +29,16 @@ class VentanaDatosEstados(QMainWindow):
         uic.loadUi('MiniNomina/FrmDesign/DatosEstados.ui',self)
         
         
-        #------------------------------------------------------------------------------------------------------
-        #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('ESTADOS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
         
-        #------------------------------------------------------------------------------------------------------
-        #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)
         
@@ -47,6 +47,21 @@ class VentanaDatosEstados(QMainWindow):
         self.BtnEliminar.clicked.connect(self.borrar_fila)
         
         self.BtnBuscar.clicked.connect(self.Filtro_por_fecha)
+    
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
+        model = QSqlTableModel()
+        model.setTable('empleados')
+        model.select()
+        column_data = []
+        for i in range(model.rowCount()):
+            column_data.append(model.data(model.index(i, 0)))
+        
+        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+        combo_model = QStandardItemModel()
+        for item in column_data:
+            combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbEmpleado.setModel(combo_model)
         
         
     #------------------------------------------------------------------------------------------------------
@@ -80,26 +95,64 @@ class VentanaDatosEstados(QMainWindow):
          self.BtnBuscar.setEnabled(False)
          
     def Filtro_por_fecha(self):
-
+        Empleado = self.cmbEmpleado.currentText()
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         currency_delegate = CurrencyDelegate()
     
-        # Crear un modelo de tabla SQL
-        model = QSqlTableModel()
-        model.setTable("faltantes")
-        model.setFilter(f"FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
-        model.setSort(0, Qt.DescendingOrder) # type: ignore    
-        # Seleccionar los datos filtrados
-        model.select()        
-    
-        # Establecer el modelo en la tabla
-        self.tbtabla.setModel(model)
+        if not Empleado:
+            query = QSqlQuery()
+            query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
+                    FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
+                    UNION ALL \
+                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+                    FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
+                    GROUP BY 'TOTAL'")
 
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbtabla.resizeColumnsToContents()        
-        self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
-        self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
+   
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+    
+            model.setQuery(query)   
+    
+            # Establecer el modelo en la tabla
+            self.tbtabla.setModel(model)
+
+        
+        
+            self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbtabla.resizeColumnsToContents()
+            self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            
+        else:
+            query = QSqlQuery()
+            query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
+                    FROM faltantes WHERE NOMBRE = '{Empleado}' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                    UNION ALL \
+                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+                    FROM faltantes WHERE NOMBRE = '{Empleado}' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                    GROUP BY 'TOTAL'")
+
+   
+            # Crear un modelo de tabla SQL
+            model = QSqlTableModel()
+    
+            model.setQuery(query)   
+    
+            # Establecer el modelo en la tabla
+            self.tbtabla.setModel(model)
+
+        
+        
+            self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
+            self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
+        
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbtabla.resizeColumnsToContents() 
+            self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
@@ -171,7 +224,8 @@ class VentanaDatosEstados(QMainWindow):
         self.tbtabla.clearSelection()
         self.DiaPrimero()
         self.DiaDeHoy()
-        
+        self.BtnEliminar.setEnabled(False)
+        self.cmbEmpleado.setCurrentText("")
     
     
     def DiaPrimero(self):
