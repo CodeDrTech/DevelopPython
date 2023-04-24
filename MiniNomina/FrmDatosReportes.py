@@ -146,10 +146,12 @@ class VentanaDatosReportes(QMainWindow):
             # Obtener la fila seleccionada de uno de los índices seleccionados
             index = indexes[0]
             row = index.row()
+            
             # Eliminar la fila seleccionada del modelo de datos
             model = self.tbtabla.model()
             model.removeRow(row)
             QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO CIERRE PARA ACTUALIZAR LOS DATOS.")
+            
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL REGISTRO QUE VAS A ELIMINAR.")
             
@@ -171,7 +173,7 @@ class VentanaDatosReportes(QMainWindow):
         self.tbtabla.clearSelection()
         self.DiaPrimero()
         self.DiaDeHoy()
-        
+        self.BtnEliminar.setEnabled(False)
     
     
     def DiaPrimero(self):
