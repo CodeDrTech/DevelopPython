@@ -94,6 +94,7 @@ class VentanaDatosFaltantes(QMainWindow):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         currency_delegate = CurrencyDelegate()
+        
         if not Empleado:
     
             # Crear un modelo de tabla SQL
