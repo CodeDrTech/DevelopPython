@@ -154,8 +154,8 @@ class VentanaDatosReportes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
-        a = 10
-        if a == 10:
+        
+        if not self.documento.selectedIndexes():
             impresion = QPrinter(QPrinter.HighResolution)
             
             dlg = QPrintDialog(impresion, self)
@@ -168,37 +168,37 @@ class VentanaDatosReportes(QMainWindow):
         else:
             QMessageBox.critical(self, "Imprimir", "No hay datos para imprimir.   ", QMessageBox.Ok)
     
-    def initUI(self):
-        self.documento = QTextDocument()
+        def initUI(self):
+            self.documento = QTextDocument()
 
-      # =================== WIDGETS QPUSHBUTTON ==================
+        # =================== WIDGETS QPUSHBUTTON ==================
 
-        buttonBuscar = QPushButton("Buscar usuarios", self)
-        buttonBuscar.setFixedSize(426, 26)
-        buttonBuscar.move(20, 20)
+            buttonBuscar = QPushButton("Buscar usuarios", self)
+            buttonBuscar.setFixedSize(426, 26)
+            buttonBuscar.move(20, 20)
 
-        buttonLimpiar = QPushButton("Limpiar tabla", self)
-        buttonLimpiar.setFixedSize(140, 26)
-        buttonLimpiar.move(452, 20)
+            buttonLimpiar = QPushButton("Limpiar tabla", self)
+            buttonLimpiar.setFixedSize(140, 26)
+            buttonLimpiar.move(452, 20)
 
-      # =================== WIDGET QTREEWIDGET ===================
+        # =================== WIDGET QTREEWIDGET ===================
 
-        self.treeWidgetUsuarios = QTreeWidget(self)
+            self.treeWidgetUsuarios = QTreeWidget(self)
 
-        self.treeWidgetUsuarios.setFont(QFont(self.treeWidgetUsuarios.font().family(), 10, False))
-        self.treeWidgetUsuarios.setRootIsDecorated(False)
-        self.treeWidgetUsuarios.setHeaderLabels(("D.N.I", "NOMBRE", "APELLIDO", "FECHA DE NACIMIENTO"))
+            self.treeWidgetUsuarios.setFont(QFont(self.treeWidgetUsuarios.font().family(), 10, False))
+            self.treeWidgetUsuarios.setRootIsDecorated(False)
+            self.treeWidgetUsuarios.setHeaderLabels(("D.N.I", "NOMBRE", "APELLIDO", "FECHA DE NACIMIENTO"))
 
-        self.model = self.treeWidgetUsuarios.model()
+            self.model = self.treeWidgetUsuarios.model()
 
-        for indice, ancho in enumerate((110, 150, 150, 160), start=0):
-            self.model.setHeaderData(indice, Qt.Horizontal, Qt.AlignCenter, Qt.TextAlignmentRole) # type: ignore
-            self.treeWidgetUsuarios.setColumnWidth(indice, ancho)
+            for indice, ancho in enumerate((110, 150, 150, 160), start=0):
+                self.model.setHeaderData(indice, Qt.Horizontal, Qt.AlignCenter, Qt.TextAlignmentRole) # type: ignore
+                self.treeWidgetUsuarios.setColumnWidth(indice, ancho)
         
-        self.treeWidgetUsuarios.setAlternatingRowColors(True)
+            self.treeWidgetUsuarios.setAlternatingRowColors(True)
 
-        self.treeWidgetUsuarios.setFixedSize(572, 300)
-        self.treeWidgetUsuarios.move(20, 56)
+            self.treeWidgetUsuarios.setFixedSize(572, 300)
+            self.treeWidgetUsuarios.move(20, 56)
 
       # =================== WIDGETS QPUSHBUTTON ==================
 
