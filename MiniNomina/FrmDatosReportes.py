@@ -143,7 +143,7 @@ class VentanaDatosReportes(QMainWindow):
         
         if indexes:
             
-            # Obtener la fila seleccionada de uno de los índices seleccionados
+            # Obtener la fila al seleccionar una celda de la tabla
             index = indexes[0]
             row = index.row()
             
