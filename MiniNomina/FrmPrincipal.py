@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton,
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QIcon
 from FrmEmpleados import VentanaEmpleados
-from FrmFiltrar import VentanaReportes
+from FrmDatosReportes import VentanaDatosReportes
 from FrmFaltantes import VentanaFaltantes
 
 
@@ -27,7 +27,7 @@ class VentanaPrincipal(QMainWindow):
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
         self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
-        self.BtnReporte.clicked.connect(self.abrirFrmFiltrar)       
+        self.BtnReporte.clicked.connect(self.abrirFrmDatosReportes)       
         
         
         
@@ -47,10 +47,10 @@ class VentanaPrincipal(QMainWindow):
         self.llamar_venana_faltante = VentanaFaltantes()
         self.llamar_venana_faltante.show()
         
-    def abrirFrmFiltrar(self):
-        self.llamar_venana_filtrar = VentanaReportes()
-        self.llamar_venana_filtrar.show()
-        
+    def abrirFrmDatosReportes(self):
+        self.llamar_venana_reportes = VentanaDatosReportes()
+        self.llamar_venana_reportes.show()
+        self.llamar_venana_reportes.Filtro_por_fecha()
      
               
         
