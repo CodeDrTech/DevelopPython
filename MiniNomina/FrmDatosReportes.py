@@ -1,8 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QAbstractItemView, QDialog
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QStandardItemModel, QStandardItem, QTextDocument
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
 from PyQt5.QtCore import QMarginsF, Qt, QRectF, QDate
 from Conexion_db import conectar_db
@@ -154,38 +154,19 @@ class VentanaDatosReportes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
-        # Crear una instancia de QPrinter
-        printer = QPrinter(QPrinter.HighResolution)
+        a = 10
+        if a == 10:
+            impresion = QPrinter(QPrinter.HighResolution)
+            
+            dlg = QPrintDialog(impresion, self)
+            dlg.setWindowTitle("Imprimir documento")
 
-        # Crear un objeto QPrintDialog y mostrarlo al usuario
-        print_dialog = QPrintDialog(printer)
-        if print_dialog.exec_() == QPrintDialog.Accepted:
-            # Escalar el tamaño del QTableView para que quepa en una página
-            scale_factor = 1.0
-            while (self.tbtabla.width() * scale_factor > printer.pageRect().width() or
-                self.tbtabla.height() * scale_factor > printer.pageRect().height()):
-                scale_factor *= 0.9
+            if dlg.exec_() == QPrintDialog.Accepted:
+                self.documento.print_(impresion)
 
-            # Configurar la página para que se ajuste al tamaño del QTableView
-            layout = QPageLayout(printer.pageLayout())
-            layout.setPaintRect(QRectF(0, 0, printer.pageRect().width(), printer.pageRect().height()))
-            printer.setPageLayout(layout)
-
-            # Establecer la escala del QTableView
-            self.tbtabla.setTransform(QTransform().scale(scale_factor, scale_factor))
-
-            # Ajustar el tamaño de las columnas
-            self.tbtabla.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
-            # Crear un objeto QPainter y dibujar el contenido del QTableView en el objeto QPrinter
-            painter = QPainter()
-            painter.begin(printer)
-            self.tbtabla.render(painter)
-            painter.end()
-
-            # Restaurar la escala y el tamaño de las columnas del QTableView
-            self.tbtabla.setTransform(QTransform())
-            self.tbtabla.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+            del dlg
+        else:
+            QMessageBox.critical(self, "Imprimir", "No hay datos para imprimir.   ", QMessageBox.Ok)
         
         
     def borrar_fila(self):

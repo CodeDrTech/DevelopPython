@@ -23,7 +23,7 @@ class VentanaPrincipal(QMainWindow):
         
 
         
-        #Para darle funiones a los botones del PANEL PRINCIPAL
+        #Llamar a los diferentes formularios desde los botones
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
         self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
