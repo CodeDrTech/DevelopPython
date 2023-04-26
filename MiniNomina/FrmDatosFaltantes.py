@@ -147,28 +147,49 @@ class VentanaDatosFaltantes(QMainWindow):
         # Mostrar diálogo de impresión y obtener configuraciones de usuario
         dialog = QPrintDialog(printer, self.tbtabla)
         if dialog.exec_() == QDialog.Accepted:
-            # Crear objeto QTextDocument y establecer contenido HTML con hojas de estilo
+            # Crear objeto QTextDocument y establecer contenido HTML
             table_html = ""
             table_model = self.tbtabla.model()
             row_count = table_model.rowCount()
             column_count = table_model.columnCount()
-            cell_value = float(table_model.data(table_model.index(row, column), Qt.DisplayRole)) # type: ignore
-            cell_value_str = "${:,.2f}".format(cell_value)
-
             for row in range(row_count):
                 table_html += "<tr>"
                 for column in range(column_count):
-                    cell_value = table_model.data(table_model.index(row, column), Qt.DisplayRole) # type: ignore
-                    if isinstance(cell_value, float):
-                        cell_value_str = "${:,.2f}".format(cell_value)
-                    else:
-                        cell_value_str = str(cell_value)
+                    cell_value = str(table_model.data(table_model.index(row, column), Qt.DisplayRole)) # type: ignore
+                    if column in [3, 4]:
+                        cell_value = f"<div class='currency'>{float(cell_value):,.2f}</div>"
+                    table_html += f"<td>{cell_value}</td>"
                 table_html += "</tr>"
 
+            # Aplicar estilos CSS a la tabla
+            table_css = """
+                <style>
+                    table {
+                        border-collapse: collapse;
+                        font-size: 12px;
+                        width: 100%;
+                    }
+                    th, td {
+                        border: 1px solid black;
+                        padding: 5px;
+                        text-align: center;
+                    }
+                    th {
+                        font-weight: bold;
+                    }
+                    td {
+                        font-size: 10px;
+                    }
+                    .currency {
+                        text-align: right;
+                    }
+                </style>
+        """
+            table_html = f"<table>{table_html}</table>"
+            table_html = table_css + table_html
+
             document = QTextDocument()
-            document.setDefaultStyleSheet("table {border-collapse: collapse;} \
-                                        th, td {border: 1px solid black; padding: 5px;}")  # Estilos CSS
-            document.setHtml(f"<table>{table_html}</table>")
+            document.setHtml(table_html)
 
             # Imprimir contenido del QTextDocument
             preview_dialog = QPrintPreviewDialog(printer, self.tbtabla)
