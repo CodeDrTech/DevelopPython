@@ -1,10 +1,10 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QAbstractItemView, QDialog, QPushButton, QTreeWidget
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QToolBar, QTreeWidgetItem, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QAbstractItemView, QDialog, QPushButton, QTreeWidget
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QStandardItemModel, QStandardItem, QTextDocument
-from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo
-from PyQt5.QtCore import QMarginsF, Qt, QRectF, QDate
+from PyQt5.QtPrintSupport import QPrintDialog, QPrintPreviewDialog, QPrinter, QPrinterInfo
+from PyQt5.QtCore import QMarginsF, Qt, QLibraryInfo, QLocale, QTranslator, QTextCodec, QByteArray, QRectF, QDate
 from Conexion_db import conectar_db
 from Consultas_db import mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
@@ -160,8 +160,8 @@ class VentanaDatosReportes(QMainWindow):
                 super(visualizarImprimirExportar, self).__init__()
         
             self.setWindowTitle("Visualizar, imprimir y exportar datos a PDF con PyQt5")
-            self.setWindowIcon(QIcon("Qt.png"))
-            self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint)
+            #self.setWindowIcon(QIcon("Qt.png"))
+            self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.setFixedSize(612, 408)
 
             self.initUI()
@@ -190,7 +190,7 @@ class VentanaDatosReportes(QMainWindow):
                 self.model = self.treeWidgetUsuarios.model()
 
                 for indice, ancho in enumerate((110, 150, 150, 160), start=0):
-                    self.model.setHeaderData(indice, Qt.Horizontal, Qt.AlignCenter, Qt.TextAlignmentRole)
+                    self.model.setHeaderData(indice, Qt.Horizontal, Qt.AlignCenter, Qt.TextAlignmentRole) # type: ignore
                     self.treeWidgetUsuarios.setColumnWidth(indice, ancho)
         
                 self.treeWidgetUsuarios.setAlternatingRowColors(True)
@@ -242,7 +242,7 @@ class VentanaDatosReportes(QMainWindow):
                         datos += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" %dato
                         item_widget.append(QTreeWidgetItem((str(dato[0]), dato[1], dato[2], dato[3])))
 
-                        reporteHtml = """
+                    reporteHtml = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -290,20 +290,19 @@ tr:nth-child(even) {
 </html>
 """.replace("[DATOS]", datos)
 
-            datos = QByteArray()
-            datos.append(str(reporteHtml))
-            codec = QTextCodec.codecForHtml(datos)
-            unistr = codec.toUnicode(datos)
+                    datos = QByteArray()
+                    datos.append(str(reporteHtml))
+                    codec = QTextCodec.codecForHtml(datos)
+                    unistr = codec.toUnicode(datos)
 
-            if Qt.mightBeRichText(unistr):
-                self.documento.setHtml(unistr)
-            else:
-                self.documento.setPlainText(unistr)
+                    if Qt.mightBeRichText(unistr): # type: ignore
+                        self.documento.setHtml(unistr)
+                    else:
+                        self.documento.setPlainText(unistr)
 
-            self.treeWidgetUsuarios.addTopLevelItems(item_widget)
-            else:
-                QMessageBox.information(self, "Buscar usuarios", "No se encontraron resultados.      ",
-                                    QMessageBox.Ok)
+                    self.treeWidgetUsuarios.addTopLevelItems(item_widget)
+                else:
+                    QMessageBox.information(self, "Buscar usuarios", "No se encontraron resultados.      ",QMessageBox.Ok)
 
             def limpiarTabla(self):
                 self.documento.clear()
@@ -315,11 +314,11 @@ tr:nth-child(even) {
             
                     vista = QPrintPreviewDialog(impresion, self)
                     vista.setWindowTitle("Vista previa")
-                    vista.setWindowFlags(Qt.Window)
+                    vista.setWindowFlags(Qt.Window) # type: ignore
                     vista.resize(800, 600)
 
                     exportarPDF = vista.findChildren(QToolBar)
-                    exportarPDF[0].addAction(QIcon("exportarPDF.png"), "Exportar a PDF", self.exportarPDF)
+                    exportarPDF[0].addAction(QIcon("MiniNomina/ICO/exportarPDF.png"), "Exportar a PDF", self.exportarPDF) # type: ignore
             
                     vista.paintRequested.connect(self.vistaPreviaImpresion)
                     vista.exec_()
