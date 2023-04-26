@@ -182,12 +182,6 @@ class VentanaDatosReportes(QMainWindow):
             preview_dialog = QPrintPreviewDialog(printer, self.tbtabla)
             preview_dialog.paintRequested.connect(document.print_)
             preview_dialog.exec_()
-
-
-        
-        
-
-
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
         
