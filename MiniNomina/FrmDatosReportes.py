@@ -174,6 +174,7 @@ class VentanaDatosReportes(QMainWindow):
                     cell_value = str(table_model.data(table_model.index(row, column), Qt.DisplayRole)) # type: ignore
                     table_html += f"<td>{cell_value}</td>"
             table_html += "</tr>"
+            
 
             document = QTextDocument()
             document.setHtml(f"<table>{table_html}</table>")

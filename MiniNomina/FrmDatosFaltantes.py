@@ -156,10 +156,10 @@ class VentanaDatosFaltantes(QMainWindow):
                 table_html += "<tr>"
                 for column in range(column_count):
                     cell_value = str(table_model.data(table_model.index(row, column), Qt.DisplayRole)) # type: ignore
-                    if column in [3, 4]:
+                    if column in [2, 3]:
                         cell_value = f"<div class='currency'>{float(cell_value):,.2f}</div>"
                     table_html += f"<td>{cell_value}</td>"
-                table_html += "</tr>"
+            table_html += "</tr>"
 
             # Aplicar estilos CSS a la tabla
             table_css = """
