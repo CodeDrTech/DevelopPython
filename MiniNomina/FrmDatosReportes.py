@@ -1,4 +1,5 @@
 import sys
+import locale
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QToolBar, QTreeWidgetItem, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QAbstractItemView, QDialog, QPushButton, QTreeWidget
 from PyQt5 import QtWidgets, QtGui
@@ -155,6 +156,10 @@ class VentanaDatosReportes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
         
+        
+        # Configurar la localización para que use la convención de separación de miles adecuada
+        locale.setlocale(locale.LC_MONETARY, '')
+        conv = locale.localeconv()
         # Crear objeto QPrinter y configurar opciones de impresión
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
@@ -164,7 +169,7 @@ class VentanaDatosReportes(QMainWindow):
         dialog = QPrintDialog(printer, self.tbtabla)
         if dialog.exec_() == QDialog.Accepted:
             # Crear objeto QTextDocument y establecer contenido HTML
-            table_html = ""
+            table_html = "<table border='0.1'>"
             table_model = self.tbtabla.model()
             row_count = table_model.rowCount()
             column_count = table_model.columnCount()
@@ -172,12 +177,15 @@ class VentanaDatosReportes(QMainWindow):
                 table_html += "<tr>"
                 for column in range(column_count):
                     cell_value = str(table_model.data(table_model.index(row, column), Qt.DisplayRole)) # type: ignore
+                    if isinstance(cell_value, (int, float)):
+                        cell_value = format(cell_value, f"n{conv['frac_digits']}")
+                        cell_value = cell_value.replace('.', conv['thousands_sep'])
                     table_html += f"<td>{cell_value}</td>"
             table_html += "</tr>"
             
 
             document = QTextDocument()
-            document.setHtml(f"<table>{table_html}</table>")
+            document.setHtml(table_html)
 
             # Imprimir contenido del QTextDocument
             preview_dialog = QPrintPreviewDialog(printer, self.tbtabla)
