@@ -106,7 +106,7 @@ class VentanaDatosEstados(QMainWindow):
             query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
                     FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
                     UNION ALL \
-                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+                    SELECT '', '', 'TOTAL', SUM(ABONO), SUM(FALTANTE) \
                     FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
                     GROUP BY 'TOTAL'")
 
@@ -133,7 +133,7 @@ class VentanaDatosEstados(QMainWindow):
             query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
                     FROM faltantes WHERE NOMBRE = '{Empleado}' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
                     UNION ALL \
-                    SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE) \
+                    SELECT '', '', 'TOTAL', SUM(ABONO), SUM(FALTANTE) \
                     FROM faltantes WHERE NOMBRE = '{Empleado}' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
                     GROUP BY 'TOTAL'")
 
@@ -243,8 +243,13 @@ class VentanaDatosEstados(QMainWindow):
                 for column in range(column_count):
                 
                     cell_value = table_model.data(table_model.index(row, column), Qt.DisplayRole) # type: ignore
-                    if isinstance(cell_value, (int, float)):
-                        cell_value = locale.format_string('%d', cell_value, grouping=True)
+                    if column == 0:  # Si es la primera columna (la de la fecha)
+                        date_str = table_model.data(table_model.index(row, column), Qt.DisplayRole)  # type: ignore # Obtener el valor de la celda
+                        date_obj = QDate.fromString(date_str, "yyyy-MM-dd")  # Convertir en objeto QDate
+                        cell_value = date_obj.toString("d-MMMM-yyyy")  # Convertir en string en el formato deseado
+                        
+                    if isinstance(cell_value, (float)):
+                        cell_value = locale.currency(cell_value, symbol=True, grouping=True)
                     table_html += f"<td>{cell_value}</td>"
                                     
                 table_html += "</tr>"

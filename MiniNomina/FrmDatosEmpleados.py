@@ -117,8 +117,8 @@ class VentanaDatosEmpleados(QMainWindow):
                 for column in range(column_count):
                 
                     cell_value = table_model.data(table_model.index(row, column), Qt.DisplayRole) # type: ignore
-                    if isinstance(cell_value, (int, float)):
-                        cell_value = locale.format_string('%d', cell_value, grouping=True)
+                    if isinstance(cell_value, (float)):
+                        cell_value = locale.currency(cell_value, symbol=True, grouping=True)
                     table_html += f"<td>{cell_value}</td>"
                                     
                 table_html += "</tr>"
