@@ -36,7 +36,7 @@ class VentanaEmpleados(QMainWindow):
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
-    # Funcione para llamar la ventana secundaria (Ventana de datos)
+    # Funcione para llamar la ventana secundaria (Ventana de datos.)
     def abrirFrmDatos(self):
         self.llamar_venana_datos = VentanaDatosEmpleados()
         self.llamar_venana_datos.show()
