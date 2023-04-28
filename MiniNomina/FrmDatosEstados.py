@@ -247,18 +247,18 @@ class VentanaDatosEstados(QMainWindow):
                         date_str = table_model.data(table_model.index(row, column), Qt.DisplayRole)  # type: ignore # Obtener el valor de la celda
                         date_obj = QDate.fromString(date_str, "yyyy-MM-dd")  # Convertir en objeto QDate
                         cell_value = date_obj.toString("d-MMMM-yyyy")  # Convertir en string en el formato deseado
-                        
+                             
                     if isinstance(cell_value, (float)):
                         cell_value = locale.currency(cell_value, symbol=True, grouping=True)
                     table_html += f"<td>{cell_value}</td>"
-                                    
+                                       
                 table_html += "</tr>"
-            
                 
+            table_html += "<th>Incluir rango de fechas</th>"    
             document = QTextDocument()
             
             document.setHtml(table_html)
-
+            
             # Imprimir contenido del QTextDocument
             preview_dialog = QPrintPreviewDialog(printer, self.tbtabla)
             preview_dialog.paintRequested.connect(document.print_)

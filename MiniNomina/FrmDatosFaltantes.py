@@ -202,7 +202,7 @@ class VentanaDatosFaltantes(QMainWindow):
                                     
                 table_html += "</tr>"
             
-                
+            table_html += "<th>Incluir rango de fechas</th>"    
             document = QTextDocument()
             
             document.setHtml(table_html)
