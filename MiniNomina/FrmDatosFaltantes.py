@@ -52,6 +52,8 @@ class VentanaDatosFaltantes(QMainWindow):
         self.txtFechaInicio.dateChanged.connect(self.Filtro_por_fecha)
         self.txtFechaFinal.dateChanged.connect(self.Filtro_por_fecha)
         
+        self.cmbEmpleado.currentIndexChanged.connect(self.Filtro_por_fecha)
+        
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
