@@ -49,6 +49,9 @@ class VentanaDatosReportes(QMainWindow):
         
         self.BtnBuscar.clicked.connect(self.Filtro_por_fecha)
         
+        self.txtFechaInicio.dateChanged.connect(self.Filtro_por_fecha)
+        self.txtFechaFinal.dateChanged.connect(self.Filtro_por_fecha)
+        
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         model = QSqlTableModel()
@@ -156,6 +159,9 @@ class VentanaDatosReportes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
         
+        FechaInicio = self.txtFechaInicio.date().toString("d-MMMM-yyyy")
+        FechaFinal = self.txtFechaFinal.date().toString("d-MMMM-yyyy") 
+        
         
         # Configurar la localización para que use la convención de separación de miles adecuada
         locale.setlocale(locale.LC_ALL, '')
@@ -190,7 +196,7 @@ class VentanaDatosReportes(QMainWindow):
 </style>"
 
 
-            
+            table_html += f"<th>REPORTE DE PAGOS </th>"
             table_html += "<table>"
             table_html += "<tr>"
             table_html += "<th>NOMBRE</th>"
@@ -215,7 +221,7 @@ class VentanaDatosReportes(QMainWindow):
                                     
                 table_html += "</tr>"
             
-                
+            table_html += f"<th>REPORTE DESDE EL {FechaInicio} HASTA {FechaFinal} </th>"    
             document = QTextDocument()
             
             document.setHtml(table_html)

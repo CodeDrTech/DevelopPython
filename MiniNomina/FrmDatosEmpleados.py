@@ -98,7 +98,7 @@ class VentanaDatosEmpleados(QMainWindow):
         background-color: #f2f2f2;\
     }\
 </style>"
-            
+            table_html += f"<th>Reporte de empleados</th>"
             table_html += "<table>"
             table_html += "<tr>"
             table_html += "<th>NOMBRE</th>"

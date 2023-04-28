@@ -48,6 +48,9 @@ class VentanaDatosEstados(QMainWindow):
         self.BtnEliminar.clicked.connect(self.borrar_fila)
         
         self.BtnBuscar.clicked.connect(self.Filtro_por_fecha)
+        
+        self.txtFechaInicio.dateChanged.connect(self.Filtro_por_fecha)
+        self.txtFechaFinal.dateChanged.connect(self.Filtro_por_fecha)
     
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
@@ -191,6 +194,9 @@ class VentanaDatosEstados(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
+        
+        FechaInicio = self.txtFechaInicio.date().toString("d-MMMM-yyyy")
+        FechaFinal = self.txtFechaFinal.date().toString("d-MMMM-yyyy")
         # Configurar la localización para que use la convención de separación de miles adecuada
         locale.setlocale(locale.LC_ALL, '')
         conv = locale.localeconv()
@@ -223,6 +229,7 @@ class VentanaDatosEstados(QMainWindow):
     }\
 </style>"
             
+            table_html += f"<th>REPORTE DE ESTADOS</th>" 
             table_html += "<table>"
             table_html += "<tr>"
             table_html += "<th>FECHA</th>"
@@ -254,7 +261,7 @@ class VentanaDatosEstados(QMainWindow):
                                        
                 table_html += "</tr>"
                 
-            table_html += "<th>Incluir rango de fechas</th>"    
+            table_html += f"<th>REPORTE DESDE EL {FechaInicio}  HASTA {FechaFinal} </th>"    
             document = QTextDocument()
             
             document.setHtml(table_html)
