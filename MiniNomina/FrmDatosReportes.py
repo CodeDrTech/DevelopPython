@@ -169,7 +169,8 @@ class VentanaDatosReportes(QMainWindow):
         dialog = QPrintDialog(printer, self.tbtabla)
         if dialog.exec_() == QDialog.Accepted:
             # Crear objeto QTextDocument y establecer contenido HTML
-            table_html = "<table class='default'>"
+            
+            table_html = "<table border='1'>"
             table_model = self.tbtabla.model()
             row_count = table_model.rowCount()
             column_count = table_model.columnCount()
@@ -177,17 +178,19 @@ class VentanaDatosReportes(QMainWindow):
             for row in range(row_count):
                 
                 table_html += "<tr>"
-                
-                for column in range(column_count):
-                    
-                    cell_value = str(table_model.data(table_model.index(row, column), Qt.DisplayRole)) # type: ignore
-                    
-                    table_html += f"<td>{cell_value}</td>"
-            table_html += f"<th>NOMBRE</th>"        
-            table_html += "</tr>"
             
-
+                for column in range(column_count):
+                
+                    cell_value = table_model.data(table_model.index(row, column), Qt.DisplayRole) # type: ignore
+                    if isinstance(cell_value, (int, float)):
+                        cell_value = locale.format_string("%.0f", cell_value, grouping=True)
+                    table_html += f"<td>{cell_value}</td>"
+                                    
+                table_html += "</tr>"
+            
+                
             document = QTextDocument()
+            
             document.setHtml(table_html)
 
             # Imprimir contenido del QTextDocument
