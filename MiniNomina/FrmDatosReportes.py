@@ -158,7 +158,7 @@ class VentanaDatosReportes(QMainWindow):
         
         
         # Configurar la localización para que use la convención de separación de miles adecuada
-        locale.setlocale(locale.LC_MONETARY, '')
+        locale.setlocale(locale.LC_ALL, '')
         conv = locale.localeconv()
         # Crear objeto QPrinter y configurar opciones de impresión
         printer = QPrinter(QPrinter.HighResolution)
@@ -183,7 +183,7 @@ class VentanaDatosReportes(QMainWindow):
                 
                     cell_value = table_model.data(table_model.index(row, column), Qt.DisplayRole) # type: ignore
                     if isinstance(cell_value, (int, float)):
-                        cell_value = locale.format_string("%d", cell_value, grouping=True)
+                        cell_value = locale.format_string('%d', cell_value, grouping=True)
                     table_html += f"<td>{cell_value}</td>"
                                     
                 table_html += "</tr>"
