@@ -170,7 +170,34 @@ class VentanaDatosReportes(QMainWindow):
         if dialog.exec_() == QDialog.Accepted:
             # Crear objeto QTextDocument y establecer contenido HTML
             
-            table_html = "<table border='1'>"
+            table_html = "<style type='text/css'>\
+    table {\
+        border-collapse: collapse;\
+        border-spacing: 0;\
+    }\
+    th, td {\
+        border: 0.5px solid black;\
+        padding: 5px;\
+        text-align: left;\
+    }\
+    th {\
+        background-color: gray;\
+        color: white;\
+    }\
+    tr:nth-child(even) {\
+        background-color: #f2f2f2;\
+    }\
+</style>"
+
+
+            
+            table_html += "<table>"
+            table_html += "<tr>"
+            table_html += "<th>NOMBRE</th>"
+            table_html += "<th>BANCA</th>"
+            table_html += "<th>ABONOS</th>"
+            table_html += "<th>SALARIO NETO</th>"
+            table_html += "</tr>"
             table_model = self.tbtabla.model()
             row_count = table_model.rowCount()
             column_count = table_model.columnCount()

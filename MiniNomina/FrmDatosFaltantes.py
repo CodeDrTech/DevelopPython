@@ -1,4 +1,5 @@
 import sys
+import locale
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QDialog
 from PyQt5 import QtWidgets, QtGui
@@ -139,6 +140,9 @@ class VentanaDatosFaltantes(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):        
                 
+        # Configurar la localización para que use la convención de separación de miles adecuada
+        locale.setlocale(locale.LC_ALL, '')
+        conv = locale.localeconv()
         # Crear objeto QPrinter y configurar opciones de impresión
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
@@ -148,47 +152,55 @@ class VentanaDatosFaltantes(QMainWindow):
         dialog = QPrintDialog(printer, self.tbtabla)
         if dialog.exec_() == QDialog.Accepted:
             # Crear objeto QTextDocument y establecer contenido HTML
-            table_html = ""
+            
+            table_html = "<style type='text/css'>\
+    table {\
+        border-collapse: collapse;\
+        border-spacing: 0;\
+    }\
+    th, td {\
+        border: 0.5px solid black;\
+        padding: 5px;\
+        text-align: left;\
+    }\
+    th {\
+        background-color: gray;\
+        color: white;\
+    }\
+    tr:nth-child(even) {\
+        background-color: #f2f2f2;\
+    }\
+</style>"
+            
+            table_html += "<table>"
+            table_html += "<tr>"
+            table_html += "<th>FECHA</th>"
+            table_html += "<th>NOMBRE</th>"
+            table_html += "<th>BANCA</th>"
+            table_html += "<th>ABONO</th>"
+            table_html += "<th>FALTANTE</th>"
+            table_html += "</tr>"
+            
             table_model = self.tbtabla.model()
             row_count = table_model.rowCount()
             column_count = table_model.columnCount()
+            
             for row in range(row_count):
+                
                 table_html += "<tr>"
+            
                 for column in range(column_count):
-                    cell_value = str(table_model.data(table_model.index(row, column), Qt.DisplayRole)) # type: ignore
-                    if column in [2, 3]:
-                        cell_value = f"<div class='currency'>{float(cell_value):,.2f}</div>"
+                
+                    cell_value = table_model.data(table_model.index(row, column), Qt.DisplayRole) # type: ignore
+                    if isinstance(cell_value, (int, float)):
+                        cell_value = locale.format_string('%d', cell_value, grouping=True)
                     table_html += f"<td>{cell_value}</td>"
-            table_html += "</tr>"
-
-            # Aplicar estilos CSS a la tabla
-            table_css = """
-                <style>
-                    table {
-                        border-collapse: collapse;
-                        font-size: 12px;
-                        width: 100%;
-                    }
-                    th, td {
-                        border: 1px solid black;
-                        padding: 5px;
-                        text-align: center;
-                    }
-                    th {
-                        font-weight: bold;
-                    }
-                    td {
-                        font-size: 10px;
-                    }
-                    .currency {
-                        text-align: right;
-                    }
-                </style>
-        """
-            table_html = f"<table>{table_html}</table>"
-            table_html = table_css + table_html
-
+                                    
+                table_html += "</tr>"
+            
+                
             document = QTextDocument()
+            
             document.setHtml(table_html)
 
             # Imprimir contenido del QTextDocument
