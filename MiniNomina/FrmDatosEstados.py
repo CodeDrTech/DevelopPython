@@ -219,7 +219,7 @@ class VentanaDatosEstados(QMainWindow):
     }\
     th, td {\
         border: 0.5px solid black;\
-        padding: 5px;\
+        padding: 10px;\
         text-align: left;\
     }\
     th {\

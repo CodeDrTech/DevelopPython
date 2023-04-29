@@ -168,7 +168,7 @@ class VentanaDatosFaltantes(QMainWindow):
     }\
     th, td {\
         border: 0.5px solid black;\
-        padding: 5px;\
+        padding: 10px;\
         text-align: left;\
     }\
     th {\
@@ -230,10 +230,19 @@ class VentanaDatosFaltantes(QMainWindow):
             # Obtener la fila al seleccionar una celda de la tabla
             index = indexes[0]
             row = index.row()
-            # Eliminar la fila seleccionada del modelo de datos
-            model = self.tbtabla.model()
-            model.removeRow(row)
-            QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO CIERRE PARA ACTUALIZAR LOS DATOS.")
+            
+            # Preguntar si el usuario está seguro de eliminar la fila
+            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTAS SEGURO QUE QUIERE ELIMINAR ESTA FILA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", eliminar la fila
+            if confirmacion == QMessageBox.Yes:            
+            
+                # Eliminar la fila seleccionada del modelo de datos
+                model = self.tbtabla.model()
+                model.removeRow(row)
+                QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO CIERRE PARA ACTUALIZAR LOS DATOS.")
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL REGISTRO QUE VAS A ELIMINAR.")
             
