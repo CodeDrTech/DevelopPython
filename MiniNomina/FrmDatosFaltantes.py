@@ -1,6 +1,7 @@
 import sys
 import locale
 from PyQt5 import uic
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QDialog
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QStandardItemModel, QStandardItem, QTextDocument
@@ -23,6 +24,23 @@ class CurrencyDelegate(QStyledItemDelegate):
         except ValueError:
             # Si no se puede convertir a un formato de moneda, devuelve el valor original
             return value 
+
+
+class DateDelegate(QStyledItemDelegate):
+    def displayText(self, value, locale):
+        try:
+            # Convierte el valor a un objeto fecha
+            date = QtCore.QDate.fromString(value, "yyyy-MM-dd")
+            # Formatea el objeto fecha en el formato deseado
+            return date.toString("d-MMMM-yyyy")
+        except Exception as e:
+            # Imprime el error en la consola
+            print("Error al dar formato a la fecha:", e)
+            # Devuelve el valor original
+            return value
+
+
+
 
 class VentanaDatosFaltantes(QMainWindow):
     def __init__(self):
@@ -100,9 +118,13 @@ class VentanaDatosFaltantes(QMainWindow):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         currency_delegate = CurrencyDelegate()
+        date_delegate = DateDelegate()
         
         if not Empleado:
-    
+            
+            #if FechaInicio > FechaFinal:
+            #    QMessageBox.warning(self, "FECHA", "FECHA INCORRECTA.")
+            #    return
             # Crear un modelo de tabla SQL
             model = QSqlTableModel()
             model.setTable("faltantes")
@@ -115,7 +137,10 @@ class VentanaDatosFaltantes(QMainWindow):
             self.tbtabla.setModel(model)
 
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            self.tbtabla.resizeColumnsToContents()        
+            self.tbtabla.resizeColumnsToContents()
+            
+            #self.tbtabla.setItemDelegateForColumn(0, date_delegate)
+                    
             self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
             self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
         else:    
@@ -150,7 +175,7 @@ class VentanaDatosFaltantes(QMainWindow):
                 
         # Configurar la localización para que use la convención de separación de miles adecuada
         locale.setlocale(locale.LC_ALL, '')
-        conv = locale.localeconv()
+        
         # Crear objeto QPrinter y configurar opciones de impresión
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
@@ -159,8 +184,8 @@ class VentanaDatosFaltantes(QMainWindow):
         # Mostrar diálogo de impresión y obtener configuraciones de usuario
         dialog = QPrintDialog(printer, self.tbtabla)
         if dialog.exec_() == QDialog.Accepted:
-            # Crear objeto QTextDocument y establecer contenido HTML
             
+            # Crear objeto QTextDocument y establecer contenido HTML
             table_html = "<style type='text/css'>\
     table {\
         border-collapse: collapse;\
@@ -242,7 +267,7 @@ class VentanaDatosFaltantes(QMainWindow):
                 # Eliminar la fila seleccionada del modelo de datos
                 model = self.tbtabla.model()
                 model.removeRow(row)
-                QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO CIERRE PARA ACTUALIZAR LOS DATOS.")
+                QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO.")
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL REGISTRO QUE VAS A ELIMINAR.")
             
