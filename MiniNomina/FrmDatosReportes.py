@@ -202,7 +202,7 @@ class VentanaDatosReportes(QMainWindow):
             table_html += "<table>"
             table_html += "<tr>"
             table_html += "<th>NOMBRE</th>"
-            table_html += "<th>BANCA</th>"
+            table_html += "<th>FALTANTES</th>"
             table_html += "<th>ABONOS</th>"
             table_html += "<th>SALARIO NETO</th>"
             table_html += "</tr>"
