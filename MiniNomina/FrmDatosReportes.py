@@ -138,9 +138,9 @@ class VentanaDatosReportes(QMainWindow):
             
         else:
             
-            if FechaInicio >= FechaFinal:
-                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
-                return
+            #if FechaInicio >= FechaFinal:
+            #    QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+            #    return
             
             query = QSqlQuery()
             query.exec_(f"SELECT e.NOMBRE,\

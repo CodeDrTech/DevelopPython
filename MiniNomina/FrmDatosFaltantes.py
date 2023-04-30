@@ -123,6 +123,7 @@ class VentanaDatosFaltantes(QMainWindow):
         
         
         
+        
         if not Empleado:
             
             if FechaInicio >= FechaFinal:
