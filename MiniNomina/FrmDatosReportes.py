@@ -105,6 +105,11 @@ class VentanaDatosReportes(QMainWindow):
         currency_delegate = CurrencyDelegate()
     
         if not Empleado:
+            
+            if FechaInicio >= FechaFinal:
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                return
+            
             query = QSqlQuery()
             query.exec_(f"SELECT e.NOMBRE,\
             COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE AND f.FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'), 0) AS FALTANTES,\
@@ -132,6 +137,11 @@ class VentanaDatosReportes(QMainWindow):
             self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
             
         else:
+            
+            if FechaInicio >= FechaFinal:
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                return
+            
             query = QSqlQuery()
             query.exec_(f"SELECT e.NOMBRE,\
             COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE AND f.FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'), 0) AS FALTANTES,\

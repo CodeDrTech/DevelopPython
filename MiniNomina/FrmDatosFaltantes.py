@@ -120,11 +120,16 @@ class VentanaDatosFaltantes(QMainWindow):
         currency_delegate = CurrencyDelegate()
         date_delegate = DateDelegate()
         
+        
+        
+        
         if not Empleado:
             
-            #if FechaInicio > FechaFinal:
-            #    QMessageBox.warning(self, "FECHA", "FECHA INCORRECTA.")
-            #    return
+            if FechaInicio >= FechaFinal:
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                return
+            
+            
             # Crear un modelo de tabla SQL
             model = QSqlTableModel()
             model.setTable("faltantes")
@@ -143,8 +148,13 @@ class VentanaDatosFaltantes(QMainWindow):
                     
             self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
             self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
-        else:    
-        
+            
+        else:
+            
+            if FechaInicio >= FechaFinal:
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                return
+            
             # Crear un modelo de tabla SQL
             model = QSqlTableModel()
             model.setTable("faltantes")

@@ -71,6 +71,7 @@ class VentanaFaltantes(QMainWindow):
         self.llamar_venana_datos = VentanaDatosFaltantes()
         self.llamar_venana_datos.show()
         self.llamar_venana_datos.Filtro_por_fecha()
+                
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------ 
     # Funcion para dotar de eventos a la ventana al cargar.    
