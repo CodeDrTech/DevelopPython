@@ -30,12 +30,10 @@ class DateDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):
         try:
             # Convierte el valor a un objeto fecha
-            date = QtCore.QDate.fromString(value, "yyyy-MM-dd")
+            date = QDate.fromString(value, "yyyy-MM-dd")
             # Formatea el objeto fecha en el formato deseado
-            return date.toString("d-MMMM-yyyy")
-        except Exception as e:
-            # Imprime el error en la consola
-            print("Error al dar formato a la fecha:", e)
+            return date.toString("d-MMMM-yyyy") #value.toString("d-MMMM-yyyy")
+        except ValueError:
             # Devuelve el valor original
             return value
 
@@ -127,7 +125,7 @@ class VentanaDatosFaltantes(QMainWindow):
         if not Empleado:
             
             if FechaInicio > FechaFinal:
-                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR O IGUAL A LA SEGUNDA.")
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
                 return
             
             
@@ -145,7 +143,7 @@ class VentanaDatosFaltantes(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             self.tbtabla.resizeColumnsToContents()
             
-            #self.tbtabla.setItemDelegateForColumn(0, date_delegate)
+            self.tbtabla.setItemDelegateForColumn(0, date_delegate)
                     
             self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
             self.tbtabla.setItemDelegateForColumn(3, currency_delegate)
