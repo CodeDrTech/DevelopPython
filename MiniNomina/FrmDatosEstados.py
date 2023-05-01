@@ -109,7 +109,7 @@ class VentanaDatosEstados(QMainWindow):
         if not Empleado:
             
             if FechaInicio >= FechaFinal:
-                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR O IGUAL A LA SEGUNDA.")
                 return
             
             query = QSqlQuery()
@@ -139,10 +139,6 @@ class VentanaDatosEstados(QMainWindow):
             self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
             
         else:
-            
-            #if FechaInicio >= FechaFinal:
-            #    QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
-            #    return
             
             query = QSqlQuery()
             query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
