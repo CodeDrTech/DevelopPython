@@ -145,7 +145,7 @@ class VentanaDatosEmpleados(QMainWindow):
             row = index.row()
             
             # Preguntar si el usuario está seguro de eliminar la fila
-            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTAS SEGURO QUE QUIERE ELIMINAR ESTA FILA?",
+            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTAS SEGURO QUE QUIERE ELIMINAR ESTE EMPLEADO?",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
@@ -154,9 +154,9 @@ class VentanaDatosEmpleados(QMainWindow):
                 # Eliminar la fila seleccionada del modelo de datos
                 model = self.tbtabla.model()
                 model.removeRow(row)
-                QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO.")
+                QMessageBox.warning(self, "ELIMINADO", "EMPLEADO ELIMINADO.")
         else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA EL REGISTRO QUE VAS A ELIMINAR.")
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL EMPLEADO QUE VAS A ELIMINAR.")
             
         
     #------------------------------------------------------------------------------------------------------

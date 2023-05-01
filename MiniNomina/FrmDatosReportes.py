@@ -33,7 +33,7 @@ class VentanaDatosReportes(QMainWindow):
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Empleados.
-        self.setWindowTitle('REPORTES')
+        self.setWindowTitle('REPORTES DE PAGOS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
         
@@ -106,7 +106,7 @@ class VentanaDatosReportes(QMainWindow):
     
         if not Empleado:
             
-            if FechaInicio >= FechaFinal:
+            if FechaInicio > FechaFinal:
                 QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR O IGUAL A LA SEGUNDA.")
                 return
             

@@ -126,7 +126,7 @@ class VentanaDatosFaltantes(QMainWindow):
         
         if not Empleado:
             
-            if FechaInicio >= FechaFinal:
+            if FechaInicio > FechaFinal:
                 QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR O IGUAL A LA SEGUNDA.")
                 return
             
@@ -266,7 +266,7 @@ class VentanaDatosFaltantes(QMainWindow):
             row = index.row()
             
             # Preguntar si el usuario está seguro de eliminar la fila
-            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTAS SEGURO QUE QUIERE ELIMINAR ESTA FILA?",
+            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTAS SEGURO QUE QUIERE ELIMINAR ESTE FALTANTE?",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
@@ -276,9 +276,9 @@ class VentanaDatosFaltantes(QMainWindow):
                 # Eliminar la fila seleccionada del modelo de datos
                 model = self.tbtabla.model()
                 model.removeRow(row)
-                QMessageBox.warning(self, "ELIMINADO", "REGISTRO ELIMINADO.")
+                QMessageBox.warning(self, "ELIMINADO", "FALTANTE ELIMINADO.")
         else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA EL REGISTRO QUE VAS A ELIMINAR.")
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL FALTANTE QUE VAS A ELIMINAR.")
             
         
     #------------------------------------------------------------------------------------------------------
