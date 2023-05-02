@@ -37,5 +37,12 @@ FROM faltantes
 WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'
 
 
+"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE\
+            FROM faltantes\
+            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+            GROUP BY FECHA, NOMBRE, BANCA\
+            WITH ROLLUP;
+
+
 
 
