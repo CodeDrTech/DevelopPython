@@ -143,7 +143,7 @@ class VentanaDatosFaltantes(QMainWindow):
             # Ajustar el tamaño de las columnas para que se ajusten al contenido
             self.tbtabla.resizeColumnsToContents()
             
-            self.tbtabla.setItemDelegateForColumn(0, date_delegate)
+            #self.tbtabla.setItemDelegateForColumn(0, date_delegate)
                     
             self.tbtabla.setItemDelegateForColumn(4, currency_delegate)
             self.tbtabla.setItemDelegateForColumn(3, currency_delegate)

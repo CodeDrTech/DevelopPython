@@ -29,4 +29,8 @@ WHERE strftime('%d-%m-%Y', FECHA) =
 ORDER BY FECHA DESC LIMIT 1;
 
 
+SELECT COUNT(*) FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'
+
+
+
 
