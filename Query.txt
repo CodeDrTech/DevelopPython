@@ -29,9 +29,6 @@ WHERE strftime('%d-%m-%Y', FECHA) =
 ORDER BY FECHA DESC LIMIT 1;
 
 
-SELECT COUNT(*) FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'
-
-
 
 SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE, 
     (SELECT SUM(ABONO) FROM faltantes f2 WHERE f2.NOMBRE = faltantes.NOMBRE AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}') as TOTAL_ABONO,
