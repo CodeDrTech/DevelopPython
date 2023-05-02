@@ -1,48 +1,12 @@
-SELECT e.NOMBRE, e.SALARIO - COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS salario_actualizado
-FROM empleados e;
-
-
-SELECT SUM(FALTANTE - ABONO) FROM faltantes
-
-SELECT e.NOMBRE, e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS salario_actualizado
-FROM empleados e;
-
-
-SELECT e.NOMBRE, 
-       COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_FALTANTES,
-       COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS TOTAL_ABONOS,
-       e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE), 0) AS SALARIO_NETO 
-FROM empleados e;
-
-
 SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE
 FROM faltantes
-UNION ALL
-SELECT 'TOTAL', '', '', SUM(ABONO), SUM(FALTANTE)
-FROM faltantes
-GROUP BY 'TOTAL'
-
-
-SELECT * FROM faltantes
-WHERE strftime('%d-%m-%Y', FECHA) = 
-    (SELECT strftime('%d-%m-%Y', MAX(FECHA)) FROM faltantes)
-ORDER BY FECHA DESC LIMIT 1;
-
-
-
-SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE, 
-    (SELECT SUM(ABONO) FROM faltantes f2 WHERE f2.NOMBRE = faltantes.NOMBRE AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}') as TOTAL_ABONO,
-    (SELECT SUM(FALTANTE) FROM faltantes f2 WHERE f2.NOMBRE = faltantes.NOMBRE AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}') as TOTAL_FALTANTE
-FROM faltantes 
 WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'
-
-
-"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE\
-            FROM faltantes\
-            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
-            GROUP BY FECHA, NOMBRE, BANCA\
-            WITH ROLLUP;
-
-
-
-
+UNION ALL
+SELECT '', NOMBRE, 'TOTAL', SUM(ABONO), SUM(FALTANTE)
+FROM faltantes
+WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'
+GROUP BY NOMBRE
+UNION ALL
+SELECT '', '', 'TOTAL', SUM(ABONO), SUM(FALTANTE)
+FROM faltantes
+WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}';
