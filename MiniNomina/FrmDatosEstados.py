@@ -113,12 +113,11 @@ class VentanaDatosEstados(QMainWindow):
                 return
             
             query = QSqlQuery()
-            query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE \
-                    FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
-                    UNION ALL \
-                    SELECT '', '', 'TOTAL', SUM(ABONO), SUM(FALTANTE) \
-                    FROM faltantes WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}' \
-                    GROUP BY 'TOTAL'")
+            query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE\
+            FROM faltantes\
+            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+            GROUP BY FECHA, NOMBRE, BANCA\
+            WITH ROLLUP")
 
    
             # Crear un modelo de tabla SQL
