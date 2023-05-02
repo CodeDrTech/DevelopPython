@@ -116,9 +116,22 @@ class VentanaDatosEstados(QMainWindow):
             query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE\
             FROM faltantes\
             WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
-            GROUP BY FECHA, NOMBRE, BANCA\
-            WITH ROLLUP")
-
+            UNION ALL\
+            SELECT '', '*TOTAL GENERAL*', '', SUM(ABONO), SUM(FALTANTE)\
+            FROM faltantes\
+            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+            UNION ALL\
+            SELECT NULL AS FECHA, '' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
+            UNION ALL\
+            SELECT NULL AS FECHA, 'NOMBRE' AS NOMBRE, NULL AS BANCA, 'ABONO' AS ABONO, 'FALTANTE' AS FALTANTE\
+            UNION ALL\
+            SELECT '', NOMBRE, 'TOTAL', SUM(ABONO), SUM(FALTANTE)\
+            FROM faltantes\
+            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+            GROUP BY NOMBRE\
+            UNION ALL\
+            SELECT NULL AS FECHA, '*TOTAL POR EMPLEADOS*' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE;")
+            
    
             # Crear un modelo de tabla SQL
             model = QSqlTableModel()
@@ -224,7 +237,7 @@ class VentanaDatosEstados(QMainWindow):
     }\
     th, td {\
         border: 0.5px solid black;\
-        padding: 10px;\
+        padding: 05px;\
         text-align: left;\
     }\
     th {\

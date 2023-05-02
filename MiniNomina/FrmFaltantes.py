@@ -149,7 +149,7 @@ class VentanaFaltantes(QMainWindow):
         self.llamar_tbtabla.show()
         # tbtabla = self.llamar_tbtabla.TableView_de_FrmDatos()
            
-        self.llamar_tbtabla.estados_por_fechas()    
+        self.llamar_tbtabla.Filtro_por_fecha()    
         # if not Empleado:
             
         #     query = QSqlQuery()
