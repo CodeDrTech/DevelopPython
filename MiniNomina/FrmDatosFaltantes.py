@@ -27,7 +27,7 @@ class CurrencyDelegate(QStyledItemDelegate):
 
 
 class DateDelegate(QStyledItemDelegate):
-    def displayText(self, value, locale):
+    def displayText(self, value, date):
         try:
             # Convierte el valor a un objeto fecha
             date = QDate.fromString(value, "yyyy-MM-dd")
