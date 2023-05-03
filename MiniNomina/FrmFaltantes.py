@@ -45,24 +45,84 @@ class VentanaFaltantes(QMainWindow):
         self.BtnEditar.clicked.connect(self.abrirFrmDatos)
         
         self.BtnEstado.clicked.connect(self.reporte_parcial)
+        
+        #self.cmbBanca.currentIndexChanged.connect(
+            #lambda i: self.actualizar_cmbEmpleados(self.cmbBanca.currentText()))
+        
+        #self.cmbEmpleado.currentIndexChanged.connect(
+            #lambda i: self.actualizar_cmbBanca(self.cmbEmpleado.currentText()))
+        
+        
+        
 
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
-        # Obtiene los datos de la columna Nombre de la tabla empleados.
+        txtEmpleado = self.cmbEmpleado.currentText()
+        txtNumBanca = self.cmbBanca.currentText()
+        
+        if not txtEmpleado:
+            # Obtiene los datos de la columna Nombre de la tabla empleados.
+            model = QSqlTableModel()
+            model.setTable('empleados')
+            model.select()
+            columna_empleados = []
+            for i in range(model.rowCount()):
+                columna_empleados.append(model.data(model.index(i, 0)))
+        
+            # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox asignado.
+            combo_model = QStandardItemModel()
+            for item in columna_empleados:
+                combo_model.appendRow(QStandardItem(str(item)))
+            self.cmbEmpleado.setModel(combo_model)
+        
+        
+            # Obtiene los datos de la columna Banca de la tabla empleados.
+            model = QSqlTableModel()
+            model.setTable('empleados')
+            model.select()
+            columna_banca = []
+            for i in range(model.rowCount()):
+                columna_banca.append(model.data(model.index(i, 1)))
+        
+            # Cargar los datos de la columna Banca de la tabla empleados en el QComboBox asignado.
+            combo_model2 = QStandardItemModel()
+            for item in columna_banca:
+                combo_model2.appendRow(QStandardItem(str(item)))
+            self.cmbBanca.setModel(combo_model2)
+        else:
+            self.cmbBanca.currentIndexChanged.connect(
+                lambda i: self.actualizar_cmbEmpleados(self.cmbBanca.currentText()))
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
+    def actualizar_cmbEmpleados(self, banca):
         model = QSqlTableModel()
         model.setTable('empleados')
+        model.setFilter(f"banca='{banca}'")
         model.select()
-        column_data = []
+        columna_empleados = []
         for i in range(model.rowCount()):
-            column_data.append(model.data(model.index(i, 0)))
-        
-        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+            columna_empleados.append(model.data(model.index(i, 0)))
+
         combo_model = QStandardItemModel()
-        for item in column_data:
+        for item in columna_empleados:
             combo_model.appendRow(QStandardItem(str(item)))
         self.cmbEmpleado.setModel(combo_model)
-    
-    
+        
+        
+    def actualizar_cmbBanca(self, Empleado):
+        model = QSqlTableModel()
+        model.setTable('empleados')
+        model.setFilter(f"Empleado='{Empleado}'")
+        model.select()
+        columna_empleados = []
+        for i in range(model.rowCount()):
+            columna_empleados.append(model.data(model.index(i, 1)))
+
+        combo_model = QStandardItemModel()
+        for item in columna_empleados:
+            combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbEmpleado.setModel(combo_model)
+
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     # Funcion para llamar la ventana secundaria (Ventana de datos) y editar las informaciones.
@@ -82,6 +142,7 @@ class VentanaFaltantes(QMainWindow):
         # Establecer el foco en el cuadro de texto cmbEmpleado.
         self.cmbEmpleado.setFocus()    
         self.cmbEmpleado.setCurrentText("")
+        self.cmbBanca.setCurrentText("")
         #Establecer la feha actual.
         self.txtFecha.setDisplayFormat("d-MMMM-yyyy")# Formato de fecha.
         self.txtFecha.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha.
