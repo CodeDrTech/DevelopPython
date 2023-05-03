@@ -242,7 +242,7 @@ class VentanaDatosFaltantes(QMainWindow):
                                     
                 table_html += "</tr>"
             
-            table_html += f"<th>REPORTE DESDE EL {FechaInicio} HASTA {FechaFinal} </th>"    
+            table_html += f"<th>REPORTE DESDE EL {FechaInicio} HASTA EL {FechaFinal} </th>"    
             document = QTextDocument()
             
             document.setHtml(table_html)

@@ -26,6 +26,9 @@
       <height>521</height>
      </rect>
     </property>
+    <property name="cursor" stdset="0">
+     <cursorShape>IBeamCursor</cursorShape>
+    </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
