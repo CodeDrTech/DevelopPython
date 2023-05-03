@@ -113,24 +113,26 @@ class VentanaDatosEstados(QMainWindow):
                 return
             
             query = QSqlQuery()
-            query.exec_(f"SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE\
-            FROM faltantes\
-            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
-            UNION ALL\
-            SELECT '', '*TOTAL GENERAL*', '', SUM(ABONO), SUM(FALTANTE)\
-            FROM faltantes\
-            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
-            UNION ALL\
-            SELECT NULL AS FECHA, '' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
-            UNION ALL\
-            SELECT NULL AS FECHA, 'NOMBRE' AS NOMBRE, NULL AS BANCA, 'ABONO' AS ABONO, 'FALTANTE' AS FALTANTE\
-            UNION ALL\
-            SELECT '', NOMBRE, 'TOTAL', SUM(ABONO), SUM(FALTANTE)\
+            query.exec_(f"SELECT '', NOMBRE, BANCA, SUM(ABONO) AS ABONO, SUM(FALTANTE) AS FALTANTE\
             FROM faltantes\
             WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
             GROUP BY NOMBRE\
             UNION ALL\
-            SELECT NULL AS FECHA, '*TOTAL POR EMPLEADOS*' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE;")
+            SELECT NULL AS FECHA, NULL AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
+            UNION ALL\
+            SELECT NULL AS FECHA, NULL AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
+            UNION ALL\
+            SELECT NULL AS FECHA, '*DETALLE DE TRANSACCIONES*' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
+            UNION ALL\
+            SELECT 'FECHA' AS FECHA, 'NOMBRE' AS NOMBRE, 'BANCA' AS BANCA, 'ABONO' AS ABONO, 'FALTANTE' AS FALTANTE\
+            UNION ALL\
+            SELECT FECHA, NOMBRE, BANCA, ABONO, FALTANTE\
+            FROM faltantes\
+            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+            UNION ALL\
+            SELECT '', '', 'TOTAL', SUM(ABONO), SUM(FALTANTE)\
+            FROM faltantes\
+            WHERE FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}';")
             
    
             # Crear un modelo de tabla SQL
