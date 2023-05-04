@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QPushButton, QDialog, QWidget, QAbstractItemView, QStyledItemDelegate
 from PyQt5.QtCore import QDate, Qt, QDateTime, QLocale
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
@@ -51,7 +51,6 @@ class VentanaFaltantes(QMainWindow):
         
         self.cmbEmpleado.currentIndexChanged.connect(
             lambda i: self.actualizar_cmbBanca(self.cmbEmpleado.currentText()))
-        
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         
@@ -119,6 +118,9 @@ class VentanaFaltantes(QMainWindow):
         for item in columna_empleados2:
             combo_model4.appendRow(QStandardItem(str(item)))
         self.cmbBanca.setModel(combo_model4)
+        
+    
+
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
