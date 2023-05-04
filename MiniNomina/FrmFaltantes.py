@@ -28,8 +28,8 @@ class VentanaFaltantes(QMainWindow):
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         # Esrtabece los focos a los texbox en orden hacia abajo.
-        self.setTabOrder(self.cmbEmpleado, self.txtNumbanca)
-        self.setTabOrder(self.txtNumbanca, self.txtAbono)
+        self.setTabOrder(self.cmbEmpleado, self.cmbBanca)
+        self.setTabOrder(self.cmbBanca, self.txtAbono)
         self.setTabOrder(self.txtAbono, self.txtFaltante)
         self.setTabOrder(self.txtFaltante, self.BtnRegistrar)
         self.setTabOrder(self.BtnRegistrar, self.BtnSalir)
@@ -46,15 +46,16 @@ class VentanaFaltantes(QMainWindow):
         
         self.BtnEstado.clicked.connect(self.reporte_parcial)
         
-        self.cmbBanca.currentIndexChanged.connect(
-            lambda i: self.actualizar_cmbEmpleados(self.cmbBanca.currentText()))
+        #self.cmbBanca.currentIndexChanged.connect(
+            #lambda i: self.actualizar_cmbEmpleados(self.cmbBanca.currentText()))
         
-        #self.cmbEmpleado.currentIndexChanged.connect(
-            #lambda i: self.actualizar_cmbBanca(self.cmbEmpleado.currentText()))
+        self.cmbEmpleado.currentIndexChanged.connect(
+            lambda i: self.actualizar_cmbBanca(self.cmbEmpleado.currentText()))
+        
+        #------------------------------------------------------------------------------------------------------
+        #------------------------------------------------------------------------------------------------------
         
         
-        
-
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         
@@ -89,35 +90,36 @@ class VentanaFaltantes(QMainWindow):
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
+    
     def actualizar_cmbEmpleados(self, banca):
         model = QSqlTableModel()
         model.setTable('empleados')
         model.setFilter(f"banca='{banca}'")
         model.select()
-        columna_empleados = []
+        columna_banca2 = []
         for i in range(model.rowCount()):
-            columna_empleados.append(model.data(model.index(i, 0)))
+            columna_banca2.append(model.data(model.index(i, 0)))
 
-        combo_model = QStandardItemModel()
-        for item in columna_empleados:
-            combo_model.appendRow(QStandardItem(str(item)))
-        self.cmbEmpleado.setModel(combo_model)
+        combo_model3 = QStandardItemModel()
+        for item in columna_banca2:
+            combo_model3.appendRow(QStandardItem(str(item)))
+        self.cmbEmpleado.setModel(combo_model3)
         
         
-    # def actualizar_cmbBanca(self, Empleado):
-    #     model = QSqlTableModel()
-    #     model.setTable('empleados')
-    #     model.setFilter(f"Empleado='{Empleado}'")
-    #     model.select()
-    #     columna_empleados = []
-    #     for i in range(model.rowCount()):
-    #         columna_empleados.append(model.data(model.index(i, 1)))
+    def actualizar_cmbBanca(self, Empleado):
+        model = QSqlTableModel()
+        model.setTable('empleados')
+        model.setFilter(f"Nombre='{Empleado}'")
+        model.select()
+        columna_empleados2 = []
+        for i in range(model.rowCount()):
+            columna_empleados2.append(model.data(model.index(i, 1)))
 
-    #     combo_model = QStandardItemModel()
-    #     for item in columna_empleados:
-    #         combo_model.appendRow(QStandardItem(str(item)))
-    #     self.cmbEmpleado.setModel(combo_model)
-
+        combo_model4 = QStandardItemModel()
+        for item in columna_empleados2:
+            combo_model4.appendRow(QStandardItem(str(item)))
+        self.cmbBanca.setModel(combo_model4)
+        
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     # Funcion para llamar la ventana secundaria (Ventana de datos) y editar las informaciones.
@@ -137,7 +139,7 @@ class VentanaFaltantes(QMainWindow):
         # Establecer el foco en el cuadro de texto cmbEmpleado.
         self.cmbEmpleado.setFocus()    
         self.cmbEmpleado.setCurrentText("")
-        self.cmbBanca.setCurrentText("")
+        #self.cmbBanca.setCurrentText("")
         #Establecer la feha actual.
         self.txtFecha.setDisplayFormat("d-MMMM-yyyy")# Formato de fecha.
         self.txtFecha.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha.
@@ -149,7 +151,7 @@ class VentanaFaltantes(QMainWindow):
         # Obtener los valores de los cuadros de texto
         Fecha = self.txtFecha.date().toString("yyyy-MM-dd")     
         Nombre = self.cmbEmpleado.currentText()
-        Num_banca = self.txtNumbanca.text()
+        Num_banca = self.cmbBanca.currentText()
         Abono = self.txtAbono.text()
         Faltante = self.txtFaltante.text()
         
@@ -183,7 +185,7 @@ class VentanaFaltantes(QMainWindow):
 
         # Limpiar los cuadros de texto        
         self.cmbEmpleado.setCurrentText("")
-        self.txtNumbanca.setText("")
+        self.cmbBanca.setCurrentText("")
         self.txtAbono.setText("")
         self.txtFaltante.setText("")
         self.txtFecha.setDate(QDate.currentDate()) 

@@ -148,16 +148,6 @@
      <string>FALTANTE</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="txtNumbanca">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>105</y>
-      <width>170</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="txtFaltante">
     <property name="geometry">
      <rect>
@@ -286,13 +276,16 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>125</y>
+      <y>105</y>
       <width>170</width>
       <height>20</height>
      </rect>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
+    </property>
+    <property name="currentText">
+     <string/>
     </property>
    </widget>
   </widget>
