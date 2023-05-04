@@ -116,7 +116,7 @@ class VentanaDatosReportes(QMainWindow):
             COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE AND f.FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'), 0) AS ABONOS,\
             e.SALARIO - COALESCE((SELECT SUM(f.FALTANTE) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE AND f.FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'), 0)\
             + COALESCE((SELECT SUM(f.ABONO) FROM faltantes f WHERE f.NOMBRE = e.NOMBRE AND f.FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'), 0) AS SALARIO_NETO\
-            FROM empleados e")
+            FROM empleados e GROUP BY NOMBRE")
 
    
             # Crear un modelo de tabla SQL
