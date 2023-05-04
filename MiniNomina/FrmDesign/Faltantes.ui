@@ -282,7 +282,7 @@
      </rect>
     </property>
     <property name="editable">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="currentText">
      <string/>

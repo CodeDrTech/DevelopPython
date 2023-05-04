@@ -139,7 +139,7 @@ class VentanaFaltantes(QMainWindow):
         # Establecer el foco en el cuadro de texto cmbEmpleado.
         self.cmbEmpleado.setFocus()    
         self.cmbEmpleado.setCurrentText("")
-        #self.cmbBanca.setCurrentText("")
+        self.cmbBanca.setCurrentText("")
         #Establecer la feha actual.
         self.txtFecha.setDisplayFormat("d-MMMM-yyyy")# Formato de fecha.
         self.txtFecha.setDate(QDate.currentDate())# Establecer fecha actual en txtFecha.
