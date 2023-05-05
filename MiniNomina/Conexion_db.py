@@ -21,7 +21,7 @@ def ruta_database():
 
 
 def funcion_de_conexion():
-    ruta_db = "C:/Users/acer/OneDrive/Documentos/GitHub/DevelopPython/Base de datos/MiniNomina.db"
+    ruta_db = "C:/Users/acer/OneDrive/ocumentos/GitHub/DevelopPython/Base de datos/MiniNomina.db"
     ruta_configuracion = "MiniNomina/configuracion.txt"
     
     if not os.path.exists(ruta_configuracion):
