@@ -117,7 +117,7 @@ class VentanaReportes(QMainWindow):
         
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
-    # Funcion para colocar el foco en el objeto indicado    
+      
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)

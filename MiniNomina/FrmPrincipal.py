@@ -7,12 +7,12 @@ from PyQt5.QtGui import QIcon
 from FrmEmpleados import VentanaEmpleados
 from FrmDatosReportes import VentanaDatosReportes
 from FrmFaltantes import VentanaFaltantes
+from Conexion_db import funcion_de_conexion
 
 
-
-class VentanaPrincipal(QMainWindow):
+class VentanaPrincipal(QMainWindow):    
     def __init__(self):
-        super().__init__()
+        super().__init__()        
         uic.loadUi('MiniNomina/FrmDesign/PanelPrincipal.ui',self)
         
         # Configuraiones de la ventana principal.
@@ -36,8 +36,13 @@ class VentanaPrincipal(QMainWindow):
     def fn_Salir(self):
         self.close()
         
+    def showEvent(self, event):
+        # Llamar al método showEvent() de la superclase
+        super().showEvent(event)    
+        funcion_de_conexion()
         
-
+        
+        
     #Funciones para llamar las ventanas secundarias y mostrarlas    
     def abrirFrmEmpleados(self):
         self.llamar_venana_empleados = VentanaEmpleados()
