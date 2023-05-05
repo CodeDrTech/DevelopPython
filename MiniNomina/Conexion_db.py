@@ -21,8 +21,8 @@ def ruta_database():
 
 
 def funcion_de_conexion():
-    ruta_db = "ruta/a/la/base/de/datos.db"
-    ruta_configuracion = "ruta/a/archivo/de/configuracion.txt"
+    ruta_db = "Base de datos/MiniNomina.db"
+    ruta_configuracion = "MiniNomina/configuracion.txt"
     
     if not os.path.exists(ruta_configuracion):
         # La configuración no existe, se debe crear
