@@ -6,10 +6,10 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 
-def ruta_database():
-    Ruta = 'C:\\Users\\Jose\\Documents\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db'
-    Ruta2 = 'C:\\Users\\acer\\OneDrive\\Documentos\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db'
-    return Ruta2
+# def ruta_database():
+#     Ruta = 'C:\\Users\\Jose\\Documents\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db'
+#     Ruta2 = 'C:\\Users\\acer\\OneDrive\\Documentos\\GitHub\\DevelopPython\\Base de datos\\MiniNomina.db'
+#     return Ruta2
 
 # def conectar_db():
 #     conn = sqlite3.connect(funcion_de_conexion())
@@ -21,8 +21,8 @@ def ruta_database():
 
 
 def funcion_de_conexion():
-    ruta_db = "C:/Users/acer/OneDrive/ocumentos/GitHub/DevelopPython/Base de datos/MiniNomina.db"
-    ruta_configuracion = "MiniNomina/configuracion.txt"
+    ruta_db = "ruta/a/la/base/de/datos.db"
+    ruta_configuracion = "ruta/a/archivo/de/configuracion.txt"
     
     if not os.path.exists(ruta_configuracion):
         # La configuración no existe, se debe crear
@@ -64,5 +64,5 @@ def conectar_db():
     conn = sqlite3.connect(funcion_de_conexion())
     return conn
 
-# db = QSqlDatabase.addDatabase("QSQLITE")
-# db.setDatabaseName(funcion_de_conexion())
+    #db = QSqlDatabase.addDatabase("QSQLITE")
+    #db.setDatabaseName(funcion_de_conexion())
