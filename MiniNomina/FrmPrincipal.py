@@ -7,8 +7,7 @@ from PyQt5.QtGui import QIcon
 from FrmEmpleados import VentanaEmpleados
 from FrmDatosReportes import VentanaDatosReportes
 from FrmFaltantes import VentanaFaltantes
-#from Conexion_db import funcion_de_conexion
-
+import Configuracion
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -27,7 +26,9 @@ class VentanaPrincipal(QMainWindow):
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
         self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
-        self.BtnReporte.clicked.connect(self.abrirFrmDatosReportes)       
+        self.BtnReporte.clicked.connect(self.abrirFrmDatosReportes)
+        self.BtnBaseDatos.clicked.connect(self.Configurar_datos)
+              
         
         
         
@@ -38,10 +39,10 @@ class VentanaPrincipal(QMainWindow):
         
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
-        super().showEvent(event)    
-        #funcion_de_conexion()
+        super().showEvent(event)
         
-        
+    def Configurar_datos(self):
+        Configuracion.funcion_de_conexion()   
         
     #Funciones para llamar las ventanas secundarias y mostrarlas    
     def abrirFrmEmpleados(self):
