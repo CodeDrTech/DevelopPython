@@ -7,7 +7,7 @@ from PyQt5.QtGui import QIcon
 from FrmEmpleados import VentanaEmpleados
 from FrmDatosReportes import VentanaDatosReportes
 from FrmFaltantes import VentanaFaltantes
-from Conexion_db import funcion_de_conexion
+#from Conexion_db import funcion_de_conexion
 
 
 class VentanaPrincipal(QMainWindow):    
@@ -39,7 +39,7 @@ class VentanaPrincipal(QMainWindow):
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)    
-        funcion_de_conexion()
+        #funcion_de_conexion()
         
         
         
