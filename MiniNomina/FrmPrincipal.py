@@ -43,7 +43,7 @@ class VentanaPrincipal(QMainWindow):
         
     def Configurar_datos(self):
         Configuracion.funcion_de_conexion()   
-        
+        self.fn_Salir()
     #Funciones para llamar las ventanas secundarias y mostrarlas    
     def abrirFrmEmpleados(self):
         self.llamar_venana_empleados = VentanaEmpleados()

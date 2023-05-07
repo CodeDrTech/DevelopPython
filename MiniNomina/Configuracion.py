@@ -1,10 +1,6 @@
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 import os
 
-
-
-
-
 def funcion_de_conexion():
     ruta_configuracion = "MiniNomina/configuracion.txt"
 
@@ -20,12 +16,14 @@ def funcion_de_conexion():
         # La configuración no tiene una ruta de base de datos
         # Se debe pedirle al usuario que seleccione la ruta
         ruta_seleccionada, _ = QFileDialog.getOpenFileName(None, "Seleccionar base de datos", "", "Archivos de base de datos (*.db)")
-
+        
+        
         # Se guarda la ruta seleccionada en el archivo de configuración
         with open(ruta_configuracion, "w") as f:
             f.write(ruta_seleccionada)
             
         if not ruta_seleccionada:    
-            QMessageBox.information(None, "Cancelado", "No seleccionaste la base de datos.") # type: ignore
+            QMessageBox.information(None, "Cancelado", "No seleccionaste la base de datos, la aplicacion se va a cerrar.") # type: ignore
         else:
             QMessageBox.information(None, "Base de datos configurada", "Reinicia la aplicaion para terminar la configuracion.") # type: ignore
+                
