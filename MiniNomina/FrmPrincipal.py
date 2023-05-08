@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QStatusBar
 from PyQt5 import QtGui
 from FrmEmpleados import VentanaEmpleados
 from FrmDatosReportes import VentanaDatosReportes
