@@ -25,5 +25,5 @@ def funcion_de_conexion():
         if not ruta_seleccionada:    
             QMessageBox.information(None, "Cancelado", "No seleccionaste la base de datos, la aplicacion se va a cerrar.") # type: ignore
         else:
-            QMessageBox.information(None, "Base de datos configurada", "Reinicia la aplicaion para terminar la configuracion.") # type: ignore
+            QMessageBox.information(None, "Base de datos configurada", "Se reiniciara la aplicaion para terminar la configuracion.") # type: ignore
                 
