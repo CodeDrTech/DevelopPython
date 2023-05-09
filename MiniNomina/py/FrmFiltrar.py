@@ -12,14 +12,14 @@ from FrmDatosReportes import VentanaDatosReportes
 class VentanaReportes(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/Filtrar.ui',self)
+        uic.loadUi('MiniNomina/ui/Filtrar.ui',self)
         
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Filtrar.
         self.setWindowTitle('CREAR REPORTES')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/ico/folder.png'))
         
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------

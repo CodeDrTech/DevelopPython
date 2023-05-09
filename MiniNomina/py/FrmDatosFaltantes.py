@@ -43,7 +43,7 @@ class DateDelegate(QStyledItemDelegate):
 class VentanaDatosFaltantes(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/DatosFaltantes.ui',self)
+        uic.loadUi('MiniNomina/ui/DatosFaltantes.ui',self)
         
         
         #------------------------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ class VentanaDatosFaltantes(QMainWindow):
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('FALTANTES')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/png/folder.png'))
         
         
         #------------------------------------------------------------------------------------------------------

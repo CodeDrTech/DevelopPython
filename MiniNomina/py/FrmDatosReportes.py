@@ -27,7 +27,7 @@ class CurrencyDelegate(QStyledItemDelegate):
 class VentanaDatosReportes(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/DatosFiltrar.ui',self)
+        uic.loadUi('MiniNomina/ui/DatosFiltrar.ui',self)
         
         
         #------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ class VentanaDatosReportes(QMainWindow):
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('REPORTES DE PAGOS')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/png/folder.png'))
         
         
         #------------------------------------------------------------------------------------------------------

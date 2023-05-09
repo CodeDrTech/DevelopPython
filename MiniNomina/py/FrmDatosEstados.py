@@ -27,7 +27,7 @@ class CurrencyDelegate(QStyledItemDelegate):
 class VentanaDatosEstados(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/DatosEstados.ui',self)
+        uic.loadUi('MiniNomina/ui/DatosEstados.ui',self)
         
         
     #------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ class VentanaDatosEstados(QMainWindow):
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('ESTADOS')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/png/folder.png'))
         
         
     #------------------------------------------------------------------------------------------------------

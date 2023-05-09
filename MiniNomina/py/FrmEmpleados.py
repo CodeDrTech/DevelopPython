@@ -9,14 +9,14 @@ from FrmDatosEmpleados import VentanaDatosEmpleados
 class VentanaEmpleados(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/Empleados.ui',self)
+        uic.loadUi('MiniNomina/ui/Empleados.ui',self)
         
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Empleados.
         self.setWindowTitle('AGREGAR EMPLEADOS')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/png/folder.png'))
         
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------

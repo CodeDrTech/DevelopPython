@@ -15,14 +15,14 @@ from Consultas_db import insertar_nuevo_faltante, mostrar_datos_totales_por_empl
 class VentanaFaltantes(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('MiniNomina/FrmDesign/Faltantes.ui',self)
+        uic.loadUi('MiniNomina/ui/Faltantes.ui',self)
         
         #------------------------------------------------------------------------------------------------------
         #------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Faltantes.
         self.setWindowTitle('REGISTRAR FALTANTES')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/png/folder.png'))
         
         
         #------------------------------------------------------------------------------------------------------
