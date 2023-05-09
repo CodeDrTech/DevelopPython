@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QStatusBar
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from FrmEmpleados import VentanaEmpleados
 from FrmDatosReportes import VentanaDatosReportes
@@ -40,8 +40,21 @@ class VentanaPrincipal(QMainWindow):
         super().showEvent(event)
         
     def Configurar_datos(self):
-        Configuracion.funcion_de_conexion()   
-        self.fn_Salir()
+        
+        confirmacion = QMessageBox.question(self, "CONFIGURACION DE DATOS", "SI EL PROGRAMA MUESTRA LOS DATOS NO ES NECESARIO CONFIGURAR LA BASE DE DATOS, QUIERES CONTINUAR?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+        # Si el usuario hace clic en el botón "Sí", configura los datos.
+        if confirmacion == QMessageBox.Yes:
+            Configuracion.funcion_de_conexion() 
+            self.fn_Salir()
+        else:
+            self.fn_Salir()
+        
+        
+          
+        
     #Funciones para llamar las ventanas secundarias y mostrarlas    
     def abrirFrmEmpleados(self):
         self.llamar_venana_empleados = VentanaEmpleados()
