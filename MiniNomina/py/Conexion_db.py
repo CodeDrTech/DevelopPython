@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QApplication
 
 
 def ruta_database():
-    ruta_configuracion = "MiniNomina/configuracion.txt"
+    ruta_configuracion = "MiniNomina/txt/configuracion.txt"
     with open(ruta_configuracion, "r") as f:
          ruta_guardada = f.read().strip()
     

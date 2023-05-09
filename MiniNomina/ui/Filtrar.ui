@@ -38,7 +38,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../.png/salir2.png</normaloff>../.png/salir2.png</iconset>
+      <normaloff>../png/salir2.png</normaloff>../png/salir2.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -71,7 +71,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../.png/agregar.png</normaloff>../.png/agregar.png</iconset>
+      <normaloff>../png/agregar.png</normaloff>../png/agregar.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -101,7 +101,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../.png/Reporte.png</normaloff>../.png/Reporte.png</iconset>
+      <normaloff>../png/Reporte.png</normaloff>../png/Reporte.png</iconset>
     </property>
     <property name="iconSize">
      <size>

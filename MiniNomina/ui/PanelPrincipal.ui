@@ -1,87 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FrmDatos</class>
- <widget class="QMainWindow" name="FrmDatos">
+ <class>FrmPrincipal</class>
+ <widget class="QMainWindow" name="FrmPrincipal">
   <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
+   <enum>Qt::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>590</height>
+    <width>281</width>
+    <height>246</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTableView" name="tbtabla">
+   <widget class="QPushButton" name="BtnAgregar">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>400</width>
-      <height>521</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-      <underline>false</underline>
-      <strikeout>false</strikeout>
-     </font>
-    </property>
-    <property name="cursor" stdset="0">
-     <cursorShape>IBeamCursor</cursorShape>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
-    </property>
-    <property name="lineWidth">
-     <number>1</number>
-    </property>
-    <property name="midLineWidth">
-     <number>0</number>
-    </property>
-    <property name="alternatingRowColors">
-     <bool>true</bool>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>0</width>
-      <height>0</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="BtnGuardar">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>540</y>
-      <width>101</width>
+      <x>0</x>
+      <y>20</y>
+      <width>140</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Guardar</string>
+     <string>Agregar empleado</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../.png/imprimir2.png</normaloff>../.png/imprimir2.png</iconset>
+      <normaloff>../png/NuevoEmpleado.png</normaloff>../png/NuevoEmpleado.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -90,28 +46,58 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="BtnImprimir">
+   <widget class="QPushButton" name="BtnRegistrar">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>540</y>
-      <width>101</width>
+      <x>140</x>
+      <y>20</y>
+      <width>140</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Imprimir</string>
+     <string>Registrar faltantes</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../.png/Calendario.png</normaloff>../.png/Calendario.png</iconset>
+      <normaloff>../png/agregar.png</normaloff>../png/agregar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BtnReporte">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>110</y>
+      <width>140</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Tirar reportes</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/ReporteTotal.png</normaloff>../png/ReporteTotal.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -123,8 +109,8 @@
    <widget class="QPushButton" name="BtnSalir">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>540</y>
+      <x>90</x>
+      <y>190</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -141,7 +127,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../.png/salir2.png</normaloff>../.png/salir2.png</iconset>
+      <normaloff>../png/salir2.png</normaloff>../png/salir2.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -153,37 +139,35 @@
      <string>Esc</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="BtnEliminar">
+   <widget class="QPushButton" name="BtnBaseDatos">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>540</y>
-      <width>101</width>
+      <x>70</x>
+      <y>150</y>
+      <width>140</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <pointsize>8</pointsize>
       <weight>75</weight>
+      <italic>false</italic>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Eliminar</string>
+     <string>Configuracion</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../.png/Eliminar.png</normaloff>../.png/Eliminar.png</iconset>
+      <normaloff>../png/Configuracion.png</normaloff>../png/Configuracion.png</iconset>
     </property>
     <property name="iconSize">
      <size>
       <width>25</width>
       <height>25</height>
      </size>
-    </property>
-    <property name="shortcut">
-     <string>Del</string>
     </property>
    </widget>
   </widget>

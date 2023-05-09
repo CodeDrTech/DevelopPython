@@ -10,12 +10,12 @@ import Configuracion
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('MiniNomina/FrmDesign/PanelPrincipal.ui',self)
+        uic.loadUi('MiniNomina/ui/PanelPrincipal.ui',self)
         
         # Configuraiones de la ventana principal.
         self.setWindowTitle('PANEL PRINCIPAL')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('MiniNomina/ICO/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('MiniNomina/png/folder.png'))
         
         
 

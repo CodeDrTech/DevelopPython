@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QFileDialog, QMessageBox
 import os
 
 def funcion_de_conexion():
-    ruta_configuracion = "MiniNomina/configuracion.txt"
+    ruta_configuracion = "MiniNomina/txt/configuracion.txt"
 
     # Crear archivo de configuración si no existe
     if not os.path.exists(ruta_configuracion):
