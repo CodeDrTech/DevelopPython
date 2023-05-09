@@ -81,7 +81,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/imprimir2.png</normaloff>../ICO/imprimir2.png</iconset>
+      <normaloff>../.png/imprimir2.png</normaloff>../.png/imprimir2.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -111,7 +111,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/Calendario.png</normaloff>../ICO/Calendario.png</iconset>
+      <normaloff>../.png/Calendario.png</normaloff>../.png/Calendario.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -141,7 +141,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/salir2.png</normaloff>../ICO/salir2.png</iconset>
+      <normaloff>../.png/salir2.png</normaloff>../.png/salir2.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -174,7 +174,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/Eliminar.png</normaloff>../ICO/Eliminar.png</iconset>
+      <normaloff>../.png/Eliminar.png</normaloff>../.png/Eliminar.png</iconset>
     </property>
     <property name="iconSize">
      <size>

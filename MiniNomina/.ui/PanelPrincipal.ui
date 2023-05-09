@@ -37,7 +37,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/NuevoEmpleado.png</normaloff>../ICO/NuevoEmpleado.png</iconset>
+      <normaloff>../.png/NuevoEmpleado.png</normaloff>../.png/NuevoEmpleado.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -66,7 +66,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/agregar.png</normaloff>../ICO/agregar.png</iconset>
+      <normaloff>../.png/agregar.png</normaloff>../.png/agregar.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -97,7 +97,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/ReporteTotal.png</normaloff>../ICO/ReporteTotal.png</iconset>
+      <normaloff>../.png/ReporteTotal.png</normaloff>../.png/ReporteTotal.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -127,7 +127,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/salir2.png</normaloff>../ICO/salir2.png</iconset>
+      <normaloff>../.png/salir2.png</normaloff>../.png/salir2.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -161,7 +161,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../ICO/Configuracion.png</normaloff>../ICO/Configuracion.png</iconset>
+      <normaloff>../.png/Configuracion.png</normaloff>../.png/Configuracion.png</iconset>
     </property>
     <property name="iconSize">
      <size>
