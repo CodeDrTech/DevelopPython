@@ -54,7 +54,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../png/Calendario.png</normaloff>../png/Calendario.png</iconset>
+      <normaloff>../png/impresora.png</normaloff>../png/impresora.png</iconset>
     </property>
     <property name="iconSize">
      <size>
