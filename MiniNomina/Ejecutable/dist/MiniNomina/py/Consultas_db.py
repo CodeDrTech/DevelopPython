@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import QStyledItemDelegate
-from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
-from PyQt5 import QtWidgets
+from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Conexion_db import conectar_db
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QTextDocument
-from PyQt5.QtCore import Qt, QDate, QLocale, QTextStream
+from PyQt5.QtCore import Qt
 
+
+
+# Configura los numero float de tbtabla y les da formato de moneda al visualizarse.
 class CurrencyDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):
         try:
@@ -16,7 +17,9 @@ class CurrencyDelegate(QStyledItemDelegate):
     
     
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------    
+#------------------------------------------------------------------------------------------------------  
+
+# Recibe parametros para introducir correspondientes datos a la base de datos.  
 def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
     
         # Conectar a la base de datos
@@ -30,7 +33,9 @@ def insertar_nuevo_empleados(Nombre, Num_banca, Salario):
         conn.close()
         
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------        
+#------------------------------------------------------------------------------------------------------ 
+
+# Recibe parametros para introducir correspondientes datos a la base de datos.       
 def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         # Conectar a la base de datos
         conn = conectar_db()
@@ -43,16 +48,7 @@ def insertar_nuevo_faltante(Fecha, Nombre, Num_banca, Abono, Faltante):
         conn.close()
 
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------        
-
-    
-        
-           
-    
-                       
-    
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------    
+#------------------------------------------------------------------------------------------------------           
 # Función que muestra los datos de los empleados en QTableView del FrmDatos    
 def mostrar_datos_de_empleados(tbtabla):
     
@@ -71,10 +67,13 @@ def mostrar_datos_de_empleados(tbtabla):
 
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
+    # Le da formato moneda a la columna con el indice 2.
     tbtabla.setItemDelegateForColumn(2, currency_delegate)
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+
+# Utilisa un query para mostrar datos segun la consulta, esto no modifican los datos solo los muestra.
 def mostrar_datos_totales_por_empleados(tbtabla):
     
     
