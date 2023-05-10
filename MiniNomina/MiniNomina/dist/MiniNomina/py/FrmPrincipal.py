@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
@@ -35,6 +35,13 @@ class VentanaPrincipal(QMainWindow):
     def fn_Salir(self):
         self.close()
         
+    #Funcion para reiniciar el programa
+    def reiniciar_programa(self):
+        
+        QApplication.quit()
+        os.execv(sys.executable, ['python'] + sys.argv)
+        
+        
     def showEvent(self, event):
         # Llamar al método showEvent() de la superclase
         super().showEvent(event)
@@ -48,9 +55,8 @@ class VentanaPrincipal(QMainWindow):
         # Si el usuario hace clic en el botón "Sí", configura los datos.
         if confirmacion == QMessageBox.Yes:
             Configuracion.funcion_de_conexion() 
-            self.fn_Salir()
-        #else:
-            #self.fn_Salir()
+            self.reiniciar_programa()
+        
         
         
           

@@ -1,4 +1,4 @@
 para que el comando funcione las carpetas ico, png, py, txt, y ui deben estar aqui dentro de esta carpeta.
 
-luego en la carpeta que se crea llamada dist crear una carpeta con el onombre obligatorio de MiniNomina
-y meter debtro las carpetas ico, png, py, txt, y ui.
+luego en la carpeta que se crea llamada dist crear una carpeta con el nombre obligatorio de MiniNomina
+y meter dentro las carpetas ico, png, py, txt, y ui.
