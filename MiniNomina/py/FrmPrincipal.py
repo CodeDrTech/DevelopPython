@@ -52,7 +52,7 @@ class VentanaPrincipal(QMainWindow):
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
-        # Si el usuario hace clic en el botón "Sí", configura los datos.
+        # Si el usuario hace clic en el botón "Sí", configura los datos y reinica el programa.
         if confirmacion == QMessageBox.Yes:
             Configuracion.funcion_de_conexion() 
             self.reiniciar_programa()

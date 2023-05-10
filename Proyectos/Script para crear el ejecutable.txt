@@ -1,2 +1,0 @@
-pyinstaller --onefile --add-data "ico/*.ico;ico" --add-data "png/*.png;png" --add-data "ui/*.ui;ui" --add-data "txt/*.txt;txt" --add-data "py/FrmPrincipal.py;py" --windowed --icon=ico/lottery.ico py/FrmPrincipal.py
-
