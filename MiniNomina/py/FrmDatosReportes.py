@@ -10,10 +10,6 @@ from Consultas_db import mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 
 
-
-
-
-
 class CurrencyDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):
         try:
