@@ -1,34 +1,34 @@
 import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QStyledItemDelegate
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import Qt
-from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QKeySequence
-from Conexion_db import conectar_db
+from PyQt5 import QtGui
+from PyQt5.QtSql import QSqlTableModel, QSqlQuery
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from FrmDatosReportes import VentanaDatosReportes
 
+#ESTE MODULO NO SE ESTA USANDO POR EL MOMENTO.
 
 class VentanaReportes(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('MiniNomina/ui/Filtrar.ui',self)
         
-        #------------------------------------------------------------------------------------------------------
-        #------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
         # Configuraiones de la ventana Filtrar.
         self.setWindowTitle('CREAR REPORTES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('MiniNomina/ico/folder.png'))
         
-        #------------------------------------------------------------------------------------------------------
-        #------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+        # Botones del formulario y sus funciones asignadas.
         self.BtnSalir.clicked.connect(self.fn_Salir)
         self.BtnReporteTotal.clicked.connect(self.abrirFrmDatos)
         self.BtnReporte.clicked.connect(self.reporte_por_cmbEmpleado)
         
-        #------------------------------------------------------------------------------------------------------
-        #------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
         model.setTable('empleados')
@@ -43,8 +43,8 @@ class VentanaReportes(QMainWindow):
             combo_model.appendRow(QStandardItem(str(item)))
         self.cmbEmpleado.setModel(combo_model)
         
-    #------------------------------------------------------------------------------------------------------
-    #------------------------------------------------------------------------------------------------------    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
     # Funcion para llamar la ventana secundaria (Ventana de datos)
     def abrirFrmDatos(self):
         self.llamar_tbtabla = VentanaDatosReportes()

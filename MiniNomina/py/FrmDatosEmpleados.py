@@ -1,19 +1,12 @@
 import sys
 import locale
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QDialog
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QTextDocument
-from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrinterInfo, QPrintPreviewDialog
-from PyQt5.QtCore import QMarginsF, Qt, QRectF, QDate
-from Conexion_db import conectar_db
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QStyledItemDelegate, QDialog
+from PyQt5 import QtGui
+from PyQt5.QtGui import QTextDocument
+from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrintPreviewDialog
+from PyQt5.QtCore import Qt
 from Consultas_db import mostrar_datos_de_empleados
-from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
-
-
-
-
-
 
 class CurrencyDelegate(QStyledItemDelegate):
     def displayText(self, value, locale):

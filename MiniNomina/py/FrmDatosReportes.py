@@ -1,14 +1,13 @@
 import sys
 import locale
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QToolBar, QTreeWidgetItem, QApplication, QHeaderView, QMessageBox, QStyledItemDelegate, QAbstractItemView, QDialog, QPushButton, QTreeWidget
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtGui import QPainter, QPageLayout, QPageSize, QFont, QTransform, QStandardItemModel, QStandardItem, QTextDocument
-from PyQt5.QtPrintSupport import QPrintDialog, QPrintPreviewDialog, QPrinter, QPrinterInfo
-from PyQt5.QtCore import QMarginsF, Qt, QLibraryInfo, QLocale, QTranslator, QTextCodec, QByteArray, QRectF, QDate
-from Conexion_db import conectar_db
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QStyledItemDelegate, QAbstractItemView, QDialog
+from PyQt5 import QtGui
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QTextDocument
+from PyQt5.QtPrintSupport import QPrintDialog, QPrintPreviewDialog, QPrinter
+from PyQt5.QtCore import Qt, QDate
 from Consultas_db import mostrar_datos_de_empleados
-from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
+from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 
 
 
