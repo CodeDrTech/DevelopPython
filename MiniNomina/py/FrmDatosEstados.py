@@ -235,11 +235,13 @@ class VentanaDatosEstados(QMainWindow):
     table {\
         border-collapse: collapse;\
         border-spacing: 0;\
+        width: 100%;\
     }\
     th, td {\
         border: 0.5px solid black;\
         padding: 05px;\
         text-align: left;\
+        font-size: 10pt;\
     }\
     th {\
         background-color: gray;\
