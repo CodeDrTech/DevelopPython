@@ -15,9 +15,9 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
                 
-        #Llamar a los diferentes formularios desde los botones
+        
         self.BtnSalir.clicked.connect(self.fn_Salir)
-        self.BtnAgregar.clicked.connect(self.Calculos)
+        self.BtnCalcular.clicked.connect(self.Calculos)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -30,9 +30,29 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
 
     def Calculos(self):
-        a=1
+        salario_texto = self.txtSalario.text()
+        ars_texto = self.txtArs.text()
+        afp_texto = self.txtAfp.text()
+        otros_texto = self.txtOtros.text()
+        
+        Ars = float(ars_texto)
+        Afp = float(afp_texto)        
+        Seguros = Ars + Afp
+        
+        Otros = float(otros_texto)
+        Salario = float(salario_texto)
+        
+        SeguroNeto = Seguros*Salario
+        SalarioNeto = Salario-SeguroNeto
         
         
+        SalarioQuincenalNeto = (SalarioNeto / 2) - Otros
+        
+        self.txtQuincenal.setText(str(SalarioQuincenalNeto))
+        self.txtMensual.setText(str(SalarioNeto))
+        
+        
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
 
@@ -40,7 +60,10 @@ class VentanaPrincipal(QMainWindow):
     #Funcion para llamas al evento show.    
     def showEvent(self, event):        
         super().showEvent(event)
-
+        self.txtSalario.setFocus()
+        self.txtArs.setText("0.0304")
+        self.txtAfp.setText("0.0287")
+        self.txtOtros.setText("0")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
 
