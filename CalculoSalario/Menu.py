@@ -1,7 +1,6 @@
-import sys, os
+import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
-from PyQt5 import QtGui
+from PyQt5.QtWidgets import QMainWindow, QApplication
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
