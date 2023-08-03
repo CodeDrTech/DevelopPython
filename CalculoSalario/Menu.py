@@ -17,7 +17,7 @@ class VentanaPrincipal(QMainWindow):
                 
         #Llamar a los diferentes formularios desde los botones
         self.BtnSalir.clicked.connect(self.fn_Salir)
-        #self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
+        self.BtnAgregar.clicked.connect(self.Calculos)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -25,6 +25,13 @@ class VentanaPrincipal(QMainWindow):
     #Funcuion para cerrar la ventana principal.    
     def fn_Salir(self):
         self.close()
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------ 
+
+    def Calculos(self):
+        a=1
+        
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
