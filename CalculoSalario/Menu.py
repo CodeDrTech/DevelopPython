@@ -37,13 +37,9 @@ class VentanaPrincipal(QMainWindow):
         renta15 = 0.15
         renta20 = 0.20
         renta25 = 0.25
-        renta_anual = 0
-        ISR = 0
         
-        ars_texto = self.txtArs.text()
-        afp_texto = self.txtAfp.text()
-        Ars = float(ars_texto)
-        Afp = float(afp_texto)        
+        Ars = 0.0304 #float(ars_texto)
+        Afp = 0.0287 #float(afp_texto)        
         Seguros = Ars + Afp
         SalarioAnual2 = salario_anualizado*Seguros
         SalarioAnual3 = salario_anualizado-SalarioAnual2
@@ -69,23 +65,18 @@ class VentanaPrincipal(QMainWindow):
             
             numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
             numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            numero_formateado4 = locale.format_string("%.2f", Ars*salario_anualizado, grouping=True)
+            numero_formateado5 = locale.format_string("%.2f", Afp*salario_anualizado, grouping=True)
             
-              
+            self.txtArs.setText(str(numero_formateado4))
+            self.txtAfp.setText(str(numero_formateado5))  
             self.txtQuincenal.setText(str(numero_formateado2))
             self.txtMensual.setText(str(numero_formateado3))
         
         
          
         elif SalarioAnual4 >= 416220.01 and SalarioAnual4 <= 624329.00:
-            #ars_texto = self.txtArs.text()
-            #afp_texto = self.txtAfp.text()
             otros_texto = self.txtOtros.text()
-            
-            
-
-            #Ars = float(ars_texto)
-            #Afp = float(afp_texto)        
-            #Seguros = Ars + Afp
                
             Otros = float(otros_texto)
             Salario = SalarioAnual/12
@@ -106,21 +97,18 @@ class VentanaPrincipal(QMainWindow):
             numero_formateado = locale.format_string("%.2f", excedente2, grouping=True)
             numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
             numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            numero_formateado4 = locale.format_string("%.2f", Ars*salario_anualizado, grouping=True)
+            numero_formateado5 = locale.format_string("%.2f", Afp*salario_anualizado, grouping=True)
             
+            
+            self.txtArs.setText(str(numero_formateado4))
+            self.txtAfp.setText(str(numero_formateado5))
             self.txtIsr.setText(str(numero_formateado))    
             self.txtQuincenal.setText(str(numero_formateado2))
             self.txtMensual.setText(str(numero_formateado3))
         
         elif SalarioAnual4 >= 624329.01 and SalarioAnual4 <= 867123.00:
-            #ars_texto = self.txtArs.text()
-            #afp_texto = self.txtAfp.text()
             otros_texto = self.txtOtros.text()
-            
-            
-
-            #Ars = float(ars_texto)
-            #Afp = float(afp_texto)        
-            #Seguros = Ars + Afp
                
             Otros = float(otros_texto)
             Salario = SalarioAnual/12
@@ -141,22 +129,19 @@ class VentanaPrincipal(QMainWindow):
             numero_formateado = locale.format_string("%.2f", excedente2, grouping=True)
             numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
             numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            numero_formateado4 = locale.format_string("%.2f", Ars*salario_anualizado, grouping=True)
+            numero_formateado5 = locale.format_string("%.2f", Afp*salario_anualizado, grouping=True)
             
+            
+            self.txtArs.setText(str(numero_formateado4))
+            self.txtAfp.setText(str(numero_formateado5))
             self.txtIsr.setText(str(numero_formateado))    
             self.txtQuincenal.setText(str(numero_formateado2))
             self.txtMensual.setText(str(numero_formateado3))
             
             
         elif SalarioAnual4 >= 867123.01:
-            #ars_texto = self.txtArs.text()
-            #afp_texto = self.txtAfp.text()
             otros_texto = self.txtOtros.text()
-            
-            
-
-            #Ars = float(ars_texto)
-            #Afp = float(afp_texto)        
-            #Seguros = Ars + Afp
                
             Otros = float(otros_texto)
             Salario = SalarioAnual/12
@@ -176,7 +161,12 @@ class VentanaPrincipal(QMainWindow):
             numero_formateado = locale.format_string("%.2f", excedente2, grouping=True)
             numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
             numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            numero_formateado4 = locale.format_string("%.2f", Ars*salario_anualizado, grouping=True)
+            numero_formateado5 = locale.format_string("%.2f", Afp*salario_anualizado, grouping=True)
             
+            
+            self.txtArs.setText(str(numero_formateado4))
+            self.txtAfp.setText(str(numero_formateado5))
             self.txtIsr.setText(str(numero_formateado))    
             self.txtQuincenal.setText(str(numero_formateado2))
             self.txtMensual.setText(str(numero_formateado3))
@@ -188,8 +178,8 @@ class VentanaPrincipal(QMainWindow):
     def showEvent(self, event):        
         super().showEvent(event)
         self.txtSalario.setFocus()
-        self.txtArs.setText("0.0304")
-        self.txtAfp.setText("0.0287")
+        #self.txtArs.setText("0.0304")
+        #self.txtAfp.setText("0.0287")
         self.txtOtros.setText("0")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
