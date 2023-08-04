@@ -1,4 +1,5 @@
-import sys  
+import sys 
+import locale 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
@@ -39,14 +40,20 @@ class VentanaPrincipal(QMainWindow):
         renta_anual = 0
         ISR = 0
         
-        if SalarioAnual <= 416220.00:
-            ars_texto = self.txtArs.text()
-            afp_texto = self.txtAfp.text()
+        ars_texto = self.txtArs.text()
+        afp_texto = self.txtAfp.text()
+        Ars = float(ars_texto)
+        Afp = float(afp_texto)        
+        Seguros = Ars + Afp
+        SalarioAnual2 = salario_anualizado*Seguros
+        SalarioAnual3 = salario_anualizado-SalarioAnual2
+        SalarioAnual4 = SalarioAnual3*12
+        
+        if SalarioAnual4 <= 416220.00:
+            
             otros_texto = self.txtOtros.text()
         
-            Ars = float(ars_texto)
-            Afp = float(afp_texto)        
-            Seguros = Ars + Afp
+            
                
             Otros = float(otros_texto)
             Salario = SalarioAnual/12
@@ -57,21 +64,28 @@ class VentanaPrincipal(QMainWindow):
             SalarioQuincenalNeto = (SalarioNeto / 2) - Otros
             
             self.txtIsr.setText("")    
-            self.txtQuincenal.setText(str(SalarioQuincenalNeto))
-            self.txtMensual.setText(str(SalarioNeto))
+            locale.setlocale(locale.LC_ALL, '')
+            
+            
+            numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
+            numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            
+              
+            self.txtQuincenal.setText(str(numero_formateado2))
+            self.txtMensual.setText(str(numero_formateado3))
         
         
          
-        elif SalarioAnual >= 416220.01 and SalarioAnual <= 624329.00:
-            ars_texto = self.txtArs.text()
-            afp_texto = self.txtAfp.text()
+        elif SalarioAnual4 >= 416220.01 and SalarioAnual4 <= 624329.00:
+            #ars_texto = self.txtArs.text()
+            #afp_texto = self.txtAfp.text()
             otros_texto = self.txtOtros.text()
             
             
 
-            Ars = float(ars_texto)
-            Afp = float(afp_texto)        
-            Seguros = Ars + Afp
+            #Ars = float(ars_texto)
+            #Afp = float(afp_texto)        
+            #Seguros = Ars + Afp
                
             Otros = float(otros_texto)
             Salario = SalarioAnual/12
@@ -87,13 +101,85 @@ class VentanaPrincipal(QMainWindow):
             SalarioQuincenalNeto = (SalarioNeto2 / 2) - Otros
             
             
-            numero_formateado = "{:.2f}".format(excedente2)
-            numero_formateado2 = "{:.2f}".format(SalarioQuincenalNeto)
+            locale.setlocale(locale.LC_ALL, '')
+            
+            numero_formateado = locale.format_string("%.2f", excedente2, grouping=True)
+            numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
+            numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            
             self.txtIsr.setText(str(numero_formateado))    
             self.txtQuincenal.setText(str(numero_formateado2))
-            self.txtMensual.setText(str(SalarioNeto))
+            self.txtMensual.setText(str(numero_formateado3))
         
+        elif SalarioAnual4 >= 624329.01 and SalarioAnual4 <= 867123.00:
+            #ars_texto = self.txtArs.text()
+            #afp_texto = self.txtAfp.text()
+            otros_texto = self.txtOtros.text()
+            
+            
 
+            #Ars = float(ars_texto)
+            #Afp = float(afp_texto)        
+            #Seguros = Ars + Afp
+               
+            Otros = float(otros_texto)
+            Salario = SalarioAnual/12
+                
+            SeguroNeto = Seguros*Salario
+            SalarioNeto = Salario-SeguroNeto
+            
+            excedente = (SalarioNeto*12)-624329.01
+            excedente2 = ((excedente*renta20)+31216)/12
+            
+            SalarioNeto2 = SalarioNeto-excedente2
+                        
+            SalarioQuincenalNeto = (SalarioNeto2 / 2) - Otros
+            
+            
+            locale.setlocale(locale.LC_ALL, '')
+            
+            numero_formateado = locale.format_string("%.2f", excedente2, grouping=True)
+            numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
+            numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            
+            self.txtIsr.setText(str(numero_formateado))    
+            self.txtQuincenal.setText(str(numero_formateado2))
+            self.txtMensual.setText(str(numero_formateado3))
+            
+            
+        elif SalarioAnual4 >= 867123.01:
+            #ars_texto = self.txtArs.text()
+            #afp_texto = self.txtAfp.text()
+            otros_texto = self.txtOtros.text()
+            
+            
+
+            #Ars = float(ars_texto)
+            #Afp = float(afp_texto)        
+            #Seguros = Ars + Afp
+               
+            Otros = float(otros_texto)
+            Salario = SalarioAnual/12
+                
+            SeguroNeto = Seguros*Salario
+            SalarioNeto = Salario-SeguroNeto
+            
+            excedente = (SalarioNeto*12)-867123.01
+            excedente2 = ((excedente*renta25)+79776)/12
+            
+            SalarioNeto2 = SalarioNeto-excedente2
+                        
+            SalarioQuincenalNeto = (SalarioNeto2 / 2) - Otros
+            
+            locale.setlocale(locale.LC_ALL, '')
+            
+            numero_formateado = locale.format_string("%.2f", excedente2, grouping=True)
+            numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
+            numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
+            
+            self.txtIsr.setText(str(numero_formateado))    
+            self.txtQuincenal.setText(str(numero_formateado2))
+            self.txtMensual.setText(str(numero_formateado3))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
 
