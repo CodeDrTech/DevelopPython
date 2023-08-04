@@ -26,6 +26,9 @@
     <property name="text">
      <string>Cerrar</string>
     </property>
+    <property name="shortcut">
+     <string>Esc</string>
+    </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -149,6 +152,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="txtArs">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -164,6 +170,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="txtAfp">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -179,6 +188,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="txtIsr">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -245,6 +257,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="txtMensual">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -260,6 +275,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="txtQuincenal">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>120</x>

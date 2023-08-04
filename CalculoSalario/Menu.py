@@ -27,30 +27,71 @@ class VentanaPrincipal(QMainWindow):
         self.close()
         
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------ 
-
+#------------------------------------------------------------------------------------------------------    
+        
     def Calculos(self):
         salario_texto = self.txtSalario.text()
-        ars_texto = self.txtArs.text()
-        afp_texto = self.txtAfp.text()
-        otros_texto = self.txtOtros.text()
+        salario_anualizado = float(salario_texto)
+        SalarioAnual = salario_anualizado*12
+        renta15 = 0.15
+        renta20 = 0.20
+        renta25 = 0.25
+        renta_anual = 0
+        ISR = 0
         
-        Ars = float(ars_texto)
-        Afp = float(afp_texto)        
-        Seguros = Ars + Afp
+        if SalarioAnual <= 416220.00:
+            ars_texto = self.txtArs.text()
+            afp_texto = self.txtAfp.text()
+            otros_texto = self.txtOtros.text()
         
-        Otros = float(otros_texto)
-        Salario = float(salario_texto)
+            Ars = float(ars_texto)
+            Afp = float(afp_texto)        
+            Seguros = Ars + Afp
+               
+            Otros = float(otros_texto)
+            Salario = SalarioAnual/12
+                
+            SeguroNeto = Seguros*Salario
+            SalarioNeto = Salario-SeguroNeto
+                        
+            SalarioQuincenalNeto = (SalarioNeto / 2) - Otros
+            
+            self.txtIsr.setText("")    
+            self.txtQuincenal.setText(str(SalarioQuincenalNeto))
+            self.txtMensual.setText(str(SalarioNeto))
         
-        SeguroNeto = Seguros*Salario
-        SalarioNeto = Salario-SeguroNeto
         
-        
-        SalarioQuincenalNeto = (SalarioNeto / 2) - Otros
-        
-        self.txtQuincenal.setText(str(SalarioQuincenalNeto))
-        self.txtMensual.setText(str(SalarioNeto))
-        
+         
+        elif SalarioAnual >= 416220.01 and SalarioAnual <= 624329.00:
+            ars_texto = self.txtArs.text()
+            afp_texto = self.txtAfp.text()
+            otros_texto = self.txtOtros.text()
+            
+            
+
+            Ars = float(ars_texto)
+            Afp = float(afp_texto)        
+            Seguros = Ars + Afp
+               
+            Otros = float(otros_texto)
+            Salario = SalarioAnual/12
+                
+            SeguroNeto = Seguros*Salario
+            SalarioNeto = Salario-SeguroNeto
+            
+            excedente = (SalarioNeto*12)-416220.01
+            excedente2 = (excedente*renta15)/12
+            
+            SalarioNeto2 = SalarioNeto-excedente2
+                        
+            SalarioQuincenalNeto = (SalarioNeto2 / 2) - Otros
+            
+            
+            numero_formateado = "{:.2f}".format(excedente2)
+            numero_formateado2 = "{:.2f}".format(SalarioQuincenalNeto)
+            self.txtIsr.setText(str(numero_formateado))    
+            self.txtQuincenal.setText(str(numero_formateado2))
+            self.txtMensual.setText(str(SalarioNeto))
         
 
 #------------------------------------------------------------------------------------------------------
