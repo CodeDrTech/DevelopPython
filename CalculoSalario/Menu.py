@@ -66,7 +66,7 @@ class VentanaPrincipal(QMainWindow):
             numero_formateado2 = locale.format_string("%.2f", SalarioQuincenalNeto, grouping=True)
             numero_formateado3 = locale.format_string("%.2f", Salario/2, grouping=True)
             numero_formateado4 = locale.format_string("%.2f", Ars*salario_anualizado, grouping=True)
-            numero_formateado5 = locale.format_string("%.2f", Afp*salario_anualizado, grouping=True)
+            numero_formateado5 = locale.format_string("%.2f", Afp*salario_anualizado, grouping=True,)
             
             self.txtArs.setText(str(numero_formateado4))
             self.txtAfp.setText(str(numero_formateado5))  
