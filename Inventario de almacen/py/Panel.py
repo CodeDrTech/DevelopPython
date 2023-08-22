@@ -6,7 +6,7 @@ from PyQt5 import QtGui
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Inventario de almacen/ui/PANEL.ui',self)
+        uic.loadUi('DevelopPython/Inventario de almacen/ui/PANEL.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 

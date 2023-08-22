@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>358</height>
+    <height>265</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/Productos.png</normaloff>../png/Productos.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_2">
@@ -37,7 +47,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/Proveedor.png</normaloff>../png/Proveedor.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
@@ -50,7 +70,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/Clientes.png</normaloff>../png/Clientes.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_4">
@@ -63,7 +93,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/Compras.png</normaloff>../png/Compras.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_5">
@@ -76,7 +116,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/almacen.png</normaloff>../png/almacen.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_6">
@@ -89,7 +139,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/historial.png</normaloff>../png/historial.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_7">
@@ -102,7 +162,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/baseSalidas.png</normaloff>../png/baseSalidas.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_8">
@@ -115,7 +185,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/baseCompras.png</normaloff>../png/baseCompras.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -308,7 +388,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/salidas.png</normaloff>../png/salidas.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_10">
@@ -321,7 +411,17 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../png/Exit.png</normaloff>../png/Exit.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
    <widget class="QLabel" name="label_10">
