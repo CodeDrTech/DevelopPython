@@ -32,8 +32,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -55,8 +55,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -78,8 +78,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -101,8 +101,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -124,8 +124,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -147,8 +147,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -170,8 +170,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -193,8 +193,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
@@ -396,12 +396,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_10">
+   <widget class="QPushButton" name="BtnSalir">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -419,17 +419,20 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>70</width>
+      <height>70</height>
      </size>
+    </property>
+    <property name="shortcut">
+     <string>Esc</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>685</x>
+      <x>670</x>
       <y>210</y>
-      <width>71</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -441,7 +444,7 @@
      </font>
     </property>
     <property name="text">
-     <string>SALIR</string>
+     <string>CERRAR</string>
     </property>
    </widget>
   </widget>
