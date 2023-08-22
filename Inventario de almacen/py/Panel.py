@@ -13,7 +13,7 @@ class VentanaPrincipal(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('CONTROL DE INVENTARIO')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('DevelopPython/Inventario de almacen/png/folder.png'))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
 
