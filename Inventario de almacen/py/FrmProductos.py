@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+from Consultas_db import insertar_nuevo_producto
 
 class VentanaProductos(QMainWindow):    
     def __init__(self):
@@ -32,25 +33,8 @@ class VentanaProductos(QMainWindow):
         categoria = self.txtCategoria.text()
         nombre = self.txtNombre.text()
         medida = self.txtMedida.text()
-    
-        if codigo and categoria and nombre and medida:
-            db = QSqlDatabase.addDatabase("QSQLITE")
-            db.setDatabaseName("Almacen.db")  # Reemplaza con el nombre de tu base de datos SQLite
-            if not db.open():
-                QMessageBox.critical(self, "Error", "No se pudo abrir la base de datos.")
-                return
-    
-            query = QSqlQuery()
-            sql = f"INSERT INTO Productos (Codigo, Categoria, Nombre, Medida) VALUES ('{codigo}', '{categoria}', '{nombre}', '{medida}')"
+        insertar_nuevo_producto(codigo, categoria, nombre, medida)
         
-            if query.exec(sql):
-                QMessageBox.information(self, "Éxito", "Datos insertados correctamente.")
-            else:
-                QMessageBox.critical(self, "Error", "Error al insertar datos: " + query.lastError().text())
-    
-            db.close()
-        else:
-            QMessageBox.warning(self, "Advertencia", "Por favor, complete todos los campos.")
 
 
 
