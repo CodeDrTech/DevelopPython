@@ -2,6 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui
+from FrmProductos import VentanaProductos
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -19,7 +20,7 @@ class VentanaPrincipal(QMainWindow):
         
         #Llamar a los diferentes formularios desde los botones
         self.BtnSalir.clicked.connect(self.fn_Salir)
-        #self.BtnAgregar.clicked.connect(self.abrirFrmEmpleados)
+        self.BtnProductos.clicked.connect(self.abrirFrmProductos)
         #self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
         #self.BtnReporte.clicked.connect(self.abrirFrmDatosReportes)
         #self.BtnBaseDatos.clicked.connect(self.Configurar_datos)
@@ -31,9 +32,9 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------       
         
     #Funciones para llamar las ventanas secundarias y mostrarlas    
-    def abrirFrmEmpleados(self):
-        self.llamar_venana_empleados = VentanaEmpleados()
-        self.llamar_venana_empleados.show()
+    def abrirFrmProductos(self):
+        self.llamar_venana_productos = VentanaProductos()
+        self.llamar_venana_productos.show()
 
 
 if __name__ == '__main__':

@@ -6,7 +6,17 @@ from PyQt5 import QtGui
 class VentanaProductos(QMainWindow):    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Inventario de almacen/ui/PANEL.ui',self)
+        uic.loadUi('Inventario de almacen/ui/FrmProductos.ui',self)
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
+                
+        # Configuraiones de la ventana principal.
+        self.setWindowTitle('PRODUCTOS')
+        self.setFixedSize(self.size())
+        self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
         
         
         
