@@ -19,9 +19,9 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
         
         #Llamar a los diferentes formularios desde los botones
-        self.BtnSalir.clicked.connect(self.fn_Salir)
-        self.BtnProductos.clicked.connect(self.abrirFrmProductos)
-        #self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
+        self.btnSalir.clicked.connect(self.fn_Salir)
+        self.btnProductos.clicked.connect(self.abrirFrmProductos)
+        #self.BtnGuardar.clicked.connect(self.abrirFrmFaltanes)
         #self.BtnReporte.clicked.connect(self.abrirFrmDatosReportes)
         #self.BtnBaseDatos.clicked.connect(self.Configurar_datos)
         
