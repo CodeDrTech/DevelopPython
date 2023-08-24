@@ -24,6 +24,7 @@ class VentanaPrincipal(QMainWindow):
         #self.BtnRegistrar.clicked.connect(self.abrirFrmFaltanes)
         #self.BtnReporte.clicked.connect(self.abrirFrmDatosReportes)
         #self.BtnBaseDatos.clicked.connect(self.Configurar_datos)
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def fn_Salir(self):

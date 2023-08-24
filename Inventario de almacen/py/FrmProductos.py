@@ -15,6 +15,7 @@ class VentanaProductos(QMainWindow):
         self.setWindowTitle('PRODUCTOS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
         
