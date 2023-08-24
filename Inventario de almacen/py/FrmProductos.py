@@ -27,6 +27,7 @@ class VentanaProductos(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     def insertar_datos(self):
+        
         codigo = self.txtCodigo.text()
         categoria = self.txtCategoria.text()
         nombre = self.txtNombre.text()
@@ -40,13 +41,9 @@ class VentanaProductos(QMainWindow):
                 return
     
             query = QSqlQuery()
-            query.prepare("INSERT INTO Productos (Codigo, Categoria, Nombre, Medida) VALUES (:codigo, :categoria, :nombre, :medida)")
-            query.bindValue(":Codigo", codigo)  # Usa ":codigo" en lugar de ":Codigo"
-            query.bindValue(":Categoria", categoria)  # Usa ":categoria" en lugar de ":Categoria"
-            query.bindValue(":Nombre", nombre)  # Usa ":nombre" en lugar de ":Nombre"
-            query.bindValue(":Medida", medida)  # Usa ":medida" en lugar de ":Medida"
-    
-            if query.exec():
+            sql = f"INSERT INTO Productos (Codigo, Categoria, Nombre, Medida) VALUES ('{codigo}', '{categoria}', '{nombre}', '{medida}')"
+        
+            if query.exec(sql):
                 QMessageBox.information(self, "Éxito", "Datos insertados correctamente.")
             else:
                 QMessageBox.critical(self, "Error", "Error al insertar datos: " + query.lastError().text())
@@ -54,6 +51,7 @@ class VentanaProductos(QMainWindow):
             db.close()
         else:
             QMessageBox.warning(self, "Advertencia", "Por favor, complete todos los campos.")
+
 
 
         
