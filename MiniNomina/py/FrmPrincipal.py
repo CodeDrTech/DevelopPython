@@ -51,7 +51,7 @@ class VentanaPrincipal(QMainWindow):
     
     #Configura la ruta a la base de datos para ser usada por el isstema.    
     def Configurar_datos(self):        
-        confirmacion = QMessageBox.question(self, "CONFIGURACION DE DATOS", "SI EL PROGRAMA MUESTRA LOS DATOS NO ES NECESARIO CONFIGURAR LA BASE DE DATOS, QUIERES CONTINUAR?",
+        confirmacion = QMessageBox.question(self, "CONFIGURACION DE DATOS", "SI EL PROGRAMA MUESTRA LOS DATOS NO ES NECESARIO CONFIGURAR LA BASE DE DATOS, QUIERES CONTINUAR?", # type: ignore
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         
                     
