@@ -23,7 +23,7 @@ class VentanaProductos(QMainWindow):
         #Llamar a los diferentes formularios desde los botones
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnGuardar.clicked.connect(self.insertar_datos)
-        self.btnLimpiar.clicked.connect(self.visualiza_datos)
+        self.btnLimpiar.clicked.connect(self.limpiar_textbox)
         self.btnBorrar.clicked.connect(self.borrar_fila)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
@@ -51,7 +51,17 @@ class VentanaProductos(QMainWindow):
         
         
         #Limpia los TexBox
-        self.txtCodigo.setText("")
+        self.txtCodigo.setText("PROD")
+        self.txtCategoria.setText("")
+        self.txtNombre.setText("")
+        self.txtMedida.setText("")
+        self.txtCodigo.setFocus()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+    def limpiar_textbox(self):
+        #Limpia los TexBox
+        self.txtCodigo.setText("PROD")
         self.txtCategoria.setText("")
         self.txtNombre.setText("")
         self.txtMedida.setText("")
@@ -89,9 +99,12 @@ class VentanaProductos(QMainWindow):
         self.close()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
-        
-        
-        
+    def showEvent(self, event):
+        super().showEvent(event) 
+          
+        self.visualiza_datos()
+        self.txtCodigo.setText("PROD")
+        self.txtCodigo.setFocus()
         
         
         
