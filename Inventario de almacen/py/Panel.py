@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui
 from FrmProductos import VentanaProductos
 from FrmClientes import Ventanaclientes
+from FrmProveedores import Ventanaproveedores
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -23,7 +24,7 @@ class VentanaPrincipal(QMainWindow):
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnProductos.clicked.connect(self.abrirFrmProductos)
         self.btnClientes.clicked.connect(self.abrirFrmClientes)
-        #self.BtnReporte.clicked.connect(self.abrirFrmDatosReportes)
+        self.btnProveedores.clicked.connect(self.abrirFrmProveedores)
         #self.BtnBaseDatos.clicked.connect(self.Configurar_datos)
         
 #------------------------------------------------------------------------------------------------------
@@ -42,6 +43,9 @@ class VentanaPrincipal(QMainWindow):
         self.llamar_venana_cliente = Ventanaclientes()
         self.llamar_venana_cliente.show()
 
+    def abrirFrmProveedores(self):
+        self.llamar_venana_proveedores = Ventanaproveedores()
+        self.llamar_venana_proveedores.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
