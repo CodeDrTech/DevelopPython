@@ -17,3 +17,16 @@ def insertar_nuevo_producto(codigo, categoria, nombre, medida):
 
         # Cerrar la conexión
         conn.close()
+        
+        
+def insertar_nuevo_cliente(codigo, nombre):
+        
+        # Conectar a la base de datos
+        conn = conectar_db()
+
+        # Realizar la inserción en la base de datos
+        conn.execute("INSERT INTO Clientes (Codigo, Nombre) VALUES (?, ?)", (codigo, nombre))
+        conn.commit()
+
+        # Cerrar la conexión
+        conn.close()
