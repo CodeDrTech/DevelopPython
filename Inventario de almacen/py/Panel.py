@@ -25,7 +25,7 @@ class VentanaPrincipal(QMainWindow):
         self.btnProductos.clicked.connect(self.abrirFrmProductos)
         self.btnClientes.clicked.connect(self.abrirFrmClientes)
         self.btnProveedores.clicked.connect(self.abrirFrmProveedores)
-        #self.BtnBaseDatos.clicked.connect(self.Configurar_datos)
+        #self.btnCompras.clicked.connect(self.abrirFrmCompras)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -46,6 +46,7 @@ class VentanaPrincipal(QMainWindow):
     def abrirFrmProveedores(self):
         self.llamar_venana_proveedores = Ventanaproveedores()
         self.llamar_venana_proveedores.show()
+        
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)       

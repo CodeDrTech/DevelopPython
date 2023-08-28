@@ -26,18 +26,30 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>25</x>
+      <x>35</x>
       <y>15</y>
-      <width>91</width>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>CODIGO</string>
@@ -95,24 +107,61 @@ QLineEdit:focus {
     border: 1px solid #3498db;
     outline: none;
 }
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
 </string>
     </property>
    </widget>
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>220</x>
       <y>15</y>
-      <width>91</width>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>NOMBRE</string>
@@ -170,6 +219,31 @@ QLineEdit:focus {
     border: 1px solid #3498db;
     outline: none;
 }
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
 </string>
     </property>
    </widget>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>265</height>
+    <height>285</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -161,7 +161,7 @@ QPushButton:pressed {
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="btnCompras">
     <property name="geometry">
      <rect>
       <x>490</x>
@@ -212,7 +212,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>150</y>
       <width>121</width>
       <height>81</height>
      </rect>
@@ -259,7 +259,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>130</y>
+      <y>150</y>
       <width>121</width>
       <height>81</height>
      </rect>
@@ -306,7 +306,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>130</y>
+      <y>150</y>
       <width>121</width>
       <height>81</height>
      </rect>
@@ -353,7 +353,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>130</y>
+      <y>150</y>
       <width>121</width>
       <height>81</height>
      </rect>
@@ -399,18 +399,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>131</width>
+      <x>20</x>
+      <y>100</y>
+      <width>111</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>PRODUCTOS</string>
@@ -419,18 +431,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>90</y>
-      <width>151</width>
+      <x>170</x>
+      <y>100</y>
+      <width>121</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>PROVEEDORES</string>
@@ -439,18 +463,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>345</x>
-      <y>90</y>
-      <width>101</width>
+      <x>350</x>
+      <y>100</y>
+      <width>81</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>CLIENTES</string>
@@ -459,18 +495,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>505</x>
-      <y>90</y>
-      <width>101</width>
+      <x>510</x>
+      <y>100</y>
+      <width>81</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>COMPRAS</string>
@@ -479,18 +527,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>90</y>
-      <width>91</width>
+      <x>675</x>
+      <y>100</y>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>SALIDAS</string>
@@ -499,18 +559,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>5</x>
-      <y>210</y>
+      <x>15</x>
+      <y>240</y>
       <width>131</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>INVENTARIOS</string>
@@ -519,18 +591,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>175</x>
-      <y>210</y>
-      <width>121</width>
+      <x>185</x>
+      <y>240</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>HISTORIAL</string>
@@ -539,18 +623,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>210</y>
-      <width>171</width>
+      <x>320</x>
+      <y>240</y>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>BASE COMPRAS</string>
@@ -559,18 +655,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>210</y>
-      <width>151</width>
+      <x>490</x>
+      <y>240</y>
+      <width>121</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>BASE SALIDAS</string>
@@ -627,7 +735,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>650</x>
-      <y>130</y>
+      <y>150</y>
       <width>121</width>
       <height>81</height>
      </rect>
@@ -676,18 +784,30 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>210</y>
-      <width>91</width>
+      <x>675</x>
+      <y>240</y>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>15</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+</string>
     </property>
     <property name="text">
      <string>CERRAR</string>

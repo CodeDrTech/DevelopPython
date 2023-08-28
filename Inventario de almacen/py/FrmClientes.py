@@ -82,7 +82,7 @@ class Ventanaclientes(QMainWindow):
             row = index.row()
             
             # Preguntar si el usuario está seguro de eliminar la fila
-            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTAS SEGURO QUE QUIERE ELIMINAR ESTE CLIENTE?",
+            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTA SEGURO QUE QUIERE ELIMINAR ESTE CLIENTE?",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             

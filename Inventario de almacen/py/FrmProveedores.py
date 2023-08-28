@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-from Consultas_db import insertar_nuevo_cliente
+from Consultas_db import insertar_nuevo_proveedor
 
 class Ventanaproveedores(QMainWindow):    
     def __init__(self):
@@ -36,7 +36,7 @@ class Ventanaproveedores(QMainWindow):
 
     def limpiar_textbox(self):
         #Limpia los TexBox
-        self.txtCodigo.setText("CLI")        
+        self.txtCodigo.setText("PROV")        
         self.txtNombre.setText("")        
         self.txtCodigo.setFocus()
         
@@ -46,7 +46,7 @@ class Ventanaproveedores(QMainWindow):
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         model = QSqlTableModel()
-        model.setTable("Clientes")
+        model.setTable("Proveedores")
         model.select()        
         self.dataView.setModel(model)
 
@@ -60,12 +60,12 @@ class Ventanaproveedores(QMainWindow):
         codigo = self.txtCodigo.text()        
         nombre = self.txtNombre.text()
         
-        insertar_nuevo_cliente(codigo, nombre)
+        insertar_nuevo_proveedor(codigo, nombre)
         self.visualiza_datos()
         
         
         #Limpia los TexBox
-        self.txtCodigo.setText("CLI")        
+        self.txtCodigo.setText("PROV")        
         self.txtNombre.setText("")        
         self.txtCodigo.setFocus()
         
@@ -82,7 +82,7 @@ class Ventanaproveedores(QMainWindow):
             row = index.row()
             
             # Preguntar si el usuario está seguro de eliminar la fila
-            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTAS SEGURO QUE QUIERE ELIMINAR ESTE CLIENTE?",
+            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTA SEGURO QUE QUIERE ELIMINAR ESTE PROVEEDOR?",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
@@ -91,16 +91,16 @@ class Ventanaproveedores(QMainWindow):
                 # Eliminar la fila seleccionada del modelo de datos
                 model = self.dataView.model()
                 model.removeRow(row)
-                QMessageBox.warning(self, "ELIMINADO", "CLIENTE ELIMINADO.")
+                QMessageBox.warning(self, "ELIMINADO", "PROVEEDOR ELIMINADO.")
         else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA EL CLIENTE QUE VAS A ELIMINAR.")    
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL PROVEEDOR QUE VAS A ELIMINAR.")    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     def showEvent(self, event):
         super().showEvent(event) 
           
         self.visualiza_datos()
-        self.txtCodigo.setText("CLI")
+        self.txtCodigo.setText("PROV")
         self.txtCodigo.setFocus()
         
 #------------------------------------------------------------------------------------------------------
