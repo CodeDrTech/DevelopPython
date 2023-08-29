@@ -29,8 +29,8 @@ class VentanaCompras(QMainWindow):
         
         self.setTabOrder(self.txtDocumento, self.cmbProveedor)
         self.setTabOrder(self.cmbProveedor, self.txtComentario)
-        self.setTabOrder(self.txtComentario, self.txtCodigo)
-        self.setTabOrder(self.txtCodigo, self.cmbProducto)
+        self.setTabOrder(self.txtComentario, self.cmbCodigo)
+        self.setTabOrder(self.cmbCodigo, self.cmbProducto)
         self.setTabOrder(self.cmbProducto, self.txtMedida)
         self.setTabOrder(self.txtMedida, self.txtCantidad)
         self.setTabOrder(self.txtCantidad, self.btnSalir)
@@ -57,14 +57,14 @@ class VentanaCompras(QMainWindow):
         model.setTable('Productos')
         model.setFilter(f"Nombre='{nombre}'")
         model.select()
-        columna_banca2 = []
+        columna_codigo = []
         for i in range(model.rowCount()):
-            columna_banca2.append(model.data(model.index(i, 0)))
+            columna_codigo.append(model.data(model.index(i, 0)))
 
-        combo_model3 = QStandardItemModel()
-        for item in columna_banca2:
-            combo_model3.appendRow(QStandardItem(str(item)))
-        self.cmbProducto.setModel(combo_model3) 
+        combo_producto = QStandardItemModel()
+        for item in columna_codigo:
+            combo_producto.appendRow(QStandardItem(str(item)))
+        self.cmbCodigo.setModel(combo_producto) 
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
@@ -87,7 +87,7 @@ class VentanaCompras(QMainWindow):
         self.txtFecha.setDate(QDate.currentDate())        
         self.txtDocumento.setText("")
         self.txtComentario.setText("") 
-        self.txtCodigo.setText("") 
+        self.cmbCodigo.setCurrentText("")  
         self.txtMedida.setText("") 
         self.txtCantidad.setText("") 
         self.cmbProveedor.setCurrentText("") 
@@ -110,7 +110,7 @@ class VentanaCompras(QMainWindow):
         
         fecha = self.txtFecha.date().toString("yyyy-MM-dd") 
         proveedor = self.cmbProveedor.currentText()
-        codigo = self.txtCodigo.text()
+        codigo = self.cmbCodigo.currentText()
         categoria = 5
         producto = self.cmbProducto.currentText()
         und = self.txtMedida.text()
@@ -124,7 +124,7 @@ class VentanaCompras(QMainWindow):
         self.txtFecha.setDate(QDate.currentDate())        
         self.txtDocumento.setText("")
         self.txtComentario.setText("") 
-        self.txtCodigo.setText("") 
+        self.cmbCodigo.setCurrentText("")
         self.txtMedida.setText("") 
         self.txtCantidad.setText("") 
         self.cmbProveedor.setCurrentText("") 
@@ -166,7 +166,7 @@ class VentanaCompras(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event) 
           
-        self.visualiza_datos()
+        #self.visualiza_datos()
         self.txtDocumento.setFocus()
         self.txtFecha.setDate(QDate.currentDate()) 
         
