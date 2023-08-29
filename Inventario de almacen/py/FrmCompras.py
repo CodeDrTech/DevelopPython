@@ -46,25 +46,25 @@ class VentanaCompras(QMainWindow):
         self.btnFrmProveedores.clicked.connect(self.abrirFrmProveedores)
         
         # Evento que inserta el codigo de producto cuando seleccionas un nombre del cmbProducto.
-        #self.cmbProducto.currentIndexChanged.connect(
-            #lambda i: self.actualizar_codigo_producto(self.cmbProducto.currentText()))
+        self.cmbProducto.currentIndexChanged.connect(
+            lambda i: self.actualizar_codigo_producto(self.cmbProducto.currentText()))
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     # Obtiene el codigo del producto correspondiente al producto seleccionado en el cmbProducto. 
-    #def actualizar_codigo_producto(self, codigo):
-        #model = QSqlTableModel()
-        #model.setTable('Productos')
-        #model.setFilter(f"Codigo='{codigo}'")
-        #model.select()
-        #columna_banca2 = []
-        #for i in range(model.rowCount()):
-            #columna_banca2.append(model.data(model.index(i, 0)))
+    def actualizar_codigo_producto(self, nombre):
+        model = QSqlTableModel()
+        model.setTable('Productos')
+        model.setFilter(f"Nombre='{nombre}'")
+        model.select()
+        columna_banca2 = []
+        for i in range(model.rowCount()):
+            columna_banca2.append(model.data(model.index(i, 0)))
 
-        #combo_model3 = QStandardItemModel()
-        #for item in columna_banca2:
-            #combo_model3.appendRow(QStandardItem(str(item)))
-        #self.cmbProducto.setModel(combo_model3) 
+        combo_model3 = QStandardItemModel()
+        for item in columna_banca2:
+            combo_model3.appendRow(QStandardItem(str(item)))
+        self.cmbProducto.setModel(combo_model3) 
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
