@@ -18,7 +18,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 </string>
   </property>
@@ -43,7 +43,7 @@
     border: 2px solid #2980b9;
     border-radius: 8px;
     padding: 10px;
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QGroupBox:title {
@@ -287,7 +287,7 @@ QPushButton:pressed {
     border: 2px solid #2980b9;
     border-radius: 8px;
     padding: 10px;
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QGroupBox:title {
@@ -319,7 +319,7 @@ QGroupBox:title {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QPushButton {
@@ -345,7 +345,7 @@ QPushButton:pressed {
 }
 
 QLineEdit {
-    background-color: #ffffff;
+    background-color: #9a9a9a;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -361,7 +361,7 @@ QLineEdit:focus {
     outline: none;
 }
 QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -816,7 +816,7 @@ QComboBox QAbstractItemView {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -848,7 +848,7 @@ QLabel {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -880,7 +880,7 @@ QLabel {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -912,7 +912,7 @@ QLabel {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -997,7 +997,7 @@ QPushButton:pressed {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -1029,7 +1029,7 @@ QLabel {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -1061,7 +1061,7 @@ QLabel {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -1093,7 +1093,7 @@ QLabel {
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -1219,7 +1219,7 @@ QDateEdit QAbstractItemView {
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>0</y>
+      <y>5</y>
       <width>91</width>
       <height>21</height>
      </rect>
@@ -1233,7 +1233,7 @@ QDateEdit QAbstractItemView {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -1258,7 +1258,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QTableView {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
     border: 1px solid #cccccc;
     selection-background-color: #3498db;
     selection-color: #ffffff;

@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 </string>
   </property>
@@ -414,7 +414,7 @@ QPushButton:pressed {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -446,7 +446,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -478,7 +478,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -510,7 +510,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -542,7 +542,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -574,7 +574,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -606,7 +606,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -638,7 +638,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -670,7 +670,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -799,7 +799,7 @@ QPushButton:pressed {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {

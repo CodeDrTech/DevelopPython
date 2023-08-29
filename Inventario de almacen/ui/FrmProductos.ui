@@ -18,7 +18,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 </string>
   </property>
@@ -34,7 +34,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QTableView {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
     border: 1px solid #cccccc;
     selection-background-color: #3498db;
     selection-color: #ffffff;
@@ -417,7 +417,7 @@ QLineEdit::placeholder {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -449,7 +449,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -481,7 +481,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
@@ -513,7 +513,7 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #f2f2f2;
+    background-color: #9a9a9a;
 }
 
 QLabel {
