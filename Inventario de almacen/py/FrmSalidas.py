@@ -18,7 +18,7 @@ class VentanaSalidas(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('SALIDAS')
+        self.setWindowTitle('REQUISICION DE MATERIALES')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))  
         
@@ -30,8 +30,8 @@ class VentanaSalidas(QMainWindow):
         self.setTabOrder(self.cmbClientes, self.txtComentario)
         self.setTabOrder(self.txtComentario, self.cmbCodigo)
         self.setTabOrder(self.cmbCodigo, self.cmbProducto)
-        self.setTabOrder(self.cmbProducto, self.cmbMedida)
-        self.setTabOrder(self.cmbMedida, self.txtCantidad)
+        self.setTabOrder(self.cmbProducto, self.txtExistencia)
+        self.setTabOrder(self.txtExistencia, self.txtCantidad)
         self.setTabOrder(self.txtCantidad, self.btnSalir)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ class VentanaSalidas(QMainWindow):
         
         # Evento que inserta la categoria del producto cuando seleccionas un nombre del cmbProducto.
         self.cmbProducto.currentIndexChanged.connect(
-            lambda i: self.actualizar_categoria(self.cmbProducto.currentText()))
+            lambda i: self.actualizar_existencia(self.cmbProducto.currentText()))
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -137,22 +137,29 @@ class VentanaSalidas(QMainWindow):
         combo_und = QStandardItemModel()
         for item in columna_medida:
             combo_und.appendRow(QStandardItem(str(item)))
-        self.cmbMedida.setModel(combo_und)
+        self.cmbCategoria.setModel(combo_und)
         
         
-    def actualizar_categoria(self, categoria):
+    def actualizar_existencia(self, producto):
         model = QSqlTableModel()
-        model.setTable('Productos')
-        model.setFilter(f"Nombre='{categoria}'")
+        model.setTable('Compras')
+        model.setFilter(f"Producto='{producto}'")
         model.select()
-        columna_categoria = []
-        for i in range(model.rowCount()):
-            columna_categoria.append(model.data(model.index(i, 1)))
+    
+        if model.rowCount() > 0:
+            existencia = model.data(model.index(0, 8))  # Obtener el dato de la columna deseada
+        
+            # Actualizar el txtExistencia con el valor obtenido
+            self.txtExistencia.setText(str(existencia))
+        else:
+            self.txtExistencia.clear()  # Limpiar el QLineEdit si no se encuentra ningún dato
 
-        combo_categoria = QStandardItemModel()
-        for item in columna_categoria:
-            combo_categoria.appendRow(QStandardItem(str(item)))
-        self.cmbCategoria.setModel(combo_categoria)  
+
+
+
+
+
+  
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
@@ -177,7 +184,7 @@ class VentanaSalidas(QMainWindow):
         self.txtComentario.setText("") 
         self.cmbCodigo.setCurrentText("")
         self.cmbCategoria.setCurrentText("")  
-        self.cmbMedida.setCurrentText("") 
+        self.txtExistencia.setText("") 
         self.txtCantidad.setText("") 
         self.cmbClientes.setCurrentText("") 
         self.cmbProducto.setCurrentText("")         
@@ -202,7 +209,7 @@ class VentanaSalidas(QMainWindow):
         codigo = self.cmbCodigo.currentText()
         categoria = self.cmbCategoria.currentText()
         producto = self.cmbProducto.currentText()
-        und = self.cmbMedida.currentText()
+        und = self.txtExistencia.text()
         comentario = self.txtComentario.text()         
         cantidad = self.txtCantidad.text()       
         #insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
@@ -215,7 +222,7 @@ class VentanaSalidas(QMainWindow):
         self.txtComentario.setText("")
         self.cmbCodigo.setCurrentText("") 
         self.cmbCategoria.setCurrentText("")
-        self.cmbMedida.setCurrentText("") 
+        self.txtExistencia.setText("") 
         self.txtCantidad.setText("") 
         self.cmbClientes.setCurrentText("") 
         self.cmbProducto.setCurrentText("")         
