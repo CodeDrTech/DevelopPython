@@ -90,20 +90,28 @@ class VentanaSalidas(QMainWindow):
         
         
         
-        # Obtiene el último dato de la columna N_Doc de la tabla Compras.
-        # Obtiene el último dato de la columna Nombre de la tabla Proveedores.
+        # Obtiene el último dato de la columna N_Doc de la tabla Salidas y le suma uno.
         model = QSqlTableModel()
-        model.setTable('Compras')
+        model.setTable('Salidas')
         model.select()
         last_row_index = model.rowCount() - 1  # Índice del último registro
-        last_proveedor = int(model.data(model.index(last_row_index, 1)))
 
-        # Incrementar el último valor en 1 y cargarlo en el QComboBox asignado.
-        next_proveedor = last_proveedor + 1
-        combo_model = QStandardItemModel()
-        combo_model.appendRow(QStandardItem(str(next_proveedor)))
-        self.cmbDocumento.setModel(combo_model)
+        if last_row_index >= 0:  # Verificar si hay datos en la tabla
+            last_proveedor = int(model.data(model.index(last_row_index, 1)))       
+            next_proveedor = last_proveedor + 1
 
+            combo_model = QStandardItemModel()
+            combo_model.appendRow(QStandardItem(str(next_proveedor)))
+    
+            if combo_model.rowCount() > 0:
+                self.cmbDocumento.setModel(combo_model)
+            else:
+                self.cmbDocumento.setCurrentText("")
+        else:
+            self.cmbDocumento.setModel(None)  # No hay datos, configurar el combo box sin modelo
+            self.cmbDocumento.setPlaceholderText("Sin datos disponibles")
+
+            
 
 
         
@@ -194,7 +202,7 @@ class VentanaSalidas(QMainWindow):
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         model = QSqlTableModel()
-        model.setTable("Compras")
+        model.setTable("Salidas")
         model.select()        
         self.dataView.setModel(model)
 
@@ -205,13 +213,14 @@ class VentanaSalidas(QMainWindow):
     def insertar_datos(self):
         
         fecha = self.txtFecha.date().toString("yyyy-MM-dd") 
-        proveedor = self.cmbClientes.currentText()
+        n_doc = self.cmbDocumento.currentText()
+        cliente = self.cmbClientes.currentText()
+        comentario = self.txtComentario.text() 
         codigo = self.cmbCodigo.currentText()
         categoria = self.cmbCategoria.currentText()
         producto = self.cmbProducto.currentText()
-        und = self.txtExistencia.text()
-        comentario = self.txtComentario.text()         
-        cantidad = self.txtCantidad.text()       
+        cantidad = self.txtCantidad.text()
+       
         #insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
         self.visualiza_datos()
         
