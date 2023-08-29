@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 from FrmProductos import VentanaProductos
 from FrmClientes import Ventanaclientes
 from FrmProveedores import Ventanaproveedores
-from FemCompras import VentanaCompras
+from FrmCompras import VentanaCompras
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
