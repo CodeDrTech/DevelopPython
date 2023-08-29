@@ -5,6 +5,7 @@ from PyQt5 import QtGui
 from FrmProductos import VentanaProductos
 from FrmClientes import Ventanaclientes
 from FrmProveedores import Ventanaproveedores
+from FemCompras import VentanaCompras
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -25,7 +26,7 @@ class VentanaPrincipal(QMainWindow):
         self.btnProductos.clicked.connect(self.abrirFrmProductos)
         self.btnClientes.clicked.connect(self.abrirFrmClientes)
         self.btnProveedores.clicked.connect(self.abrirFrmProveedores)
-        #self.btnCompras.clicked.connect(self.abrirFrmCompras)
+        self.btnCompras.clicked.connect(self.abrirFrmCompras)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -46,6 +47,10 @@ class VentanaPrincipal(QMainWindow):
     def abrirFrmProveedores(self):
         self.llamar_venana_proveedores = Ventanaproveedores()
         self.llamar_venana_proveedores.show()
+        
+    def abrirFrmCompras(self):
+        self.llamar_venana_compras = VentanaCompras()
+        self.llamar_venana_compras.show()
         
 
 if __name__ == '__main__':

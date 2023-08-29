@@ -2,7 +2,11 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
+from PyQt5.QtCore import QDate
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
+from FrmProductos import VentanaProductos
+from FrmProveedores import Ventanaproveedores
 
 
 class VentanaCompras(QMainWindow):    
@@ -16,24 +20,108 @@ class VentanaCompras(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('COMPRAS')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))        
+        self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))  
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+        # Esrtabece los focos a los texbox en orden de arriba hacia abajo.
+        
+        self.setTabOrder(self.txtDocumento, self.cmbProveedor)
+        self.setTabOrder(self.cmbProveedor, self.txtComentario)
+        self.setTabOrder(self.txtComentario, self.txtCodigo)
+        self.setTabOrder(self.txtCodigo, self.cmbProducto)
+        self.setTabOrder(self.cmbProducto, self.txtMedida)
+        self.setTabOrder(self.txtMedida, self.txtCantidad)
+        self.setTabOrder(self.txtCantidad, self.btnSalir)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
-
+        #Llamar a los diferentes formularios desde los botones
+        self.btnSalir.clicked.connect(self.fn_Salir)
+        #self.btnGuardar.clicked.connect(self.insertar_datos)
+        self.btnLimpiar.clicked.connect(self.limpiar_textbox)
+        #self.btnBorrar.clicked.connect(self.borrar_fila)
+        self.btnFrmProductos.clicked.connect(self.abrirFrmProductos)
+        self.btnFrmProveedores.clicked.connect(self.abrirFrmProveedores)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
+    
+    #Funciones para llamar las ventanas secundarias y mostrarlas    
+    def abrirFrmProductos(self):
+        self.llamar_venana_productos = VentanaProductos()
+        self.llamar_venana_productos.show()
+
+    def abrirFrmProveedores(self):
+        self.llamar_venana_proveedores = Ventanaproveedores()
+        self.llamar_venana_proveedores.show()
+    
     def fn_Salir(self):
         self.close()
+        
+        
+    def limpiar_textbox(self):
+        #Limpia los TexBox
+        self.txtFecha.setDate(QDate.currentDate())        
+        self.txtDocumento.setText("")
+        self.txtComentario.setText("") 
+        self.txtCodigo.setText("") 
+        self.txtMedida.setText("") 
+        self.txtCantidad.setText("") 
+        self.cmbProveedor.setCurrentText("") 
+        self.cmbProducto.setCurrentText("")         
+        self.txtDocumento.setFocus()
+        
+        
+    def visualiza_datos(self):
+        # Consulta SELECT * FROM Productos
+        model = QSqlTableModel()
+        model.setTable("Compras")
+        model.select()        
+        self.dataView.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.dataView.resizeColumnsToContents()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+    # Obtiene los datos de la columna Nombre de la tabla Productos.
+        model = QSqlTableModel()
+        model.setTable('Productos')
+        model.select()
+        columna_nombre = []
+        for i in range(model.rowCount()):
+            columna_nombre.append(model.data(model.index(i, 2)))
+        
+        # Cargar los datos de la columna Nombre de la tabla Productos en el QComboBox asignado.
+        combo_model = QStandardItemModel()
+        for item in columna_nombre:
+             combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbProducto.setModel(combo_model)
+        
+        
+    # Obtiene los datos de la columna Nombre de la tabla Proveedores.
+        model = QSqlTableModel()
+        model.setTable('Proveedores')
+        model.select()
+        columna_proveedor = []
+        for i in range(model.rowCount()):
+            columna_proveedor.append(model.data(model.index(i, 1)))
+        
+        # Cargar los datos de la columna Nombre de la tabla Proveedores en el QComboBox asignado.
+        combo_model = QStandardItemModel()
+        for item in columna_proveedor:
+             combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbProveedor.setModel(combo_model)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     def showEvent(self, event):
         super().showEvent(event) 
           
-        #self.visualiza_datos()
+        self.visualiza_datos()
         #self.txtCodigo.setText("PROD")
-        #self.txtCodigo.setFocus()
+        self.txtDocumento.setFocus()
+        self.txtFecha.setDate(QDate.currentDate()) 
         
         
         
