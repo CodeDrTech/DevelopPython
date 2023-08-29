@@ -50,11 +50,11 @@ class VentanaSalidas(QMainWindow):
         
         # Evento que inserta la unidad del producto cuando seleccionas un nombre del cmbProducto
         self.cmbProducto.currentIndexChanged.connect(
-            lambda i: self.actualizar_und_producto(self.cmbProducto.currentText()))
+            lambda i: self.actualizar_categoria_producto(self.cmbProducto.currentText()))
         
         # Evento que inserta la categoria del producto cuando seleccionas un nombre del cmbProducto.
         self.cmbProducto.currentIndexChanged.connect(
-            lambda i: self.actualizar_existencia(self.cmbProducto.currentText()))
+            lambda i: self.actualizar_existencia_producto(self.cmbProducto.currentText()))
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -125,14 +125,14 @@ class VentanaSalidas(QMainWindow):
         self.cmbCodigo.setModel(combo_producto)
         
     # szxczxcxcvxcvxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcv. 
-    def actualizar_und_producto(self, und):
+    def actualizar_categoria_producto(self, categoria):
         model = QSqlTableModel()
         model.setTable('Productos')
-        model.setFilter(f"Nombre='{und}'")
+        model.setFilter(f"Nombre='{categoria}'")
         model.select()
         columna_medida = []
         for i in range(model.rowCount()):
-            columna_medida.append(model.data(model.index(i, 3)))
+            columna_medida.append(model.data(model.index(i, 1)))
 
         combo_und = QStandardItemModel()
         for item in columna_medida:
@@ -140,7 +140,7 @@ class VentanaSalidas(QMainWindow):
         self.cmbCategoria.setModel(combo_und)
         
         
-    def actualizar_existencia(self, producto):
+    def actualizar_existencia_producto(self, producto):
         model = QSqlTableModel()
         model.setTable('Compras')
         model.setFilter(f"Producto='{producto}'")
@@ -152,7 +152,7 @@ class VentanaSalidas(QMainWindow):
             # Actualizar el txtExistencia con el valor obtenido
             self.txtExistencia.setText(str(existencia))
         else:
-            self.txtExistencia.clear()  # Limpiar el QLineEdit si no se encuentra ningún dato
+            self.txtExistencia.setText("0")
 
 
 

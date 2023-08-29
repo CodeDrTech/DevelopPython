@@ -349,7 +349,7 @@ QPushButton:pressed {
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnSalidas">
+   <widget class="QPushButton" name="btnBaseSalidas">
     <property name="geometry">
      <rect>
       <x>490</x>
@@ -684,7 +684,7 @@ QLabel {
      <string>BASE SALIDAS</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_9">
+   <widget class="QPushButton" name="btnSalidas">
     <property name="geometry">
      <rect>
       <x>650</x>
