@@ -31,15 +31,15 @@ class VentanaCompras(QMainWindow):
         self.setTabOrder(self.cmbProveedor, self.txtComentario)
         self.setTabOrder(self.txtComentario, self.cmbCodigo)
         self.setTabOrder(self.cmbCodigo, self.cmbProducto)
-        self.setTabOrder(self.cmbProducto, self.txtMedida)
-        self.setTabOrder(self.txtMedida, self.txtCantidad)
+        self.setTabOrder(self.cmbProducto, self.cmbMedida)
+        self.setTabOrder(self.cmbMedida, self.txtCantidad)
         self.setTabOrder(self.txtCantidad, self.btnSalir)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
         #Llamar a los diferentes formularios desde los botones
         self.btnSalir.clicked.connect(self.fn_Salir)
-        #self.btnGuardar.clicked.connect(self.insertar_datos)
+        self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnLimpiar.clicked.connect(self.limpiar_textbox)
         #self.btnBorrar.clicked.connect(self.borrar_fila)
         self.btnFrmProductos.clicked.connect(self.abrirFrmProductos)
@@ -48,6 +48,46 @@ class VentanaCompras(QMainWindow):
         # Evento que inserta el codigo de producto cuando seleccionas un nombre del cmbProducto.
         self.cmbProducto.currentIndexChanged.connect(
             lambda i: self.actualizar_codigo_producto(self.cmbProducto.currentText()))
+        
+        # fkjhsgksljfhlkdjglhsglkdfjlgksjdhlkghsldkfjghdfjhgkljdfshgkljdhsfljkghsdlfjgksdhfjlkghsdlfk.actualizar_categoria
+        self.cmbProducto.currentIndexChanged.connect(
+            lambda i: self.actualizar_und_producto(self.cmbProducto.currentText()))
+        
+        # fkjhsgksljfhlkdjglhsglkdfjlgksjdhlkghsldkfjghdfjhgkljdfshgkljdhsfljkghsdlfjgksdhfjlkghsdlfk.
+        self.cmbProducto.currentIndexChanged.connect(
+            lambda i: self.actualizar_categoria(self.cmbProducto.currentText()))
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    
+        # Obtiene los datos de la columna Nombre de la tabla Productos.
+        model = QSqlTableModel()
+        model.setTable('Productos')
+        model.select()
+        columna_nombre = []
+        for i in range(model.rowCount()):
+            columna_nombre.append(model.data(model.index(i, 2)))
+        
+        # Cargar los datos de la columna Nombre de la tabla Productos en el QComboBox asignado.
+        combo_model = QStandardItemModel()
+        for item in columna_nombre:
+             combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbProducto.setModel(combo_model)
+        
+        
+        # Obtiene los datos de la columna Nombre de la tabla Proveedores.
+        model = QSqlTableModel()
+        model.setTable('Proveedores')
+        model.select()
+        columna_proveedor = []
+        for i in range(model.rowCount()):
+            columna_proveedor.append(model.data(model.index(i, 1)))
+        
+        # Cargar los datos de la columna Nombre de la tabla Proveedores en el QComboBox asignado.
+        combo_model = QStandardItemModel()
+        for item in columna_proveedor:
+             combo_model.appendRow(QStandardItem(str(item)))
+        self.cmbProveedor.setModel(combo_model)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -64,7 +104,37 @@ class VentanaCompras(QMainWindow):
         combo_producto = QStandardItemModel()
         for item in columna_codigo:
             combo_producto.appendRow(QStandardItem(str(item)))
-        self.cmbCodigo.setModel(combo_producto) 
+        self.cmbCodigo.setModel(combo_producto)
+        
+    # szxczxcxcvxcvxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcv. 
+    def actualizar_und_producto(self, und):
+        model = QSqlTableModel()
+        model.setTable('Productos')
+        model.setFilter(f"Nombre='{und}'")
+        model.select()
+        columna_medida = []
+        for i in range(model.rowCount()):
+            columna_medida.append(model.data(model.index(i, 3)))
+
+        combo_und = QStandardItemModel()
+        for item in columna_medida:
+            combo_und.appendRow(QStandardItem(str(item)))
+        self.cmbMedida.setModel(combo_und)
+        
+        
+    def actualizar_categoria(self, categoria):
+        model = QSqlTableModel()
+        model.setTable('Productos')
+        model.setFilter(f"Nombre='{categoria}'")
+        model.select()
+        columna_categoria = []
+        for i in range(model.rowCount()):
+            columna_categoria.append(model.data(model.index(i, 1)))
+
+        combo_categoria = QStandardItemModel()
+        for item in columna_categoria:
+            combo_categoria.appendRow(QStandardItem(str(item)))
+        self.cmbCategoria.setModel(combo_categoria)  
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
@@ -87,12 +157,13 @@ class VentanaCompras(QMainWindow):
         self.txtFecha.setDate(QDate.currentDate())        
         self.txtDocumento.setText("")
         self.txtComentario.setText("") 
-        self.cmbCodigo.setCurrentText("")  
-        self.txtMedida.setText("") 
+        self.cmbCodigo.setCurrentText("")
+        self.cmbCategoria.setCurrentText("")  
+        self.cmbMedida.setCurrentText("") 
         self.txtCantidad.setText("") 
         self.cmbProveedor.setCurrentText("") 
         self.cmbProducto.setCurrentText("")         
-        self.txtDocumento.setFocus()
+        self.txtComentario.setFocus()
         
         
     def visualiza_datos(self):
@@ -111,9 +182,9 @@ class VentanaCompras(QMainWindow):
         fecha = self.txtFecha.date().toString("yyyy-MM-dd") 
         proveedor = self.cmbProveedor.currentText()
         codigo = self.cmbCodigo.currentText()
-        categoria = 5
+        categoria = self.cmbCategoria.currentText()
         producto = self.cmbProducto.currentText()
-        und = self.txtMedida.text()
+        und = self.cmbMedida.currentText()
         comentario = self.txtComentario.text()         
         cantidad = self.txtCantidad.text()       
         insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
@@ -123,51 +194,22 @@ class VentanaCompras(QMainWindow):
         #Limpia los TexBox
         self.txtFecha.setDate(QDate.currentDate())        
         self.txtDocumento.setText("")
-        self.txtComentario.setText("") 
-        self.cmbCodigo.setCurrentText("")
-        self.txtMedida.setText("") 
+        self.txtComentario.setText("")
+        self.cmbCodigo.setCurrentText("") 
+        self.cmbCategoria.setCurrentText("")
+        self.cmbMedida.setCurrentText("") 
         self.txtCantidad.setText("") 
         self.cmbProveedor.setCurrentText("") 
         self.cmbProducto.setCurrentText("")         
-        self.txtDocumento.setFocus()
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
+        self.txtComentario.setFocus()
 
-    # Obtiene los datos de la columna Nombre de la tabla Productos.
-        model = QSqlTableModel()
-        model.setTable('Productos')
-        model.select()
-        columna_nombre = []
-        for i in range(model.rowCount()):
-            columna_nombre.append(model.data(model.index(i, 2)))
-        
-        # Cargar los datos de la columna Nombre de la tabla Productos en el QComboBox asignado.
-        combo_model = QStandardItemModel()
-        for item in columna_nombre:
-             combo_model.appendRow(QStandardItem(str(item)))
-        self.cmbProducto.setModel(combo_model)
-        
-        
-    # Obtiene los datos de la columna Nombre de la tabla Proveedores.
-        model = QSqlTableModel()
-        model.setTable('Proveedores')
-        model.select()
-        columna_proveedor = []
-        for i in range(model.rowCount()):
-            columna_proveedor.append(model.data(model.index(i, 1)))
-        
-        # Cargar los datos de la columna Nombre de la tabla Proveedores en el QComboBox asignado.
-        combo_model = QStandardItemModel()
-        for item in columna_proveedor:
-             combo_model.appendRow(QStandardItem(str(item)))
-        self.cmbProveedor.setModel(combo_model)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     def showEvent(self, event):
         super().showEvent(event) 
           
-        #self.visualiza_datos()
-        self.txtDocumento.setFocus()
+        self.visualiza_datos()
+        self.txtComentario.setFocus()
         self.txtFecha.setDate(QDate.currentDate()) 
         
         
