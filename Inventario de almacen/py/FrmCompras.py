@@ -27,7 +27,7 @@ class VentanaCompras(QMainWindow):
 #------------------------------------------------------------------------------------------------------
         # Esrtabece los focos a los texbox en orden de arriba hacia abajo.
         
-        self.setTabOrder(self.txtDocumento, self.cmbProveedor)
+        self.setTabOrder(self.cmbDocumento, self.cmbProveedor)
         self.setTabOrder(self.cmbProveedor, self.txtComentario)
         self.setTabOrder(self.txtComentario, self.cmbCodigo)
         self.setTabOrder(self.cmbCodigo, self.cmbProducto)
@@ -41,7 +41,7 @@ class VentanaCompras(QMainWindow):
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnLimpiar.clicked.connect(self.limpiar_textbox)
-        #self.btnBorrar.clicked.connect(self.borrar_fila)
+        self.btnBorrar.clicked.connect(self.borrar_fila)
         self.btnFrmProductos.clicked.connect(self.abrirFrmProductos)
         self.btnFrmProveedores.clicked.connect(self.abrirFrmProveedores)
         
@@ -49,11 +49,11 @@ class VentanaCompras(QMainWindow):
         self.cmbProducto.currentIndexChanged.connect(
             lambda i: self.actualizar_codigo_producto(self.cmbProducto.currentText()))
         
-        # fkjhsgksljfhlkdjglhsglkdfjlgksjdhlkghsldkfjghdfjhgkljdfshgkljdhsfljkghsdlfjgksdhfjlkghsdlfk.actualizar_categoria
+        # Evento que inserta la unidad del producto cuando seleccionas un nombre del cmbProducto
         self.cmbProducto.currentIndexChanged.connect(
             lambda i: self.actualizar_und_producto(self.cmbProducto.currentText()))
         
-        # fkjhsgksljfhlkdjglhsglkdfjlgksjdhlkghsldkfjghdfjhgkljdfshgkljdhsfljkghsdlfjgksdhfjlkghsdlfk.
+        # Evento que inserta la categoria del producto cuando seleccionas un nombre del cmbProducto.
         self.cmbProducto.currentIndexChanged.connect(
             lambda i: self.actualizar_categoria(self.cmbProducto.currentText()))
         
@@ -88,6 +88,25 @@ class VentanaCompras(QMainWindow):
         for item in columna_proveedor:
              combo_model.appendRow(QStandardItem(str(item)))
         self.cmbProveedor.setModel(combo_model)
+        
+        
+        
+        # Obtiene el último dato de la columna N_Doc de la tabla Compras.
+        # Obtiene el último dato de la columna Nombre de la tabla Proveedores.
+        model = QSqlTableModel()
+        model.setTable('Compras')
+        model.select()
+        last_row_index = model.rowCount() - 1  # Índice del último registro
+        last_proveedor = int(model.data(model.index(last_row_index, 1)))
+
+        # Incrementar el último valor en 1 y cargarlo en el QComboBox asignado.
+        next_proveedor = last_proveedor + 1
+        combo_model = QStandardItemModel()
+        combo_model.appendRow(QStandardItem(str(next_proveedor)))
+        self.cmbDocumento.setModel(combo_model)
+
+
+
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -155,7 +174,7 @@ class VentanaCompras(QMainWindow):
     def limpiar_textbox(self):
         #Limpia los TexBox
         self.txtFecha.setDate(QDate.currentDate())        
-        self.txtDocumento.setText("")
+        self.cmbDocumento.setCurrentText("")
         self.txtComentario.setText("") 
         self.cmbCodigo.setCurrentText("")
         self.cmbCategoria.setCurrentText("")  
@@ -193,7 +212,7 @@ class VentanaCompras(QMainWindow):
         
         #Limpia los TexBox
         self.txtFecha.setDate(QDate.currentDate())        
-        self.txtDocumento.setText("")
+        self.cmbDocumento.setCurrentText("")
         self.txtComentario.setText("")
         self.cmbCodigo.setCurrentText("") 
         self.cmbCategoria.setCurrentText("")
@@ -202,6 +221,33 @@ class VentanaCompras(QMainWindow):
         self.cmbProveedor.setCurrentText("") 
         self.cmbProducto.setCurrentText("")         
         self.txtComentario.setFocus()
+        
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
+    def borrar_fila(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.dataView.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener la fila al seleccionar una celda de la tabla
+            index = indexes[0]
+            row = index.row()
+            
+            # Preguntar si el usuario está seguro de eliminar la fila
+            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTA SEGURO QUE QUIERE ELIMINAR ESTA FILA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", eliminar la fila
+            if confirmacion == QMessageBox.Yes:
+                # Eliminar la fila seleccionada del modelo de datos
+                model = self.dataView.model()
+                model.removeRow(row)
+                QMessageBox.warning(self, "ELIMINADO", "FILA ELIMINADA.")
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA LA FILA QUE VAS A ELIMINAR.")
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
