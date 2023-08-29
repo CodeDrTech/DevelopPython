@@ -42,3 +42,15 @@ def insertar_nuevo_proveedor(codigo, nombre):
 
         # Cerrar la conexión
         conn.close()
+        
+def insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad):
+        
+        # Conectar a la base de datos
+        conn = conectar_db()
+
+        # Realizar la inserción en la base de datos
+        conn.execute("INSERT INTO Compras (Fecha, Proveedor, Codigo, Categoria, Producto, Und, Comentario, Cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad))
+        conn.commit()
+
+        # Cerrar la conexión
+        conn.close()

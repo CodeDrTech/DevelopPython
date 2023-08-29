@@ -7,6 +7,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from FrmProductos import VentanaProductos
 from FrmProveedores import Ventanaproveedores
+from Consultas_db import insertar_compras
 
 
 class VentanaCompras(QMainWindow):    
@@ -43,6 +44,27 @@ class VentanaCompras(QMainWindow):
         #self.btnBorrar.clicked.connect(self.borrar_fila)
         self.btnFrmProductos.clicked.connect(self.abrirFrmProductos)
         self.btnFrmProveedores.clicked.connect(self.abrirFrmProveedores)
+        
+        # Evento que inserta el codigo de producto cuando seleccionas un nombre del cmbProducto.
+        #self.cmbProducto.currentIndexChanged.connect(
+            #lambda i: self.actualizar_codigo_producto(self.cmbProducto.currentText()))
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
+    # Obtiene el codigo del producto correspondiente al producto seleccionado en el cmbProducto. 
+    #def actualizar_codigo_producto(self, codigo):
+        #model = QSqlTableModel()
+        #model.setTable('Productos')
+        #model.setFilter(f"Codigo='{codigo}'")
+        #model.select()
+        #columna_banca2 = []
+        #for i in range(model.rowCount()):
+            #columna_banca2.append(model.data(model.index(i, 0)))
+
+        #combo_model3 = QStandardItemModel()
+        #for item in columna_banca2:
+            #combo_model3.appendRow(QStandardItem(str(item)))
+        #self.cmbProducto.setModel(combo_model3) 
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
@@ -82,6 +104,32 @@ class VentanaCompras(QMainWindow):
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.dataView.resizeColumnsToContents()
+        
+        
+    def insertar_datos(self):
+        
+        fecha = self.txtFecha.date().toString("yyyy-MM-dd") 
+        proveedor = self.cmbProveedor.currentText()
+        codigo = self.txtCodigo.text()
+        categoria = 5
+        producto = self.cmbProducto.currentText()
+        und = self.txtMedida.text()
+        comentario = self.txtComentario.text()         
+        cantidad = self.txtCantidad.text()       
+        insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
+        self.visualiza_datos()
+        
+        
+        #Limpia los TexBox
+        self.txtFecha.setDate(QDate.currentDate())        
+        self.txtDocumento.setText("")
+        self.txtComentario.setText("") 
+        self.txtCodigo.setText("") 
+        self.txtMedida.setText("") 
+        self.txtCantidad.setText("") 
+        self.cmbProveedor.setCurrentText("") 
+        self.cmbProducto.setCurrentText("")         
+        self.txtDocumento.setFocus()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -119,7 +167,6 @@ class VentanaCompras(QMainWindow):
         super().showEvent(event) 
           
         self.visualiza_datos()
-        #self.txtCodigo.setText("PROD")
         self.txtDocumento.setFocus()
         self.txtFecha.setDate(QDate.currentDate()) 
         
