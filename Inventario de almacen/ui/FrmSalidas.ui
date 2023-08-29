@@ -387,7 +387,7 @@ QLineEdit::placeholder {
 </string>
      </property>
     </widget>
-    <widget class="QComboBox" name="cmbProveedor">
+    <widget class="QComboBox" name="cmbClientes">
      <property name="geometry">
       <rect>
        <x>265</x>
@@ -609,9 +609,9 @@ QLabel {
     <widget class="QLabel" name="label_10">
      <property name="geometry">
       <rect>
-       <x>320</x>
+       <x>330</x>
        <y>5</y>
-       <width>101</width>
+       <width>81</width>
        <height>21</height>
       </rect>
      </property>
@@ -635,7 +635,7 @@ QLabel {
 </string>
      </property>
      <property name="text">
-      <string>PROVEEDOR</string>
+      <string>CLIENTES</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_11">
@@ -670,7 +670,7 @@ QLabel {
       <string>COMENTARIO</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btnFrmProveedores">
+    <widget class="QPushButton" name="btnFrmClientes">
      <property name="geometry">
       <rect>
        <x>430</x>
@@ -1133,9 +1133,9 @@ QComboBox QAbstractItemView {
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>330</x>
       <y>5</y>
-      <width>91</width>
+      <width>71</width>
       <height>21</height>
      </rect>
     </property>
@@ -1159,7 +1159,7 @@ QLabel {
 </string>
     </property>
     <property name="text">
-     <string>ENTRADAS</string>
+     <string>SALIDAS</string>
     </property>
    </widget>
    <widget class="QTableView" name="dataView">
