@@ -208,7 +208,7 @@ QPushButton:pressed {
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="btnInventario">
     <property name="geometry">
      <rect>
       <x>10</x>

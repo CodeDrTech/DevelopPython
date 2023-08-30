@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -208,6 +208,7 @@ class VentanaSalidas(QMainWindow):
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.dataView.resizeColumnsToContents()
+        self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
         
     def insertar_datos(self):
