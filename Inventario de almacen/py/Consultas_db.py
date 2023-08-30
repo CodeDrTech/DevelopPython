@@ -20,7 +20,8 @@ def insertar_nuevo_producto(codigo, categoria, nombre, medida):
         # Cerrar la conexión
         conn.close()
         
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
 def insertar_nuevo_cliente(codigo, nombre):
         
         # Conectar a la base de datos
@@ -32,7 +33,8 @@ def insertar_nuevo_cliente(codigo, nombre):
 
         # Cerrar la conexión
         conn.close()
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
 def insertar_nuevo_proveedor(codigo, nombre):
         
         # Conectar a la base de datos
@@ -45,67 +47,88 @@ def insertar_nuevo_proveedor(codigo, nombre):
         # Cerrar la conexión
         conn.close()
         
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
 def insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad):
-        
-        # Conectar a la base de datos
-        conn = conectar_db()
-
-        # Realizar la inserción en la base de datos
-        conn.execute("INSERT INTO Compras (Fecha, Proveedor, Codigo, Categoria, Producto, Und, Comentario, Cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad))
-        conn.commit()
-
-        # Cerrar la conexión
-        conn.close()
-        
-
-
-        
-
-def registrar_salida(id_prod, cantidad_rebajada, cliente, comentario_salida):
     # Conectar a la base de datos
     conn = conectar_db()
 
-    # Obtener información de la compra original
-    cursor = conn.execute("SELECT * FROM Compras WHERE Codigo=?", (id_prod,))
-    compra = cursor.fetchone()
-    
-    if compra:
-        cantidad_actual = compra["Cantidad"]
-        
-        # Verificar si hay suficientes existencias para la salida
-        if cantidad_actual >= cantidad_rebajada:
-            # Insertar registro de salida en la tabla de salidas
-            fecha_actual = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            conn.execute("INSERT INTO Salidas (Fecha, N_doc, Clientes, Codigo, Categoria, Producto, Comentario, Cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                         (fecha_actual, None, cliente, compra["Codigo"], compra["Categoria"], compra["Producto"], comentario_salida, cantidad_rebajada))
-            
-            # Calcular nueva cantidad después de la salida
-            nueva_cantidad = cantidad_actual - cantidad_rebajada
-            # Actualizar la cantidad en la tabla de compras
-            conn.execute("UPDATE Compras SET Cantidad=? WHERE N_doc=?", (nueva_cantidad, id_prod))
-            
-            conn.commit()
-            
-            # Mostrar mensaje de éxito
-            msg_box = QMessageBox()
-            msg_box.setIcon(QMessageBox.Information)
-            msg_box.setWindowTitle("Éxito")
-            msg_box.setText("Salida registrada con éxito.")
-            msg_box.exec_()
-        else:
-            # Mostrar mensaje de error
-            msg_box = QMessageBox()
-            msg_box.setIcon(QMessageBox.Warning)
-            msg_box.setWindowTitle("Error")
-            msg_box.setText("No hay suficientes existencias para la salida.")
-            msg_box.exec_()
-    else:
-        # Mostrar mensaje de error
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Warning)
-        msg_box.setWindowTitle("Error")
-        msg_box.setText("Compra no encontrada.")
-        msg_box.exec_()
+    try:
+        # Verificar si el producto ya existe en la tabla Stock
+        cursor = conn.execute("SELECT Disponible FROM Stock WHERE Codigo = ?", (codigo,))
+        existing_stock = cursor.fetchone()
 
-    # Cerrar la conexión
-    conn.close()
+        if existing_stock:
+            # Si el producto existe en Stock, actualizamos la cantidad disponible
+            nueva_cantidad = existing_stock[0] + cantidad
+            conn.execute("UPDATE Stock SET Disponible = ? WHERE Codigo = ?", (nueva_cantidad, codigo))
+        else:
+            # Si el producto no existe en Stock, lo agregamos
+            conn.execute("INSERT INTO Stock (Codigo, Producto, Disponible) VALUES (?, ?, ?)", (codigo, producto, cantidad))
+        
+        # Insertar en la tabla Compras
+        conn.execute("INSERT INTO Compras (Fecha, Proveedor, Codigo, Categoria, Producto, Und, Comentario, Cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad))
+        
+        # Confirmar los cambios en la base de datos
+        conn.commit()
+        
+    except Exception as e:
+        error_message = "Error: " + str(e)
+        # Mostrar mensaje de error utilizando QMessageBox
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setWindowTitle("Error")
+        msg_box.setText(error_message)
+        msg_box.exec_()
+        # Revertir cambios en caso de error
+        conn.rollback()
+        
+    finally:
+        # Cerrar la conexión
+        conn.close()
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------ 
+from PyQt5.QtWidgets import QMessageBox
+
+def insertar_salidas(fecha, cliente, codigo, categoria, producto, comentario, cantidad):
+    # Conectar a la base de datos
+    conn = conectar_db()
+
+    try:
+        # Verificar si el producto existe en la tabla Stock
+        cursor = conn.execute("SELECT Disponible FROM Stock WHERE Codigo = ?", (codigo,))
+        existing_stock = cursor.fetchone()
+
+        if existing_stock:
+            # Verificar si hay suficiente cantidad disponible
+            if existing_stock[0] >= cantidad:
+                # Actualizar la cantidad disponible en Stock
+                nueva_cantidad = existing_stock[0] - cantidad
+                conn.execute("UPDATE Stock SET Disponible = ? WHERE Codigo = ?", (nueva_cantidad, codigo))
+            else:
+                raise Exception("No hay suficiente cantidad disponible")
+        else:
+            raise Exception("Producto no encontrado en Almacen")
+        
+        # Insertar en la tabla Salidas (N_doc es autoincrementable)
+        conn.execute("INSERT INTO Salidas (Fecha, Cliente, Codigo, Categoria, Producto, Comentario, Cantidad) VALUES (?, ?, ?, ?, ?, ?, ?)", (fecha, cliente, codigo, categoria, producto, comentario, cantidad))
+        
+        # Confirmar los cambios en la base de datos
+        conn.commit()
+        
+    except Exception as e:
+        error_message = "Error: " + str(e)
+        # Mostrar mensaje de error utilizando QMessageBox
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setWindowTitle("Error")
+        msg_box.setText(error_message)
+        msg_box.exec_()
+        # Revertir cambios en caso de error
+        conn.rollback()
+        
+    finally:
+        # Cerrar la conexión
+        conn.close()
+

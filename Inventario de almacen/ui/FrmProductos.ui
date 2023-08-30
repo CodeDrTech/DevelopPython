@@ -410,7 +410,7 @@ QLineEdit::placeholder {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -442,7 +442,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -474,7 +474,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -506,7 +506,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -531,7 +531,7 @@ QLabel {
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>30</y>
+      <y>40</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -581,7 +581,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>30</y>
+      <y>40</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -628,7 +628,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>30</y>
+      <y>40</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -675,7 +675,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>30</y>
+      <y>40</y>
       <width>41</width>
       <height>31</height>
      </rect>

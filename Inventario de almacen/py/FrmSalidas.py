@@ -7,7 +7,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from FrmProductos import VentanaProductos
 from FrmClientes import Ventanaclientes
-
+from Consultas_db import insertar_salidas
 
 class VentanaSalidas(QMainWindow):    
     def __init__(self):
@@ -212,8 +212,7 @@ class VentanaSalidas(QMainWindow):
         
     def insertar_datos(self):
         
-        fecha = self.txtFecha.date().toString("yyyy-MM-dd") 
-        n_doc = self.cmbDocumento.currentText()
+        fecha = self.txtFecha.date().toString("yyyy-MM-dd")
         cliente = self.cmbClientes.currentText()
         comentario = self.txtComentario.text() 
         codigo = self.cmbCodigo.currentText()
@@ -221,7 +220,7 @@ class VentanaSalidas(QMainWindow):
         producto = self.cmbProducto.currentText()
         cantidad = self.txtCantidad.text()
        
-        #insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
+        insertar_salidas(fecha, cliente, codigo, categoria, producto, comentario, cantidad)
         self.visualiza_datos()
         
         
