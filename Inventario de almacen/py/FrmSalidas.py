@@ -103,7 +103,7 @@ class VentanaSalidas(QMainWindow):
             combo_model = QStandardItemModel()
             combo_model.appendRow(QStandardItem(str(next_Ndoc)))
     
-            if combo_model.rowCount() > 0:
+            if next_Ndoc > 0: #combo_model.rowCount() > 0:
                 self.cmbDocumento.setModel(combo_model)
             else:
                 self.cmbDocumento.setCurrentText("")
@@ -150,12 +150,12 @@ class VentanaSalidas(QMainWindow):
         
     def actualizar_existencia_producto(self, producto):
         model = QSqlTableModel()
-        model.setTable('Compras')
+        model.setTable('Stock')
         model.setFilter(f"Producto='{producto}'")
         model.select()
     
         if model.rowCount() > 0:
-            existencia = model.data(model.index(0, 8))  # Obtener el dato de la columna deseada
+            existencia = model.data(model.index(0, 2))  # Obtener el dato de la columna deseada
         
             # Actualizar el txtExistencia con el valor obtenido
             self.txtExistencia.setText(str(existencia))
@@ -218,7 +218,7 @@ class VentanaSalidas(QMainWindow):
         codigo = self.cmbCodigo.currentText()
         categoria = self.cmbCategoria.currentText()
         producto = self.cmbProducto.currentText()
-        cantidad = self.txtCantidad.text()
+        cantidad = float(self.txtCantidad.text())
        
         insertar_salidas(fecha, cliente, codigo, categoria, producto, comentario, cantidad)
         self.visualiza_datos()

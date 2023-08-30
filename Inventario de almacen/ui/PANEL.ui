@@ -407,7 +407,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -439,7 +439,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -471,7 +471,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -503,7 +503,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -535,7 +535,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -561,13 +561,13 @@ QLabel {
      <rect>
       <x>15</x>
       <y>240</y>
-      <width>131</width>
+      <width>111</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -585,7 +585,7 @@ QLabel {
 </string>
     </property>
     <property name="text">
-     <string>INVENTARIOS</string>
+     <string>INVENTARIO</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
@@ -599,7 +599,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -631,7 +631,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -663,7 +663,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -792,7 +792,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
