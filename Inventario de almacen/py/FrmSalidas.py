@@ -96,12 +96,12 @@ class VentanaSalidas(QMainWindow):
         model.select()
         last_row_index = model.rowCount() - 1  # Índice del último registro
 
-        if last_row_index >= 0:  # Verificar si hay datos en la tabla
-            last_proveedor = int(model.data(model.index(last_row_index, 1)))       
-            next_proveedor = last_proveedor + 1
+        if last_row_index > 0:  # Verificar si hay datos en la tabla
+            last_Ndoc = int(model.data(model.index(last_row_index, 1)))       
+            next_Ndoc = last_Ndoc + 1
 
             combo_model = QStandardItemModel()
-            combo_model.appendRow(QStandardItem(str(next_proveedor)))
+            combo_model.appendRow(QStandardItem(str(next_Ndoc)))
     
             if combo_model.rowCount() > 0:
                 self.cmbDocumento.setModel(combo_model)
