@@ -108,8 +108,8 @@ class VentanaSalidas(QMainWindow):
             else:
                 self.cmbDocumento.setCurrentText("")
         else:
-            self.cmbDocumento.setModel(None)  # No hay datos, configurar el combo box sin modelo
-            self.cmbDocumento.setPlaceholderText("Sin datos disponibles")
+            #self.cmbDocumento.setModel(None)  # No hay datos, configurar el combo box sin modelo
+            self.cmbDocumento.setPlaceholderText("")
 
             
 
