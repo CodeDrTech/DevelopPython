@@ -5,16 +5,16 @@ from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 import Consultas_db
 
-class VentanaInventario(QMainWindow):    
+class VentanaHistorial(QMainWindow):    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Inventario de almacen/ui/FrmInventario.ui',self)
+        uic.loadUi('Inventario de almacen/ui/FrmHistorial.ui',self)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('INVENTARIO')
+        self.setWindowTitle('MOVIMIENTOS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))
         
@@ -28,23 +28,18 @@ class VentanaInventario(QMainWindow):
     
 
     def visualiza_datos(self):
-        # Consulta SELECT * FROM Productos
-        model = QSqlTableModel()
-        model.setTable("Stock")
-        model.select()        
-        self.dataView.setModel(model)
         
-        #query = QSqlQuery()
-        #query.exec_(f"SELECT * FROM Compras, Salidas")
+        query = QSqlQuery()
+        query.exec_(f"SELECT * FROM Compras, Salidas")
 
    
         # Crear un modelo de tabla SQL
-        #model = QSqlTableModel()
+        model = QSqlTableModel()
     
-        #model.setQuery(query)   
+        model.setQuery(query)   
     
         # Establecer el modelo en la tabla
-        #self.dataView.setModel(model)
+        self.dataView.setModel(model)
         
         
 
@@ -69,6 +64,6 @@ class VentanaInventario(QMainWindow):
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
-    GUI = VentanaInventario()
+    GUI = VentanaHistorial()
     GUI.show()
     sys.exit(app.exec_())

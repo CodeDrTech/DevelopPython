@@ -8,6 +8,7 @@ from FrmProveedores import Ventanaproveedores
 from FrmCompras import VentanaCompras
 from FrmSalidas import VentanaSalidas
 from FrmInventario import VentanaInventario
+from FrmHistorial import VentanaHistorial
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -31,6 +32,8 @@ class VentanaPrincipal(QMainWindow):
         self.btnCompras.clicked.connect(self.abrirFrmCompras)
         self.btnSalidas.clicked.connect(self.abrirFrmSalidas)
         self.btnInventario.clicked.connect(self.abrirFrmInventario)
+        self.btnHistorial.clicked.connect(self.abrirFrmHistorial)
+        
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -63,6 +66,10 @@ class VentanaPrincipal(QMainWindow):
     def abrirFrmInventario(self):
         self.llamar_venana_inventario = VentanaInventario()
         self.llamar_venana_inventario.show()
+        
+    def abrirFrmHistorial(self):
+        self.llamar_venana_historial = VentanaHistorial()
+        self.llamar_venana_historial.show()
         
 
 if __name__ == '__main__':

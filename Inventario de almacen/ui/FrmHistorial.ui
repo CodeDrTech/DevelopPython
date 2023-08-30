@@ -109,7 +109,7 @@ QLabel {
 </string>
     </property>
     <property name="text">
-     <string>INVENTARIO DE PRODUCTOS</string>
+     <string>HISTORIAL DE MOVIMIENTOS</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnSalir">
