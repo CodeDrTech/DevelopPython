@@ -14,7 +14,13 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setFixedSize(self.size())
 
+
+        self.ui.btnSalir.clicked.connect(self.fn_Salir)
+
+    def fn_Salir(self):
+        self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
