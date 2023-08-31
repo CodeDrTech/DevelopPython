@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.2, 2023-08-31T15:05:20. -->
+<!-- Written by QtCreator 11.0.2, 2023-08-31T15:10:01. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -145,7 +145,6 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">mainwindow.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/acer/OneDrive/Documentos/GitHub/DevelopPython/QT Creator/Aplicacion/mainwindow.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/acer/OneDrive/Documentos/GitHub/DevelopPython/QT Creator/Aplicacion/mainwindow.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{6db62199-08e5-4337-9559-39af5ebef150}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\acer\OneDrive\Documentos\GitHub\DevelopPython\QT Creator\Aplicacion\mainwindow.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
