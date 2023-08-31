@@ -89,7 +89,7 @@ def insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comenta
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
-from PyQt5.QtWidgets import QMessageBox
+
 
 def insertar_salidas(fecha, cliente, codigo, categoria, producto, comentario, cantidad):
     # Conectar a la base de datos

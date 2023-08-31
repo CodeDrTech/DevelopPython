@@ -3,12 +3,14 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
-import Consultas_db
+
 
 class VentanaHistorial(QMainWindow):    
     def __init__(self):
         super().__init__()        
         uic.loadUi('Inventario de almacen/ui/FrmHistorial.ui',self)
+        
+        
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -22,15 +24,20 @@ class VentanaHistorial(QMainWindow):
 #------------------------------------------------------------------------------------------------------  
         #Llamar a los diferentes formularios desde los botones
         self.btnSalir.clicked.connect(self.fn_Salir)
-        #self.btnImprimir.clicked.connect(self.btnImprimir)
+        #self.btnImprimir.clicked.connect(self.visualiza_datos)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
-    
+        
 
     def visualiza_datos(self):
         
         query = QSqlQuery()
-        query.exec_(f"SELECT * FROM Compras, Salidas")
+        query.exec_(f"SELECT * from Compras\
+                        UNION ALL\
+                        SELECT NULL as Fecha, NULL as N_doc, NULL as Proveedor, NULL as Codigo, NULL as Categoria, NULL as Producto, NULL as Und, NULL as Comentario, NULL as Cantidad\
+                        UNION ALL\
+                        SELECT NULL as Fecha, NULL as N_doc, NULL as Proveedor, NULL as Codigo, NULL as Categoria, NULL as Producto, NULL as Und, NULL as Comentario, NULL as Cantidad\
+                        ")
 
    
         # Crear un modelo de tabla SQL
