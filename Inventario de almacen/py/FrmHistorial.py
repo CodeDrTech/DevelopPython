@@ -1,8 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView, QMessageBox
 from PyQt5 import QtGui
-from PyQt5.QtSql import QSqlTableModel, QSqlQuery
+from PyQt5.QtSql import QSqlTableModel, QSqlQuery, QSqlDatabase
 from Conexion_db import ruta_database
 
 
@@ -27,9 +27,7 @@ class VentanaHistorial(QMainWindow):
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnImprimir.clicked.connect(self.visualiza_datos)
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------ 
-        
-
+#------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
         
         query = QSqlQuery()
