@@ -4,6 +4,9 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView, QMessa
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery, QSqlDatabase
 from Conexion_db import ruta_database
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
 
 class VentanaHistorial(QMainWindow):    
@@ -25,7 +28,7 @@ class VentanaHistorial(QMainWindow):
 #------------------------------------------------------------------------------------------------------  
         #Llamar a los diferentes formularios desde los botones
         self.btnSalir.clicked.connect(self.fn_Salir)
-        self.btnImprimir.clicked.connect(self.visualiza_datos)
+        self.btnImprimir.clicked.connect(self.imprimir_datos)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -51,6 +54,41 @@ class VentanaHistorial(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido y bloquea el editar
         self.dataView.resizeColumnsToContents()
         self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
+    def imprimir_datos(self):
+        # Crear una QTableView con datos (reemplaza esto con tus propios datos)
+        self.dataView = QTableView(self)
+        # Carga los datos en la self.dataView
+
+        # Crear un botón para imprimir
+        self.print_button = QPushButton("Imprimir", self)
+        self.print_button.clicked.connect(self.print_table)
+
+    def print_table(self):
+        # Crear un documento PDF
+        doc = SimpleDocTemplate("tabla_qtableview.pdf", pagesize=letter)
+
+        # Obtener los datos de la self.dataView
+        data = []
+        for row in range(self.dataView.model().rowCount()):
+            row_data = []
+            for col in range(self.dataView.model().columnCount()):
+                item = self.dataView.model().index(row, col).data(Qt.DisplayRole)
+                row_data.append(str(item))
+            data.append(row_data)
+
+        # Crear la tabla con los datos
+        tabla_qtableview = Table(data)
+        tabla_qtableview.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            # Agrega otros estilos según tus preferencias
+        ]))
+
+        # Crear el contenido del PDF
+        contenido = [tabla_qtableview]
+
+        # Agregar contenido al documento
+        doc.build(contenido)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
