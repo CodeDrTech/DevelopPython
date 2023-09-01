@@ -225,20 +225,20 @@ class VentanaSalidas(QMainWindow):
         fecha_hora = now.strftime("%Y%m%d%H%M%S")
     # Datos de la factura (personaliza estos datos)
         invoice_data = {
-            'invoice_number': 'INV-001',
+            'invoice_number': '# 5',
             'invoice_date': '01/09/2023',
             'due_date': '15/09/2023',
             'customer_name': 'Cliente de Ejemplo',
             'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
             'items': [
-                {'description': 'Producto A', 'quantity': 2, 'unit_price': 50, 'total': 100},
-                {'description': 'Producto B', 'quantity': 3, 'unit_price': 30, 'total': 90},
+                {'description': 'CODIGO', 'quantity': "DESCRIPCION", 'unit_price': "UND", 'total': "CANT."},
+                {'description': 'PRDO00001', 'quantity': "ALAMBE DE ACERO", 'unit_price': "ROLLO", 'total': 90},
             ],
             'total': 190,
         }
 
         # Crear un documento PDF
-        pdf_filename = f'Conduce de salida {fecha_hora}.pdf'
+        pdf_filename = f'Documento de salida {fecha_hora}.pdf'
         doc = SimpleDocTemplate(pdf_filename, pagesize=landscape(letter))
 
         # Crear una lista de elementos (contenido) para la factura
@@ -260,7 +260,7 @@ class VentanaSalidas(QMainWindow):
         for item in invoice_data['items']:
             item_data.append([item['description'], item['quantity'], item['unit_price'], item['total']])
 
-        item_table = Table(item_data, colWidths=[300, 60, 60, 60])
+        item_table = Table(item_data, colWidths=[65, 300, 60, 60])
         item_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),

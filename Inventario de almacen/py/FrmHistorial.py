@@ -31,7 +31,7 @@ class VentanaHistorial(QMainWindow):
 #------------------------------------------------------------------------------------------------------  
         #Llamar a los diferentes formularios desde los botones
         self.btnSalir.clicked.connect(self.fn_Salir)
-        self.btnImprimir.clicked.connect(self.generate_invoice)
+        #self.btnImprimir.clicked.connect(self.generate_invoice)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
