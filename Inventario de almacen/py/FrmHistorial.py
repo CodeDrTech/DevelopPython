@@ -10,6 +10,7 @@ from Conexion_db import ruta_database
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 from io import BytesIO
 
@@ -59,52 +60,8 @@ class VentanaHistorial(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    #aqui va el codigo para la impresion de la factura
-    def generate_invoice(self):
-        data = self.get_invoice_data()
-
-        # Crear un archivo PDF
-        pdf_filename = 'factura.pdf'
-        buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=letter)
-
-        # Crear una lista de elementos (contenido) para la factura
-        elements = []
-
-        # Agregar contenido a la factura, colocando datos específicos en lugares específicos
-        elements.append(Paragraph("Factura", style=self.get_paragraph_style('Title')))
-        elements.append(Paragraph("Fecha: " + data['fecha'], style=self.get_paragraph_style('Normal')))
-        elements.append(Paragraph("Cliente: " + data['cliente'], style=self.get_paragraph_style('Normal')))
-
-        # Agregar más datos específicos según tus necesidades
-
-        # Crear el documento PDF con el contenido
-        doc.build(elements)
-
-        # Guardar el PDF en un archivo
-        with open(pdf_filename, 'wb') as f:
-            f.write(buffer.getvalue())
-
-    def get_paragraph_style(self, style_name):
-        # Define estilos de párrafo personalizados aquí, como "Title" y "Normal"
-        # Puedes personalizar fuentes, tamaños, colores, alineación, etc.
-        styles = {
-            'Title': {'fontName': 'Helvetica-Bold', 'fontSize': 16, 'alignment': 1},
-            'Normal': {'fontName': 'Helvetica', 'fontSize': 12, 'alignment': 0},
-            # Agrega más estilos según sea necesario
-        }
-        return styles[style_name]
-
-    def get_invoice_data(self):
-        # Aquí puedes obtener los datos específicos que deseas imprimir desde la base de datos
-        # o desde tu QTableView (dataView)
-        # Por ejemplo, asumiendo que tienes una base de datos con campos 'fecha' y 'cliente':
-        data = {
-            'fecha': '2023-09-01',
-            'cliente': 'Cliente de ejemplo',
-            # Agrega más campos y datos aquí según tus necesidades
-        }
-        return data
+    #aqui va el codigo para la opcion de imprimir    
+    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def fn_Salir(self):

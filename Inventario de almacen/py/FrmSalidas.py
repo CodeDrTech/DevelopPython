@@ -2,12 +2,18 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
+from datetime import datetime
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from FrmProductos import VentanaProductos
 from FrmClientes import Ventanaclientes
 from Consultas_db import insertar_salidas
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 
 class VentanaSalidas(QMainWindow):    
     def __init__(self):
@@ -43,6 +49,7 @@ class VentanaSalidas(QMainWindow):
         self.btnBorrar.clicked.connect(self.borrar_fila)
         self.btnFrmProductos.clicked.connect(self.abrirFrmProductos)
         self.btnFrmClientes.clicked.connect(self.abrirFrmClientes)
+        self.btnImprimir.clicked.connect(self.generate_invoice)
         
         # Evento que inserta el codigo de producto cuando seleccionas un nombre del cmbProducto.
         self.cmbProducto.currentIndexChanged.connect(
@@ -209,7 +216,74 @@ class VentanaSalidas(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.dataView.resizeColumnsToContents()
         self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    #aqui va el codigo para la impresion de la factura
+    def generate_invoice(self):
         
+        now = datetime.now()        
+        fecha_hora = now.strftime("%Y%m%d%H%M%S")
+    # Datos de la factura (personaliza estos datos)
+        invoice_data = {
+            'invoice_number': 'INV-001',
+            'invoice_date': '01/09/2023',
+            'due_date': '15/09/2023',
+            'customer_name': 'Cliente de Ejemplo',
+            'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
+            'items': [
+                {'description': 'Producto A', 'quantity': 2, 'unit_price': 50, 'total': 100},
+                {'description': 'Producto B', 'quantity': 3, 'unit_price': 30, 'total': 90},
+            ],
+            'total': 190,
+        }
+
+        # Crear un documento PDF
+        pdf_filename = f'Conduce de salida {fecha_hora}.pdf'
+        doc = SimpleDocTemplate(pdf_filename, pagesize=landscape(letter))
+
+        # Crear una lista de elementos (contenido) para la factura
+        elements = []
+
+        # Agregar el encabezado de la factura
+        styles = getSampleStyleSheet()
+        header_text = Paragraph(f'<b>Documento de salida {invoice_data["invoice_number"]}</b>', styles['Heading2'])
+        elements.append(header_text)
+
+        # Agregar información de la factura y el cliente
+        elements.append(Paragraph(f'Fecha de Factura: {invoice_data["invoice_date"]}', styles['Normal']))
+        elements.append(Paragraph(f'Fecha de Vencimiento: {invoice_data["due_date"]}', styles['Normal']))
+        elements.append(Paragraph(f'Entregado a: {invoice_data["customer_name"]}', styles['Normal']))
+        elements.append(Paragraph(f'Dirección: {invoice_data["customer_address"]}', styles['Normal']))
+
+        # Agregar la tabla de ítems
+        item_data = []
+        for item in invoice_data['items']:
+            item_data.append([item['description'], item['quantity'], item['unit_price'], item['total']])
+
+        item_table = Table(item_data, colWidths=[300, 60, 60, 60])
+        item_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+
+        elements.append(item_table)
+
+        # Agregar el total
+        elements.append(Paragraph(f'Total: ${invoice_data["total"]}', styles['Heading3']))
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+
+
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
         
     def insertar_datos(self):
         

@@ -28,8 +28,8 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>701</width>
-      <height>80</height>
+      <width>359</width>
+      <height>63</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -64,12 +64,15 @@ QGroupBox:title {
     <property name="checkable">
      <bool>false</bool>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0">
      <property name="spacing">
       <number>1</number>
      </property>
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <property name="topMargin">
+      <number>1</number>
      </property>
      <property name="bottomMargin">
       <number>1</number>
@@ -159,6 +162,47 @@ QPushButton:pressed {
        <property name="icon">
         <iconset>
          <normaloff>../png/limpiar.png</normaloff>../png/limpiar.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnImprimir">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../png/imprimir.png</normaloff>../png/imprimir.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -553,7 +597,7 @@ QComboBox QAbstractItemView {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -585,7 +629,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -617,7 +661,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -649,7 +693,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -734,7 +778,7 @@ QPushButton:pressed {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -766,7 +810,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -798,7 +842,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -830,7 +874,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -1040,7 +1084,7 @@ QComboBox QAbstractItemView {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -1189,7 +1233,7 @@ QLineEdit::placeholder {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
