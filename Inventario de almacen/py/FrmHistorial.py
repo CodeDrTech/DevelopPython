@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
+from Conexion_db import ruta_database
 
 
 class VentanaHistorial(QMainWindow):    
@@ -24,7 +25,7 @@ class VentanaHistorial(QMainWindow):
 #------------------------------------------------------------------------------------------------------  
         #Llamar a los diferentes formularios desde los botones
         self.btnSalir.clicked.connect(self.fn_Salir)
-        #self.btnImprimir.clicked.connect(self.visualiza_datos)
+        self.btnImprimir.clicked.connect(self.visualiza_datos)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
         
@@ -57,6 +58,7 @@ class VentanaHistorial(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.dataView.resizeColumnsToContents()
         self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         
@@ -69,8 +71,11 @@ class VentanaHistorial(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event) 
           
-        self.visualiza_datos()
         
+        model = QSqlTableModel()
+        model.setTable("Compras")
+        model.select()
+        self.visualiza_datos()
         
         
 if __name__ == '__main__':
