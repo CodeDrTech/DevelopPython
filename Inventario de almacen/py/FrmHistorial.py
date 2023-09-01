@@ -43,17 +43,12 @@ class VentanaHistorial(QMainWindow):
                         FROM Salidas")
 
    
-        # Crear un modelo de tabla SQL
-        model = QSqlTableModel()
-    
-        model.setQuery(query)   
-    
-        # Establecer el modelo en la tabla
-        self.dataView.setModel(model)
-        
-        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.dataView.setModel(model)        
 
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido y bloquea el editar
         self.dataView.resizeColumnsToContents()
         self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
