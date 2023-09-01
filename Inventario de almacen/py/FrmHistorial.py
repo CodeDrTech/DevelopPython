@@ -7,17 +7,17 @@ from PyQt5.QtGui import QTextDocument, QTextCursor
 from PyQt5.QtPrintSupport import QPrinter
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery, QSqlDatabase
 from Conexion_db import ruta_database
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, landscape
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+from io import BytesIO
 
 
 class VentanaHistorial(QMainWindow):    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Inventario de almacen/ui/FrmHistorial.ui',self)
-        
-        
-        
+        uic.loadUi('Inventario de almacen/ui/FrmHistorial.ui',self)        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
@@ -30,7 +30,7 @@ class VentanaHistorial(QMainWindow):
 #------------------------------------------------------------------------------------------------------  
         #Llamar a los diferentes formularios desde los botones
         self.btnSalir.clicked.connect(self.fn_Salir)
-        self.btnImprimir.clicked.connect(self.imprimir_datos)
+        self.btnImprimir.clicked.connect(self.generate_invoice)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -57,47 +57,54 @@ class VentanaHistorial(QMainWindow):
         self.dataView.resizeColumnsToContents()
         self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
-    # Función para obtener los datos del QTableView
-    def get_table_data(self, table_view):
-        table_data = []
-
-        model = table_view.model()
-        for row in range(model.rowCount()):
-            row_data = []
-            for column in range(model.columnCount()):
-                item = model.index(row, column).data(Qt.DisplayRole) # type: ignore
-                row_data.append(item)
-            table_data.append(row_data)
-
-            return table_data
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    #aqui va el codigo para la impresion de la factura
     def generate_invoice(self):
-        # Obtener los datos del QTableView
-        table_data = self.get_table_data(self.dataView)
+        data = self.get_invoice_data()
 
-        # Crear un documento QTextDocument para la factura
-        invoice_doc = QTextDocument()
-        cursor = QTextCursor(invoice_doc)
-        cursor.movePosition(QTextCursor.Start)
-
-        # Agregar los datos de la factura al documento
-        for row in table_data:
-            for item in row:
-                cursor.insertText(str(item))
-                cursor.movePosition(QTextCursor.NextCell)
-            cursor.insertBlock()
-
-        # Crear un archivo PDF a partir del documento
+        # Crear un archivo PDF
         pdf_filename = 'factura.pdf'
-        pdf_printer = QPrinter()
-        pdf_printer.setOutputFormat(QPrinter.PdfFormat)
-        pdf_printer.setOutputFileName(pdf_filename)
-        invoice_doc.print_(pdf_printer)
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter)
 
-        
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-        
+        # Crear una lista de elementos (contenido) para la factura
+        elements = []
+
+        # Agregar contenido a la factura, colocando datos específicos en lugares específicos
+        elements.append(Paragraph("Factura", style=self.get_paragraph_style('Title')))
+        elements.append(Paragraph("Fecha: " + data['fecha'], style=self.get_paragraph_style('Normal')))
+        elements.append(Paragraph("Cliente: " + data['cliente'], style=self.get_paragraph_style('Normal')))
+
+        # Agregar más datos específicos según tus necesidades
+
+        # Crear el documento PDF con el contenido
+        doc.build(elements)
+
+        # Guardar el PDF en un archivo
+        with open(pdf_filename, 'wb') as f:
+            f.write(buffer.getvalue())
+
+    def get_paragraph_style(self, style_name):
+        # Define estilos de párrafo personalizados aquí, como "Title" y "Normal"
+        # Puedes personalizar fuentes, tamaños, colores, alineación, etc.
+        styles = {
+            'Title': {'fontName': 'Helvetica-Bold', 'fontSize': 16, 'alignment': 1},
+            'Normal': {'fontName': 'Helvetica', 'fontSize': 12, 'alignment': 0},
+            # Agrega más estilos según sea necesario
+        }
+        return styles[style_name]
+
+    def get_invoice_data(self):
+        # Aquí puedes obtener los datos específicos que deseas imprimir desde la base de datos
+        # o desde tu QTableView (dataView)
+        # Por ejemplo, asumiendo que tienes una base de datos con campos 'fecha' y 'cliente':
+        data = {
+            'fecha': '2023-09-01',
+            'cliente': 'Cliente de ejemplo',
+            # Agrega más campos y datos aquí según tus necesidades
+        }
+        return data
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def fn_Salir(self):
