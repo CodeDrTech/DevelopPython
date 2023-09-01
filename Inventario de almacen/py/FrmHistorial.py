@@ -2,11 +2,13 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView, QMessageBox
 from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QTextDocument, QTextCursor
+from PyQt5.QtPrintSupport import QPrinter
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery, QSqlDatabase
 from Conexion_db import ruta_database
 from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.pdfgen import canvas
 
 
 class VentanaHistorial(QMainWindow):    
@@ -55,40 +57,43 @@ class VentanaHistorial(QMainWindow):
         self.dataView.resizeColumnsToContents()
         self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
-    def imprimir_datos(self):
-        # Crear una QTableView con datos (reemplaza esto con tus propios datos)
-        self.dataView = QTableView(self)
-        # Carga los datos en la self.dataView
+    # Función para obtener los datos del QTableView
+    def get_table_data(self, table_view):
+        table_data = []
 
-        # Crear un botón para imprimir
-        self.print_button = QPushButton("Imprimir", self)
-        self.print_button.clicked.connect(self.print_table)
-
-    def print_table(self):
-        # Crear un documento PDF
-        doc = SimpleDocTemplate("tabla_qtableview.pdf", pagesize=letter)
-
-        # Obtener los datos de la self.dataView
-        data = []
-        for row in range(self.dataView.model().rowCount()):
+        model = table_view.model()
+        for row in range(model.rowCount()):
             row_data = []
-            for col in range(self.dataView.model().columnCount()):
-                item = self.dataView.model().index(row, col).data(Qt.DisplayRole)
-                row_data.append(str(item))
-            data.append(row_data)
+            for column in range(model.columnCount()):
+                item = model.index(row, column).data(Qt.DisplayRole) # type: ignore
+                row_data.append(item)
+            table_data.append(row_data)
 
-        # Crear la tabla con los datos
-        tabla_qtableview = Table(data)
-        tabla_qtableview.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            # Agrega otros estilos según tus preferencias
-        ]))
+            return table_data
+        
+    def generate_invoice(self):
+        # Obtener los datos del QTableView
+        table_data = self.get_table_data(self.dataView)
 
-        # Crear el contenido del PDF
-        contenido = [tabla_qtableview]
+        # Crear un documento QTextDocument para la factura
+        invoice_doc = QTextDocument()
+        cursor = QTextCursor(invoice_doc)
+        cursor.movePosition(QTextCursor.Start)
 
-        # Agregar contenido al documento
-        doc.build(contenido)
+        # Agregar los datos de la factura al documento
+        for row in table_data:
+            for item in row:
+                cursor.insertText(str(item))
+                cursor.movePosition(QTextCursor.NextCell)
+            cursor.insertBlock()
+
+        # Crear un archivo PDF a partir del documento
+        pdf_filename = 'factura.pdf'
+        pdf_printer = QPrinter()
+        pdf_printer.setOutputFormat(QPrinter.PdfFormat)
+        pdf_printer.setOutputFileName(pdf_filename)
+        invoice_doc.print_(pdf_printer)
+
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
