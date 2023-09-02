@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
 from datetime import datetime
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, QPoint
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from FrmProductos import VentanaProductos
@@ -221,18 +221,27 @@ class VentanaSalidas(QMainWindow):
     #aqui va el codigo para la impresion de la factura
     def generate_invoice(self):
         
+        items_from_table = []
+        indexes = self.dataView.selectedIndexes()
+        
+        index = indexes[0]
+        rows = index.row()
+        
+        
+
         now = datetime.now()        
         fecha_hora = now.strftime("%Y%m%d%H%M%S")
-    # Datos de la factura (personaliza estos datos)
+        fecha = now.strftime("%Y-%m-%d")
+        # Datos de la factura (personaliza estos datos)
         invoice_data = {
-            'invoice_number': '# 5',
-            'invoice_date': '01/09/2023',
-            'due_date': '15/09/2023',
-            'customer_name': 'Cliente de Ejemplo',
+            'invoice_number': f'#',
+            'invoice_date': f'{fecha}',
+            'due_date': f'{fecha}',
+            'customer_name': 'JOSE LUIS PEREZ',
             'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
             'items': [
                 {'description': 'CODIGO', 'quantity': "DESCRIPCION", 'unit_price': "UND", 'total': "CANT."},
-                {'description': 'PRDO00001', 'quantity': "ALAMBE DE ACERO", 'unit_price': "ROLLO", 'total': 90},
+                {'description': 'codigo', 'quantity': 'descripcion', 'unit_price': 'und', 'total': 'cant'},
             ],
             'total': 190,
         }
@@ -255,10 +264,20 @@ class VentanaSalidas(QMainWindow):
         elements.append(Paragraph(f'Entregado a: {invoice_data["customer_name"]}', styles['Normal']))
         elements.append(Paragraph(f'Dirección: {invoice_data["customer_address"]}', styles['Normal']))
 
-        # Agregar la tabla de ítems
         item_data = []
-        for item in invoice_data['items']:
-            item_data.append([item['description'], item['quantity'], item['unit_price'], item['total']])
+        for row in invoice_data[rows]:
+            codigo = self.dataView.columnAt(2)  # Columna 0
+            descripcion = self.dataView.columnAt(6) # Columna 1
+            und = self.dataView.columnAt(4)  # Columna 2
+            cant = self.dataView.columnAt(8)  # Columna 3
+
+            # Agregar los datos de la fila a la lista de ítems
+            item_data.append({'description': codigo, 'quantity': descripcion, 'unit_price': und, 'total': cant})
+        
+        # Agregar la tabla de ítems
+        #item_data = []
+        #for item in invoice_data['items']:
+            #item_data.append([item['description'], item['quantity'], item['unit_price'], item['total']])
 
         item_table = Table(item_data, colWidths=[65, 300, 60, 60])
         item_table.setStyle(TableStyle([
