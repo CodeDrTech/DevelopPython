@@ -272,7 +272,7 @@ class VentanaSalidas(QMainWindow):
             cant = self.dataView.columnAt(8)  # Columna 3
 
             # Agregar los datos de la fila a la lista de ítems
-            item_data.append({'description': codigo, 'quantity': descripcion, 'unit_price': und, 'total': cant})
+            #item_data.append({'description': codigo, 'quantity': descripcion, 'unit_price': und, 'total': cant})
         
         # Agregar la tabla de ítems
         #item_data = []
