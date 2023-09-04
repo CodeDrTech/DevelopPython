@@ -37,16 +37,9 @@ class VentanaHistorial(QMainWindow):
     def visualiza_datos(self):
         
         query = QSqlQuery()
-        query.exec_(f"SELECT * from Compras\
-                        UNION ALL\
-                        SELECT NULL as Fecha, NULL as N_doc, NULL as Proveedor, NULL as Codigo, NULL as Categoria, NULL as Producto, NULL as Und, NULL as Comentario, NULL as Cantidad\
-                        UNION ALL\
-                        SELECT NULL as Fecha, NULL as N_doc, '*HISTORIAL DE SALIDAS*', NULL as Codigo, NULL as Categoria, NULL as Producto, NULL as Und, NULL as Comentario, NULL as Cantidad\
-                        UNION ALL\
-                        SELECT 'Fecha', 'N_doc', 'Cliente', 'Codigo', 'Categoria', 'Producto', NULL as Und, 'Comentario', 'Cantidad'\
-                        UNION ALL\
-                        SELECT Fecha, N_doc, Cliente, Codigo, Categoria, Producto, NULL, Comentario, Cantidad\
-                        FROM Salidas")
+        query.exec_(f"SELECT DS.Fecha, DS.Cliente, S.Codigo, S.Categoria, S.Producto, S.CantidadTotal, DS.Comentario\
+                            FROM DetalleSalidas AS DS\
+                            JOIN Salidas AS S ON DS.ID = S.ID_Salida;")
 
    
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
