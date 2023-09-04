@@ -103,8 +103,13 @@ def insertar_detalle_salida(fecha, cliente, comentario):
         return detalle_salida_id
 
     except Exception as e:
-        # Manejar errores aquí
-        return None
+        # Manejar errores aquí y mostrar un mensaje de error
+        error_message = "Error al insertar producto en salida: " + str(e)
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setWindowTitle("Error")
+        msg_box.setText(error_message)
+        msg_box.exec_()
 
     finally:
         conn.close()
@@ -122,8 +127,13 @@ def insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, c
         conn.commit()
 
     except Exception as e:
-        # Manejar errores aquí
-        return None
+        # Manejar errores aquí y mostrar un mensaje de error
+        error_message = "Error al insertar producto en salida: " + str(e)
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setWindowTitle("Error")
+        msg_box.setText(error_message)
+        msg_box.exec_()
 
     finally:
         conn.close()
