@@ -553,7 +553,7 @@ QComboBox QAbstractItemView {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -585,7 +585,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -617,7 +617,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -649,7 +649,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -734,7 +734,7 @@ QPushButton:pressed {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -766,7 +766,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -790,15 +790,15 @@ QLabel {
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>560</x>
+       <x>530</x>
        <y>75</y>
-       <width>41</width>
+       <width>71</width>
        <height>21</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -816,7 +816,7 @@ QLabel {
 </string>
      </property>
      <property name="text">
-      <string>UND</string>
+      <string>MEDIDA</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_15">
@@ -830,7 +830,7 @@ QLabel {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -1074,7 +1074,7 @@ QComboBox QAbstractItemView {
      </property>
      <property name="font">
       <font>
-       <pointsize>1</pointsize>
+       <pointsize>-1</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -1141,7 +1141,7 @@ QComboBox QAbstractItemView {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>

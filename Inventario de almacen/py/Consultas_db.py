@@ -118,16 +118,30 @@ def insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, c
     conn = conectar_db()
 
     try:
-        # Insertar un producto en la tabla Salidas
-        conn.execute("INSERT INTO Salidas (ID_Salida, Codigo, Categoria, Producto, CantidadTotal) VALUES (?, ?, ?, ?, ?)", (id_salida, codigo, categoria, producto_nombre, cantidad))
-        
-        # Actualizar la tabla Stock restando la cantidad vendida
-        conn.execute("UPDATE Stock SET Disponible = Disponible - ? WHERE Codigo = ?", (cantidad, codigo))
+        # Verificar la cantidad disponible en Stock antes de la inserción
+        cursor = conn.execute("SELECT Disponible FROM Stock WHERE Codigo = ?", (codigo,))
+        disponible = cursor.fetchone()
 
-        conn.commit()
+        if disponible is not None and cantidad <= disponible[0]:
+            # Si la cantidad vendida es menor o igual a la cantidad disponible
+            # Insertar un producto en la tabla Salidas
+            conn.execute("INSERT INTO Salidas (ID_Salida, Codigo, Categoria, Producto, CantidadTotal) VALUES (?, ?, ?, ?, ?)", (id_salida, codigo, categoria, producto_nombre, cantidad))
+            
+            # Actualizar la tabla Stock restando la cantidad vendida
+            conn.execute("UPDATE Stock SET Disponible = Disponible - ? WHERE Codigo = ?", (cantidad, codigo))
+
+            conn.commit()
+        else:
+            # Mostrar un mensaje de error si la cantidad vendida supera la cantidad disponible
+            error_message = "La cantidad supera la disponible en Stock."
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.setWindowTitle("Error")
+            msg_box.setText(error_message)
+            msg_box.exec_()
 
     except Exception as e:
-        # Manejar errores aquí y mostrar un mensaje de error
+        # Manejar otros errores aquí y mostrar un mensaje de error
         error_message = "Error al insertar producto en salida: " + str(e)
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Critical)

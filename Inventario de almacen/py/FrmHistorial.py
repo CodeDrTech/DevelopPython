@@ -37,11 +37,11 @@ class VentanaHistorial(QMainWindow):
     def visualiza_datos(self):
         
         query = QSqlQuery()
-        query.exec_(f"SELECT DS.Fecha, DS.Cliente, S.Codigo, S.Categoria, S.Producto, S.CantidadTotal, DS.Comentario\
+        query.exec_(f"SELECT DS.Fecha, DS.Cliente, S.Codigo, S.Categoria, S.Producto, S.CantidadTotal as Cantidad, DS.Comentario\
                             FROM DetalleSalidas AS DS\
                             JOIN Salidas AS S ON DS.ID = S.ID_Salida;")
-
-   
+        
+           
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
         model = QSqlTableModel()    
         model.setQuery(query)

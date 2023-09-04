@@ -215,8 +215,8 @@ class VentanaCompras(QMainWindow):
         categoria = self.cmbCategoria.currentText()
         producto = self.cmbProducto.currentText()
         und = self.cmbMedida.currentText()
-        comentario = self.txtComentario.text()         
-        cantidad = self.txtCantidad.text()       
+        comentario = self.txtComentario.text().upper()         
+        cantidad = float(self.txtCantidad.text())       
         insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
         self.visualiza_datos()
         

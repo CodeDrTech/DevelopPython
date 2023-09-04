@@ -308,11 +308,11 @@ class VentanaSalidas(QMainWindow):
         
         fecha = self.txtFecha.date().toString("yyyy-MM-dd")
         cliente = self.cmbClientes.currentText()
-        comentario = self.txtComentario.text() 
+        comentario = self.txtComentario.text().upper() 
         codigo = self.cmbCodigo.currentText()
         categoria = self.cmbCategoria.currentText()
         producto_nombre = self.cmbProducto.currentText()
-        cantidad = self.txtCantidad.text()
+        cantidad = float(self.txtCantidad.text())
         
         id_salida = insertar_detalle_salida(fecha, cliente, comentario)
         insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad)

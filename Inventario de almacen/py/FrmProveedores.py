@@ -58,7 +58,7 @@ class Ventanaproveedores(QMainWindow):
     def insertar_datos(self):
         
         codigo = self.txtCodigo.text()        
-        nombre = self.txtNombre.text()
+        nombre = self.txtNombre.text().upper()
         
         insertar_nuevo_proveedor(codigo, nombre)
         self.visualiza_datos()

@@ -43,9 +43,9 @@ class VentanaProductos(QMainWindow):
     def insertar_datos(self):
         
         codigo = self.txtCodigo.text()
-        categoria = self.txtCategoria.text()
-        nombre = self.txtNombre.text()
-        medida = self.txtMedida.text()
+        categoria = self.txtCategoria.text().upper()
+        nombre = self.txtNombre.text().upper()
+        medida = self.txtMedida.text().upper()
         insertar_nuevo_producto(codigo, categoria, nombre, medida)
         self.visualiza_datos()
         
