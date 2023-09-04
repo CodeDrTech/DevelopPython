@@ -8,7 +8,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from FrmProductos import VentanaProductos
 from FrmClientes import Ventanaclientes
-from Consultas_db import insertar_salidas
+from Consultas_db import insertar_detalle_salida, insertar_producto_en_salida
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
@@ -311,10 +311,11 @@ class VentanaSalidas(QMainWindow):
         comentario = self.txtComentario.text() 
         codigo = self.cmbCodigo.currentText()
         categoria = self.cmbCategoria.currentText()
-        producto = self.cmbProducto.currentText()
-        cantidad = float(self.txtCantidad.text())
-       
-        insertar_salidas(fecha, cliente, codigo, categoria, producto, comentario, cantidad)
+        producto_nombre = self.cmbProducto.currentText()
+        cantidad = self.txtCantidad.text()
+        
+        id_salida = insertar_detalle_salida(fecha, cliente, comentario)
+        insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad)
         self.visualiza_datos()
         
         

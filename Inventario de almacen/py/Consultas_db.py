@@ -91,44 +91,41 @@ def insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comenta
 #------------------------------------------------------------------------------------------------------ 
 
 
-def insertar_salidas(fecha, cliente, codigo, categoria, producto, comentario, cantidad):
-    # Conectar a la base de datos
+def insertar_detalle_salida(fecha, cliente, comentario):
     conn = conectar_db()
 
     try:
-        # Verificar si el producto existe en la tabla Stock
-        cursor = conn.execute("SELECT Disponible FROM Stock WHERE Codigo = ?", (codigo,))
-        existing_stock = cursor.fetchone()
-
-        if existing_stock:
-            # Verificar si hay suficiente cantidad disponible
-            if existing_stock[0] >= cantidad:
-                # Actualizar la cantidad disponible en Stock
-                nueva_cantidad = existing_stock[0] - cantidad
-                conn.execute("UPDATE Stock SET Disponible = ? WHERE Codigo = ?", (nueva_cantidad, codigo))
-            else:
-                raise Exception("No hay suficiente cantidad disponible")
-        else:
-            raise Exception("Producto no encontrado en Almacen")
-        
-        # Insertar en la tabla Salidas (N_doc es autoincrementable)
-        conn.execute("INSERT INTO Salidas (Fecha, Cliente, Codigo, Categoria, Producto, Comentario, Cantidad) VALUES (?, ?, ?, ?, ?, ?, ?)", (fecha, cliente, codigo, categoria, producto, comentario, cantidad))
-        
-        # Confirmar los cambios en la base de datos
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO DetalleSalidas (Fecha, Cliente, Comentario) VALUES (?, ?, ?)", (fecha, cliente, comentario))
         conn.commit()
-        
+        detalle_salida_id = cursor.lastrowid
+
+        return detalle_salida_id
+
     except Exception as e:
-        error_message = "Error: " + str(e)
-        # Mostrar mensaje de error utilizando QMessageBox
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Critical)
-        msg_box.setWindowTitle("Error")
-        msg_box.setText(error_message)
-        msg_box.exec_()
-        # Revertir cambios en caso de error
-        conn.rollback()
-        
+        # Manejar errores aquí
+        return None
+
     finally:
-        # Cerrar la conexión
         conn.close()
+
+def insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad):
+    conn = conectar_db()
+
+    try:
+        # Insertar un producto en la tabla Salidas
+        conn.execute("INSERT INTO Salidas (ID_Salida, Codigo, Categoria, Producto, CantidadTotal) VALUES (?, ?, ?, ?, ?)", (id_salida, codigo, categoria, producto_nombre, cantidad))
+        
+        # Actualizar la tabla Stock restando la cantidad vendida
+        conn.execute("UPDATE Stock SET Disponible = Disponible - ? WHERE Codigo = ?", (cantidad, codigo))
+
+        conn.commit()
+
+    except Exception as e:
+        # Manejar errores aquí
+        return None
+
+    finally:
+        conn.close()
+
 
