@@ -234,14 +234,13 @@ class VentanaSalidas(QMainWindow):
         fecha = now.strftime("%Y-%m-%d")
         # Datos de la factura (personaliza estos datos)
         invoice_data = {
-            'invoice_number': f'#',
+            'invoice_number': f'# {fecha_hora}',
             'invoice_date': f'{fecha}',
             'due_date': f'{fecha}',
             'customer_name': 'JOSE LUIS PEREZ',
             'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
             'items': [
                 {'description': 'CODIGO', 'quantity': "DESCRIPCION", 'unit_price': "UND", 'total': "CANT."},
-                {'description': 'codigo', 'quantity': 'descripcion', 'unit_price': 'und', 'total': 'cant'},
             ],
             'total': 190,
         }
@@ -264,20 +263,20 @@ class VentanaSalidas(QMainWindow):
         elements.append(Paragraph(f'Entregado a: {invoice_data["customer_name"]}', styles['Normal']))
         elements.append(Paragraph(f'Dirección: {invoice_data["customer_address"]}', styles['Normal']))
 
-        item_data = []
-        for row in invoice_data[rows]:
-            codigo = self.dataView.columnAt(2)  # Columna 0
-            descripcion = self.dataView.columnAt(6) # Columna 1
-            und = self.dataView.columnAt(4)  # Columna 2
-            cant = self.dataView.columnAt(8)  # Columna 3
+        #item_data = []
+        #for row in invoice_data[rows]:
+            #codigo = self.dataView.columnAt(2)  # Columna 0
+            #descripcion = self.dataView.columnAt(6) # Columna 1
+            #und = self.dataView.columnAt(4)  # Columna 2
+            #cant = self.dataView.columnAt(8)  # Columna 3
 
             # Agregar los datos de la fila a la lista de ítems
             #item_data.append({'description': codigo, 'quantity': descripcion, 'unit_price': und, 'total': cant})
         
         # Agregar la tabla de ítems
-        #item_data = []
-        #for item in invoice_data['items']:
-            #item_data.append([item['description'], item['quantity'], item['unit_price'], item['total']])
+        item_data = []
+        for item in invoice_data['items']:
+            item_data.append([item['description'], item['quantity'], item['unit_price'], item['total']])
 
         item_table = Table(item_data, colWidths=[65, 300, 60, 60])
         item_table.setStyle(TableStyle([
