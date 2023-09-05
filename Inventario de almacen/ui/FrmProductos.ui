@@ -160,6 +160,9 @@ QLineEdit::placeholder {
 
 </string>
     </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLineEdit" name="txtCategoria">
     <property name="geometry">
@@ -410,7 +413,7 @@ QLineEdit::placeholder {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -442,7 +445,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -474,7 +477,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -506,7 +509,7 @@ QLabel {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>

@@ -3,22 +3,45 @@ from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Conexion_db import conectar_db
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
-import datetime
 
 
 
 
-def insertar_nuevo_producto(codigo, categoria, nombre, medida):
+def obtener_ultimo_codigo():
+    conn = conectar_db()
+    cursor = conn.execute("SELECT MAX(Codigo) FROM Productos")
+    ultimo_codigo = cursor.fetchone()[0]
+    conn.close()
+    return ultimo_codigo
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+def generar_nuevo_codigo(ultimo_codigo):
+    if ultimo_codigo is None:
+        nuevo_codigo = 0
+    else:
+        nuevo_codigo = int(ultimo_codigo.replace('PROD', '')) + 1
+
+    nuevo_codigo_formateado = f"PROD{str(nuevo_codigo).zfill(5)}"
+    return nuevo_codigo_formateado
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+def insertar_nuevo_producto(categoria, nombre, medida):
     
-        # Conectar a la base de datos
-        conn = conectar_db()
+    # Obtener el último código de producto
+    ultimo_codigo = obtener_ultimo_codigo()
 
-        # Realizar la inserción en la base de datos
-        conn.execute("INSERT INTO Productos (Codigo, Categoria, Nombre, Medida) VALUES (?, ?, ?, ?)", (codigo, categoria, nombre, medida))
-        conn.commit()
+    # Generar el nuevo código
+    nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
 
-        # Cerrar la conexión
-        conn.close()
+    # Conectar a la base de datos
+    conn = conectar_db()
+
+    # Realizar la inserción en la base de datos
+    conn.execute("INSERT INTO Productos (Codigo, Categoria, Nombre, Medida) VALUES (?, ?, ?, ?)", (nuevo_codigo, categoria, nombre, medida))
+    conn.commit()
+
+    # Cerrar la conexión
+    conn.close()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        

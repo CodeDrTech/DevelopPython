@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-from Consultas_db import insertar_nuevo_producto
+from Consultas_db import insertar_nuevo_producto, generar_nuevo_codigo, obtener_ultimo_codigo
 
 class VentanaProductos(QMainWindow):    
     def __init__(self):
@@ -42,26 +42,34 @@ class VentanaProductos(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     def insertar_datos(self):
         
-        codigo = self.txtCodigo.text()
+        
         categoria = self.txtCategoria.text().upper()
         nombre = self.txtNombre.text().upper()
         medida = self.txtMedida.text().upper()
-        insertar_nuevo_producto(codigo, categoria, nombre, medida)
+        insertar_nuevo_producto(categoria, nombre, medida)
+        
+        ultimo_codigo = obtener_ultimo_codigo()
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        
         self.visualiza_datos()
         
         
         #Limpia los TexBox
-        self.txtCodigo.setText("PROD")
+        self.txtCodigo.setText(nuevo_codigo)
         self.txtCategoria.setText("")
         self.txtNombre.setText("")
         self.txtMedida.setText("")
-        self.txtCodigo.setFocus()
+        self.txtCategoria.setFocus()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
     def limpiar_textbox(self):
+        
+        ultimo_codigo = obtener_ultimo_codigo()
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        
         #Limpia los TexBox
-        self.txtCodigo.setText("PROD")
+        self.txtCodigo.setText(nuevo_codigo)
         self.txtCategoria.setText("")
         self.txtNombre.setText("")
         self.txtMedida.setText("")
@@ -101,10 +109,12 @@ class VentanaProductos(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     def showEvent(self, event):
         super().showEvent(event) 
-          
+        ultimo_codigo = obtener_ultimo_codigo()
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        
         self.visualiza_datos()
-        self.txtCodigo.setText("PROD")
-        self.txtCodigo.setFocus()
+        self.txtCodigo.setText(nuevo_codigo)
+        self.txtCategoria.setFocus()
         
         
         
