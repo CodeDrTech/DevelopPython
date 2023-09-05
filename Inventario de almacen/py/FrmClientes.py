@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-from Consultas_db2 import insertar_nuevo_cliente, generar_nuevo_codigo, obtener_ultimo_codigo
+from Consultas_db import insertar_nuevo_cliente, generar_nuevo_codigo, obtener_ultimo_codigo
 
 class Ventanaclientes(QMainWindow):    
     def __init__(self):
