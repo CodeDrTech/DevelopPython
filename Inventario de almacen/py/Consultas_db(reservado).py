@@ -6,53 +6,69 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 
-def obtener_ultimo_codigo(tabla):
+
+def obtener_ultimo_codigo():
     conn = conectar_db()
-    cursor = conn.execute(f"SELECT MAX(Codigo) FROM {tabla}")
+    cursor = conn.execute("SELECT MAX(Codigo) FROM Productos")
     ultimo_codigo = cursor.fetchone()[0]
     conn.close()
     return ultimo_codigo
-
-def generar_nuevo_codigo(prefijo, ultimo_codigo):
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+def generar_nuevo_codigo(ultimo_codigo):
     if ultimo_codigo is None:
         nuevo_codigo = 0
     else:
-        nuevo_codigo = int(ultimo_codigo.replace(prefijo, '')) + 1
+        nuevo_codigo = int(ultimo_codigo.replace('PROD', '')) + 1
 
-    nuevo_codigo_formateado = f"{prefijo}{str(nuevo_codigo).zfill(5)}"
+    nuevo_codigo_formateado = f"PROD{str(nuevo_codigo).zfill(5)}"
     return nuevo_codigo_formateado
-
-def insertar_generico(tabla, columnas, valores, prefijo):
-    # Obtener el último código de la tabla
-    ultimo_codigo = obtener_ultimo_codigo(tabla)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+def insertar_nuevo_producto(categoria, nombre, medida):
+    
+    # Obtener el último código de producto
+    ultimo_codigo = obtener_ultimo_codigo()
 
     # Generar el nuevo código
-    nuevo_codigo = generar_nuevo_codigo(prefijo, ultimo_codigo)
+    nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
 
     # Conectar a la base de datos
     conn = conectar_db()
 
-    # Construir la consulta SQL dinámica
-    columnas_str = ', '.join(columnas)
-    valores_str = ', '.join(['?'] * len(columnas))
-    query = f"INSERT INTO {tabla} ({columnas_str}) VALUES ({valores_str})"
-
     # Realizar la inserción en la base de datos
-    conn.execute(query, (nuevo_codigo, *valores))
+    conn.execute("INSERT INTO Productos (Codigo, Categoria, Nombre, Medida) VALUES (?, ?, ?, ?)", (nuevo_codigo, categoria, nombre, medida))
     conn.commit()
 
     # Cerrar la conexión
     conn.close()
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
+def insertar_nuevo_cliente(codigo, nombre):
+        
+        # Conectar a la base de datos
+        conn = conectar_db()
 
-def insertar_nuevo_producto(categoria, nombre, medida):
-    insertar_generico('Productos', ['Codigo', 'Categoria', 'Nombre', 'Medida'], [categoria, nombre, medida], 'PROD')
+        # Realizar la inserción en la base de datos
+        conn.execute("INSERT INTO Clientes (Codigo, Nombre) VALUES (?, ?)", (codigo, nombre))
+        conn.commit()
 
-def insertar_nuevo_cliente(nombre):
-    insertar_generico('Clientes', ['Codigo', 'Nombre'], [nombre], 'CLI')
+        # Cerrar la conexión
+        conn.close()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
+def insertar_nuevo_proveedor(codigo, nombre):
+        
+        # Conectar a la base de datos
+        conn = conectar_db()
 
-def insertar_nuevo_proveedor(nombre):
-    insertar_generico('Proveedores', ['Codigo', 'Nombre'], [nombre], 'PROV')
+        # Realizar la inserción en la base de datos
+        conn.execute("INSERT INTO Proveedores (Codigo, Nombre) VALUES (?, ?)", (codigo, nombre))
+        conn.commit()
 
+        # Cerrar la conexión
+        conn.close()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        

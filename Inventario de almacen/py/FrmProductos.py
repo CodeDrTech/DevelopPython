@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-from Consultas_db import insertar_nuevo_producto, generar_nuevo_codigo, obtener_ultimo_codigo
+from Consultas_db2 import insertar_nuevo_producto, generar_nuevo_codigo, obtener_ultimo_codigo
 
 class VentanaProductos(QMainWindow):    
     def __init__(self):
@@ -48,8 +48,8 @@ class VentanaProductos(QMainWindow):
         medida = self.txtMedida.text().upper()
         insertar_nuevo_producto(categoria, nombre, medida)
         
-        ultimo_codigo = obtener_ultimo_codigo()
-        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        ultimo_codigo = obtener_ultimo_codigo("Productos")
+        nuevo_codigo = generar_nuevo_codigo("PROD",ultimo_codigo)
         
         self.visualiza_datos()
         
@@ -65,8 +65,8 @@ class VentanaProductos(QMainWindow):
 
     def limpiar_textbox(self):
         
-        ultimo_codigo = obtener_ultimo_codigo()
-        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        ultimo_codigo = obtener_ultimo_codigo("Productos")
+        nuevo_codigo = generar_nuevo_codigo("PROD",ultimo_codigo)
         
         #Limpia los TexBox
         self.txtCodigo.setText(nuevo_codigo)
@@ -109,8 +109,8 @@ class VentanaProductos(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     def showEvent(self, event):
         super().showEvent(event) 
-        ultimo_codigo = obtener_ultimo_codigo()
-        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        ultimo_codigo = obtener_ultimo_codigo("Productos")
+        nuevo_codigo = generar_nuevo_codigo("PROD",ultimo_codigo)
         
         self.visualiza_datos()
         self.txtCodigo.setText(nuevo_codigo)

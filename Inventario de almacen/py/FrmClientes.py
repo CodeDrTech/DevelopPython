@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-from Consultas_db import insertar_nuevo_cliente
+from Consultas_db2 import insertar_nuevo_cliente, generar_nuevo_codigo, obtener_ultimo_codigo
 
 class Ventanaclientes(QMainWindow):    
     def __init__(self):
@@ -35,10 +35,14 @@ class Ventanaclientes(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 
     def limpiar_textbox(self):
+        
+        ultimo_codigo = obtener_ultimo_codigo("Clientes")
+        nuevo_codigo = generar_nuevo_codigo("CLI",ultimo_codigo)
+        
         #Limpia los TexBox
-        self.txtCodigo.setText("CLI")        
+        self.txtCodigo.setText(nuevo_codigo)        
         self.txtNombre.setText("")        
-        self.txtCodigo.setFocus()
+        self.txtNombre.setFocus()
         
 
 #------------------------------------------------------------------------------------------------------
@@ -59,15 +63,18 @@ class Ventanaclientes(QMainWindow):
         
         codigo = self.txtCodigo.text()        
         nombre = self.txtNombre.text().upper()
+        insertar_nuevo_cliente(nombre)
         
-        insertar_nuevo_cliente(codigo, nombre)
+        ultimo_codigo = obtener_ultimo_codigo("Clientes")
+        nuevo_codigo = generar_nuevo_codigo("CLI",ultimo_codigo)
+        
         self.visualiza_datos()
         
         
         #Limpia los TexBox
-        self.txtCodigo.setText("CLI")        
+        self.txtCodigo.setText(nuevo_codigo)        
         self.txtNombre.setText("")        
-        self.txtCodigo.setFocus()
+        self.txtNombre.setFocus()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -98,9 +105,12 @@ class Ventanaclientes(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     def showEvent(self, event):
         super().showEvent(event) 
+        ultimo_codigo = obtener_ultimo_codigo("Clientes")
+        nuevo_codigo = generar_nuevo_codigo("CLI",ultimo_codigo)
+        
           
         self.visualiza_datos()
-        self.txtCodigo.setText("CLI")
+        self.txtCodigo.setText(nuevo_codigo)
         self.txtCodigo.setFocus()
         
 #------------------------------------------------------------------------------------------------------

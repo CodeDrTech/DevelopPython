@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-from Consultas_db import insertar_nuevo_proveedor
+from Consultas_db2 import insertar_nuevo_proveedor, generar_nuevo_codigo, obtener_ultimo_codigo
 
 class Ventanaproveedores(QMainWindow):    
     def __init__(self):
@@ -35,10 +35,14 @@ class Ventanaproveedores(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 
     def limpiar_textbox(self):
+        
+        ultimo_codigo = obtener_ultimo_codigo("Proveedores")
+        nuevo_codigo = generar_nuevo_codigo("PROV",ultimo_codigo)
+        
         #Limpia los TexBox
-        self.txtCodigo.setText("PROV")        
+        self.txtCodigo.setText(nuevo_codigo)        
         self.txtNombre.setText("")        
-        self.txtCodigo.setFocus()
+        self.txtNombre.setFocus()
         
 
 #------------------------------------------------------------------------------------------------------
@@ -60,14 +64,18 @@ class Ventanaproveedores(QMainWindow):
         codigo = self.txtCodigo.text()        
         nombre = self.txtNombre.text().upper()
         
-        insertar_nuevo_proveedor(codigo, nombre)
+        insertar_nuevo_proveedor(nombre)
+        
+        ultimo_codigo = obtener_ultimo_codigo("Proveedores")
+        nuevo_codigo = generar_nuevo_codigo("PROV",ultimo_codigo)
+        
         self.visualiza_datos()
         
         
         #Limpia los TexBox
-        self.txtCodigo.setText("PROV")        
+        self.txtCodigo.setText(nuevo_codigo)        
         self.txtNombre.setText("")        
-        self.txtCodigo.setFocus()
+        self.txtNombre.setFocus()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -98,10 +106,12 @@ class Ventanaproveedores(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     def showEvent(self, event):
         super().showEvent(event) 
+        ultimo_codigo = obtener_ultimo_codigo("Proveedores")
+        nuevo_codigo = generar_nuevo_codigo("PROV",ultimo_codigo)
           
         self.visualiza_datos()
-        self.txtCodigo.setText("PROV")
-        self.txtCodigo.setFocus()
+        self.txtCodigo.setText(nuevo_codigo)
+        self.txtNombre.setFocus()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
