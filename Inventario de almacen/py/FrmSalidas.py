@@ -302,40 +302,48 @@ class VentanaSalidas(QMainWindow):
 #------------------------------------------------------------------------------------------------------    
         
     def insertar_datos(self):
+        try:
+            documento = self.cmbDocumento.currentText()
+            fecha = self.txtFecha.date().toString("yyyy-MM-dd")
+            cliente = self.cmbClientes.currentText()
+            comentario = self.txtComentario.text().upper() 
+            codigo = self.cmbCodigo.currentText()
+            categoria = self.cmbCategoria.currentText()
+            producto_nombre = self.cmbProducto.currentText()
+            cantidad = float(self.txtCantidad.text())
         
-        documento = self.cmbDocumento.currentText()
-        fecha = self.txtFecha.date().toString("yyyy-MM-dd")
-        cliente = self.cmbClientes.currentText()
-        comentario = self.txtComentario.text().upper() 
-        codigo = self.cmbCodigo.currentText()
-        categoria = self.cmbCategoria.currentText()
-        producto_nombre = self.cmbProducto.currentText()
-        cantidad = float(self.txtCantidad.text())
+            if not cantidad or not fecha or not cliente or not comentario or not codigo or not categoria or not producto_nombre or not documento:
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
         
-        if not cantidad or not fecha or not cliente or not comentario or not codigo or not categoria or not producto_nombre or not documento:
+            else:
+                id_salida = insertar_detalle_salida(fecha, cliente, comentario)
+                insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad)
+                self.visualiza_datos()
+        
+        
+                #Limpia los TexBox
+                self.txtFecha.setDate(QDate.currentDate())        
+                self.cmbDocumento.setCurrentText("")
+                self.txtComentario.setText("")
+                self.cmbCodigo.setCurrentText("") 
+                self.cmbCategoria.setCurrentText("")
+                self.txtExistencia.setText("") 
+                self.txtCantidad.setText("") 
+                self.cmbClientes.setCurrentText("") 
+                self.cmbProducto.setCurrentText("")         
+                self.txtComentario.setFocus()
+                
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Faltan datos")
-            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Error de cantidad: {str(e)}")
             mensaje.exec_()
-        
-        else:
-            id_salida = insertar_detalle_salida(fecha, cliente, comentario)
-            insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad)
-            self.visualiza_datos()
-        
-        
-            #Limpia los TexBox
-            self.txtFecha.setDate(QDate.currentDate())        
-            self.cmbDocumento.setCurrentText("")
-            self.txtComentario.setText("")
-            self.cmbCodigo.setCurrentText("") 
-            self.cmbCategoria.setCurrentText("")
-            self.txtExistencia.setText("") 
-            self.txtCantidad.setText("") 
-            self.cmbClientes.setCurrentText("") 
-            self.cmbProducto.setCurrentText("")         
-            self.txtComentario.setFocus()
         
         
 #------------------------------------------------------------------------------------------------------
