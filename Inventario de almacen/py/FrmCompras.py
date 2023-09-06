@@ -197,9 +197,13 @@ class VentanaCompras(QMainWindow):
         
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
-        model = QSqlTableModel()
-        model.setTable("Compras")
-        model.select()        
+        query = QSqlQuery()
+        query.exec_(f"SELECT Fecha, Proveedor, Codigo, Categoria, Producto, Und, Cantidad, Comentario FROM compras")
+        
+           
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)
         self.dataView.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido

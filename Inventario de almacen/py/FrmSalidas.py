@@ -104,7 +104,7 @@ class VentanaSalidas(QMainWindow):
         last_row_index = model.rowCount() - 1  # Índice del último registro
 
         if last_row_index > 0:  # Verificar si hay datos en la tabla
-            last_Ndoc = int(model.data(model.index(last_row_index, 1)))       
+            last_Ndoc = int(model.data(model.index(last_row_index, 0)))       
             next_Ndoc = last_Ndoc + 1
 
             combo_model = QStandardItemModel()
