@@ -212,30 +212,48 @@ class VentanaCompras(QMainWindow):
         
         
     def insertar_datos(self):
+        try:
+            fecha = self.txtFecha.date().toString("yyyy-MM-dd") 
+            proveedor = self.cmbProveedor.currentText()
+            codigo = self.cmbCodigo.currentText()
+            categoria = self.cmbCategoria.currentText()
+            producto = self.cmbProducto.currentText()
+            und = self.cmbMedida.currentText()
+            comentario = self.txtComentario.text().upper()         
+            cantidad = float(self.txtCantidad.text())
+            
+            if not fecha or not proveedor or not codigo or not categoria or not producto or not und or not comentario or not cantidad:
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            
+            else:       
+                insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
+                self.visualiza_datos()
         
-        fecha = self.txtFecha.date().toString("yyyy-MM-dd") 
-        proveedor = self.cmbProveedor.currentText()
-        codigo = self.cmbCodigo.currentText()
-        categoria = self.cmbCategoria.currentText()
-        producto = self.cmbProducto.currentText()
-        und = self.cmbMedida.currentText()
-        comentario = self.txtComentario.text().upper()         
-        cantidad = float(self.txtCantidad.text())       
-        insertar_compras(fecha, proveedor, codigo, categoria, producto, und, comentario, cantidad)
-        self.visualiza_datos()
         
-        
-        #Limpia los TexBox
-        self.txtFecha.setDate(QDate.currentDate())        
-        self.cmbDocumento.setCurrentText("")
-        self.txtComentario.setText("")
-        self.cmbCodigo.setCurrentText("") 
-        self.cmbCategoria.setCurrentText("")
-        self.cmbMedida.setCurrentText("") 
-        self.txtCantidad.setText("") 
-        self.cmbProveedor.setCurrentText("") 
-        self.cmbProducto.setCurrentText("")         
-        self.txtComentario.setFocus()
+                #Limpia los TexBox
+                self.txtFecha.setDate(QDate.currentDate())        
+                self.cmbDocumento.setCurrentText("")
+                self.txtComentario.setText("")
+                self.cmbCodigo.setCurrentText("") 
+                self.cmbCategoria.setCurrentText("")
+                self.cmbMedida.setCurrentText("") 
+                self.txtCantidad.setText("") 
+                self.cmbProveedor.setCurrentText("") 
+                self.cmbProducto.setCurrentText("")         
+                self.txtComentario.setFocus()
+            
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
+            mensaje.exec_()
         
         
 #------------------------------------------------------------------------------------------------------

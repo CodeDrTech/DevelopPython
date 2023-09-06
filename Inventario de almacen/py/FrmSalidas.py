@@ -342,7 +342,7 @@ class VentanaSalidas(QMainWindow):
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
             mensaje.setWindowTitle("Error")
-            mensaje.setText(f"Error de cantidad: {str(e)}")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
         
         
