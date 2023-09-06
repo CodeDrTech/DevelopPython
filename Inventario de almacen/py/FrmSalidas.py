@@ -160,22 +160,14 @@ class VentanaSalidas(QMainWindow):
         model.setTable('Stock')
         model.setFilter(f"Producto='{producto}'")
         model.select()
-    
+
+        medida = ""
         if model.rowCount() > 0:
-            existencia = model.data(model.index(0, 2))  # Obtener el dato de la columna deseada
-        
-            # Actualizar el txtExistencia con el valor obtenido
-            self.txtExistencia.setText(str(existencia))
+            medida = model.data(model.index(0, 2))
+
+            self.txtExistencia.setText(str(medida)) 
         else:
-            self.txtExistencia.setText("0")
-
-
-
-
-
-
-  
-
+            self.txtExistencia.setText("Sin existencia") 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
     
@@ -311,6 +303,7 @@ class VentanaSalidas(QMainWindow):
         
     def insertar_datos(self):
         
+        documento = self.cmbDocumento.currentText()
         fecha = self.txtFecha.date().toString("yyyy-MM-dd")
         cliente = self.cmbClientes.currentText()
         comentario = self.txtComentario.text().upper() 
@@ -319,22 +312,30 @@ class VentanaSalidas(QMainWindow):
         producto_nombre = self.cmbProducto.currentText()
         cantidad = float(self.txtCantidad.text())
         
-        id_salida = insertar_detalle_salida(fecha, cliente, comentario)
-        insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad)
-        self.visualiza_datos()
+        if not cantidad or not fecha or not cliente or not comentario or not codigo or not categoria or not producto_nombre or not documento:
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Faltan datos")
+            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.exec_()
+        
+        else:
+            id_salida = insertar_detalle_salida(fecha, cliente, comentario)
+            insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad)
+            self.visualiza_datos()
         
         
-        #Limpia los TexBox
-        self.txtFecha.setDate(QDate.currentDate())        
-        self.cmbDocumento.setCurrentText("")
-        self.txtComentario.setText("")
-        self.cmbCodigo.setCurrentText("") 
-        self.cmbCategoria.setCurrentText("")
-        self.txtExistencia.setText("") 
-        self.txtCantidad.setText("") 
-        self.cmbClientes.setCurrentText("") 
-        self.cmbProducto.setCurrentText("")         
-        self.txtComentario.setFocus()
+            #Limpia los TexBox
+            self.txtFecha.setDate(QDate.currentDate())        
+            self.cmbDocumento.setCurrentText("")
+            self.txtComentario.setText("")
+            self.cmbCodigo.setCurrentText("") 
+            self.cmbCategoria.setCurrentText("")
+            self.txtExistencia.setText("") 
+            self.txtCantidad.setText("") 
+            self.cmbClientes.setCurrentText("") 
+            self.cmbProducto.setCurrentText("")         
+            self.txtComentario.setFocus()
         
         
 #------------------------------------------------------------------------------------------------------
