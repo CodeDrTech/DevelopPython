@@ -46,20 +46,32 @@ class VentanaProductos(QMainWindow):
         categoria = self.txtCategoria.text().upper()
         nombre = self.txtNombre.text().upper()
         medida = self.txtMedida.text().upper()
-        insertar_nuevo_producto(categoria, nombre, medida)
-        
-        ultimo_codigo = obtener_ultimo_codigo("Productos")
-        nuevo_codigo = generar_nuevo_codigo("PROD",ultimo_codigo)
-        
-        self.visualiza_datos()
         
         
-        #Limpia los TexBox
-        self.txtCodigo.setText(nuevo_codigo)
-        self.txtCategoria.setText("")
-        self.txtNombre.setText("")
-        self.txtMedida.setText("")
-        self.txtCategoria.setFocus()
+        if  not categoria or  not nombre or  not medida:
+    
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Faltan datos")
+            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.exec_()
+            
+            
+        else:
+            insertar_nuevo_producto(categoria, nombre, medida)
+        
+            ultimo_codigo = obtener_ultimo_codigo("Productos")
+            nuevo_codigo = generar_nuevo_codigo("PROD",ultimo_codigo)
+        
+            self.visualiza_datos()
+        
+        
+            #Limpia los TexBox
+            self.txtCodigo.setText(nuevo_codigo)
+            self.txtCategoria.setText("")
+            self.txtNombre.setText("")
+            self.txtMedida.setText("")
+            self.txtCategoria.setFocus()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -98,6 +110,12 @@ class VentanaProductos(QMainWindow):
                 model = self.dataView.model()
                 model.removeRow(row)
                 QMessageBox.warning(self, "ELIMINADO", "FILA ELIMINADA.")
+                
+                ultimo_codigo = obtener_ultimo_codigo("Productos")
+                nuevo_codigo = generar_nuevo_codigo("PROD",ultimo_codigo)        
+                self.visualiza_datos()
+                self.txtCodigo.setText(nuevo_codigo)
+                
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA LA FILA QUE VAS A ELIMINAR.")
         

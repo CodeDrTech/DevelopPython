@@ -61,21 +61,33 @@ class Ventanaproveedores(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     def insertar_datos(self):
         
+        
         codigo = self.txtCodigo.text()        
         nombre = self.txtNombre.text().upper()
         
-        insertar_nuevo_proveedor(nombre)
+        if not codigo or not nombre:
+            
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Faltan datos")
+            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.exec_()
         
-        ultimo_codigo = obtener_ultimo_codigo("Proveedores")
-        nuevo_codigo = generar_nuevo_codigo("PROV",ultimo_codigo)
+        else:
+            
         
-        self.visualiza_datos()
+            insertar_nuevo_proveedor(nombre)
+        
+            ultimo_codigo = obtener_ultimo_codigo("Proveedores")
+            nuevo_codigo = generar_nuevo_codigo("PROV",ultimo_codigo)
+        
+            self.visualiza_datos()
         
         
-        #Limpia los TexBox
-        self.txtCodigo.setText(nuevo_codigo)        
-        self.txtNombre.setText("")        
-        self.txtNombre.setFocus()
+            #Limpia los TexBox
+            self.txtCodigo.setText(nuevo_codigo)        
+            self.txtNombre.setText("")        
+            self.txtNombre.setFocus()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -100,6 +112,12 @@ class Ventanaproveedores(QMainWindow):
                 model = self.dataView.model()
                 model.removeRow(row)
                 QMessageBox.warning(self, "ELIMINADO", "PROVEEDOR ELIMINADO.")
+                
+                ultimo_codigo = obtener_ultimo_codigo("Proveedores")
+                nuevo_codigo = generar_nuevo_codigo("PROV",ultimo_codigo)          
+                self.visualiza_datos()
+                self.txtCodigo.setText(nuevo_codigo)
+        
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL PROVEEDOR QUE VAS A ELIMINAR.")    
 #------------------------------------------------------------------------------------------------------

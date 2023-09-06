@@ -63,18 +63,28 @@ class Ventanaclientes(QMainWindow):
         
         codigo = self.txtCodigo.text()        
         nombre = self.txtNombre.text().upper()
-        insertar_nuevo_cliente(nombre)
         
-        ultimo_codigo = obtener_ultimo_codigo("Clientes")
-        nuevo_codigo = generar_nuevo_codigo("CLI",ultimo_codigo)
+        if not codigo or not nombre:
+            
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Faltan datos")
+            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.exec_()
+            
+        else:
+            insertar_nuevo_cliente(nombre)
         
-        self.visualiza_datos()
+            ultimo_codigo = obtener_ultimo_codigo("Clientes")
+            nuevo_codigo = generar_nuevo_codigo("CLI",ultimo_codigo)
+        
+            self.visualiza_datos()
         
         
-        #Limpia los TexBox
-        self.txtCodigo.setText(nuevo_codigo)        
-        self.txtNombre.setText("")        
-        self.txtNombre.setFocus()
+            #Limpia los TexBox
+            self.txtCodigo.setText(nuevo_codigo)        
+            self.txtNombre.setText("")        
+            self.txtNombre.setFocus()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
@@ -99,6 +109,12 @@ class Ventanaclientes(QMainWindow):
                 model = self.dataView.model()
                 model.removeRow(row)
                 QMessageBox.warning(self, "ELIMINADO", "CLIENTE ELIMINADO.")
+                
+                
+                ultimo_codigo = obtener_ultimo_codigo("Clientes")
+                nuevo_codigo = generar_nuevo_codigo("CLI",ultimo_codigo)
+                self.visualiza_datos()
+                self.txtCodigo.setText(nuevo_codigo)
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL CLIENTE QUE VAS A ELIMINAR.")    
 #------------------------------------------------------------------------------------------------------
