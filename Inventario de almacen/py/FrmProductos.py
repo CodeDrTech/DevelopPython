@@ -111,6 +111,7 @@ class VentanaProductos(QMainWindow):
                 model.removeRow(row)
                 QMessageBox.warning(self, "ELIMINADO", "FILA ELIMINADA.")
                 
+                # Actualizar la vista de los datos y codigo del producto
                 ultimo_codigo = obtener_ultimo_codigo("Productos")
                 nuevo_codigo = generar_nuevo_codigo("PROD",ultimo_codigo)        
                 self.visualiza_datos()

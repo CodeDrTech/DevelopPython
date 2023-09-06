@@ -110,7 +110,7 @@ class Ventanaclientes(QMainWindow):
                 model.removeRow(row)
                 QMessageBox.warning(self, "ELIMINADO", "CLIENTE ELIMINADO.")
                 
-                
+                # Actualizar la vista de los datos y codigo del cliente
                 ultimo_codigo = obtener_ultimo_codigo("Clientes")
                 nuevo_codigo = generar_nuevo_codigo("CLI",ultimo_codigo)
                 self.visualiza_datos()

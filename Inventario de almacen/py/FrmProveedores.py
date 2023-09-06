@@ -113,6 +113,7 @@ class Ventanaproveedores(QMainWindow):
                 model.removeRow(row)
                 QMessageBox.warning(self, "ELIMINADO", "PROVEEDOR ELIMINADO.")
                 
+                # Actualizar la vista de los datos y codigo del proveedor
                 ultimo_codigo = obtener_ultimo_codigo("Proveedores")
                 nuevo_codigo = generar_nuevo_codigo("PROV",ultimo_codigo)          
                 self.visualiza_datos()
