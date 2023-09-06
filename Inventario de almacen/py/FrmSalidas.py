@@ -208,9 +208,15 @@ class VentanaSalidas(QMainWindow):
         
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
-        model = QSqlTableModel()
-        model.setTable("Salidas")
-        model.select()        
+        query = QSqlQuery()
+        query.exec_(f"SELECT DS.Fecha, DS.Cliente, S.Codigo, S.Categoria, S.Producto, S.CantidadTotal as 'Cantidad', DS.Comentario\
+                            FROM DetalleSalidas AS DS\
+                            JOIN Salidas AS S ON DS.ID = S.ID_Salida")
+        
+           
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)
         self.dataView.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido

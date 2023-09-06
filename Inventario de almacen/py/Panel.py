@@ -9,6 +9,7 @@ from FrmCompras import VentanaCompras
 from FrmSalidas import VentanaSalidas
 from FrmInventario import VentanaInventario
 from FrmHistorial import VentanaHistorial
+from FrmBaseSalidas import VentanaBaseSalidas
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -33,6 +34,7 @@ class VentanaPrincipal(QMainWindow):
         self.btnSalidas.clicked.connect(self.abrirFrmSalidas)
         self.btnInventario.clicked.connect(self.abrirFrmInventario)
         self.btnHistorial.clicked.connect(self.abrirFrmHistorial)
+        self.btnBaseSalidas.clicked.connect(self.abrirFrmBaseSalidas)
         
         
 #------------------------------------------------------------------------------------------------------
@@ -70,6 +72,10 @@ class VentanaPrincipal(QMainWindow):
     def abrirFrmHistorial(self):
         self.llamar_venana_historial = VentanaHistorial()
         self.llamar_venana_historial.show()
+        
+    def abrirFrmBaseSalidas(self):
+        self.llamar_venana_base_salidas = VentanaBaseSalidas()
+        self.llamar_venana_base_salidas.show()
         
 
 if __name__ == '__main__':
