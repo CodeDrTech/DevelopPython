@@ -598,7 +598,6 @@ QComboBox QAbstractItemView {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -630,7 +629,6 @@ QLabel {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -655,14 +653,13 @@ QLabel {
       <rect>
        <x>330</x>
        <y>5</y>
-       <width>81</width>
+       <width>71</width>
        <height>21</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -679,7 +676,7 @@ QLabel {
 </string>
      </property>
      <property name="text">
-      <string>CLIENTES</string>
+      <string>CLIENTE</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_11">
@@ -694,7 +691,6 @@ QLabel {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -779,7 +775,6 @@ QPushButton:pressed {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -811,7 +806,6 @@ QLabel {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -843,7 +837,6 @@ QLabel {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -875,7 +868,6 @@ QLabel {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -1085,7 +1077,6 @@ QComboBox QAbstractItemView {
      <property name="font">
       <font>
        <pointsize>-1</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -1234,7 +1225,6 @@ QLineEdit::placeholder {
     <property name="font">
      <font>
       <pointsize>-1</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>

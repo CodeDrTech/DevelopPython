@@ -219,28 +219,27 @@ class VentanaSalidas(QMainWindow):
     #aqui va el codigo para la impresion de la factura
     def generate_invoice(self):
         
-        items_from_table = []
-        indexes = self.dataView.selectedIndexes()
+        codigo = self.cmbCodigo.currentText()
+        producto_nombre = self.cmbProducto.currentText()
+        comentario = self.txtComentario.text().upper()
+        cantidad = self.txtCantidad.text()
+        cliente = self.cmbClientes.currentText()
         
-        index = indexes[0]
-        rows = index.row()
-        
-        
-
         now = datetime.now()        
         fecha_hora = now.strftime("%Y%m%d%H%M%S")
         fecha = now.strftime("%Y-%m-%d")
-        # Datos de la factura (personaliza estos datos)
+        # Datos de la factura 
         invoice_data = {
-            'invoice_number': f'# {fecha_hora}',
+            'invoice_number': f'',
             'invoice_date': f'{fecha}',
-            'due_date': f'{fecha}',
-            'customer_name': 'JOSE LUIS PEREZ',
+            'due_date': f'{fecha_hora}',
+            'customer_name': cliente,
             'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
             'items': [
-                {'description': 'CODIGO', 'quantity': "DESCRIPCION", 'unit_price': "UND", 'total': "CANT."},
+                {'codigo': 'CODIGO', 'producto': "DESCRIPCION", 'comentario': "UNIDAD", 'cantidad': "CANT."},
+                {'codigo': codigo, 'producto': producto_nombre, 'comentario': comentario, 'cantidad': cantidad},
             ],
-            'total': 190,
+            'pages': "1 de 1",
         }
 
         # Crear un documento PDF
@@ -257,26 +256,19 @@ class VentanaSalidas(QMainWindow):
 
         # Agregar información de la factura y el cliente
         elements.append(Paragraph(f'Fecha de Factura: {invoice_data["invoice_date"]}', styles['Normal']))
-        elements.append(Paragraph(f'Fecha de Vencimiento: {invoice_data["due_date"]}', styles['Normal']))
+        elements.append(Paragraph(f'Codigo de fecha: {invoice_data["due_date"]}', styles['Normal']))
         elements.append(Paragraph(f'Entregado a: {invoice_data["customer_name"]}', styles['Normal']))
         elements.append(Paragraph(f'Dirección: {invoice_data["customer_address"]}', styles['Normal']))
-
-        #item_data = []
-        #for row in invoice_data[rows]:
-            #codigo = self.dataView.columnAt(2)  # Columna 0
-            #descripcion = self.dataView.columnAt(6) # Columna 1
-            #und = self.dataView.columnAt(4)  # Columna 2
-            #cant = self.dataView.columnAt(8)  # Columna 3
-
-            # Agregar los datos de la fila a la lista de ítems
-            #item_data.append({'description': codigo, 'quantity': descripcion, 'unit_price': und, 'total': cant})
+        
+        
+        
         
         # Agregar la tabla de ítems
         item_data = []
         for item in invoice_data['items']:
-            item_data.append([item['description'], item['quantity'], item['unit_price'], item['total']])
+            item_data.append([item['codigo'], item['producto'], item['comentario'], item['cantidad']])
 
-        item_table = Table(item_data, colWidths=[65, 300, 60, 60])
+        item_table = Table(item_data, colWidths=[65, 300, 200, 60])
         item_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -290,7 +282,7 @@ class VentanaSalidas(QMainWindow):
         elements.append(item_table)
 
         # Agregar el total
-        elements.append(Paragraph(f'Total: ${invoice_data["total"]}', styles['Heading3']))
+        elements.append(Paragraph(f'Pagina: {invoice_data["pages"]}', styles['Heading3']))
 
         # Construir el documento PDF
         doc.build(elements)
