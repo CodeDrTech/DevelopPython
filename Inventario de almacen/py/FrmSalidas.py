@@ -60,8 +60,8 @@ class VentanaSalidas(QMainWindow):
             lambda i: self.actualizar_categoria_producto(self.cmbProducto.currentText()))
         
         # Evento que inserta la categoria del producto cuando seleccionas un nombre del cmbProducto.
-        self.cmbProducto.currentIndexChanged.connect(
-            lambda i: self.actualizar_existencia_producto(self.cmbProducto.currentText()))
+        self.cmbCodigo.currentIndexChanged.connect(
+            lambda i: self.actualizar_existencia_producto(self.cmbCodigo.currentText()))
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -155,10 +155,10 @@ class VentanaSalidas(QMainWindow):
         self.cmbCategoria.setModel(combo_und)
         
         
-    def actualizar_existencia_producto(self, producto):
+    def actualizar_existencia_producto(self, codigo):
         model = QSqlTableModel()
         model.setTable('Stock')
-        model.setFilter(f"Producto='{producto}'")
+        model.setFilter(f"Codigo='{codigo}'")
         model.select()
 
         medida = ""
