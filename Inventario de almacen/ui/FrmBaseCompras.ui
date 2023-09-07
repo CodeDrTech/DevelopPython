@@ -109,7 +109,7 @@ QLabel {
 </string>
     </property>
     <property name="text">
-     <string>TOTAL DE SALIDAS DE PRODUCTOS</string>
+     <string>TOTAL DE COMPRAS DE PRODUCTOS</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnSalir">

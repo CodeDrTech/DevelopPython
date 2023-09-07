@@ -15,15 +15,15 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 from io import BytesIO
 
 
-class VentanaHistorial(QMainWindow):    
+class VentanaBaseCompras(QMainWindow):    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Inventario de almacen/ui/FrmHistorial.ui',self)        
+        uic.loadUi('Inventario de almacen/ui/FrmBaseCompras.ui',self)        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('MOVIMIENTOS')
+        self.setWindowTitle('HISTORIAL DE COMPRAS')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Inventario de almacen/png/folder.png'))
         
@@ -37,16 +37,7 @@ class VentanaHistorial(QMainWindow):
     def visualiza_datos(self):
         
         query = QSqlQuery()
-        query.exec_(f"SELECT DS.Fecha, DS.Cliente, S.Codigo, S.Categoria, S.Producto, S.CantidadTotal as Cantidad, DS.Comentario, DS.ID\
-                        FROM DetalleSalidas AS DS JOIN Salidas AS S ON DS.ID = S.ID_Salida\
-                        UNION ALL\
-                        SELECT NULL as Fecha, NULL as Proveedor, NULL as Codigo, NULL as Categoria, NULL as Producto, NULL as Cantidad, NULL as Comentario, NULL as Und\
-                        UNION ALL\
-                        SELECT NULL as Fecha, '*DETALLE DE COMPRAS*', NULL as Codigo, NULL as Categoria, NULL as Producto, NULL as Cantidad, NULL as Comentario, NULL as Und\
-                        UNION ALL\
-                        SELECT 'Fecha', 'Proveedor', 'Codigo', 'Categoria', 'Producto', 'Cantidad', 'Comentario', 'Medida'\
-                        UNION ALL\
-                        SELECT Fecha, Proveedor, Codigo, Categoria, Producto, Cantidad, Comentario, Und FROM Compras")
+        query.exec_(f"SELECT Codigo, Categoria, Producto, Und, sum(Cantidad) as 'Cantidad total' FROM Compras GROUP by Und, Producto")
         
            
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
@@ -80,6 +71,6 @@ class VentanaHistorial(QMainWindow):
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
-    GUI = VentanaHistorial()
+    GUI = VentanaBaseCompras()
     GUI.show()
     sys.exit(app.exec_())
