@@ -202,7 +202,7 @@ QPushButton:pressed {
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../png/imprimir.png</normaloff>../png/imprimir.png</iconset>
+         <normaloff>../png/pdf.png</normaloff>../png/pdf.png</iconset>
        </property>
        <property name="iconSize">
         <size>
