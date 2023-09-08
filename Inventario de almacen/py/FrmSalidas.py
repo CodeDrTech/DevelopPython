@@ -418,6 +418,15 @@ class VentanaSalidas(QMainWindow):
                 # Construir el documento PDF
                 doc.build(elements)
 
+                
+                # Abrir la carpeta con el archivo pdf creado
+                ruta = f'{directorio_proyecto}\Inventario de almacen\pdf'
+                if os.path.exists(ruta):
+                    # Utiliza el comando adecuado según tu sistema operativo
+                    if os.name == 'posix':  # Para sistemas basados en Unix (Linux, macOS)
+                        subprocess.Popen(['xdg-open', ruta])
+                    elif os.name == 'nt':   # Para Windows
+                        subprocess.Popen(['explorer', ruta])
 
 
 #------------------------------------------------------------------------------------------------------
