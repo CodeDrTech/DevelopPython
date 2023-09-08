@@ -46,7 +46,7 @@ class VentanaSalidas(QMainWindow):
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnLimpiar.clicked.connect(self.limpiar_textbox)
-        self.btnBorrar.clicked.connect(self.borrar_fila)
+        #self.btnBorrar.clicked.connect(self.borrar_fila)
         self.btnFrmProductos.clicked.connect(self.abrirFrmProductos)
         self.btnFrmClientes.clicked.connect(self.abrirFrmClientes)
         self.btnImprimir.clicked.connect(self.generate_invoice)
@@ -216,77 +216,183 @@ class VentanaSalidas(QMainWindow):
         self.dataView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+
+    def obtener_datos_de_fila(self, fila_seleccionada):
+        # Obtener el modelo de datos del QTableView
+        modelo = self.dataView.model()
+
+        if modelo is not None and 0 <= fila_seleccionada < modelo.rowCount():
+            # Obtener los datos de la fila seleccionada
+            columna_0 = modelo.index(fila_seleccionada, 0).data()
+            columna_1 = modelo.index(fila_seleccionada, 1).data()
+            columna_2 = modelo.index(fila_seleccionada, 2).data()
+            columna_4 = modelo.index(fila_seleccionada, 4).data()
+            columna_5 = modelo.index(fila_seleccionada, 5).data()
+            columna_6 = modelo.index(fila_seleccionada, 6).data()
+
+            self.valor_columna_0 = columna_0
+            self.valor_columna_1 = columna_1
+            self.valor_columna_2 = columna_2
+            self.valor_columna_4 = columna_4
+            self.valor_columna_5 = columna_5
+            self.valor_columna_6 = columna_6
+            
+
     #aqui va el codigo para la impresion de la factura
     def generate_invoice(self):
         
-        codigo = self.cmbCodigo.currentText()
-        producto_nombre = self.cmbProducto.currentText()
-        comentario = self.txtComentario.text().upper()
-        cantidad = self.txtCantidad.text()
-        cliente = self.cmbClientes.currentText()
+        # Obtener el índice de la fila seleccionada
+        indexes = self.dataView.selectedIndexes()
         
-        now = datetime.now()        
-        fecha_hora = now.strftime("%Y%m%d%H%M%S")
-        fecha = now.strftime("%Y-%m-%d")
-        # Datos de la factura 
-        invoice_data = {
-            'invoice_number': f'',
-            'invoice_date': f'{fecha}',
-            'due_date': f'{fecha_hora}',
-            'customer_name': cliente,
-            'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
-            'items': [
-                {'codigo': 'CODIGO', 'producto': "DESCRIPCION", 'comentario': "UNIDAD", 'cantidad': "CANT."},
-                {'codigo': codigo, 'producto': producto_nombre, 'comentario': comentario, 'cantidad': cantidad},
-            ],
-            'pages': "1 de 1",
-        }
+        if indexes:
+            
+            # Obtener la fila al seleccionar una celda de la tabla
+            index = indexes[0]
+            row = index.row()
 
-        # Crear un documento PDF
-        pdf_filename = f'Documento de salida {fecha_hora}.pdf'
-        doc = SimpleDocTemplate(pdf_filename, pagesize=landscape(letter))
+            self.obtener_datos_de_fila(row)
+            
+            now = datetime.now()        
+            fecha_hora = now.strftime("%Y%m%d%H%M%S")
+            fecha = now.strftime("%Y-%m-%d")
+            # Datos de la factura 
+            invoice_data = {
+                'invoice_number': f'',
+                'invoice_date': f'{self.valor_columna_0}',
+                'due_date': f'{fecha_hora}',
+                'customer_name': f'{self.valor_columna_1}',
+                'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
+                'items': [
+                    {'codigo': 'CODIGO', 'producto': "DESCRIPCION", 'comentario': "UNIDAD", 'cantidad': "CANT."},
+                    {'codigo': self.valor_columna_2, 'producto': self.valor_columna_4, 'comentario': self.valor_columna_6, 'cantidad': self.valor_columna_5},
+                
+                ],
+                'Firma': "__________________",
+            }
 
-        # Crear una lista de elementos (contenido) para la factura
-        elements = []
+            # Crear un documento PDF
+            pdf_filename = f'Documento de salida {fecha_hora}.pdf'
+            doc = SimpleDocTemplate(pdf_filename, pagesize=landscape(letter))
 
-        # Agregar el encabezado de la factura
-        styles = getSampleStyleSheet()
-        header_text = Paragraph(f'<b>Documento de salida {invoice_data["invoice_number"]}</b>', styles['Heading2'])
-        elements.append(header_text)
+            # Crear una lista de elementos (contenido) para la factura
+            elements = []
 
-        # Agregar información de la factura y el cliente
-        elements.append(Paragraph(f'Fecha de Factura: {invoice_data["invoice_date"]}', styles['Normal']))
-        elements.append(Paragraph(f'Codigo de fecha: {invoice_data["due_date"]}', styles['Normal']))
-        elements.append(Paragraph(f'Entregado a: {invoice_data["customer_name"]}', styles['Normal']))
-        elements.append(Paragraph(f'Dirección: {invoice_data["customer_address"]}', styles['Normal']))
+            # Agregar el encabezado de la factura
+            styles = getSampleStyleSheet()
+            header_text = Paragraph(f'<b>SALIDA DE ALMACEN {invoice_data["invoice_number"]}</b>', styles['Heading2'])
+            elements.append(header_text)
+
+            # Agregar información de la factura y el cliente
+            elements.append(Paragraph(f'Fecha de Factura: {invoice_data["invoice_date"]}', styles['Normal']))
+            elements.append(Paragraph(f'Codigo de fecha: {invoice_data["due_date"]}', styles['Normal']))
+            elements.append(Paragraph(f'Entregado a: {invoice_data["customer_name"]}', styles['Normal']))
+            elements.append(Paragraph(f'Dirección: {invoice_data["customer_address"]}', styles['Normal']))
         
         
         
         
-        # Agregar la tabla de ítems
-        item_data = []
-        for item in invoice_data['items']:
-            item_data.append([item['codigo'], item['producto'], item['comentario'], item['cantidad']])
+            # Agregar la tabla de ítems
+            item_data = []
+            for item in invoice_data['items']:
+                item_data.append([item['codigo'], item['producto'], item['comentario'], item['cantidad']])
 
-        item_table = Table(item_data, colWidths=[65, 300, 200, 60])
-        item_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ]))
+            item_table = Table(item_data, colWidths=[65, 300, 200, 60])
+            item_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ]))
 
-        elements.append(item_table)
+            elements.append(item_table)
 
-        # Agregar el total
-        elements.append(Paragraph(f'Pagina: {invoice_data["pages"]}', styles['Heading3']))
+            # Agregar el total
+            elements.append(Paragraph(f'Recibido por: {invoice_data["Firma"]}', styles['Heading3']))
 
-        # Construir el documento PDF
-        doc.build(elements)
+            # Construir el documento PDF
+            doc.build(elements)
 
+        else:
+            codigo = self.cmbCodigo.currentText()
+            producto_nombre = self.cmbProducto.currentText()
+            comentario = self.txtComentario.text().upper()
+            cantidad = self.txtCantidad.text()
+            cliente = self.cmbClientes.currentText()
+            
+            if not codigo or not producto_nombre or not comentario or not cantidad or not cliente:
+                
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+                
+            else:
+                now = datetime.now()        
+                fecha_hora = now.strftime("%Y%m%d%H%M%S")
+                fecha = now.strftime("%Y-%m-%d")
+                # Datos de la factura 
+                invoice_data = {
+                    'invoice_number': f'',
+                    'invoice_date': f'{fecha}',
+                    'due_date': f'{fecha_hora}',
+                    'customer_name': cliente,
+                    'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
+                    'items': [
+                        {'codigo': 'CODIGO', 'producto': "DESCRIPCION", 'comentario': "UNIDAD", 'cantidad': "CANT."},
+                        {'codigo': codigo, 'producto': producto_nombre, 'comentario': comentario, 'cantidad': cantidad},
+                
+                    ],
+                    'Firma': "__________________",
+                }
+
+                # Crear un documento PDF
+                pdf_filename = f'Documento de salida {fecha_hora}.pdf'
+                doc = SimpleDocTemplate(pdf_filename, pagesize=landscape(letter))
+
+                # Crear una lista de elementos (contenido) para la factura
+                elements = []
+
+                # Agregar el encabezado de la factura
+                styles = getSampleStyleSheet()
+                header_text = Paragraph(f'<b>SALIDA DE ALMACEN {invoice_data["invoice_number"]}</b>', styles['Heading2'])
+                elements.append(header_text)
+
+                # Agregar información de la factura y el cliente
+                elements.append(Paragraph(f'Fecha de Factura: {invoice_data["invoice_date"]}', styles['Normal']))
+                elements.append(Paragraph(f'Codigo de fecha: {invoice_data["due_date"]}', styles['Normal']))
+                elements.append(Paragraph(f'Entregado a: {invoice_data["customer_name"]}', styles['Normal']))
+                elements.append(Paragraph(f'Dirección: {invoice_data["customer_address"]}', styles['Normal']))
+        
+        
+        
+        
+                # Agregar la tabla de ítems
+                item_data = []
+                for item in invoice_data['items']:
+                    item_data.append([item['codigo'], item['producto'], item['comentario'], item['cantidad']])
+
+                item_table = Table(item_data, colWidths=[65, 300, 200, 60])
+                item_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ]))
+
+                elements.append(item_table)
+
+                # Agregar el total
+                elements.append(Paragraph(f'Recibido por: {invoice_data["Firma"]}', styles['Heading3']))
+
+                # Construir el documento PDF
+                doc.build(elements)
 
 
 
@@ -315,7 +421,7 @@ class VentanaSalidas(QMainWindow):
                 id_salida = insertar_detalle_salida(fecha, cliente, comentario)
                 insertar_producto_en_salida(id_salida, codigo, categoria, producto_nombre, cantidad)
                 self.visualiza_datos()
-        
+                self.generate_invoice()
         
                 #Limpia los TexBox
                 self.txtFecha.setDate(QDate.currentDate())        

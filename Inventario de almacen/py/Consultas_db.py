@@ -6,6 +6,8 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 
+    
+    
 def obtener_ultimo_codigo(tabla):
     conn = conectar_db()
     cursor = conn.execute(f"SELECT MAX(Codigo) FROM {tabla}")
