@@ -1,4 +1,4 @@
-import sys
+import sys, os, subprocess
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
@@ -270,8 +270,12 @@ class VentanaSalidas(QMainWindow):
                 'Firma': "__________________",
             }
 
+            
+            # Obtener el directorio actual del proyecto
+            directorio_proyecto = os.getcwd()
+            # Crear la ruta completa al archivo PDF en el directorio del proyecto
+            pdf_filename = os.path.join(f'{directorio_proyecto}/Inventario de almacen/pdf', f'Documento de salida {fecha_hora}.pdf')
             # Crear un documento PDF
-            pdf_filename = f'Documento de salida {fecha_hora}.pdf'
             doc = SimpleDocTemplate(pdf_filename, pagesize=landscape(letter))
 
             # Crear una lista de elementos (contenido) para la factura
@@ -314,7 +318,24 @@ class VentanaSalidas(QMainWindow):
 
             # Construir el documento PDF
             doc.build(elements)
+            
+            #mensaje al usuario de pdf guardado
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Creacion de PDF")
+            mensaje.setText("Documento guardado con exito.")
+            mensaje.exec_()
 
+            
+            # Abrir la carpeta con el archivo pdf creado
+            ruta = f'{directorio_proyecto}/Inventario de almacen/pdf'
+            if os.path.exists(f'{directorio_proyecto}/Inventario de almacen/pdf'):
+                # Utiliza el comando adecuado según tu sistema operativo
+                if os.name == 'posix':  # Para sistemas basados en Unix (Linux, macOS)
+                    subprocess.Popen(['xdg-open', ruta])
+                elif os.name == 'nt':   # Para Windows
+                    subprocess.Popen(['explorer', ruta])
+            
         else:
             codigo = self.cmbCodigo.currentText()
             producto_nombre = self.cmbProducto.currentText()
@@ -349,8 +370,11 @@ class VentanaSalidas(QMainWindow):
                     'Firma': "__________________",
                 }
 
+                # Obtener el directorio actual del proyecto
+                directorio_proyecto = os.getcwd()
+                # Crear la ruta completa al archivo PDF en el directorio del proyecto
+                pdf_filename = os.path.join(f'{directorio_proyecto}/Inventario de almacen/pdf', f'Documento de salida {fecha_hora}.pdf')
                 # Crear un documento PDF
-                pdf_filename = f'Documento de salida {fecha_hora}.pdf'
                 doc = SimpleDocTemplate(pdf_filename, pagesize=landscape(letter))
 
                 # Crear una lista de elementos (contenido) para la factura
