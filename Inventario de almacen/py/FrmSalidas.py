@@ -265,7 +265,7 @@ class VentanaSalidas(QMainWindow):
                 'items': [
                     {'codigo': 'CODIGO', 'producto': "DESCRIPCION", 'comentario': "COMENTARIO", 'cantidad': "CANTIDAD"},
                     {'codigo': self.valor_columna_2, 'producto': self.valor_columna_4, 'comentario': self.valor_columna_6, 'cantidad': self.valor_columna_5},
-                
+                    
                 ],
                 'Firma': "__________________",
             }
