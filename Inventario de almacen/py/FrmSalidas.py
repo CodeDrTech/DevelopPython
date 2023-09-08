@@ -263,7 +263,7 @@ class VentanaSalidas(QMainWindow):
                 'customer_name': f'{self.valor_columna_1}',
                 'customer_address': 'C/ 1ra la cartonera, piedra blanca, Haina.',
                 'items': [
-                    {'codigo': 'CODIGO', 'producto': "DESCRIPCION", 'comentario': "UNIDAD", 'cantidad': "CANT."},
+                    {'codigo': 'CODIGO', 'producto': "DESCRIPCION", 'comentario': "COMENTARIO", 'cantidad': "CANTIDAD"},
                     {'codigo': self.valor_columna_2, 'producto': self.valor_columna_4, 'comentario': self.valor_columna_6, 'cantidad': self.valor_columna_5},
                 
                 ],
@@ -296,7 +296,7 @@ class VentanaSalidas(QMainWindow):
             for item in invoice_data['items']:
                 item_data.append([item['codigo'], item['producto'], item['comentario'], item['cantidad']])
 
-            item_table = Table(item_data, colWidths=[65, 300, 200, 60])
+            item_table = Table(item_data, colWidths=[65, 250, 300, 60])
             item_table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
