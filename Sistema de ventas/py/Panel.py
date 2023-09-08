@@ -6,12 +6,12 @@ from PyQt5 import QtGui
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Sistema de ventas/ui/LOGIN.ui',self)
+        uic.loadUi('Sistema de ventas/ui/FrmCategoria.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('PANEL')
+        self.setWindowTitle('*Mantenimiento de Categorias*')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
