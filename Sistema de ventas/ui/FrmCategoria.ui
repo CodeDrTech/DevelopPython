@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>574</width>
-    <height>450</height>
+    <height>363</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>90</y>
+      <y>0</y>
       <width>114</width>
       <height>27</height>
      </rect>
@@ -39,13 +39,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>30</y>
       <width>551</width>
       <height>301</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -146,6 +146,140 @@
      <attribute name="title">
       <string>Mantenimiento</string>
      </attribute>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>531</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Categorias</string>
+      </property>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>37</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>codigo</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>44</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Nombre</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>62</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Descripcion</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnNuevo">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>160</y>
+         <width>75</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Nuevo</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnEditar">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>160</y>
+         <width>75</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Editar</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnGuardar">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>160</y>
+         <width>75</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Guardar</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnCancelar">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>160</y>
+         <width>75</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Cancelar</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="txtCodigo">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>30</y>
+         <width>113</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="txtNombre">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>60</y>
+         <width>221</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="txtDescripcion">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>90</y>
+         <width>221</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </widget>
   </widget>
