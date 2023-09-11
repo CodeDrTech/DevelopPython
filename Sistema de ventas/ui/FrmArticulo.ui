@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>-1</pointsize>
+      <pointsize>1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -73,7 +73,7 @@ QTabWidget {
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -90,7 +90,7 @@ QTabWidget {
       </property>
       <property name="font">
        <font>
-        <pointsize>-1</pointsize>
+        <pointsize>1</pointsize>
         <bold>true</bold>
        </font>
       </property>
