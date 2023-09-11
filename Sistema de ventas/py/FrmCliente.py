@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui
 
-class Ventanacategoria(QMainWindow):    
+class VentanaCliente(QMainWindow):    
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmCliente.ui',self)
@@ -18,6 +18,6 @@ class Ventanacategoria(QMainWindow):
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
-    GUI = Ventanacategoria()
+    GUI = VentanaCliente()
     GUI.show()
     sys.exit(app.exec_())
