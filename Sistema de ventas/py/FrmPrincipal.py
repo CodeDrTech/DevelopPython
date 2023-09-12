@@ -14,7 +14,16 @@ class VentanaPrincipal(QMainWindow):
         self.setWindowTitle('.:. Sistema de Ventas .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
         
+        
+        self.btnSalir.clicked.connect(self.fn_Salir)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def fn_Salir(self):
+        self.close()
+
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
