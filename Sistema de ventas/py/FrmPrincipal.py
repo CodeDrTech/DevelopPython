@@ -2,6 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui
+from FrmEmpleado import VentanaEmpleado
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -18,7 +19,14 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
         
         
-        self.btnSalir.clicked.connect(self.fn_Salir)
+        self.actionSalir.triggered.connect(self.fn_Salir)
+        self.actionEmpleados.triggered.connect(self.abrirFrmEmpleados)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def abrirFrmEmpleados(self):
+        self.llamar_venana_Empleado = VentanaEmpleado()
+        self.llamar_venana_Empleado.show()
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
