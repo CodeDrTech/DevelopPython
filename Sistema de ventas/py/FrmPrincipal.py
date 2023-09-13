@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMdiSubWindow
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMdiSubWindow, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from FrmEmpleado import VentanaEmpleado
@@ -19,7 +19,7 @@ class VentanaPrincipal(QMainWindow):
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Sistema de Ventas .:.')
-        self.setFixedSize(self.size())
+        #self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -35,28 +35,52 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def abrirFrmEmpleados(self):
-        self.llamar_venana_Empleado = VentanaEmpleado()
-        self.llamar_venana_Empleado.show()
         
+        if VentanaEmpleado:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Creacion de PDF")
+            mensaje.setText("Documento guardado con exito.")
+            mensaje.exec_()
+        else:
+            frmEmpleado = VentanaEmpleado()
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmEmpleado)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
     def abrirFrmCategoria(self):
-        self.llamar_venana_Categoria = VentanaCategoria()
-        self.llamar_venana_Categoria.show()
+        frmCategoria = VentanaCategoria()
+        subWindow = QMdiSubWindow()
+        subWindow.setWidget(frmCategoria)
+        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+        self.mdiArea.addSubWindow(subWindow)
+        subWindow.show()
         
     def abrirFrmPresentacion(self):
-        self.llamar_venana_Presentacion = VentanaPresentacion()
-        self.llamar_venana_Presentacion.show()
+        frmPresentacion = VentanaPresentacion()
+        subWindow = QMdiSubWindow()
+        subWindow.setWidget(frmPresentacion)
+        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+        self.mdiArea.addSubWindow(subWindow)
+        subWindow.show()
         
     def abrirFrmArticulo(self):
-        self.llamar_venana_Articulo = VentanaArticulo()
-        self.llamar_venana_Articulo.show()
+        frmArticulo = VentanaArticulo()
+        subWindow = QMdiSubWindow()
+        subWindow.setWidget(frmArticulo)
+        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+        self.mdiArea.addSubWindow(subWindow)
+        subWindow.show()
         
     def abrirFrmProveedor(self):
-        self.llamar_venana_Proveedor = VentanaProveedor()
-        self.llamar_venana_Proveedor.show()
-        
-    #def abrirFrmClientes(self):
-        #self.llamar_venana_Clientes = VentanaCliente()
-        #self.llamar_venana_Clientes.show()
+        frmProveedor = VentanaProveedor()
+        subWindow = QMdiSubWindow()
+        subWindow.setWidget(frmProveedor)
+        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+        self.mdiArea.addSubWindow(subWindow)
+        subWindow.show()
         
         
     def abrirFrmClientes(self):
@@ -76,5 +100,5 @@ class VentanaPrincipal(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
     GUI = VentanaPrincipal()
-    GUI.show()
+    GUI.showMaximized()
     sys.exit(app.exec_())
