@@ -10,7 +10,8 @@ from FrmPresentacion import VentanaPresentacion
 from FrmProveedor import VentanaProveedor
 from FrmCliente import VentanaCliente
 
-class VentanaPrincipal(QMainWindow):    
+class VentanaPrincipal(QMainWindow): 
+       
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmPrincipal.ui',self)
@@ -36,20 +37,25 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------
     def abrirFrmEmpleados(self):
         
-        if VentanaEmpleado:
-            #mensaje al usuario
-            mensaje = QMessageBox()
-            mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Creacion de PDF")
-            mensaje.setText("Documento guardado con exito.")
-            mensaje.exec_()
-        else:
+        if VentanaEmpleado.isActiveWindow:           
             frmEmpleado = VentanaEmpleado()
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmEmpleado)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             self.mdiArea.addSubWindow(subWindow)
-            subWindow.show()
+            subWindow.show()   
+            
+            
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
+            
+            
+            
     def abrirFrmCategoria(self):
         frmCategoria = VentanaCategoria()
         subWindow = QMdiSubWindow()

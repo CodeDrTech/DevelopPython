@@ -5,7 +5,8 @@ from PyQt5 import QtGui
 
 class VentanaEmpleado(QMainWindow):    
     def __init__(self):
-        super().__init__()        
+        super().__init__()  
+        self.ventana_abierta = False      
         uic.loadUi('Sistema de ventas/ui/FrmEmpleado.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
