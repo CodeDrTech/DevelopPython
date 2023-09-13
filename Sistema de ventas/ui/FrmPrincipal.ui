@@ -29,11 +29,6 @@
     </property>
     <addaction name="actionSalir"/>
    </widget>
-   <widget class="QMenu" name="menuVer">
-    <property name="title">
-     <string>Ver</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuHerramientas">
     <property name="title">
      <string>Herramientas</string>
@@ -45,13 +40,6 @@
      <addaction name="actionBack_up"/>
     </widget>
     <addaction name="menuBase_de_datos"/>
-   </widget>
-   <widget class="QMenu" name="menuAyuda">
-    <property name="title">
-     <string>Ayuda</string>
-    </property>
-    <addaction name="actionIndice"/>
-    <addaction name="actionAcerca_de"/>
    </widget>
    <widget class="QMenu" name="menuAlmacen">
     <property name="title">
@@ -95,9 +83,7 @@
    <addaction name="menuVentas"/>
    <addaction name="menuMantenimiento"/>
    <addaction name="menuConsultas"/>
-   <addaction name="menuVer"/>
    <addaction name="menuHerramientas"/>
-   <addaction name="menuAyuda"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionIndice">

@@ -3,6 +3,11 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui
 from FrmEmpleado import VentanaEmpleado
+from FrmCategoria import VentanaCategoria
+from FrmArticulo import VentanaArticulo
+from FrmPresentacion import VentanaPresentacion
+from FrmProveedor import VentanaProveedor
+from FrmCliente import VentanaCliente
 
 class VentanaPrincipal(QMainWindow):    
     def __init__(self):
@@ -21,11 +26,36 @@ class VentanaPrincipal(QMainWindow):
         
         self.actionSalir.triggered.connect(self.fn_Salir)
         self.actionEmpleados.triggered.connect(self.abrirFrmEmpleados)
+        self.actionCategorias.triggered.connect(self.abrirFrmCategoria)
+        self.actionArticulos.triggered.connect(self.abrirFrmArticulo)
+        self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
+        self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
+        self.actionClientes.triggered.connect(self.abrirFrmClientes)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def abrirFrmEmpleados(self):
         self.llamar_venana_Empleado = VentanaEmpleado()
         self.llamar_venana_Empleado.show()
+        
+    def abrirFrmCategoria(self):
+        self.llamar_venana_Categoria = VentanaCategoria()
+        self.llamar_venana_Categoria.show()
+        
+    def abrirFrmPresentacion(self):
+        self.llamar_venana_Presentacion = VentanaPresentacion()
+        self.llamar_venana_Presentacion.show()
+        
+    def abrirFrmArticulo(self):
+        self.llamar_venana_Articulo = VentanaArticulo()
+        self.llamar_venana_Articulo.show()
+        
+    def abrirFrmProveedor(self):
+        self.llamar_venana_Proveedor = VentanaProveedor()
+        self.llamar_venana_Proveedor.show()
+        
+    def abrirFrmClientes(self):
+        self.llamar_venana_Clientes = VentanaCliente()
+        self.llamar_venana_Clientes.show()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
