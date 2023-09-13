@@ -1,7 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMdiSubWindow
 from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 from FrmEmpleado import VentanaEmpleado
 from FrmCategoria import VentanaCategoria
 from FrmArticulo import VentanaArticulo
@@ -53,9 +54,18 @@ class VentanaPrincipal(QMainWindow):
         self.llamar_venana_Proveedor = VentanaProveedor()
         self.llamar_venana_Proveedor.show()
         
+    #def abrirFrmClientes(self):
+        #self.llamar_venana_Clientes = VentanaCliente()
+        #self.llamar_venana_Clientes.show()
+        
+        
     def abrirFrmClientes(self):
-        self.llamar_venana_Clientes = VentanaCliente()
-        self.llamar_venana_Clientes.show()
+        frmCliente = VentanaCliente()  # Crea una instancia de VentanaCliente
+        subWindow = QMdiSubWindow()  # Crea una ventana secundaria para VentanaCliente
+        subWindow.setWidget(frmCliente)  # Establece VentanaCliente como contenido de la ventana secundaria
+        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore # Configura para que la ventana secundaria se elimine al cerrarse
+        self.mdiArea.addSubWindow(subWindow)  # Agrega la ventana secundaria al mdiArea
+        subWindow.show()  # Muestra la ventana secundaria
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
