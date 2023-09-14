@@ -61,10 +61,9 @@ class VentanaPresentacion(QMainWindow):
         
         
             #Limpia los TexBox
-            self.txtCodigo.setText("")
             self.txtNombre.setText("")
             self.txtDescripcion.setPlainText("")
-            self.txtCodigo.setFocus()
+            self.txtNombre.setFocus()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -72,7 +71,17 @@ class VentanaPresentacion(QMainWindow):
         VentanaPresentacion.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
         
+    def showEvent(self, event):
+        super().showEvent(event)    
+        self.visualiza_datos()
+        
+        
+        #Limpia los TexBox
+        self.txtNombre.setText("")
+        self.txtDescripcion.setPlainText("")
+        self.txtNombre.setFocus()
             
+                
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
     GUI = VentanaPresentacion()
