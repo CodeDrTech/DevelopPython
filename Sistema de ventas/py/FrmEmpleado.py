@@ -1,7 +1,9 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
+from PyQt5.QtSql import QSqlTableModel
+from Consultas_db import insertar_nuevo_empleados
 
 class VentanaEmpleado(QMainWindow):
     ventana_abierta = False    
@@ -18,9 +20,57 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
+        self.btnGuardar.clicked.connect(self.insertar_datos)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
-        # Funciones conectadas a los botones
+    # Funciones conectadas a los botones
+        
+    def insertar_datos(self):
+        
+        
+        
+        nombre = self.txtNombre.text().upper()
+        apellidos = self.txtApellidos.text().upper()
+        sexo = self.cmbSexo.currentText()
+        fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
+        numdocumento = self.txtNumDocumento.text().upper()
+        direccion = self.txtDireccion.toPlainText().upper()
+        telefono = int(self.txtTelefono.text())
+        email = self.txtEmail.text()
+        acceso = self.cmbAcceso.currentText()
+        usuario = self.txtUsuario.text()
+        password = self.txtPassword.text()
+                
+        if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
+    
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Faltan datos importantes")
+            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.exec_()
+            
+            
+        else:
+            insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
+        
+            self.visualiza_datos()
+        
+        
+            #Limpia los TexBox
+            #self.txtNombre.setText("")
+            #self.txtDescripcion.setPlainText("")
+            #self.txtNombre.setFocus()
+            
+    def visualiza_datos(self):
+        # Consulta SELECT * FROM Productos
+        model = QSqlTableModel()
+        model.setTable("empleado")
+        model.select()        
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()    
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def closeEvent(self, event):

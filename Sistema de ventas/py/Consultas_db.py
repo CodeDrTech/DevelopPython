@@ -23,10 +23,13 @@ def insertar_dato_generico(tabla, columnas, valores):
 
     # Cerrar la conexión
     conn.close()
+    
+# Funciones para intercambiar datos de los formularios a la base de datos
 def insertar_nueva_presentacion(nombre, descripcion):
     insertar_dato_generico('presentacion', ['nombre', 'descripcion'], [nombre, descripcion])
 
-
+def insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password):
+    insertar_dato_generico('empleado', ['nombre', 'apellidos', 'sexo', 'fecha_nac', 'num_documento', 'direccion', 'telefono', 'email', 'acceso', 'usuario', 'password'], [nombre, apellidos, sexo , fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password])
 
 
 
