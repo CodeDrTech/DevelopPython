@@ -18,13 +18,13 @@ def insertar_dato_generico(tabla, columnas, valores):
     query = f"INSERT INTO {tabla} ({columnas_str}) VALUES ({valores_str})"
 
     # Realizar la inserción en la base de datos
-    conn.execute(query, *valores)
+    conn.execute(query, valores)
     conn.commit()
 
     # Cerrar la conexión
     conn.close()
-def insertar_nueva_presentacion(codigo, nombre, descripcion):
-    insertar_dato_generico('presentacion', ['idpresentacion', 'nombre', 'descripcion'], [codigo, nombre, descripcion])
+def insertar_nueva_presentacion(nombre, descripcion):
+    insertar_dato_generico('presentacion', ['nombre', 'descripcion'], [nombre, descripcion])
 
 
 

@@ -40,7 +40,7 @@ class VentanaPresentacion(QMainWindow):
     def insertar_datos(self):
         
         
-        codigo = self.txtCodigo.text().upper()
+        #codigo = self.txtCodigo.text().upper()
         nombre = self.txtNombre.text().upper()
         descripcion = self.txtDescripcion.toPlainText().upper()
         
@@ -55,7 +55,7 @@ class VentanaPresentacion(QMainWindow):
             
             
         else:
-            insertar_nueva_presentacion(codigo, nombre, descripcion)
+            insertar_nueva_presentacion(nombre, descripcion)
         
             self.visualiza_datos()
         
