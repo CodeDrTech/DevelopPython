@@ -37,8 +37,9 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------
     def abrirFrmEmpleados(self):
         
-        if VentanaEmpleado.isActiveWindow:           
+        if not VentanaEmpleado.ventana_abierta:           
             frmEmpleado = VentanaEmpleado()
+            VentanaEmpleado.ventana_abierta = True
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmEmpleado)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
@@ -57,46 +58,95 @@ class VentanaPrincipal(QMainWindow):
             
             
     def abrirFrmCategoria(self):
-        frmCategoria = VentanaCategoria()
-        subWindow = QMdiSubWindow()
-        subWindow.setWidget(frmCategoria)
-        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
-        self.mdiArea.addSubWindow(subWindow)
-        subWindow.show()
+        
+        if not VentanaCategoria.ventana_abierta:
+            frmCategoria = VentanaCategoria()
+            VentanaCategoria.ventana_abierta = True
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmCategoria)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
         
     def abrirFrmPresentacion(self):
-        frmPresentacion = VentanaPresentacion()
-        subWindow = QMdiSubWindow()
-        subWindow.setWidget(frmPresentacion)
-        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
-        self.mdiArea.addSubWindow(subWindow)
-        subWindow.show()
+        
+        if not VentanaPresentacion.ventana_abierta:
+            frmPresentacion = VentanaPresentacion()
+            VentanaPresentacion.ventana_abierta = True
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmPresentacion)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
         
     def abrirFrmArticulo(self):
-        frmArticulo = VentanaArticulo()
-        subWindow = QMdiSubWindow()
-        subWindow.setWidget(frmArticulo)
-        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
-        self.mdiArea.addSubWindow(subWindow)
-        subWindow.show()
+        
+        if not VentanaArticulo.ventana_abierta:
+            frmArticulo = VentanaArticulo()
+            VentanaArticulo.ventana_abierta = True
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmArticulo)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
         
     def abrirFrmProveedor(self):
-        frmProveedor = VentanaProveedor()
-        subWindow = QMdiSubWindow()
-        subWindow.setWidget(frmProveedor)
-        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
-        self.mdiArea.addSubWindow(subWindow)
-        subWindow.show()
+        
+        if not VentanaProveedor.ventana_abierta:
+            frmProveedor = VentanaProveedor()
+            VentanaProveedor.ventana_abierta = True
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmProveedor)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
         
         
     def abrirFrmClientes(self):
-        frmCliente = VentanaCliente()  # Crea una instancia de VentanaCliente
-        subWindow = QMdiSubWindow()  # Crea una ventana secundaria para VentanaCliente
-        subWindow.setWidget(frmCliente)  # Establece VentanaCliente como contenido de la ventana secundaria
-        subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore # Configura para que la ventana secundaria se elimine al cerrarse
-        self.mdiArea.addSubWindow(subWindow)  # Agrega la ventana secundaria al mdiArea
-        subWindow.show()  # Muestra la ventana secundaria
-
+        
+        if not VentanaCliente.ventana_abierta:
+            frmCliente = VentanaCliente()  # Crea una instancia de VentanaCliente
+            VentanaCliente.ventana_abierta = True
+            subWindow = QMdiSubWindow()  # Crea una ventana secundaria para VentanaCliente
+            subWindow.setWidget(frmCliente)  # Establece VentanaCliente como contenido de la ventana secundaria
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore # Configura para que la ventana secundaria se elimine al cerrarse
+            self.mdiArea.addSubWindow(subWindow)  # Agrega la ventana secundaria al mdiArea
+            subWindow.show()  # Muestra la ventana secundaria
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
