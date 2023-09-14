@@ -633,7 +633,7 @@ QPushButton:pressed {
       <widget class="QLineEdit" name="txtCodigo">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>20</y>
          <width>105</width>
          <height>35</height>
@@ -713,7 +713,7 @@ QLineEdit::placeholder {
       <widget class="QLineEdit" name="txtNombre">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>60</y>
          <width>105</width>
          <height>35</height>
@@ -793,7 +793,7 @@ QLineEdit::placeholder {
       <widget class="QTextEdit" name="txtDireccion">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>180</y>
          <width>221</width>
          <height>41</height>
@@ -899,7 +899,7 @@ QLabel {
         <rect>
          <x>5</x>
          <y>110</y>
-         <width>136</width>
+         <width>141</width>
          <height>21</height>
         </rect>
        </property>
@@ -921,7 +921,7 @@ QLabel {
       <widget class="QLineEdit" name="txtNumDocumento">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>100</y>
          <width>181</width>
          <height>35</height>
@@ -1025,7 +1025,7 @@ QLabel {
       <widget class="QLineEdit" name="txtTelefono">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>225</y>
          <width>120</width>
          <height>35</height>
@@ -1129,7 +1129,7 @@ QLabel {
       <widget class="QLineEdit" name="txtEmail">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>265</y>
          <width>181</width>
          <height>35</height>
@@ -1313,7 +1313,7 @@ QLabel {
       <widget class="QComboBox" name="cmbSexo">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>140</y>
          <width>105</width>
          <height>35</height>
@@ -1356,7 +1356,7 @@ QComboBox QAbstractItemView {
         <rect>
          <x>260</x>
          <y>150</y>
-         <width>158</width>
+         <width>171</width>
          <height>21</height>
         </rect>
        </property>
@@ -1378,7 +1378,7 @@ QLabel {
       <widget class="QDateEdit" name="txtFechaNac">
        <property name="geometry">
         <rect>
-         <x>430</x>
+         <x>440</x>
          <y>140</y>
          <width>105</width>
          <height>35</height>
@@ -1490,7 +1490,7 @@ QLabel {
       <widget class="QComboBox" name="cmbAcceso">
        <property name="geometry">
         <rect>
-         <x>145</x>
+         <x>147</x>
          <y>305</y>
          <width>121</width>
          <height>35</height>

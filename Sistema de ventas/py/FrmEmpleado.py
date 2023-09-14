@@ -12,11 +12,17 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Mantenimiento de Clientes .:.')
+        self.setWindowTitle('.:. Mantenimiento de Empleados .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------        
+#------------------------------------------------------------------------------------------------------
+        # Botones del formulario y sus funciones
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------ 
+        # Funciones conectadas a los botones
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
     def closeEvent(self, event):
         VentanaEmpleado.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
