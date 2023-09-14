@@ -4,8 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui
 from PyQt5.QtCore import QDateTime
 
-class VentanaLogin(QMainWindow):
-    ventana_abierta = False    
+class VentanaLogin(QMainWindow):    
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmLogin.ui',self)
@@ -30,7 +29,6 @@ class VentanaLogin(QMainWindow):
         self.close()
        
     def closeEvent(self, event):
-        VentanaLogin.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
         
     def showEvent(self, event):
