@@ -10,8 +10,7 @@ from FrmPresentacion import VentanaPresentacion
 from FrmProveedor import VentanaProveedor
 from FrmCliente import VentanaCliente
 
-class VentanaPrincipal(QMainWindow): 
-       
+class VentanaPrincipal(QMainWindow):       
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmPrincipal.ui',self)
