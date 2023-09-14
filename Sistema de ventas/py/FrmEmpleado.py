@@ -21,7 +21,8 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
         self.btnGuardar.clicked.connect(self.insertar_datos)
-        self.btnNuevo.clicked.connect(self.visualiza_datos)
+        self.btnEditar.clicked.connect(self.editar_datos)
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     # Funciones conectadas a los botones
@@ -82,6 +83,16 @@ class VentanaEmpleado(QMainWindow):
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
         model = QSqlTableModel()    
         model.setQuery(query)        
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()
+        
+    def editar_datos(self):
+        # Consulta SELECT * FROM Productos
+        model = QSqlTableModel()
+        model.setTable("empleado")
+        model.select()        
         self.tbDatos.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido

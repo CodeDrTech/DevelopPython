@@ -26,9 +26,14 @@ class VentanaPresentacion(QMainWindow):
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
-        model = QSqlTableModel()
-        model.setTable("presentacion")
-        model.select()        
+        
+        query = QSqlQuery()
+        query.exec_(f"SELECT idpresentacion as 'CODIGO', nombre AS 'NOMBRE', descripcion AS 'DESCRIPCION' FROM presentacion")
+        
+           
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
         self.tbDatos.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
@@ -72,7 +77,9 @@ class VentanaPresentacion(QMainWindow):
         event.accept()
         
     def showEvent(self, event):
-        super().showEvent(event)    
+        super().showEvent(event)
+        
+        model = QSqlTableModel()    
         self.visualiza_datos()
         
         
