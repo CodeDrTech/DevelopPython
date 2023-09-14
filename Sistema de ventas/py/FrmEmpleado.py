@@ -2,7 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
-from PyQt5.QtSql import QSqlTableModel
+from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Consultas_db import insertar_nuevo_empleados
 
 class VentanaEmpleado(QMainWindow):
@@ -21,6 +21,7 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
         self.btnGuardar.clicked.connect(self.insertar_datos)
+        self.btnNuevo.clicked.connect(self.visualiza_datos)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     # Funciones conectadas a los botones
@@ -57,15 +58,30 @@ class VentanaEmpleado(QMainWindow):
         
         
             #Limpia los TexBox
-            #self.txtNombre.setText("")
-            #self.txtDescripcion.setPlainText("")
-            #self.txtNombre.setFocus()
+            nombre = self.txtNombre.setText("")
+            apellidos = self.txtApellidos.setText("")
+            sexo = self.cmbSexo.setCurrentText("") 
+            #fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            numdocumento = self.txtNumDocumento.setText("")
+            direccion = self.txtDireccion.setPlainText("")
+            telefono = self.txtTelefono.setText("")
+            email = self.txtEmail.setText("")
+            acceso = self.cmbAcceso.setCurrentText("") 
+            usuario = self.txtUsuario.setText("")
+            password = self.txtPassword.setText("")
+            self.txtNombre.setFocus()
             
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
-        model = QSqlTableModel()
-        model.setTable("empleado")
-        model.select()        
+        query = QSqlQuery()
+        query.exec_(f"SELECT idempleado as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
+                    fecha_nac AS 'FECHA DE NACIMIENTO', num_documento AS 'CEDULA', direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
+                    email AS 'CORREO', acceso AS 'ACCESO', usuario AS 'USUARIO', password AS 'CONTRASENA'  FROM empleado")
+        
+           
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
         self.tbDatos.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
@@ -76,6 +92,12 @@ class VentanaEmpleado(QMainWindow):
     def closeEvent(self, event):
         VentanaEmpleado.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
+        
+    def showEvent(self, event):
+        super().showEvent(event)
+        
+        model = QSqlTableModel()   
+        self.visualiza_datos()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
 if __name__ == '__main__':
