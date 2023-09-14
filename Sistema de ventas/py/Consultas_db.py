@@ -31,7 +31,8 @@ def insertar_nueva_presentacion(nombre, descripcion):
 def insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password):
     insertar_dato_generico('empleado', ['nombre', 'apellidos', 'sexo', 'fecha_nac', 'num_documento', 'direccion', 'telefono', 'email', 'acceso', 'usuario', 'password'], [nombre, apellidos, sexo , fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password])
 
-
+def insertar_nueva_categoria(nombre, descripcion):
+    insertar_dato_generico('categoria', ['nombre', 'descripcion'], [nombre, descripcion])
 
 
 
