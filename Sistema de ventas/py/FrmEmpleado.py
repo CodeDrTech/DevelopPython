@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Consultas_db import insertar_nuevo_empleados
@@ -87,8 +87,10 @@ class VentanaEmpleado(QMainWindow):
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()
+        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
     def editar_datos(self):
+        self.listado()
         # Consulta SELECT * FROM Productos
         model = QSqlTableModel()
         model.setTable("empleado")
@@ -97,7 +99,10 @@ class VentanaEmpleado(QMainWindow):
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()    
-
+        self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        
+    def listado(self):
+        self.tabWidget.setCurrentIndex(0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def closeEvent(self, event):

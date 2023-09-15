@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PyQt5 import QtGui
 from Consultas_db import insertar_nueva_presentacion
@@ -22,6 +22,8 @@ class VentanaPresentacion(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         self.btnGuardar.clicked.connect(self.insertar_datos)
+        self.btnEditar.clicked.connect(self.editar_datos)
+        #self.btnNuevo.clicked.connect(self.listado)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -38,6 +40,23 @@ class VentanaPresentacion(QMainWindow):
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()
+        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
+    def editar_datos(self):
+        self.listado()
+        # Consulta SELECT * FROM Productos
+        model = QSqlTableModel()
+        model.setTable("presentacion")
+        model.select()        
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()    
+        self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        
+        
+    def listado(self):
+        self.tabWidget.setCurrentIndex(0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
 
