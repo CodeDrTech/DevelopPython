@@ -22,7 +22,7 @@ class VentanaProveedor(QMainWindow):
         # Botones del formulario y sus funciones
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
-        
+        self.btnSalir.clicked.connect(self.fn_Salir)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Funciones conectadas a los botones
@@ -114,7 +114,10 @@ class VentanaProveedor(QMainWindow):
         super().showEvent(event)
         
         model = QSqlTableModel()   
-        self.visualiza_datos()        
+        self.visualiza_datos()
+        
+    def fn_Salir(self):
+        self.close()       
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
 if __name__ == '__main__':

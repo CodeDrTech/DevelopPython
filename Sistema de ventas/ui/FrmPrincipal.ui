@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1236</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSistema">
@@ -122,9 +122,6 @@
   <action name="actionSalir">
    <property name="text">
     <string>Salir</string>
-   </property>
-   <property name="shortcut">
-    <string>Esc</string>
    </property>
   </action>
   <action name="actionArticulos">

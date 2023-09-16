@@ -23,7 +23,7 @@ class VentanaPresentacion(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
-        #self.btnNuevo.clicked.connect(self.listado)
+        self.btnSalir.clicked.connect(self.fn_Salir)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -106,6 +106,9 @@ class VentanaPresentacion(QMainWindow):
         self.txtNombre.setText("")
         self.txtDescripcion.setPlainText("")
         self.txtNombre.setFocus()
+        
+    def fn_Salir(self):
+        self.close()
             
                 
 if __name__ == '__main__':

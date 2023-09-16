@@ -570,7 +570,7 @@ QPushButton:pressed {
         <string>Salir</string>
        </property>
        <property name="shortcut">
-        <string>Esc</string>
+        <string>Ctrl+S</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtCodigo">
