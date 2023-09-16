@@ -61,6 +61,9 @@ QLabel {
       <height>301</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ver, agregar o editar presentacion&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
     <property name="styleSheet">
      <string notr="true">QTabWidget {
     background-color: #9a9a9a;
@@ -117,6 +120,9 @@ QLabel {
         <width>120</width>
         <height>35</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inserte el dato para buscar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="styleSheet">
        <string notr="true">QWidget {
@@ -301,30 +307,6 @@ QPushButton:pressed {
        <string>Imprimir</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="chkEliminar">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>91</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QWidget {
-    background-color: #9a9a9a;
-}
-
-QCheckBox{
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}</string>
-      </property>
-      <property name="text">
-       <string>Eliminar</string>
-      </property>
-     </widget>
      <widget class="QTableView" name="tbDatos">
       <property name="geometry">
        <rect>
@@ -471,47 +453,10 @@ QLabel {
         <string>Descripcion</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnNuevo">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>160</y>
-         <width>85</width>
-         <height>37</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-</string>
-       </property>
-       <property name="text">
-        <string>Nuevo</string>
-       </property>
-      </widget>
       <widget class="QPushButton" name="btnEditar">
        <property name="geometry">
         <rect>
-         <x>290</x>
+         <x>220</x>
          <y>160</y>
          <width>85</width>
          <height>37</height>
@@ -548,7 +493,7 @@ QPushButton:pressed {
       <widget class="QPushButton" name="btnGuardar">
        <property name="geometry">
         <rect>
-         <x>200</x>
+         <x>110</x>
          <y>160</y>
          <width>85</width>
          <height>37</height>
@@ -582,10 +527,10 @@ QPushButton:pressed {
         <string> Guardar </string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnCancelar">
+      <widget class="QPushButton" name="btnSalir">
        <property name="geometry">
         <rect>
-         <x>380</x>
+         <x>330</x>
          <y>160</y>
          <width>85</width>
          <height>37</height>
@@ -616,7 +561,10 @@ QPushButton:pressed {
 </string>
        </property>
        <property name="text">
-        <string>Cancelar</string>
+        <string>Salir</string>
+       </property>
+       <property name="shortcut">
+        <string>Esc</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtCodigo">
@@ -697,6 +645,9 @@ QLineEdit::placeholder {
 }
 
 </string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtNombre">

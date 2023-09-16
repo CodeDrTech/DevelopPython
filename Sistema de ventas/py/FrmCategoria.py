@@ -23,7 +23,8 @@ class VentanaCategoria(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         self.btnGuardar.clicked.connect(self.insertar_datos)
-        self.btnEditar.clicked.connect(self.editar_datos)
+        self.btnEditar.clicked.connect(self.editar_datos) 
+        self.btnSalir.clicked.connect(self.fn_Salir)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -102,6 +103,8 @@ class VentanaCategoria(QMainWindow):
         model = QSqlTableModel()    
         self.visualiza_datos()
         
+    def fn_Salir(self):
+        self.close()    
         
             
 if __name__ == '__main__':
