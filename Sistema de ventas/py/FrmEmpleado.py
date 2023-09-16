@@ -117,7 +117,14 @@ class VentanaEmpleado(QMainWindow):
         self.visualiza_datos()
         
     def fn_Salir(self):
-        self.close()
+        # Preguntar si el usuario está seguro de cerrar la ventana
+        confirmacion = QMessageBox.question(self, "", "¿ESTAS SEGURO QUE QUIERE CERRAR LA VENTANA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+        # Si el usuario hace clic en el botón "Sí", se cierra la ventana
+        if confirmacion == QMessageBox.Yes:
+            self.close()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
 if __name__ == '__main__':
