@@ -33,7 +33,12 @@ def insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, di
 
 def insertar_nueva_categoria(nombre, descripcion):
     insertar_dato_generico('categoria', ['nombre', 'descripcion'], [nombre, descripcion])
+    
+def insertar_nuevo_proveedor(razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url):
+    insertar_dato_generico('proveedor', ['razon_social', 'sector_comercial', 'tipo_documento', 'num_documento', 'direccion', 'telefono', 'email', 'url'], [razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url])
 
+def insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email):
+    insertar_dato_generico('cliente', ['nombre', 'apellidos', 'sexo', 'fecha_nacimiento', 'num_documento', 'direccion', 'telefono', 'email'], [nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email])
 
 
 
