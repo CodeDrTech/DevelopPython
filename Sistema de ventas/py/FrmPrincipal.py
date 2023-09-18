@@ -24,17 +24,41 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         
-        
-        self.actionSalir.triggered.connect(self.fn_Salir)
-        self.actionEmpleados.triggered.connect(self.abrirFrmEmpleados)
-        self.actionCategorias.triggered.connect(self.abrirFrmCategoria)
-        self.actionArticulos.triggered.connect(self.abrirFrmArticulo)
-        self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
-        self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
-        self.actionClientes.triggered.connect(self.abrirFrmClientes)
-        
-        
+    def administrador(self):
+            self.actionSalir.triggered.connect(self.fn_Salir)
+            self.actionEmpleados.triggered.connect(self.abrirFrmEmpleados)
+            self.actionCategorias.triggered.connect(self.abrirFrmCategoria)
+            self.actionArticulos.triggered.connect(self.abrirFrmArticulo)
+            self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
+            self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
+            self.actionClientes.triggered.connect(self.abrirFrmClientes)
+                    
         #self.actionCategorias.setEnabled(False)
+            
+    def vendedor(self):
+            self.actionSalir.triggered.connect(self.fn_Salir)
+            self.actionEmpleados.setEnabled(False)
+            self.actionCategorias.setEnabled(False)
+            self.actionArticulos.setEnabled(False)
+            self.actionPresentaciones.setEnabled(False)
+            self.actionProveedores.setEnabled(False)
+            self.actionClientes.triggered.connect(self.abrirFrmClientes)
+            #self.menuConsultas
+            #self.nemuHerramientas
+                    
+            #self.actionCategorias.setEnabled(False)
+            
+    def almacen(self):
+            self.actionSalir.triggered.connect(self.fn_Salir)
+            self.actionEmpleados.setEnabled(False)
+            self.actionCategorias.triggered.connect(self.abrirFrmCategoria)
+            self.actionArticulos.triggered.connect(self.abrirFrmArticulo)
+            self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
+            self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
+            self.actionClientes.setEnabled(False)
+            #self.actionIngresos
+            #self.menuConsultas
+            #self.nemuHerramientas
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def abrirFrmEmpleados(self):

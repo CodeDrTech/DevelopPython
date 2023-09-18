@@ -62,7 +62,7 @@ class VentanaEmpleado(QMainWindow):
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("Agregar empleado")
-                mensaje.setText("Empleado registrad.")
+                mensaje.setText("Empleado registrado.")
                 mensaje.exec_()
                 
                 #Limpia los TexBox

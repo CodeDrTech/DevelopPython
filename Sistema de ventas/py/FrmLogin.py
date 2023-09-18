@@ -65,9 +65,25 @@ class VentanaLogin(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
-    def abrirFrmPrincipal(self):
+    def abrir_FrmPrincipal_admin(self):
         self.llamar_venana_principal = VentanaPrincipal()
+        self.llamar_venana_principal.administrador()
         self.llamar_venana_principal.show()
+        
+        self.fn_Salir()
+        
+    def abrir_FrmPrincipal_almacen(self):
+        self.llamar_venana_principal = VentanaPrincipal()
+        self.llamar_venana_principal.almacen()
+        self.llamar_venana_principal.show()
+        
+        self.fn_Salir()
+        
+    def abrir_FrmPrincipal_vendedor(self):
+        self.llamar_venana_principal = VentanaPrincipal()
+        self.llamar_venana_principal.vendedor()
+        self.llamar_venana_principal.show()
+        
         self.fn_Salir()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------      
@@ -110,18 +126,47 @@ class VentanaLogin(QMainWindow):
                 mensaje.setText("Por favor, complete todos los campos.")
                 mensaje.exec_()
             
-            else:    
-                if usuario == bd_usuario and password == bd_password:
-                    self.abrirFrmPrincipal()
+            else:
+                if bd_acceso == "Administrador":    
+                    if usuario == bd_usuario and password == bd_password:
+                        self.abrir_FrmPrincipal_admin()
+                    else:
+                        mensaje = QMessageBox()
+                        mensaje.setIcon(QMessageBox.Critical)
+                        mensaje.setWindowTitle("Error de datos")
+                        mensaje.setText("Usuario o contraseña incorrecto.")
+                        mensaje.exec_()
+                        self.txtPassword.setText("")
+                        self.txtUsuario.setText("")
+                        self.txtUsuario.setFocus()
+                        
+                elif bd_acceso == "Vendedor":
+                    if usuario == bd_usuario and password == bd_password:
+                        self.abrir_FrmPrincipal_vendedor()
+                        
+                    else:
+                        mensaje = QMessageBox()
+                        mensaje.setIcon(QMessageBox.Critical)
+                        mensaje.setWindowTitle("Error de datos")
+                        mensaje.setText("Usuario o contraseña incorrecto.")
+                        mensaje.exec_()
+                        self.txtPassword.setText("")
+                        self.txtUsuario.setText("")
+                        self.txtUsuario.setFocus()
+                        
                 else:
-                    mensaje = QMessageBox()
-                    mensaje.setIcon(QMessageBox.Critical)
-                    mensaje.setWindowTitle("Error de datos")
-                    mensaje.setText("Usuario o contraseña incorrecto.")
-                    mensaje.exec_()
-                    self.txtPassword.setText("")
-                    self.txtUsuario.setText("")
-                    self.txtUsuario.setFocus()
+                    if usuario == bd_usuario and password == bd_password:
+                        self.abrir_FrmPrincipal_almacen()
+                        
+                    else:
+                        mensaje = QMessageBox()
+                        mensaje.setIcon(QMessageBox.Critical)
+                        mensaje.setWindowTitle("Error de datos")
+                        mensaje.setText("Usuario o contraseña incorrecto.")
+                        mensaje.exec_()
+                        self.txtPassword.setText("")
+                        self.txtUsuario.setText("")
+                        self.txtUsuario.setFocus()
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
