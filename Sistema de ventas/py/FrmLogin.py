@@ -47,12 +47,10 @@ class VentanaLogin(QMainWindow):
         model.select()
         
             
-        #acceso = ""
         if model.rowCount() > 0:
-            acceso = model.data(model.index(0, 10))
-
-            #self.txtExistencia.setText(str(acceso))
-            return acceso 
+            # Obtén la fila del primer registro que cumple con la condición
+            fila = model.index(0, 9).row()
+            return fila
         else:
             return None
         
