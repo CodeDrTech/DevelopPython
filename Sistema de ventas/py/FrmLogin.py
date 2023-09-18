@@ -112,9 +112,16 @@ class VentanaLogin(QMainWindow):
             
             else:    
                 if usuario == bd_usuario and password == bd_password:
-                    print("Usuario correcto")
+                    self.abrirFrmPrincipal()
                 else:
-                    print("Usuario incorrecto")
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Critical)
+                    mensaje.setWindowTitle("Error de datos")
+                    mensaje.setText("Usuario o contraseña incorrecto.")
+                    mensaje.exec_()
+                    self.txtPassword.setText("")
+                    self.txtUsuario.setText("")
+                    self.txtUsuario.setFocus()
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
@@ -122,7 +129,9 @@ class VentanaLogin(QMainWindow):
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
-        
+            self.txtPassword.setText("")
+            self.txtUsuario.setText("")
+            self.txtUsuario.setFocus()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
