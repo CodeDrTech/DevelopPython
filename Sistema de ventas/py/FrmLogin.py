@@ -2,6 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView
 from PyQt5 import QtGui
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtCore import QDateTime
 from FrmPrincipal import VentanaPrincipal
@@ -23,7 +24,7 @@ class VentanaLogin(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         self.btnSalir.clicked.connect(self.fn_Salir)
-        self.btnIngresar.clicked.connect(self.abrirFrmPrincipal)
+        self.btnIngresar.clicked.connect(self.obtener_codigo_empleado)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
@@ -53,6 +54,8 @@ class VentanaLogin(QMainWindow):
         self.valor_columna_9 = columna_9
         self.valor_columna_10 = columna_10
         self.valor_columna_11 = columna_11
+        
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
     def abrirFrmPrincipal(self):
@@ -60,7 +63,30 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.show()
         self.fn_Salir()
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------     
+#------------------------------------------------------------------------------------------------------
+        
+        dato = "admin"
+        self.obtener_codigo_empleado(dato)
+        
+    def obtener_codigo_empleado(self, usuario):
+        model = QSqlTableModel()
+        model.setTable('empleado')
+        model.setFilter(f"usuario='{usuario}'")
+        model.select()
+        
+            
+        if model.rowCount() > 0:
+            # Suponemos que el ID está en la columna 0
+            empleado_id = model.data(model.index(0, 0))
+            return empleado_id
+        else:
+            return None
+        
+        
+        
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
         self.close()
         
