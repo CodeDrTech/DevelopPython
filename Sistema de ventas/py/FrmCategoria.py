@@ -64,31 +64,38 @@ class VentanaCategoria(QMainWindow):
         
     def insertar_datos(self):
         
+        try:
+            #codigo = self.txtCodigo.text().upper()
+            nombre = self.txtNombre.text().upper()
+            descripcion = self.txtDescripcion.toPlainText().upper()
         
-        #codigo = self.txtCodigo.text().upper()
-        nombre = self.txtNombre.text().upper()
-        descripcion = self.txtDescripcion.toPlainText().upper()
         
-        
-        if  not nombre:
+            if  not nombre:
     
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            
+            else:
+                insertar_nueva_categoria(nombre, descripcion)
+        
+                self.visualiza_datos()
+        
+        
+                #Limpia los TexBox
+                self.txtNombre.setText("")
+                self.txtDescripcion.setPlainText("")
+                self.txtNombre.setFocus()
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Faltan datos importantes")
-            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
-            
-            
-        else:
-            insertar_nueva_categoria(nombre, descripcion)
-        
-            self.visualiza_datos()
-        
-        
-            #Limpia los TexBox
-            self.txtNombre.setText("")
-            self.txtDescripcion.setPlainText("")
-            self.txtNombre.setFocus()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------

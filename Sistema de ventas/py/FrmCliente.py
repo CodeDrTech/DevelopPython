@@ -34,42 +34,49 @@ class VentanaCliente(QMainWindow):
     def insertar_datos(self):
         
         
-        
-        nombre = self.txtNombre.text().upper()
-        apellidos = self.txtApellidos.text().upper()
-        sexo = self.cmbSexo.currentText()
-        fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
-        tipo_doc = self.cmbTipoDocumento.currentText().upper()
-        numdocumento = self.txtNumDocumento.text().upper()
-        direccion = self.txtDireccion.toPlainText().upper()
-        telefono = int(self.txtTelefono.text())
-        email = self.txtEmail.text()
+        try:
+            nombre = self.txtNombre.text().upper()
+            apellidos = self.txtApellidos.text().upper()
+            sexo = self.cmbSexo.currentText()
+            fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            tipo_doc = self.cmbTipoDocumento.currentText().upper()
+            numdocumento = self.txtNumDocumento.text().upper()
+            direccion = self.txtDireccion.toPlainText().upper()
+            telefono = int(self.txtTelefono.text())
+            email = self.txtEmail.text()
                 
-        if  not nombre or not tipo_doc or not numdocumento :
+            if  not nombre or not tipo_doc or not numdocumento :
     
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            
+            else:
+                insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email)
+        
+                self.visualiza_datos()
+        
+        
+                #Limpia los TexBox
+                nombre = self.txtNombre.setText("")
+                apellidos = self.txtApellidos.setText("")
+                sexo = self.cmbSexo.setCurrentText("") 
+                tipo_doc = self.cmbTipoDocumento.setCurrentText("")
+                numdocumento = self.txtNumDocumento.setText("")
+                direccion = self.txtDireccion.setPlainText("")
+                telefono = self.txtTelefono.setText("")
+                email = self.txtEmail.setText("")
+                self.txtNombre.setFocus()
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Faltan datos importantes")
-            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
-            
-            
-        else:
-            insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email)
-        
-            self.visualiza_datos()
-        
-        
-            #Limpia los TexBox
-            nombre = self.txtNombre.setText("")
-            apellidos = self.txtApellidos.setText("")
-            sexo = self.cmbSexo.setCurrentText("") 
-            tipo_doc = self.cmbTipoDocumento.setCurrentText("")
-            numdocumento = self.txtNumDocumento.setText("")
-            direccion = self.txtDireccion.setPlainText("")
-            telefono = self.txtTelefono.setText("")
-            email = self.txtEmail.setText("")
-            self.txtNombre.setFocus()
             
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos

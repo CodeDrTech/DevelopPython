@@ -30,41 +30,48 @@ class VentanaProveedor(QMainWindow):
     def insertar_datos(self):
         
         
-        
-        razon_soc = self.txtRazonSocial.text().upper()
-        sector_com = self.cmbSectorComercial.currentText().upper()
-        tipo_doc = self.cmbTipoDocumento.currentText()
-        numdocumento = self.txtNumDocumento.text().upper()
-        direccion = self.txtDireccion.toPlainText().upper()
-        telefono = int(self.txtTelefono.text())
-        email = self.txtEmail.text()
-        url = self.txtUrl.text()
+        try:
+            razon_soc = self.txtRazonSocial.text().upper()
+            sector_com = self.cmbSectorComercial.currentText().upper()
+            tipo_doc = self.cmbTipoDocumento.currentText()
+            numdocumento = self.txtNumDocumento.text().upper()
+            direccion = self.txtDireccion.toPlainText().upper()
+            telefono = int(self.txtTelefono.text())
+            email = self.txtEmail.text()
+            url = self.txtUrl.text()
                 
-        if  not razon_soc or not sector_com or not tipo_doc or not numdocumento or not direccion:
+            if  not razon_soc or not sector_com or not tipo_doc or not numdocumento or not direccion:
     
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            
+            else:
+                insertar_nuevo_proveedor(razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url)
+        
+                self.visualiza_datos()
+        
+        
+                #Limpia los TexBox
+                razon_soc = self.txtRazonSocial.setText("")
+                sector_com = self.cmbSectorComercial.setCurrentText("")
+                tipo_doc = self.cmbTipoDocumento.setCurrentText("")
+                numdocumento = self.txtNumDocumento.setText("")
+                direccion = self.txtDireccion.setPlainText("")
+                telefono = self.txtTelefono.setText("")
+                email = self.txtEmail.setText("")
+                url = self.txtUrl.text()
+                self.txtRazonSocial.setFocus()
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Faltan datos importantes")
-            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
-            
-            
-        else:
-            insertar_nuevo_proveedor(razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url)
-        
-            self.visualiza_datos()
-        
-        
-            #Limpia los TexBox
-            razon_soc = self.txtRazonSocial.setText("")
-            sector_com = self.cmbSectorComercial.setCurrentText("")
-            tipo_doc = self.cmbTipoDocumento.setCurrentText("")
-            numdocumento = self.txtNumDocumento.setText("")
-            direccion = self.txtDireccion.setPlainText("")
-            telefono = self.txtTelefono.setText("")
-            email = self.txtEmail.setText("")
-            url = self.txtUrl.text()
-            self.txtRazonSocial.setFocus()
             
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos

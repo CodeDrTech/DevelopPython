@@ -31,47 +31,54 @@ class VentanaEmpleado(QMainWindow):
     def insertar_datos(self):
         
         
-        
-        nombre = self.txtNombre.text().upper()
-        apellidos = self.txtApellidos.text().upper()
-        sexo = self.cmbSexo.currentText()
-        fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
-        numdocumento = self.txtNumDocumento.text().upper()
-        direccion = self.txtDireccion.toPlainText().upper()
-        telefono = int(self.txtTelefono.text())
-        email = self.txtEmail.text()
-        acceso = self.cmbAcceso.currentText()
-        usuario = self.txtUsuario.text()
-        password = self.txtPassword.text()
+        try:
+            nombre = self.txtNombre.text().upper()
+            apellidos = self.txtApellidos.text().upper()
+            sexo = self.cmbSexo.currentText()
+            fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            numdocumento = self.txtNumDocumento.text().upper()
+            direccion = self.txtDireccion.toPlainText().upper()
+            telefono = int(self.txtTelefono.text())
+            email = self.txtEmail.text()
+            acceso = self.cmbAcceso.currentText()
+            usuario = self.txtUsuario.text()
+            password = self.txtPassword.text()
                 
-        if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
+            if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
     
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            
+            else:
+                insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
+        
+                self.visualiza_datos()
+        
+        
+                #Limpia los TexBox
+                nombre = self.txtNombre.setText("")
+                apellidos = self.txtApellidos.setText("")
+                sexo = self.cmbSexo.setCurrentText("") 
+                #fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
+                numdocumento = self.txtNumDocumento.setText("")
+                direccion = self.txtDireccion.setPlainText("")
+                telefono = self.txtTelefono.setText("")
+                email = self.txtEmail.setText("")
+                acceso = self.cmbAcceso.setCurrentText("") 
+                usuario = self.txtUsuario.setText("")
+                password = self.txtPassword.setText("")
+                self.txtNombre.setFocus()
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Faltan datos importantes")
-            mensaje.setText("Por favor, complete todos los campos.")
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
-            
-            
-        else:
-            insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
-        
-            self.visualiza_datos()
-        
-        
-            #Limpia los TexBox
-            nombre = self.txtNombre.setText("")
-            apellidos = self.txtApellidos.setText("")
-            sexo = self.cmbSexo.setCurrentText("") 
-            #fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
-            numdocumento = self.txtNumDocumento.setText("")
-            direccion = self.txtDireccion.setPlainText("")
-            telefono = self.txtTelefono.setText("")
-            email = self.txtEmail.setText("")
-            acceso = self.cmbAcceso.setCurrentText("") 
-            usuario = self.txtUsuario.setText("")
-            password = self.txtPassword.setText("")
-            self.txtNombre.setFocus()
             
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
