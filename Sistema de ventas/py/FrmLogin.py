@@ -43,16 +43,23 @@ class VentanaLogin(QMainWindow):
     def obtener_codigo_empleado(self, usuario):
         model = QSqlTableModel()
         model.setTable('empleado')
-        model.setFilter(f"usuario='{usuario}'")
+        #model.setFilter(f"usuario='{usuario.strip()}'")
+
         model.select()
         
             
-        if model.rowCount() > 0:
-            # Obtén la fila del primer registro que cumple con la condición
-            fila = model.index(0, 9).row()
-            return fila
-        else:
-            return None
+        # Encuentra el índice de la columna "usuario"
+        usuario_column_index = model.fieldIndex("usuario")
+    
+        # Itera a través de las filas para encontrar el usuario
+        for row in range(model.rowCount()):
+            index = model.index(row, usuario_column_index)
+            if model.data(index) == usuario:
+                # Si se encuentra el usuario, devuelve el número de fila
+                return row
+    
+        # Si no se encuentra el usuario, devuelve None
+        return None
         
         
 #------------------------------------------------------------------------------------------------------
@@ -68,24 +75,30 @@ class VentanaLogin(QMainWindow):
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
 
-        #if modelo is not None and 0 <= fila_seleccionada < modelo.rowCount():
-        # Obtener los datos de la fila seleccionada
-        columna_9 = modelo.index(fila_id, 9).data()
-        columna_10 = modelo.index(fila_id, 10).data()
-        columna_11 = modelo.index(fila_id, 11).data()
+        if modelo is not None and 0 <= fila_id < modelo.rowCount():
+            # Obtener los datos de la fila seleccionada
+            columna_9 = modelo.index(fila_id, 9).data()
+            columna_10 = modelo.index(fila_id, 10).data()
+            columna_11 = modelo.index(fila_id, 11).data()
             
 
-        self.valor_columna_9 = columna_9
-        self.valor_columna_10 = columna_10
-        self.valor_columna_11 = columna_11    
+            self.valor_columna_9 = columna_9
+            self.valor_columna_10 = columna_10
+            self.valor_columna_11 = columna_11    
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def validar_usuario(self):
         usuario = self.txtUsuario.text()
         fila = self.obtener_codigo_empleado(usuario)
-        usuario_comp = self.obtener_datos_de_fila(fila)
+        self.obtener_datos_de_fila(fila)
+        
+        print(self.valor_columna_9)
+        print(self.valor_columna_10)
+        print(self.valor_columna_11)
         print(fila)
+        
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
