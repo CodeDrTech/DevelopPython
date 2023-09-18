@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
@@ -20,6 +20,7 @@ class VentanaLogin(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         
+        self.setTabOrder(self.txtUsuario, self.txtPassword)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -76,6 +77,7 @@ class VentanaLogin(QMainWindow):
         modelo = self.tbDatos.model()
 
         if modelo is not None and 0 <= fila_id < modelo.rowCount():
+            
             # Obtener los datos de la fila seleccionada
             columna_9 = modelo.index(fila_id, 9).data()
             columna_10 = modelo.index(fila_id, 10).data()
@@ -84,20 +86,42 @@ class VentanaLogin(QMainWindow):
 
             self.valor_columna_9 = columna_9
             self.valor_columna_10 = columna_10
-            self.valor_columna_11 = columna_11    
-
+            self.valor_columna_11 = columna_11
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def validar_usuario(self):
+        password = self.txtPassword.text()
         usuario = self.txtUsuario.text()
-        fila = self.obtener_codigo_empleado(usuario)
-        self.obtener_datos_de_fila(fila)
         
-        print(self.valor_columna_9)
-        print(self.valor_columna_10)
-        print(self.valor_columna_11)
-        print(fila)
+        try:
+            fila = self.obtener_codigo_empleado(usuario)
+            self.obtener_datos_de_fila(fila)
+            bd_acceso = self.valor_columna_9
+            bd_usuario = self.valor_columna_10
+            bd_password = self.valor_columna_11
         
+        
+            if not usuario or not password:
+            
+            
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            else:    
+                if usuario == bd_usuario and password == bd_password:
+                    print("Usuario correcto")
+                else:
+                    print("Usuario incorrecto")
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
+            mensaje.exec_()
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
