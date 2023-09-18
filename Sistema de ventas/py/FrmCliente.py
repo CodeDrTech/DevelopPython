@@ -59,7 +59,14 @@ class VentanaCliente(QMainWindow):
         
                 self.visualiza_datos()
         
-        
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar cliente")
+                mensaje.setText("cliente registrado.")
+                mensaje.exec_()
+                
+                
                 #Limpia los TexBox
                 nombre = self.txtNombre.setText("")
                 apellidos = self.txtApellidos.setText("")

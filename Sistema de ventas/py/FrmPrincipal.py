@@ -32,6 +32,9 @@ class VentanaPrincipal(QMainWindow):
         self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
         self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
         self.actionClientes.triggered.connect(self.abrirFrmClientes)
+        
+        
+        #self.actionCategorias.setEnabled(False)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def abrirFrmEmpleados(self):

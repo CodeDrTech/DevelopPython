@@ -38,7 +38,7 @@ class VentanaEmpleado(QMainWindow):
             fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
             numdocumento = self.txtNumDocumento.text().upper()
             direccion = self.txtDireccion.toPlainText().upper()
-            telefono = int(self.txtTelefono.text())
+            telefono = self.txtTelefono.text()
             email = self.txtEmail.text()
             acceso = self.cmbAcceso.currentText()
             usuario = self.txtUsuario.text()
@@ -58,7 +58,13 @@ class VentanaEmpleado(QMainWindow):
         
                 self.visualiza_datos()
         
-        
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar empleado")
+                mensaje.setText("Empleado registrad.")
+                mensaje.exec_()
+                
                 #Limpia los TexBox
                 nombre = self.txtNombre.setText("")
                 apellidos = self.txtApellidos.setText("")

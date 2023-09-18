@@ -54,7 +54,14 @@ class VentanaProveedor(QMainWindow):
         
                 self.visualiza_datos()
         
-        
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar proveedor")
+                mensaje.setText("Proveedor registrado.")
+                mensaje.exec_()
+                
+                
                 #Limpia los TexBox
                 razon_soc = self.txtRazonSocial.setText("")
                 sector_com = self.cmbSectorComercial.setCurrentText("")

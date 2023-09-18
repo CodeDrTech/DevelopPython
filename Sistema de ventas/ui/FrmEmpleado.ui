@@ -654,6 +654,9 @@ QLineEdit::placeholder {
 
 </string>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLineEdit" name="txtNombre">
        <property name="geometry">
@@ -1636,6 +1639,15 @@ QLineEdit::placeholder {
 }
 
 </string>
+       </property>
+       <property name="inputMask">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Normal</enum>
        </property>
       </widget>
      </widget>

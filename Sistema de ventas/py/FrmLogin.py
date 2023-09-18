@@ -3,6 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui
 from PyQt5.QtCore import QDateTime
+from FrmPrincipal import VentanaPrincipal
 
 class VentanaLogin(QMainWindow):    
     def __init__(self):
@@ -34,7 +35,7 @@ class VentanaLogin(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
-                
+        self.tbDatos.hide()        
         fecha_hora = QDateTime.currentDateTime()
         self.txtFecha.setDateTime(fecha_hora)
         self.txtUsuario.setFocus()

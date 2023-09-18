@@ -83,7 +83,14 @@ class VentanaPresentacion(QMainWindow):
         
                 self.visualiza_datos()
         
-        
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar presentacion")
+                mensaje.setText("presentacion registrada.")
+                mensaje.exec_()
+                
+                
                 #Limpia los TexBox
                 self.txtNombre.setText("")
                 self.txtDescripcion.setPlainText("")

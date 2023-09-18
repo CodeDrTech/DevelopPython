@@ -236,6 +236,9 @@ QLineEdit::placeholder {
 
 </string>
      </property>
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
     </widget>
     <widget class="QLineEdit" name="txtUsuario">
      <property name="geometry">
@@ -365,6 +368,63 @@ QLabel {
       <string>Usuario:</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QTableView" name="tbDatos">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>175</width>
+      <height>165</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTableView {
+    background-color: #9a9a9a;
+    border: 1px solid #cccccc;
+    selection-background-color: #3498db;
+    selection-color: #ffffff;
+}
+
+QTableView QHeaderView {
+    background-color: #d3d3d3;
+    color: #333333;
+    border: none;
+}
+
+QTableView QHeaderView::section {
+    background-color: #bbbbbb;
+    color: #333333;
+    padding: 6px;
+    border: 1px solid #cccccc;
+}
+
+QTableView QHeaderView::section:checked {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+QTableView::item {
+    padding: 6px;
+}
+
+QTableView::item:selected {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+QTableView::item:focus {
+    background-color: #3498db;
+    color: #ffffff;
+    outline: none;
+}
+
+QTableView::item:hover {
+    background-color: #d3d3d3;
+    color: #333333;
+}
+</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
