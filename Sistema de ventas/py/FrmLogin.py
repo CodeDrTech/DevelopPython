@@ -24,7 +24,7 @@ class VentanaLogin(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         self.btnSalir.clicked.connect(self.fn_Salir)
-        self.btnIngresar.clicked.connect(self.obtener_codigo_empleado)
+        self.btnIngresar.clicked.connect(self.validar_usuario)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
@@ -40,15 +40,15 @@ class VentanaLogin(QMainWindow):
         self.tbDatos.resizeColumnsToContents()    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
-    def obtener_datos_de_fila(self, fila_seleccionada):
+    def obtener_datos_de_fila(self, fila_id):
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
 
         #if modelo is not None and 0 <= fila_seleccionada < modelo.rowCount():
         # Obtener los datos de la fila seleccionada
-        columna_9 = modelo.index(fila_seleccionada, 9).data()
-        columna_10 = modelo.index(fila_seleccionada, 10).data()
-        columna_11 = modelo.index(fila_seleccionada, 11).data()
+        columna_9 = modelo.index(fila_id, 9).data()
+        columna_10 = modelo.index(fila_id, 10).data()
+        columna_11 = modelo.index(fila_id, 11).data()
             
 
         self.valor_columna_9 = columna_9
@@ -63,11 +63,8 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.show()
         self.fn_Salir()
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-        
-        dato = "admin"
-        self.obtener_codigo_empleado(dato)
-        
+#------------------------------------------------------------------------------------------------------            
+            
     def obtener_codigo_empleado(self, usuario):
         model = QSqlTableModel()
         model.setTable('empleado')
@@ -85,6 +82,13 @@ class VentanaLogin(QMainWindow):
         
         
 
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def validar_usuario(self):
+        usuario = self.txtUsuario.text()
+        id_empleado = self.obtener_codigo_empleado(usuario)
+        usuario_comp = self.obtener_datos_de_fila(id_empleado)
+        print(usuario_comp)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
