@@ -40,6 +40,32 @@ class VentanaLogin(QMainWindow):
         self.tbDatos.resizeColumnsToContents()    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
+    def obtener_codigo_empleado(self, usuario):
+        model = QSqlTableModel()
+        model.setTable('empleado')
+        model.setFilter(f"usuario='{usuario}'")
+        model.select()
+        
+            
+        #acceso = ""
+        if model.rowCount() > 0:
+            acceso = model.data(model.index(0, 10))
+
+            #self.txtExistencia.setText(str(acceso))
+            return acceso 
+        else:
+            return None
+        
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------     
+    def abrirFrmPrincipal(self):
+        self.llamar_venana_principal = VentanaPrincipal()
+        self.llamar_venana_principal.show()
+        self.fn_Salir()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------      
+        
     def obtener_datos_de_fila(self, fila_id):
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
@@ -53,42 +79,15 @@ class VentanaLogin(QMainWindow):
 
         self.valor_columna_9 = columna_9
         self.valor_columna_10 = columna_10
-        self.valor_columna_11 = columna_11
-        
-        
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------     
-    def abrirFrmPrincipal(self):
-        self.llamar_venana_principal = VentanaPrincipal()
-        self.llamar_venana_principal.show()
-        self.fn_Salir()
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------            
-            
-    def obtener_codigo_empleado(self, usuario):
-        model = QSqlTableModel()
-        model.setTable('empleado')
-        model.setFilter(f"usuario='{usuario}'")
-        model.select()
-        
-            
-        if model.rowCount() > 0:
-            # Suponemos que el ID está en la columna 0
-            empleado_id = model.data(model.index(0, 0))
-            return empleado_id
-        else:
-            return None
-        
-        
-        
+        self.valor_columna_11 = columna_11    
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def validar_usuario(self):
         usuario = self.txtUsuario.text()
-        id_empleado = self.obtener_codigo_empleado(usuario)
-        usuario_comp = self.obtener_datos_de_fila(id_empleado)
-        print(usuario_comp)
+        fila = self.obtener_codigo_empleado(usuario)
+        usuario_comp = self.obtener_datos_de_fila(fila)
+        print(fila)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
