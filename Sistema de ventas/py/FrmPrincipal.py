@@ -21,6 +21,10 @@ class VentanaPrincipal(QMainWindow):
         self.setWindowTitle('.:. Sistema de Ventas .:.')
         #self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        
+    def etiqueta_usuario(self, etiqueta):
+        nombre = etiqueta
+        self.lblEmpleado.setText(nombre)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         

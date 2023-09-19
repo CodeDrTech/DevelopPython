@@ -81,10 +81,6 @@ class VentanaEmpleado(QMainWindow):
             password = self.txtPassword.text()
             usuario = self.txtUsuario.text()
             
-            validacion = self.obtener_codigo_empleado(usuario)
-            self.obtener_datos_de_fila(validacion)
-            bd_usuario = self.valor_columna_10
-            
                 
             if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
     
@@ -97,7 +93,11 @@ class VentanaEmpleado(QMainWindow):
                 
             
             
-            else: 
+            else:
+                fila = self.obtener_codigo_empleado(usuario)
+                self.obtener_datos_de_fila(fila)
+                bd_usuario = self.valor_columna_10
+                 
                 if usuario == bd_usuario:
                     mensaje = QMessageBox()
                     mensaje.setIcon(QMessageBox.Critical)

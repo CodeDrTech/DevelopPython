@@ -24,9 +24,9 @@
     <property name="geometry">
      <rect>
       <x>9</x>
-      <y>0</y>
+      <y>20</y>
       <width>1900</width>
-      <height>941</height>
+      <height>900</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -36,6 +36,66 @@
      </sizepolicy>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Usuario:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblEmpleado">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>0</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Empleado</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -43,7 +103,7 @@
      <x>0</x>
      <y>0</y>
      <width>1236</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSistema">

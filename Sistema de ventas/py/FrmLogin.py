@@ -83,6 +83,11 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.show()
         
         self.fn_Salir()
+        
+        
+    def mandar_nombre_usuario(self, nombre_usuario):
+        self.llamar_venana_principal = VentanaPrincipal()
+        self.llamar_venana_principal.etiqueta_usuario(nombre_usuario)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------      
         
@@ -93,11 +98,12 @@ class VentanaLogin(QMainWindow):
         if modelo is not None and 0 <= fila_id < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
+            columna_1 = modelo.index(fila_id, 1).data()
             columna_9 = modelo.index(fila_id, 9).data()
             columna_10 = modelo.index(fila_id, 10).data()
             columna_11 = modelo.index(fila_id, 11).data()
             
-
+            self.valor_columna_1 = columna_1
             self.valor_columna_9 = columna_9
             self.valor_columna_10 = columna_10
             self.valor_columna_11 = columna_11
@@ -110,6 +116,7 @@ class VentanaLogin(QMainWindow):
         try:
             fila = self.obtener_codigo_empleado(usuario)
             self.obtener_datos_de_fila(fila)
+            saludo = str(self.valor_columna_1)
             bd_acceso = self.valor_columna_9
             bd_usuario = self.valor_columna_10
             bd_password = self.valor_columna_11
@@ -127,7 +134,9 @@ class VentanaLogin(QMainWindow):
             else:
                 if bd_acceso == "Administrador":    
                     if usuario == bd_usuario and password == bd_password:
+                        self.mandar_nombre_usuario(saludo)
                         self.abrir_FrmPrincipal_admin()
+                        
                     else:
                         mensaje = QMessageBox()
                         mensaje.setIcon(QMessageBox.Critical)
