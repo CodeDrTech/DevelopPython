@@ -23,8 +23,8 @@ class VentanaPrincipal(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
     def etiqueta_usuario(self, etiqueta):
-        nombre = etiqueta
-        self.lblEmpleado.setText(nombre)
+        
+        self.lblEmpleado.setText(etiqueta)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         
@@ -182,7 +182,11 @@ class VentanaPrincipal(QMainWindow):
     def fn_Salir(self):
         self.close()
         
-    
+    def showEvent(self, event):
+        super().showEvent(event)
+        
+        
+        
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
