@@ -44,8 +44,6 @@ class VentanaLogin(QMainWindow):
     def obtener_codigo_empleado(self, usuario):
         model = QSqlTableModel()
         model.setTable('empleado')
-        #model.setFilter(f"usuario='{usuario.strip()}'")
-
         model.select()
         
             

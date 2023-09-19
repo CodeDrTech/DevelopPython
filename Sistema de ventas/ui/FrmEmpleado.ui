@@ -537,6 +537,9 @@ QPushButton:pressed {
        <property name="text">
         <string>Guardar</string>
        </property>
+       <property name="shortcut">
+        <string>Return</string>
+       </property>
       </widget>
       <widget class="QPushButton" name="btnSalir">
        <property name="geometry">
@@ -839,7 +842,7 @@ QLabel {
 }</string>
        </property>
        <property name="text">
-        <string>Apeliddos</string>
+        <string>Apellidos</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_7">

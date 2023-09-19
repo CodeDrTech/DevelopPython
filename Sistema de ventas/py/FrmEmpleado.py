@@ -27,8 +27,45 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     # Funciones conectadas a los botones
+    
+    def obtener_codigo_empleado(self, usuario):
+        model = QSqlTableModel()
+        model.setTable('empleado')
+        model.select()
+        
+            
+        # Encuentra el índice de la columna "usuario"
+        usuario_column_index = model.fieldIndex("usuario")
+    
+        # Itera a través de las filas para encontrar el usuario
+        for row in range(model.rowCount()):
+            index = model.index(row, usuario_column_index)
+            if model.data(index) == usuario:
+                # Si se encuentra el usuario, devuelve el número de fila
+                return row
+    
+        # Si no se encuentra el usuario, devuelve None
+        return None
+    
+    def obtener_datos_de_fila(self, fila_id):
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbDatos.model()
+
+        if modelo is not None and 0 <= fila_id < modelo.rowCount():
+            
+            # Obtener los datos de la fila seleccionada
+            columna_9 = modelo.index(fila_id, 9).data()
+            columna_10 = modelo.index(fila_id, 10).data()
+            columna_11 = modelo.index(fila_id, 11).data()
+            
+
+            self.valor_columna_9 = columna_9
+            self.valor_columna_10 = columna_10
+            self.valor_columna_11 = columna_11
+    
         
     def insertar_datos(self):
+        
         
         
         try:
@@ -40,9 +77,14 @@ class VentanaEmpleado(QMainWindow):
             direccion = self.txtDireccion.toPlainText().upper()
             telefono = self.txtTelefono.text()
             email = self.txtEmail.text()
-            acceso = self.cmbAcceso.currentText()
-            usuario = self.txtUsuario.text()
+            acceso = self.cmbAcceso.currentText()            
             password = self.txtPassword.text()
+            usuario = self.txtUsuario.text()
+            
+            validacion = self.obtener_codigo_empleado(usuario)
+            self.obtener_datos_de_fila(validacion)
+            bd_usuario = self.valor_columna_10
+            
                 
             if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
     
@@ -51,33 +93,45 @@ class VentanaEmpleado(QMainWindow):
                 mensaje.setWindowTitle("Faltan datos importantes")
                 mensaje.setText("Por favor, complete todos los campos.")
                 mensaje.exec_()
+
+                
             
             
-            else:
-                insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
+            else: 
+                if usuario == bd_usuario:
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Critical)
+                    mensaje.setWindowTitle("Usuario repetido")
+                    mensaje.setText("Por favor, usar otro nombre de usuario.")
+                    mensaje.exec_()
+                    self.txtUsuario.setText("")
+                    self.txtUsuario.setFocus()
+                    
+                else:
+                    insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
         
-                self.visualiza_datos()
+                    self.visualiza_datos()
         
 
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Agregar empleado")
-                mensaje.setText("Empleado registrado.")
-                mensaje.exec_()
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Critical)
+                    mensaje.setWindowTitle("Agregar empleado")
+                    mensaje.setText("Empleado registrado.")
+                    mensaje.exec_()
                 
-                #Limpia los TexBox
-                nombre = self.txtNombre.setText("")
-                apellidos = self.txtApellidos.setText("")
-                sexo = self.cmbSexo.setCurrentText("") 
-                #fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
-                numdocumento = self.txtNumDocumento.setText("")
-                direccion = self.txtDireccion.setPlainText("")
-                telefono = self.txtTelefono.setText("")
-                email = self.txtEmail.setText("")
-                acceso = self.cmbAcceso.setCurrentText("") 
-                usuario = self.txtUsuario.setText("")
-                password = self.txtPassword.setText("")
-                self.txtNombre.setFocus()
+                    #Limpia los TexBox
+                    self.txtNombre.setText("")
+                    self.txtApellidos.setText("")
+                    self.cmbSexo.setCurrentText("") 
+                    #self.txtFechaNac.date().toString("yyyy-MM-dd")
+                    self.txtNumDocumento.setText("")
+                    self.txtDireccion.setPlainText("")
+                    self.txtTelefono.setText("")
+                    self.txtEmail.setText("")
+                    self.cmbAcceso.setCurrentText("") 
+                    self.txtUsuario.setText("")
+                    self.txtPassword.setText("")
+                    self.txtNombre.setFocus()
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
