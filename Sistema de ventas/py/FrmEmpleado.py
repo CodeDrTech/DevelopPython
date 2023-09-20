@@ -28,7 +28,7 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     # Funciones conectadas a los botones
     
-    def obtener_codigo_empleado(self, usuario):
+    def obtener_fila_empleado(self, usuario_del_formulario):
         model = QSqlTableModel()
         model.setTable('empleado')
         model.select()
@@ -40,32 +40,32 @@ class VentanaEmpleado(QMainWindow):
         # Itera a través de las filas para encontrar el usuario
         for row in range(model.rowCount()):
             index = model.index(row, usuario_column_index)
-            if model.data(index) == usuario:
+            if model.data(index) == usuario_del_formulario:
                 # Si se encuentra el usuario, devuelve el número de fila
                 return row
     
         # Si no se encuentra el usuario, devuelve None
         return None
     
-    def obtener_datos_de_fila(self, fila_id):
+    def obtener_datos_de_fila(self, fila_del_usuario):
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
 
-        if modelo is not None and 0 <= fila_id < modelo.rowCount():
+        if modelo is not None and 0 <= fila_del_usuario < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
-            columna_9 = modelo.index(fila_id, 9).data()
-            columna_10 = modelo.index(fila_id, 10).data()
-            columna_11 = modelo.index(fila_id, 11).data()
+            columna_9 = modelo.index(fila_del_usuario, 9).data()
+            columna_10 = modelo.index(fila_del_usuario, 10).data()
+            columna_11 = modelo.index(fila_del_usuario, 11).data()
             
 
             self.valor_columna_9 = columna_9
             self.valor_columna_10 = columna_10
             self.valor_columna_11 = columna_11
     
-    def evaluar_usuario(self, usuario):
+    def evaluar_usuario(self, usuario_ingresado):
         
-        fila = self.obtener_codigo_empleado(usuario)
+        fila = self.obtener_fila_empleado(usuario_ingresado)
         self.obtener_datos_de_fila(fila)
         bd_usuario = self.valor_columna_10
         return bd_usuario
