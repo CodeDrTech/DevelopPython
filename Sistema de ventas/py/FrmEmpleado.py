@@ -56,12 +56,12 @@ class VentanaEmpleado(QMainWindow):
             self.txtPassword.setText("")
             self.txtNombre.setFocus()
         except Exception as e:
-                # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Error")
-                mensaje.setText(f"Se produjo un error: {str(e)}")
-                mensaje.exec_()
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
+            mensaje.exec_()
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
@@ -113,9 +113,9 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
     def obtener_datos_de_fila(self, fila_del_usuario):
+        
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
-
         if modelo is not None and 0 <= fila_del_usuario < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
@@ -127,6 +127,7 @@ class VentanaEmpleado(QMainWindow):
             self.valor_columna_9 = columna_9
             self.valor_columna_10 = columna_10
             self.valor_columna_11 = columna_11
+            
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
@@ -143,12 +144,15 @@ class VentanaEmpleado(QMainWindow):
         acceso = self.cmbAcceso.currentText()            
         password = self.txtPassword.text()
         usuario = self.txtUsuario.text()
-        try:
+        
+        try:            
             fila = self.obtener_fila_empleado(usuario)
             self.obtener_datos_de_fila(fila)
-            bd_usuario = self.valor_columna_10            
+            bd_usuario = self.valor_columna_10
+            
+            
             if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
-    
+                
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("Faltan datos importantes")

@@ -95,7 +95,6 @@ class VentanaLogin(QMainWindow):
     def obtener_datos_de_fila(self, fila_id):
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
-
         if modelo is not None and 0 <= fila_id < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
