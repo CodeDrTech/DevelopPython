@@ -23,11 +23,96 @@ class VentanaEmpleado(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
         self.btnSalir.clicked.connect(self.fn_Salir)
+        self.btnEliminar.clicked.connect(self.borrar_fila)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     # Funciones conectadas a los botones
     
+    def insertar_datos(self):
+        try:
+            nombre = self.txtNombre.text().upper()
+            apellidos = self.txtApellidos.text().upper()
+            sexo = self.cmbSexo.currentText()
+            fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            numdocumento = self.txtNumDocumento.text()
+            direccion = self.txtDireccion.toPlainText().upper()
+            telefono = self.txtTelefono.text()
+            email = self.txtEmail.text()
+            acceso = self.cmbAcceso.currentText()            
+            password = self.txtPassword.text()
+            usuario = self.txtUsuario.text()
+                    
+            if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
+    
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+                        
+            else:
+                self.evaluar_usuario()                            
+                insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
+        
+                self.visualiza_datos()
+        
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar empleado")
+                mensaje.setText("Empleado registrado.")
+                mensaje.exec_()
+                
+                #Limpia los TexBox
+                self.txtNombre.setText("")
+                self.txtApellidos.setText("")
+                self.cmbSexo.setCurrentText("")
+                self.txtNumDocumento.setText("")
+                self.txtDireccion.setPlainText("")
+                self.txtTelefono.setText("")
+                self.txtEmail.setText("")
+                self.cmbAcceso.setCurrentText("") 
+                self.txtUsuario.setText("")
+                self.txtPassword.setText("")
+                self.txtNombre.setFocus()
+        except Exception as e:
+                # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Error")
+                mensaje.setText(f"Se produjo un error: {str(e)}")
+                mensaje.exec_()
+    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------ 
+    def borrar_fila(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbDatos.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener la fila al seleccionar una celda de la tabla
+            index = indexes[0]
+            row = index.row()
+            
+            # Preguntar si el usuario está seguro de eliminar la fila
+            confirmacion = QMessageBox.question(self, "¿ELIMINAR?", "¿ESTA SEGURO QUE QUIERE ELIMINAR ESTA FILA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", eliminar la fila
+            if confirmacion == QMessageBox.Yes:
+                # Eliminar la fila seleccionada del modelo de datos
+                model = self.tbDatos.model()
+                model.removeRow(row)
+                QMessageBox.warning(self, "ELIMINADA", "FILA ELIMINADA.")
+                self.visualiza_datos()
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA LA FILA QUE VAS A ELIMINAR.")
+            
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------             
     def obtener_fila_empleado(self, usuario_del_formulario):
         model = QSqlTableModel()
         model.setTable('empleado')
@@ -46,7 +131,8 @@ class VentanaEmpleado(QMainWindow):
     
         # Si no se encuentra el usuario, devuelve None
         return None
-    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
     def obtener_datos_de_fila(self, fila_del_usuario):
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
@@ -62,82 +148,28 @@ class VentanaEmpleado(QMainWindow):
             self.valor_columna_9 = columna_9
             self.valor_columna_10 = columna_10
             self.valor_columna_11 = columna_11
-    
-    def evaluar_usuario(self, usuario_ingresado):
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------     
+    def evaluar_usuario(self):
         
-        fila = self.obtener_fila_empleado(usuario_ingresado)
-        self.obtener_datos_de_fila(fila)
-        bd_usuario = self.valor_columna_10
-        return bd_usuario
-    
-        
-    def insertar_datos(self):
-        
-        
-        
+        usuario_ingresado = self.txtUsuario.text()
         try:
-            nombre = self.txtNombre.text().upper()
-            apellidos = self.txtApellidos.text().upper()
-            sexo = self.cmbSexo.currentText()
-            fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
-            numdocumento = self.txtNumDocumento.text()
-            direccion = self.txtDireccion.toPlainText().upper()
-            telefono = self.txtTelefono.text()
-            email = self.txtEmail.text()
-            acceso = self.cmbAcceso.currentText()            
-            password = self.txtPassword.text()
-            usuario = self.txtUsuario.text()
-            
-                
-            if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
+            fila = self.obtener_fila_empleado(usuario_ingresado)
+            self.obtener_datos_de_fila(fila)
+            bd_usuario = self.valor_columna_10
+        
     
+            #evaluar_usuario = self.evaluar_usuario(usuario)
+        
+            if bd_usuario == usuario_ingresado:                    
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Faltan datos importantes")
-                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.setWindowTitle("Usuario repetido")
+                mensaje.setText("Por favor, usar otro nombre de usuario.")
                 mensaje.exec_()
-
-                
+                self.txtUsuario.setText("")
+                self.txtUsuario.setFocus()
             
-            
-            else:
-                
-                resultado = self.evaluar_usuario(usuario)
-                
-                if usuario == resultado:
-                    
-                    mensaje = QMessageBox()
-                    mensaje.setIcon(QMessageBox.Critical)
-                    mensaje.setWindowTitle("Usuario repetido")
-                    mensaje.setText("Por favor, usar otro nombre de usuario.")
-                    mensaje.exec_()
-                    self.txtUsuario.setText("")
-                    self.txtUsuario.setFocus()
-                else:   
-                    
-                    insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
-        
-                    self.visualiza_datos()
-        
-
-                    mensaje = QMessageBox()
-                    mensaje.setIcon(QMessageBox.Critical)
-                    mensaje.setWindowTitle("Agregar empleado")
-                    mensaje.setText("Empleado registrado.")
-                    mensaje.exec_()
-                
-                    #Limpia los TexBox
-                    self.txtNombre.setText("")
-                    self.txtApellidos.setText("")
-                    self.cmbSexo.setCurrentText("")
-                    self.txtNumDocumento.setText("")
-                    self.txtDireccion.setPlainText("")
-                    self.txtTelefono.setText("")
-                    self.txtEmail.setText("")
-                    self.cmbAcceso.setCurrentText("") 
-                    self.txtUsuario.setText("")
-                    self.txtPassword.setText("")
-                    self.txtNombre.setFocus()
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
@@ -145,7 +177,8 @@ class VentanaEmpleado(QMainWindow):
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
-            
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------             
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()
@@ -162,7 +195,8 @@ class VentanaEmpleado(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()
         self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
     def editar_datos(self):
         self.listado()
         # Consulta SELECT * FROM Productos
@@ -174,7 +208,8 @@ class VentanaEmpleado(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()    
         self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
     def listado(self):
         self.tabWidget.setCurrentIndex(0)
 #------------------------------------------------------------------------------------------------------
@@ -188,7 +223,8 @@ class VentanaEmpleado(QMainWindow):
         
         model = QSqlTableModel()   
         self.visualiza_datos()
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
     def fn_Salir(self):
         # Preguntar si el usuario está seguro de cerrar la ventana
         confirmacion = QMessageBox.question(self, "", "¿ESTAS SEGURO QUE QUIERE CERRAR LA VENTANA?",
