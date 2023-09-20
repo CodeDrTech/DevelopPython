@@ -80,7 +80,7 @@ class VentanaEmpleado(QMainWindow):
             apellidos = self.txtApellidos.text().upper()
             sexo = self.cmbSexo.currentText()
             fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
-            numdocumento = self.txtNumDocumento.text().upper()
+            numdocumento = self.txtNumDocumento.text()
             direccion = self.txtDireccion.toPlainText().upper()
             telefono = self.txtTelefono.text()
             email = self.txtEmail.text()
@@ -103,6 +103,7 @@ class VentanaEmpleado(QMainWindow):
             else:
                 
                 resultado = self.evaluar_usuario(usuario)
+                
                 if usuario == resultado:
                     
                     mensaje = QMessageBox()
