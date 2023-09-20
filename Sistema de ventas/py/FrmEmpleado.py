@@ -63,6 +63,13 @@ class VentanaEmpleado(QMainWindow):
             self.valor_columna_10 = columna_10
             self.valor_columna_11 = columna_11
     
+    def evaluar_usuario(self, usuario):
+        
+        fila = self.obtener_codigo_empleado(usuario)
+        self.obtener_datos_de_fila(fila)
+        bd_usuario = self.valor_columna_10
+        return bd_usuario
+    
         
     def insertar_datos(self):
         
@@ -94,11 +101,10 @@ class VentanaEmpleado(QMainWindow):
             
             
             else:
-                fila = self.obtener_codigo_empleado(usuario)
-                self.obtener_datos_de_fila(fila)
-                bd_usuario = self.valor_columna_10
-                 
-                if usuario == bd_usuario:
+                
+                resultado = self.evaluar_usuario(usuario)
+                if usuario == resultado:
+                    
                     mensaje = QMessageBox()
                     mensaje.setIcon(QMessageBox.Critical)
                     mensaje.setWindowTitle("Usuario repetido")
@@ -106,8 +112,8 @@ class VentanaEmpleado(QMainWindow):
                     mensaje.exec_()
                     self.txtUsuario.setText("")
                     self.txtUsuario.setFocus()
+                else:   
                     
-                else:
                     insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
         
                     self.visualiza_datos()
@@ -122,8 +128,7 @@ class VentanaEmpleado(QMainWindow):
                     #Limpia los TexBox
                     self.txtNombre.setText("")
                     self.txtApellidos.setText("")
-                    self.cmbSexo.setCurrentText("") 
-                    #self.txtFechaNac.date().toString("yyyy-MM-dd")
+                    self.cmbSexo.setCurrentText("")
                     self.txtNumDocumento.setText("")
                     self.txtDireccion.setPlainText("")
                     self.txtTelefono.setText("")
