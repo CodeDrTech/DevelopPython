@@ -127,6 +127,7 @@ class VentanaEmpleado(QMainWindow):
             self.valor_columna_9 = columna_9
             self.valor_columna_10 = columna_10
             self.valor_columna_11 = columna_11
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
     def evaluar_usuario(self):
@@ -153,8 +154,7 @@ class VentanaEmpleado(QMainWindow):
                 mensaje.setWindowTitle("Faltan datos importantes")
                 mensaje.setText("Por favor, complete todos los campos.")
                 mensaje.exec_()
-            else:
-                if bd_usuario == usuario:                    
+            elif bd_usuario == usuario:                    
                     mensaje = QMessageBox()
                     mensaje.setIcon(QMessageBox.Critical)
                     mensaje.setWindowTitle("Usuario ya existe")
@@ -163,9 +163,8 @@ class VentanaEmpleado(QMainWindow):
                     self.txtUsuario.setText("")
                     self.txtUsuario.setFocus()
                 
-                else:
-                    if bd_usuario != usuario:
-                        self.insertar_datos(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
+            else:
+                self.insertar_datos(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
