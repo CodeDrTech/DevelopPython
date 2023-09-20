@@ -20,7 +20,7 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
-        self.btnGuardar.clicked.connect(self.insertar_datos)
+        self.btnGuardar.clicked.connect(self.evaluar_usuario)
         self.btnEditar.clicked.connect(self.editar_datos)
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnEliminar.clicked.connect(self.borrar_fila)
@@ -29,53 +29,32 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
     # Funciones conectadas a los botones
     
-    def insertar_datos(self):
+    def insertar_datos(self, nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password):
         try:
-            nombre = self.txtNombre.text().upper()
-            apellidos = self.txtApellidos.text().upper()
-            sexo = self.cmbSexo.currentText()
-            fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
-            numdocumento = self.txtNumDocumento.text()
-            direccion = self.txtDireccion.toPlainText().upper()
-            telefono = self.txtTelefono.text()
-            email = self.txtEmail.text()
-            acceso = self.cmbAcceso.currentText()            
-            password = self.txtPassword.text()
-            usuario = self.txtUsuario.text()
-                    
-            if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
-    
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Faltan datos importantes")
-                mensaje.setText("Por favor, complete todos los campos.")
-                mensaje.exec_()
-                        
-            else:
-                self.evaluar_usuario()                            
-                insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
+                                            
+            insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
         
-                self.visualiza_datos()
+            self.visualiza_datos()
         
 
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Agregar empleado")
-                mensaje.setText("Empleado registrado.")
-                mensaje.exec_()
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Agregar empleado")
+            mensaje.setText("Empleado registrado.")
+            mensaje.exec_()
                 
-                #Limpia los TexBox
-                self.txtNombre.setText("")
-                self.txtApellidos.setText("")
-                self.cmbSexo.setCurrentText("")
-                self.txtNumDocumento.setText("")
-                self.txtDireccion.setPlainText("")
-                self.txtTelefono.setText("")
-                self.txtEmail.setText("")
-                self.cmbAcceso.setCurrentText("") 
-                self.txtUsuario.setText("")
-                self.txtPassword.setText("")
-                self.txtNombre.setFocus()
+            #Limpia los TexBox
+            self.txtNombre.setText("")
+            self.txtApellidos.setText("")
+            self.cmbSexo.setCurrentText("")
+            self.txtNumDocumento.setText("")
+            self.txtDireccion.setPlainText("")
+            self.txtTelefono.setText("")
+            self.txtEmail.setText("")
+            self.cmbAcceso.setCurrentText("") 
+            self.txtUsuario.setText("")
+            self.txtPassword.setText("")
+            self.txtNombre.setFocus()
         except Exception as e:
                 # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
                 mensaje = QMessageBox()
@@ -152,24 +131,41 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------     
     def evaluar_usuario(self):
         
-        usuario_ingresado = self.txtUsuario.text()
+        nombre = self.txtNombre.text().upper()
+        apellidos = self.txtApellidos.text().upper()
+        sexo = self.cmbSexo.currentText()
+        fechanac = self.txtFechaNac.date().toString("yyyy-MM-dd")
+        numdocumento = self.txtNumDocumento.text()
+        direccion = self.txtDireccion.toPlainText().upper()
+        telefono = self.txtTelefono.text()
+        email = self.txtEmail.text()
+        acceso = self.cmbAcceso.currentText()            
+        password = self.txtPassword.text()
+        usuario = self.txtUsuario.text()
         try:
-            fila = self.obtener_fila_empleado(usuario_ingresado)
+            fila = self.obtener_fila_empleado(usuario)
             self.obtener_datos_de_fila(fila)
-            bd_usuario = self.valor_columna_10
-        
+            bd_usuario = self.valor_columna_10            
+            if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
     
-            #evaluar_usuario = self.evaluar_usuario(usuario)
-        
-            if bd_usuario == usuario_ingresado:                    
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Usuario repetido")
-                mensaje.setText("Por favor, usar otro nombre de usuario.")
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
                 mensaje.exec_()
-                self.txtUsuario.setText("")
-                self.txtUsuario.setFocus()
-            
+            else:
+                if bd_usuario == usuario:                    
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Critical)
+                    mensaje.setWindowTitle("Usuario ya existe")
+                    mensaje.setText(f"El usuario {usuario} pertenece a otra persona.")
+                    mensaje.exec_()
+                    self.txtUsuario.setText("")
+                    self.txtUsuario.setFocus()
+                
+                else:
+                    if bd_usuario != usuario:
+                        self.insertar_datos(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
