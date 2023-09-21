@@ -6,6 +6,23 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 
+def obtener_ultimo_codigo(tabla, codigo):
+    conn = conectar_db()
+    cursor = conn.execute(f"SELECT MAX({codigo}) FROM {tabla}")
+    ultimo_codigo = cursor.fetchone()[0]
+    conn.close()
+    return ultimo_codigo
+
+def generar_nuevo_codigo(ultimo_codigo):
+    if ultimo_codigo is None:
+        nuevo_codigo = 0
+    else:
+        nuevo_codigo = int(ultimo_codigo) + 1
+
+    nuevo_codigo_formateado = str(nuevo_codigo)
+    return nuevo_codigo_formateado
+
+
 def insertar_dato_generico(tabla, columnas, valores):
     
 

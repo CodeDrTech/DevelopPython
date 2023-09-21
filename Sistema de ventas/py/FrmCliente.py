@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
-from Consultas_db import insertar_nuevo_cliente
+from Consultas_db import insertar_nuevo_cliente, obtener_ultimo_codigo, generar_nuevo_codigo
 
 class VentanaCliente(QMainWindow):
     ventana_abierta = False    
@@ -103,6 +103,11 @@ class VentanaCliente(QMainWindow):
         self.tbDatos.resizeColumnsToContents()
         self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
+    def actualizar_codigo_categoria(self):
+        ultimo_codigo = obtener_ultimo_codigo("cliente","idcliente")
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        self.txtCodigo.setText(nuevo_codigo)
+            
     def editar_datos(self):
         self.listado()
         # Consulta SELECT * FROM Productos
@@ -133,7 +138,10 @@ class VentanaCliente(QMainWindow):
         # Si el usuario hace clic en el botón "Sí", se cierra la ventana
         if confirmacion == QMessageBox.Yes:
             self.close()
-        
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.actualizar_codigo_categoria()
+        self.visualiza_datos()   
                 
 if __name__ == '__main__':
     app = QApplication(sys.argv)       

@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PyQt5 import QtGui
-from Consultas_db import insertar_nueva_categoria
+from Consultas_db import insertar_nueva_categoria, obtener_ultimo_codigo, generar_nuevo_codigo
 
 class VentanaCategoria(QMainWindow):
     ventana_abierta = False     
@@ -92,6 +92,7 @@ class VentanaCategoria(QMainWindow):
                 mensaje.exec_()
                 
                 
+                self.actualizar_codigo_categoria()
                 #Limpia los TexBox
                 self.txtNombre.setText("")
                 self.txtDescripcion.setPlainText("")
@@ -105,15 +106,22 @@ class VentanaCategoria(QMainWindow):
             mensaje.exec_()
 
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------            
+    
+    
+    def actualizar_codigo_categoria(self):
+        ultimo_codigo = obtener_ultimo_codigo("Categoria","idcategoria")
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        self.txtCodigo.setText(nuevo_codigo)
         
+            
     def closeEvent(self, event):
         VentanaCategoria.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
                 
     def showEvent(self, event):
         super().showEvent(event)
-        
+        self.actualizar_codigo_categoria()
         model = QSqlTableModel()    
         self.visualiza_datos()
         
