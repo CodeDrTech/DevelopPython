@@ -109,7 +109,7 @@ class VentanaEmpleado(QMainWindow):
                 return row
     
         # Si no se encuentra el usuario, devuelve None
-        return None
+        return -1
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
     def obtener_datos_de_fila(self, fila_del_usuario):
@@ -150,25 +150,32 @@ class VentanaEmpleado(QMainWindow):
             self.obtener_datos_de_fila(fila)
             bd_usuario = self.valor_columna_10
             
-            
-            if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
-                
+            if fila == -1:
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Faltan datos importantes")
-                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.setWindowTitle("Error inesperado")
+                mensaje.setText("Por favor, revisar bien todos los campos.")
                 mensaje.exec_()
-            elif bd_usuario == usuario:                    
-                    mensaje = QMessageBox()
-                    mensaje.setIcon(QMessageBox.Critical)
-                    mensaje.setWindowTitle("Usuario ya existe")
-                    mensaje.setText(f"El usuario {usuario} pertenece a otra persona.")
-                    mensaje.exec_()
-                    self.txtUsuario.setText("")
-                    self.txtUsuario.setFocus()
                 
             else:
-                self.insertar_datos(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
+                if  not nombre or not apellidos or not sexo or not fechanac or not numdocumento or not acceso or not usuario or not password:
+                
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Critical)
+                    mensaje.setWindowTitle("Faltan datos importantes")
+                    mensaje.setText("Por favor, complete todos los campos.")
+                    mensaje.exec_()
+                elif bd_usuario == usuario:                    
+                        mensaje = QMessageBox()
+                        mensaje.setIcon(QMessageBox.Critical)
+                        mensaje.setWindowTitle("Usuario ya existe")
+                        mensaje.setText(f"El usuario {usuario} pertenece a otra persona.")
+                        mensaje.exec_()
+                        self.txtUsuario.setText("")
+                        self.txtUsuario.setFocus()
+                
+                else:
+                    self.insertar_datos(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password)
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()

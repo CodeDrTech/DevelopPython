@@ -58,7 +58,7 @@ class VentanaLogin(QMainWindow):
                 return row
     
         # Si no se encuentra el usuario, devuelve None
-        return None
+        return -1
         
         
 #------------------------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ class VentanaLogin(QMainWindow):
             bd_password = self.valor_columna_11
         
         
-            if not usuario or not password:
+            if not usuario or not password and fila == -1:
             
             
                 mensaje = QMessageBox()
