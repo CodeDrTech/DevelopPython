@@ -3,7 +3,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
-from Consultas_db import insertar_nuevo_empleados
+from Consultas_db import insertar_nuevo_empleados, obtener_ultimo_codigo, generar_nuevo_codigo
 
 class VentanaEmpleado(QMainWindow):
     ventana_abierta = False    
@@ -214,6 +214,11 @@ class VentanaEmpleado(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()    
         self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        
+    def actualizar_codigo_categoria(self):
+        ultimo_codigo = obtener_ultimo_codigo("Empleado","idempleado")
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        self.txtCodigo.setText(nuevo_codigo)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def listado(self):
@@ -226,7 +231,7 @@ class VentanaEmpleado(QMainWindow):
         
     def showEvent(self, event):
         super().showEvent(event)
-        
+        self.actualizar_codigo_categoria()
         model = QSqlTableModel()   
         self.visualiza_datos()
 #------------------------------------------------------------------------------------------------------
