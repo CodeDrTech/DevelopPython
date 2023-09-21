@@ -234,7 +234,7 @@ class VentanaEmpleado(QMainWindow):
         self.actualizar_codigo_categoria()
         model = QSqlTableModel()   
         self.visualiza_datos()
-        #jhdfgjhdf
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def fn_Salir(self):

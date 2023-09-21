@@ -3,7 +3,8 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
-from Consultas_db import insertar_nuevo_proveedor
+from Consultas_db import insertar_nuevo_proveedor, obtener_ultimo_codigo,generar_nuevo_codigo 
+
 
 class VentanaProveedor(QMainWindow):
     ventana_abierta = False    
@@ -112,7 +113,10 @@ class VentanaProveedor(QMainWindow):
     def listado(self):
         self.tabWidget.setCurrentIndex(0)
 
-
+    def actualizar_codigo_categoria(self):
+        ultimo_codigo = obtener_ultimo_codigo("proveedor","idproveedor")
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        self.txtCodigo.setText(nuevo_codigo)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -126,7 +130,7 @@ class VentanaProveedor(QMainWindow):
         
     def showEvent(self, event):
         super().showEvent(event)
-        
+        self.actualizar_codigo_categoria()
         model = QSqlTableModel()   
         self.visualiza_datos()
         
