@@ -9,6 +9,7 @@ from FrmArticulo import VentanaArticulo
 from FrmPresentacion import VentanaPresentacion
 from FrmProveedor import VentanaProveedor
 from FrmCliente import VentanaCliente
+from FrmIngreso import VentanaIngresoAlmacen
 
 class VentanaPrincipal(QMainWindow):       
     def __init__(self):
@@ -36,8 +37,9 @@ class VentanaPrincipal(QMainWindow):
             self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
             self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
+            self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
                     
-        #self.actionCategorias.setEnabled(False)
+            #self.actionCategorias.setEnabled(False)
             
     def vendedor(self):
             self.actionSalir.triggered.connect(self.fn_Salir)
@@ -60,7 +62,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
             self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
             self.actionClientes.setEnabled(False)
-            #self.actionIngresos
+            self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
             #self.menuConsultas
             #self.nemuHerramientas
 #------------------------------------------------------------------------------------------------------
@@ -122,7 +124,25 @@ class VentanaPrincipal(QMainWindow):
             mensaje.setWindowTitle("Ventana duplicada")
             mensaje.setText("La ventana ya esta abierta.")
             mensaje.exec_()
+            
+    def abrirFrmIngresos(self):
         
+        if not VentanaIngresoAlmacen.ventana_abierta:
+            frmPresentacion = VentanaIngresoAlmacen()
+            VentanaIngresoAlmacen.ventana_abierta = True
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmPresentacion)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
+                
     def abrirFrmArticulo(self):
         
         if not VentanaArticulo.ventana_abierta:
