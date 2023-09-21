@@ -38,7 +38,8 @@ class VentanaPrincipal(QMainWindow):
             self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
-                    
+            #self.menuConsultas
+            #self.nemuHerramientas       
             #self.actionCategorias.setEnabled(False)
             
     def vendedor(self):
@@ -49,6 +50,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionPresentaciones.setEnabled(False)
             self.actionProveedores.setEnabled(False)
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
+            self.actionIngresos.setEnabled(False)
             #self.menuConsultas
             #self.nemuHerramientas
                     

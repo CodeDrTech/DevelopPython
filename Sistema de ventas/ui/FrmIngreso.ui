@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>707</width>
-    <height>487</height>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@ QLabel {
       <x>10</x>
       <y>30</y>
       <width>691</width>
-      <height>431</height>
+      <height>501</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -515,7 +515,7 @@ QLabel {
         <x>10</x>
         <y>20</y>
         <width>671</width>
-        <height>371</height>
+        <height>441</height>
        </rect>
       </property>
       <property name="title">
@@ -549,7 +549,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>320</y>
+         <y>390</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -586,7 +586,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>310</x>
-         <y>320</y>
+         <y>390</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -623,7 +623,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>220</x>
-         <y>320</y>
+         <y>390</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -660,7 +660,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>400</x>
-         <y>320</y>
+         <y>390</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -846,8 +846,8 @@ QDateEdit QAbstractItemView {
       <widget class="QLabel" name="label_12">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>60</y>
+         <x>300</x>
+         <y>20</y>
          <width>91</width>
          <height>21</height>
         </rect>
@@ -921,8 +921,8 @@ QComboBox QAbstractItemView {
       <widget class="QComboBox" name="cmbProveedor">
        <property name="geometry">
         <rect>
-         <x>370</x>
-         <y>50</y>
+         <x>400</x>
+         <y>20</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -953,7 +953,7 @@ QComboBox QAbstractItemView {
        <property name="geometry">
         <rect>
          <x>260</x>
-         <y>110</y>
+         <y>60</y>
          <width>67</width>
          <height>21</height>
         </rect>
@@ -977,7 +977,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>330</x>
-         <y>110</y>
+         <y>60</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -1057,7 +1057,7 @@ QLineEdit::placeholder {
        <property name="geometry">
         <rect>
          <x>450</x>
-         <y>110</y>
+         <y>60</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -1155,6 +1155,84 @@ QLabel {
        </property>
        <property name="text">
         <string>Fecha</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>100</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+       </property>
+       <property name="text">
+        <string>Articulo</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="cmbArticulo">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>100</y>
+         <width>120</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QComboBox:hover {
+    border: 1px solid #3498db;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #cccccc;
+    background-color: white;
+    selection-background-color: #3498db;
+}
+</string>
+       </property>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>179</y>
+         <width>651</width>
+         <height>91</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Articulo</string>
+       </property>
+      </widget>
+      <widget class="QTableView" name="tbDatos2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>280</y>
+         <width>651</width>
+         <height>91</height>
+        </rect>
        </property>
       </widget>
      </widget>
