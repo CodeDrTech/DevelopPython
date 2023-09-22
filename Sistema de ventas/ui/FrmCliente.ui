@@ -389,6 +389,26 @@ QComboBox QAbstractItemView {
         <height>401</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+    border: 2px solid #2980b9;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #9a9a9a;
+}
+
+QGroupBox:title {
+    color: #2980b9;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+
+</string>
+      </property>
       <property name="title">
        <string>Clientes</string>
       </property>

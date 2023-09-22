@@ -518,6 +518,26 @@ QLabel {
         <height>451</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+    border: 2px solid #2980b9;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #9a9a9a;
+}
+
+QGroupBox:title {
+    color: #2980b9;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+
+</string>
+      </property>
       <property name="title">
        <string>Ingresos</string>
       </property>
@@ -803,7 +823,7 @@ QLabel {
       <widget class="QDateEdit" name="txtFecha">
        <property name="geometry">
         <rect>
-         <x>640</x>
+         <x>645</x>
          <y>30</y>
          <width>120</width>
          <height>35</height>
@@ -921,9 +941,9 @@ QComboBox QAbstractItemView {
       <widget class="QComboBox" name="cmbProveedor">
        <property name="geometry">
         <rect>
-         <x>450</x>
+         <x>349</x>
          <y>30</y>
-         <width>120</width>
+         <width>221</width>
          <height>35</height>
         </rect>
        </property>
@@ -1165,6 +1185,26 @@ QLabel {
          <width>791</width>
          <height>91</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QGroupBox {
+    border: 2px solid #2980b9;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #9a9a9a;
+}
+
+QGroupBox:title {
+    color: #2980b9;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+
+</string>
        </property>
        <property name="title">
         <string/>
@@ -1708,7 +1748,7 @@ QLabel {
       <widget class="QLineEdit" name="txtItbis">
        <property name="geometry">
         <rect>
-         <x>640</x>
+         <x>645</x>
          <y>70</y>
          <width>120</width>
          <height>35</height>
@@ -1783,6 +1823,9 @@ QLineEdit::placeholder {
 }
 
 </string>
+       </property>
+       <property name="text">
+        <string>18</string>
        </property>
       </widget>
      </widget>

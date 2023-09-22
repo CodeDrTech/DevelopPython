@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>574</width>
-    <height>363</height>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@ QLabel {
       <x>10</x>
       <y>30</y>
       <width>551</width>
-      <height>301</height>
+      <height>311</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -381,8 +381,28 @@ QTableView::item:hover {
         <x>10</x>
         <y>20</y>
         <width>531</width>
-        <height>251</height>
+        <height>231</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+    border: 2px solid #2980b9;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #9a9a9a;
+}
+
+QGroupBox:title {
+    color: #2980b9;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+
+</string>
       </property>
       <property name="title">
        <string>Categorias</string>
