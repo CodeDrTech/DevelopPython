@@ -35,6 +35,21 @@ class VentanaIngresoAlmacen(QMainWindow):
         for item in column_data:
             combo_model.appendRow(QStandardItem(str(item)))
         self.cmbProveedor.setModel(combo_model)
+        
+    def cargar_articulos(self):    
+        # Obtiene los datos de la columna Nombre de la tabla empleados.
+        model = QSqlTableModel()
+        model.setTable('articulo')
+        model.select()
+        column_name = []
+        for i in range(model.rowCount()):
+            column_name.append(model.data(model.index(i, 2)))
+        
+        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+        combo_model_articulo = QStandardItemModel()
+        for item in column_name:
+            combo_model_articulo.appendRow(QStandardItem(str(item)))
+        self.cmbArticulo.setModel(combo_model_articulo)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
@@ -45,6 +60,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         super().showEvent(event)
         
         self.cargar_proveedores()
+        self.cargar_articulos()
                 
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
