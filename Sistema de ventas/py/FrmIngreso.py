@@ -43,7 +43,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         model.select()
         column_name = []
         for i in range(model.rowCount()):
-            column_name.append(model.data(model.index(i, 2)))
+            column_name.append(model.data(model.index(i, 3)))
         
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model_articulo = QStandardItemModel()
