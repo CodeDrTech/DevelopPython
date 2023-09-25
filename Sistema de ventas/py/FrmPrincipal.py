@@ -40,7 +40,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
             self.actionVentas.triggered.connect(self.abrirFrmVentas)
-            self.actionCambiar_de_usuario.triggered.connect(LoginCambiarUsuario())
+            self.actionCambiar_de_usuario.triggered.connect(self.CambiarUsuario)
             #self.menuConsultas
             #self.nemuHerramientas       
             #self.actionCategorias.setEnabled(False)
@@ -55,7 +55,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
             self.actionVentas.triggered.connect(self.abrirFrmVentas)
             self.actionIngresos.setEnabled(False)
-            self.actionCambiar_de_usuario.triggered.connect(LoginCambiarUsuario())
+            self.actionCambiar_de_usuario.triggered.connect(self.CambiarUsuario)
             #self.menuConsultas
             #self.nemuHerramientas
                     
@@ -71,7 +71,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionClientes.setEnabled(False)
             self.actionVentas.setEnabled(False)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
-            self.actionCambiar_de_usuario.triggered.connect(LoginCambiarUsuario())
+            self.actionCambiar_de_usuario.triggered.connect(self.CambiarUsuario)
             #self.menuConsultas
             #self.nemuHerramientas
 #------------------------------------------------------------------------------------------------------
@@ -225,6 +225,16 @@ class VentanaPrincipal(QMainWindow):
             mensaje.setWindowTitle("Ventana duplicada")
             mensaje.setText("La ventana ya esta abierta.")
             mensaje.exec_()
+            
+    def CambiarUsuario(self):
+        
+        from FrmLogin import VentanaLogin
+        
+        ventana_login = VentanaLogin()
+                
+        ventana_login.show()
+        
+        #self.fn_Salir()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):

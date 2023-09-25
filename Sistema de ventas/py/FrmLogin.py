@@ -8,7 +8,8 @@ from PyQt5.QtCore import QDateTime
 from FrmPrincipal import VentanaPrincipal
 
 class VentanaLogin(QMainWindow):
-    ventana_abierta = False     
+    ventana_abierta = False
+    
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmLogin.ui',self)
@@ -65,25 +66,28 @@ class VentanaLogin(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
     def abrir_FrmPrincipal_admin(self, nombre_usuario):
+        
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.administrador()
-        self.llamar_venana_principal.show()
+        self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(nombre_usuario)
         
         self.fn_Salir()
         
     def abrir_FrmPrincipal_almacen(self, nombre_usuario):
+        
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.almacen()
-        self.llamar_venana_principal.show()
+        self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(nombre_usuario)
         
         self.fn_Salir()
         
     def abrir_FrmPrincipal_vendedor(self, nombre_usuario):
+        
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.vendedor()
-        self.llamar_venana_principal.show()
+        self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(nombre_usuario)
         
         self.fn_Salir()
