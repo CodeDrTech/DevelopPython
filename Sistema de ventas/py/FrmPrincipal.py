@@ -40,7 +40,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
             self.actionVentas.triggered.connect(self.abrirFrmVentas)
-            self.actionCambiar_de_usuario.triggered.connect(self.CambiarUsuario)
+            self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
             #self.menuConsultas
             #self.nemuHerramientas       
             #self.actionCategorias.setEnabled(False)
@@ -55,7 +55,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
             self.actionVentas.triggered.connect(self.abrirFrmVentas)
             self.actionIngresos.setEnabled(False)
-            self.actionCambiar_de_usuario.triggered.connect(self.CambiarUsuario)
+            self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
             #self.menuConsultas
             #self.nemuHerramientas
                     
@@ -71,7 +71,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionClientes.setEnabled(False)
             self.actionVentas.setEnabled(False)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
-            self.actionCambiar_de_usuario.triggered.connect(self.CambiarUsuario)
+            self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
             #self.menuConsultas
             #self.nemuHerramientas
 #------------------------------------------------------------------------------------------------------
@@ -226,15 +226,12 @@ class VentanaPrincipal(QMainWindow):
             mensaje.setText("La ventana ya esta abierta.")
             mensaje.exec_()
             
-    def CambiarUsuario(self):
-        
+    def cerrar_sesion(self):
+        # Cierra la sesión del usuario actual
         from FrmLogin import VentanaLogin
-        
-        ventana_login = VentanaLogin()
-                
-        ventana_login.show()
-        
-        #self.fn_Salir()
+        self.ventana_login = VentanaLogin()
+        self.ventana_login.show()
+        self.close()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
