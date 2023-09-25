@@ -10,6 +10,8 @@ from FrmPresentacion import VentanaPresentacion
 from FrmProveedor import VentanaProveedor
 from FrmCliente import VentanaCliente
 from FrmIngreso import VentanaIngresoAlmacen
+from FrmVentas import VentanaVentas
+from FrmPrincipal_login import LoginCambiarUsuario
 
 class VentanaPrincipal(QMainWindow):       
     def __init__(self):
@@ -38,6 +40,8 @@ class VentanaPrincipal(QMainWindow):
             self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
+            self.actionVentas.triggered.connect(self.abrirFrmVentas)
+            self.actionCambiar_de_usuario.triggered.connect(LoginCambiarUsuario())
             #self.menuConsultas
             #self.nemuHerramientas       
             #self.actionCategorias.setEnabled(False)
@@ -50,7 +54,9 @@ class VentanaPrincipal(QMainWindow):
             self.actionPresentaciones.setEnabled(False)
             self.actionProveedores.setEnabled(False)
             self.actionClientes.triggered.connect(self.abrirFrmClientes)
+            self.actionVentas.triggered.connect(self.abrirFrmVentas)
             self.actionIngresos.setEnabled(False)
+            self.actionCambiar_de_usuario.triggered.connect(LoginCambiarUsuario())
             #self.menuConsultas
             #self.nemuHerramientas
                     
@@ -64,11 +70,14 @@ class VentanaPrincipal(QMainWindow):
             self.actionPresentaciones.triggered.connect(self.abrirFrmPresentacion)
             self.actionProveedores.triggered.connect(self.abrirFrmProveedor)
             self.actionClientes.setEnabled(False)
+            self.actionVentas.setEnabled(False)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
+            self.actionCambiar_de_usuario.triggered.connect(LoginCambiarUsuario())
             #self.menuConsultas
             #self.nemuHerramientas
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    
     def abrirFrmEmpleados(self):
         
         if not VentanaEmpleado.ventana_abierta:           
@@ -130,10 +139,10 @@ class VentanaPrincipal(QMainWindow):
     def abrirFrmIngresos(self):
         
         if not VentanaIngresoAlmacen.ventana_abierta:
-            frmPresentacion = VentanaIngresoAlmacen()
+            frmIngreso = VentanaIngresoAlmacen()
             VentanaIngresoAlmacen.ventana_abierta = True
             subWindow = QMdiSubWindow()
-            subWindow.setWidget(frmPresentacion)
+            subWindow.setWidget(frmIngreso)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()
@@ -170,6 +179,24 @@ class VentanaPrincipal(QMainWindow):
             VentanaProveedor.ventana_abierta = True
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmProveedor)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
+    
+    def abrirFrmVentas(self):
+        
+        if not VentanaVentas.ventana_abierta:
+            frmVentas = VentanaVentas()
+            VentanaVentas.ventana_abierta = True
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmVentas)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()

@@ -103,13 +103,14 @@ QLabel {
      <x>0</x>
      <y>0</y>
      <width>1236</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSistema">
     <property name="title">
      <string>SisVentas</string>
     </property>
+    <addaction name="actionCambiar_de_usuario"/>
     <addaction name="actionSalir"/>
    </widget>
    <widget class="QMenu" name="menuHerramientas">
@@ -242,6 +243,11 @@ QLabel {
   <action name="actionBack_up">
    <property name="text">
     <string>Back up</string>
+   </property>
+  </action>
+  <action name="actionCambiar_de_usuario">
+   <property name="text">
+    <string>Cambiar de usuario</string>
    </property>
   </action>
  </widget>

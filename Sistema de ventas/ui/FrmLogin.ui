@@ -28,6 +28,12 @@
       <height>25</height>
      </rect>
     </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="calendarPopup">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">

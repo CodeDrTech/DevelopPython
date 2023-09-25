@@ -7,7 +7,8 @@ from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtCore import QDateTime
 from FrmPrincipal import VentanaPrincipal
 
-class VentanaLogin(QMainWindow):    
+class VentanaLogin(QMainWindow):
+    ventana_abierta = False     
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmLogin.ui',self)
@@ -190,6 +191,7 @@ class VentanaLogin(QMainWindow):
         self.close()
         
     def closeEvent(self, event):
+        VentanaLogin.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
         
     def showEvent(self, event):
