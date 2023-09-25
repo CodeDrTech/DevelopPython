@@ -11,7 +11,6 @@ from FrmProveedor import VentanaProveedor
 from FrmCliente import VentanaCliente
 from FrmIngreso import VentanaIngresoAlmacen
 from FrmVentas import VentanaVentas
-from FrmPrincipal_login import LoginCambiarUsuario
 
 class VentanaPrincipal(QMainWindow):       
     def __init__(self):
