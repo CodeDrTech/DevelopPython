@@ -868,7 +868,7 @@ QDateEdit QAbstractItemView {
         <rect>
          <x>260</x>
          <y>30</y>
-         <width>91</width>
+         <width>61</width>
          <height>21</height>
         </rect>
        </property>
@@ -884,7 +884,7 @@ QLabel {
 }</string>
        </property>
        <property name="text">
-        <string>Proveedor</string>
+        <string>Cliente</string>
        </property>
       </widget>
       <widget class="QComboBox" name="cmbComprobante">
@@ -938,12 +938,12 @@ QComboBox QAbstractItemView {
         </property>
        </item>
       </widget>
-      <widget class="QComboBox" name="cmbProveedor">
+      <widget class="QComboBox" name="cmbCliente">
        <property name="geometry">
         <rect>
-         <x>349</x>
-         <y>30</y>
-         <width>221</width>
+         <x>330</x>
+         <y>35</y>
+         <width>241</width>
          <height>35</height>
         </rect>
        </property>
@@ -1209,54 +1209,11 @@ QGroupBox:title {
        <property name="title">
         <string/>
        </property>
-       <widget class="QDateEdit" name="txtFechaProd">
-        <property name="geometry">
-         <rect>
-          <x>640</x>
-          <y>10</y>
-          <width>120</width>
-          <height>35</height>
-         </rect>
-        </property>
-        <property name="acceptDrops">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">/* Estilos para QDateEdit */
-QDateEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #2980b9;
-}
-
-QDateEdit:hover {
-    border: 1px solid #3498db;
-}
-
-QDateEdit QAbstractItemView {
-    border: 1px solid #cccccc;
-    background-color: white;
-    selection-background-color: #3498db;
-}
-
-
-</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="calendarPopup">
-         <bool>true</bool>
-        </property>
-       </widget>
        <widget class="QDateEdit" name="txtFechaVenc">
         <property name="geometry">
          <rect>
           <x>640</x>
-          <y>50</y>
+          <y>10</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1300,7 +1257,7 @@ QDateEdit QAbstractItemView {
          <rect>
           <x>540</x>
           <y>20</y>
-          <width>91</width>
+          <width>101</width>
           <height>21</height>
          </rect>
         </property>
@@ -1316,7 +1273,7 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Fecha prod.</string>
+         <string>Fecha venc.</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_17">
@@ -1340,15 +1297,15 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Fecha venc.</string>
+         <string>Descuento</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_18">
         <property name="geometry">
          <rect>
-          <x>285</x>
+          <x>280</x>
           <y>20</y>
-          <width>121</width>
+          <width>131</width>
           <height>21</height>
          </rect>
         </property>
@@ -1370,9 +1327,9 @@ QLabel {
        <widget class="QLabel" name="label_19">
         <property name="geometry">
          <rect>
-          <x>300</x>
+          <x>290</x>
           <y>60</y>
-          <width>111</width>
+          <width>121</width>
           <height>21</height>
          </rect>
         </property>
@@ -1556,7 +1513,7 @@ QLineEdit::placeholder {
          <rect>
           <x>120</x>
           <y>10</y>
-          <width>120</width>
+          <width>131</width>
           <height>35</height>
          </rect>
         </property>
@@ -1586,7 +1543,7 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>20</y>
+          <y>25</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1606,12 +1563,12 @@ QLabel {
          <string>Articulo</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="txtStockInicial">
+       <widget class="QLineEdit" name="txtCantidad">
         <property name="geometry">
          <rect>
           <x>120</x>
           <y>50</y>
-          <width>120</width>
+          <width>41</width>
           <height>35</height>
          </rect>
         </property>
@@ -1691,7 +1648,7 @@ QLineEdit::placeholder {
          <rect>
           <x>10</x>
           <y>60</y>
-          <width>101</width>
+          <width>81</width>
           <height>21</height>
          </rect>
         </property>
@@ -1707,7 +1664,274 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Stock inicial</string>
+         <string>Cantidad</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtCodArticulo">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>5</y>
+          <width>75</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3498db;
+    outline: none;
+}
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtStock">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>50</y>
+          <width>41</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3498db;
+    outline: none;
+}
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_22">
+        <property name="geometry">
+         <rect>
+          <x>165</x>
+          <y>60</y>
+          <width>41</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+        </property>
+        <property name="text">
+         <string>Disp.</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtDescuento">
+        <property name="geometry">
+         <rect>
+          <x>640</x>
+          <y>50</y>
+          <width>120</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3498db;
+    outline: none;
+}
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+</string>
         </property>
        </widget>
       </widget>
@@ -1826,6 +2050,89 @@ QLineEdit::placeholder {
        </property>
        <property name="text">
         <string>18</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="txtIdCliente">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>5</y>
+         <width>75</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3498db;
+    outline: none;
+}
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>

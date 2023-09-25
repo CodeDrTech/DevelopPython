@@ -21,20 +21,41 @@ class VentanaVentas(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
-    def cargar_proveedores(self):    
-        # Obtiene los datos de la columna Nombre de la tabla empleados.
+    def cargar_cientes(self):    
+        # Obtiene los datos de las columnas Nombre y Apellido de la tabla cliente.
         model = QSqlTableModel()
-        model.setTable('proveedor')
+        model.setTable('cliente')
         model.select()
-        column_data = []
+        client_data = []
+
         for i in range(model.rowCount()):
-            column_data.append(model.data(model.index(i, 1)))
-        
-        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+            codigo = model.data(model.index(i, 0))
+            nombre = model.data(model.index(i, 1))
+            apellido = model.data(model.index(i, 2))
+            nombre_completo = f"{nombre} {apellido}"
+            client_data.append((nombre_completo, codigo))
+            
+        # Cargar los datos en el QComboBox.
         combo_model = QStandardItemModel()
-        for item in column_data:
-            combo_model.appendRow(QStandardItem(str(item)))
-        self.cmbProveedor.setModel(combo_model)
+        for item, _ in client_data:
+            combo_model.appendRow(QStandardItem(item))
+    
+        self.client_data = client_data  # Guardar los datos del cliente para su uso posterior.
+        self.cmbCliente.setModel(combo_model)
+
+        # Conectar la señal currentIndexChanged del QComboBox a la función actualizar_codigo_cliente.
+        self.cmbCliente.currentIndexChanged.connect(self.actualizar_codigo_cliente)
+
+        # Mostrar el código del cliente en el QLineEdit si hay al menos un cliente.
+        if model.rowCount() > 0:
+            codigo_cliente = model.data(model.index(0, 0))
+            self.txtIdCliente.setText(str(codigo_cliente))
+    
+    def actualizar_codigo_cliente(self, index):
+        # Obtener el código del cliente seleccionado en el QComboBox y mostrarlo en el QLineEdit.
+        selected_client_data = self.client_data[index]
+        codigo_cliente = selected_client_data[1]
+        self.txtIdCliente.setText(str(codigo_cliente))
         
     def cargar_articulos(self):    
         # Obtiene los datos de la columna Nombre de la tabla empleados.
@@ -59,7 +80,7 @@ class VentanaVentas(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
-        self.cargar_proveedores()
+        self.cargar_cientes()
         self.cargar_articulos()
                 
         self.txtFecha.setDate(QDate.currentDate())
