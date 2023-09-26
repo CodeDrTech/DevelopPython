@@ -498,7 +498,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>210</y>
+         <y>240</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -535,7 +535,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>310</x>
-         <y>210</y>
+         <y>240</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -572,7 +572,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>220</x>
-         <y>210</y>
+         <y>240</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -605,11 +605,11 @@ QPushButton:pressed {
         <string> Guardar </string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnCancelar">
+      <widget class="QPushButton" name="btnSalir">
        <property name="geometry">
         <rect>
          <x>400</x>
-         <y>210</y>
+         <y>240</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -639,7 +639,7 @@ QPushButton:pressed {
 </string>
        </property>
        <property name="text">
-        <string>Cancelar</string>
+        <string>Salir</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtCodigo">
@@ -967,13 +967,16 @@ QLineEdit::placeholder {
 
 </string>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLabel" name="label_6">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>70</y>
-         <width>121</width>
+         <width>101</width>
          <height>21</height>
         </rect>
        </property>
@@ -989,7 +992,7 @@ QLabel {
 }</string>
        </property>
        <property name="text">
-        <string>Codigo Ventas</string>
+        <string>Codigo Barr.</string>
        </property>
       </widget>
       <widget class="QGraphicsView" name="gFoto">
@@ -997,8 +1000,8 @@ QLabel {
         <rect>
          <x>360</x>
          <y>110</y>
-         <width>131</width>
-         <height>91</height>
+         <width>151</width>
+         <height>121</height>
         </rect>
        </property>
        <property name="toolTip">
@@ -1008,7 +1011,7 @@ QLabel {
       <widget class="QPushButton" name="btnCargar">
        <property name="geometry">
         <rect>
-         <x>500</x>
+         <x>515</x>
          <y>110</y>
          <width>85</width>
          <height>31</height>
@@ -1045,7 +1048,7 @@ QPushButton:pressed {
       <widget class="QPushButton" name="btnLimpiar">
        <property name="geometry">
         <rect>
-         <x>500</x>
+         <x>515</x>
          <y>150</y>
          <width>85</width>
          <height>31</height>

@@ -5,7 +5,27 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
 
 
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+# Finciones para obtener y generar el codigo de los articulos de manera automatica 
+def obtener_codigo_articulo(tabla):
+    conn = conectar_db()
+    cursor = conn.execute(f"SELECT MAX(Codigo) FROM {tabla}")
+    ultimo_codigo = cursor.fetchone()[0]
+    conn.close()
+    return ultimo_codigo
 
+def generar_nuevo_codigo_articulo(prefijo, ultimo_codigo):
+    if ultimo_codigo is None:
+        nuevo_codigo = 0
+    else:
+        nuevo_codigo = int(ultimo_codigo.replace(prefijo, '')) + 1
+
+    nuevo_codigo_formateado = f"{prefijo}{str(nuevo_codigo).zfill(5)}"
+    return nuevo_codigo_formateado
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+# Funciones genericas para mostrar los codigos siguientes al momento de registrar en la base de dato 
 def obtener_ultimo_codigo(tabla, codigo):
     conn = conectar_db()
     cursor = conn.execute(f"SELECT MAX({codigo}) FROM {tabla}")
@@ -22,7 +42,9 @@ def generar_nuevo_codigo(ultimo_codigo):
     nuevo_codigo_formateado = str(nuevo_codigo)
     return nuevo_codigo_formateado
 
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+# Funcion generica para insertar datos en la base en alguno de los formularios 
 def insertar_dato_generico(tabla, columnas, valores):
     
 
@@ -40,7 +62,8 @@ def insertar_dato_generico(tabla, columnas, valores):
 
     # Cerrar la conexión
     conn.close()
-    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------     
 # Funciones para intercambiar datos de los formularios a la base de datos
 def insertar_nueva_presentacion(nombre, descripcion):
     insertar_dato_generico('presentacion', ['nombre', 'descripcion'], [nombre, descripcion])
@@ -58,7 +81,45 @@ def insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocum
     insertar_dato_generico('cliente', ['nombre', 'apellidos', 'sexo', 'fecha_nacimiento', 'tipo_documento', 'num_documento', 'direccion', 'telefono', 'email'], [nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email])
 
 def insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria, presentacion):
-    insertar_dato_generico('articulo', ['codigo', 'nombre', 'descripcion', 'imagen', 'idcategoria', 'idpresentacion'], [codigoventa, nombre, descripcion, imagen, categoria, presentacion])
+    try:
+        # Obtener los IDs de Categoria y presentacion a partir de los nombres
+        id_categoria = obtener_id_categoria_por_nombre(categoria)
+        id_presentacion = obtener_id_presentacion_por_nombre(presentacion)
+
+        # Verificar si se encontraron los IDs de Categoria y presentacion
+        if id_categoria is not None and id_presentacion is not None:
+            # Llamar a la función genérica para insertar el artículo en la base de datos
+            insertar_dato_generico('articulo', ['codigo', 'nombre', 'descripcion', 'imagen', 'idcategoria', 'idpresentacion'], [codigoventa, nombre, descripcion, imagen, id_categoria, id_presentacion])
+        else:
+            # Manejar el caso en el que no se encontraron los IDs mostrando un mensaje de error
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error")
+            mensaje_error.setText("No se encontraron los IDs de Categoria y/o presentacion.")
+            mensaje_error.exec_()
+    except Exception as e:
+        # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
+        mensaje_error = QMessageBox()
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al insertar artículo: {str(e)}")
+        mensaje_error.exec_()
+
+# Función para obtener el ID de Categoria a partir del nombre
+def obtener_id_categoria_por_nombre(nombre_categoria):
+    conn = conectar_db()
+    cursor = conn.execute("SELECT idcategoria FROM Categoria WHERE nombre = ?", (nombre_categoria,))
+    resultado = cursor.fetchone()
+    conn.close()
+    return resultado[0] if resultado else None
+
+# Función para obtener el ID de presentacion a partir del nombre
+def obtener_id_presentacion_por_nombre(nombre_presentacion):
+    conn = conectar_db()
+    cursor = conn.execute("SELECT idpresentacion FROM presentacion WHERE nombre = ?", (nombre_presentacion,))
+    resultado = cursor.fetchone()
+    conn.close()
+    return resultado[0] if resultado else None
 
 
 

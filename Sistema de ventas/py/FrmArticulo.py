@@ -1,13 +1,18 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsScene, QGraphicsPixmapItem
 from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
+import io
+from PIL import Image
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from Consultas_db import insertar_nuevo_articulo
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
+from Consultas_db import insertar_nuevo_articulo, obtener_codigo_articulo, generar_nuevo_codigo_articulo, obtener_ultimo_codigo, generar_nuevo_codigo
 
 class VentanaArticulo(QMainWindow):
-    ventana_abierta = False     
+    ventana_abierta = False
+         
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmArticulo.ui',self)
@@ -19,13 +24,27 @@ class VentanaArticulo(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
+        self.imagen_cargada = None
         
         # Botones del formulario y sus funciones
         self.btnGuardar.clicked.connect(self.insertar_datos)
         #self.btnEditar.clicked.connect(self.editar_datos)
-        self.btnSalir.clicked.connect(self.fn_Salir)
+        #self.btnSalir.clicked.connect(self.fn_Salir)
+        self.btnCargar.clicked.connect(self.cargar_imagen)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+
+    def visualiza_datos(self):
+        # Consulta SELECT * FROM Productos
+        model = QSqlTableModel()
+        model.setTable("articulo")
+        model.select()        
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
     def insertar_datos(self):
         
         
@@ -33,7 +52,6 @@ class VentanaArticulo(QMainWindow):
             codigoventa = self.txtCodVenta.text().upper()
             nombre = self.txtNombre.text().upper()
             descripcion = self.txtDescripcion.toPlainText().upper()
-            imagen = self.gFoto
             categoria = self.cmbCategoria.currentText()
             presentacion = self.cmbPresentacion.currentText()
             
@@ -48,20 +66,26 @@ class VentanaArticulo(QMainWindow):
             
             
             else:
-                insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria, presentacion)
-        
-                #self.visualiza_datos()
+                
+                #imagen = self.cargar_imagen()
+                
+                insertar_nuevo_articulo(codigoventa, nombre, descripcion, self.imagen_cargada, categoria, presentacion)
+                
+                ultimo_codigo = obtener_codigo_articulo("articulo")
+                nuevo_codigo = generar_nuevo_codigo_articulo("ART",ultimo_codigo)
+                self.visualiza_datos()
         
 
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Agregar cliente")
-                mensaje.setText("cliente registrado.")
+                mensaje.setWindowTitle("Agregar articulo")
+                mensaje.setText("articulo registrado.")
                 mensaje.exec_()
                 
                 
                 #Limpia los TexBox
-                self.txtCodVenta.setText("")
+                self.actualizar_ID_articulo()
+                self.txtCodVenta.setText(nuevo_codigo)
                 self.txtNombre.setText("")
                 self.txtDescripcion.setPlainText("")
                 #self.gFoto
@@ -76,6 +100,51 @@ class VentanaArticulo(QMainWindow):
             mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
             
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def cargar_imagen(self):
+        # Abre un cuadro de diálogo para seleccionar un archivo de imagen
+        opciones = QFileDialog.Options()
+        opciones |= QFileDialog.ReadOnly  # Asegura que el archivo seleccionado sea solo de lectura
+        archivo_imagen, _ = QFileDialog.getOpenFileName(None, "Seleccionar imagen", "", "Imágenes (*.png *.jpg *.jpeg *.bmp *.gif);;Todos los archivos (*)", options=opciones)
+
+        if archivo_imagen:
+            # Carga la imagen seleccionada usando Pillow (PIL)
+            try:
+                imagen = Image.open(archivo_imagen)
+                # Convierte la imagen en datos binarios
+                imagen_bytes = io.BytesIO()
+                imagen.save(imagen_bytes, format='PNG')  # Puedes ajustar 'PNG' a 'JPEG' u otro formato si es necesario
+                imagen_data = imagen_bytes.getvalue()
+                # Aquí puedes usar "imagen_data" para almacenar o mostrar la imagen según tus necesidades
+                # Por ejemplo, puedes asignarla a un widget de imagen en tu interfaz gráfica
+                
+                # Crea una escena y un elemento gráfico de mapa de bits
+                scene = QGraphicsScene()
+                pixmap = QPixmap()
+                pixmap.loadFromData(imagen_data)
+                pixmap_item = QGraphicsPixmapItem(pixmap)
+            
+                # Agrega el elemento gráfico a la escena
+                scene.addItem(pixmap_item)
+            
+                # Establece la escena en el QGraphicsView
+                self.gFoto.setScene(scene)
+                
+                # Ajusta la vista para que la imagen ocupe todo el espacio disponible en el QGraphicsView
+                self.gFoto.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)   # type: ignore
+                self.imagen_cargada = imagen_data
+                return imagen_data
+            except Exception as e:
+                # Muestra un mensaje de error utilizando QMessageBox
+                mensaje_error = QMessageBox()
+                mensaje_error.setIcon(QMessageBox.Critical)
+                mensaje_error.setWindowTitle("Error al cargar la imagen")
+                mensaje_error.setText(f"Se produjo un error al cargar la imagen: {str(e)}")
+                mensaje_error.exec_()
+    
+        return None
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def cargar_categoria(self):    
@@ -93,7 +162,8 @@ class VentanaArticulo(QMainWindow):
             combo_model_categoria.appendRow(QStandardItem(str(item)))
         self.cmbCategoria.setModel(combo_model_categoria)
         
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------          
     def cargar_presentacion(self):    
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
@@ -108,13 +178,27 @@ class VentanaArticulo(QMainWindow):
         for item in column_name:
             combo_model_presentacion.appendRow(QStandardItem(str(item)))
         self.cmbPresentacion.setModel(combo_model_presentacion)
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
+    def actualizar_ID_articulo(self):
+        ultimo_codigo = obtener_ultimo_codigo("articulo","idarticulo")
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        self.txtCodigo.setText(nuevo_codigo)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------              
     def closeEvent(self, event):
         VentanaArticulo.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------          
     def showEvent(self, event):
-        super().showEvent(event)  
+        super().showEvent(event)
+        self.actualizar_ID_articulo()
+        self.visualiza_datos()
+
+        ultimo_codigo = obtener_codigo_articulo("articulo")
+        nuevo_codigo = generar_nuevo_codigo_articulo("ART",ultimo_codigo)
+        self.txtCodVenta.setText(nuevo_codigo)
         
         self.cargar_presentacion()
         self.cargar_categoria()      
