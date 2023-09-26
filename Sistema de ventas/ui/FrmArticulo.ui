@@ -992,7 +992,7 @@ QLabel {
         <string>Codigo Ventas</string>
        </property>
       </widget>
-      <widget class="QGraphicsView" name="graphicsView">
+      <widget class="QGraphicsView" name="gFoto">
        <property name="geometry">
         <rect>
          <x>360</x>

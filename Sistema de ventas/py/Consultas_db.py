@@ -57,7 +57,8 @@ def insertar_nuevo_proveedor(razon_soc, sector_com, tipo_doc, numdocumento, dire
 def insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email):
     insertar_dato_generico('cliente', ['nombre', 'apellidos', 'sexo', 'fecha_nacimiento', 'tipo_documento', 'num_documento', 'direccion', 'telefono', 'email'], [nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email])
 
-
+def insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria, presentacion):
+    insertar_dato_generico('articulo', ['codigo', 'nombre', 'descripcion', 'imagen', 'idcategoria', 'idpresentacion'], [codigoventa, nombre, descripcion, imagen, categoria, presentacion])
 
 
 

@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractIte
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-
+from Consultas_db import insertar_nuevo_articulo
 
 class VentanaArticulo(QMainWindow):
     ventana_abierta = False     
@@ -48,7 +48,7 @@ class VentanaArticulo(QMainWindow):
             
             
             else:
-                insertar_nuevo_cliente(codigoventa, nombre, descripcion, imagen, categoria, presentacion)
+                insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria, presentacion)
         
                 #self.visualiza_datos()
         
