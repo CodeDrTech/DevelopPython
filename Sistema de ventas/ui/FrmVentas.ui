@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>858</width>
-    <height>561</height>
+    <height>623</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@ QLabel {
       <x>10</x>
       <y>30</y>
       <width>831</width>
-      <height>501</height>
+      <height>571</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -515,7 +515,7 @@ QLabel {
         <x>10</x>
         <y>10</y>
         <width>811</width>
-        <height>451</height>
+        <height>511</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -569,7 +569,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>400</y>
+         <y>470</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -606,7 +606,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>310</x>
-         <y>400</y>
+         <y>470</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -643,7 +643,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>220</x>
-         <y>400</y>
+         <y>470</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -680,7 +680,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>400</x>
-         <y>400</y>
+         <y>470</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -1183,7 +1183,7 @@ QLabel {
          <x>10</x>
          <y>109</y>
          <width>791</width>
-         <height>91</height>
+         <height>121</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -1213,7 +1213,7 @@ QGroupBox:title {
         <property name="geometry">
          <rect>
           <x>669</x>
-          <y>10</y>
+          <y>40</y>
           <width>91</width>
           <height>35</height>
          </rect>
@@ -1256,7 +1256,7 @@ QDateEdit QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>570</x>
-          <y>20</y>
+          <y>50</y>
           <width>91</width>
           <height>21</height>
          </rect>
@@ -1280,7 +1280,7 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>580</x>
-          <y>60</y>
+          <y>90</y>
           <width>91</width>
           <height>21</height>
          </rect>
@@ -1304,7 +1304,7 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>330</x>
-          <y>20</y>
+          <y>50</y>
           <width>131</width>
           <height>21</height>
          </rect>
@@ -1328,7 +1328,7 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>340</x>
-          <y>60</y>
+          <y>90</y>
           <width>111</width>
           <height>21</height>
          </rect>
@@ -1352,7 +1352,7 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>459</x>
-          <y>10</y>
+          <y>40</y>
           <width>91</width>
           <height>35</height>
          </rect>
@@ -1432,7 +1432,7 @@ QLineEdit::placeholder {
         <property name="geometry">
          <rect>
           <x>459</x>
-          <y>50</y>
+          <y>80</y>
           <width>91</width>
           <height>35</height>
          </rect>
@@ -1512,7 +1512,7 @@ QLineEdit::placeholder {
         <property name="geometry">
          <rect>
           <x>120</x>
-          <y>10</y>
+          <y>40</y>
           <width>201</width>
           <height>35</height>
          </rect>
@@ -1543,7 +1543,7 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>25</y>
+          <y>50</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1567,8 +1567,8 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>120</x>
-          <y>50</y>
-          <width>41</width>
+          <y>80</y>
+          <width>61</width>
           <height>35</height>
          </rect>
         </property>
@@ -1642,12 +1642,15 @@ QLineEdit::placeholder {
 
 </string>
         </property>
+        <property name="text">
+         <string/>
+        </property>
        </widget>
        <widget class="QLabel" name="label_20">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>60</y>
+          <y>90</y>
           <width>81</width>
           <height>21</height>
          </rect>
@@ -1671,7 +1674,7 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>5</y>
+          <y>10</y>
           <width>91</width>
           <height>35</height>
          </rect>
@@ -1753,9 +1756,9 @@ QLineEdit::placeholder {
        <widget class="QLineEdit" name="txtStock">
         <property name="geometry">
          <rect>
-          <x>210</x>
-          <y>50</y>
-          <width>41</width>
+          <x>230</x>
+          <y>80</y>
+          <width>61</width>
           <height>35</height>
          </rect>
         </property>
@@ -1833,8 +1836,8 @@ QLineEdit::placeholder {
        <widget class="QLabel" name="label_22">
         <property name="geometry">
          <rect>
-          <x>165</x>
-          <y>60</y>
+          <x>185</x>
+          <y>90</y>
           <width>41</width>
           <height>21</height>
          </rect>
@@ -1858,7 +1861,7 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>669</x>
-          <y>50</y>
+          <y>80</y>
           <width>91</width>
           <height>35</height>
          </rect>
@@ -1939,9 +1942,9 @@ QLineEdit::placeholder {
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>210</y>
+         <y>240</y>
          <width>791</width>
-         <height>181</height>
+         <height>221</height>
         </rect>
        </property>
       </widget>

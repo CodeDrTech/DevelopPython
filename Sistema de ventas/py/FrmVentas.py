@@ -64,32 +64,36 @@ class VentanaVentas(QMainWindow):
         model.setTable('articulo')
         model.select()
         articulo_data = []
+        codigo_data = []  # Agregamos una lista para almacenar los códigos de los artículos.
         
         for i in range(model.rowCount()):
             articulo_data.append(model.data(model.index(i, 2)))
-        
+            codigo_data.append(model.data(model.index(i, 1)))  # Obtenemos los códigos y los almacenamos.
+            
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model_articulo = QStandardItemModel()
-        for item in articulo_data:
-            combo_model_articulo.appendRow(QStandardItem(str(item)))
+        for item2 in articulo_data:
+            combo_model_articulo.appendRow(QStandardItem(str(item2)))
         self.cmbArticulo.setModel(combo_model_articulo)
         
         self.articulo_data = articulo_data  # Guardar los datos del cliente para su uso posterior.
-        self.cmbCliente.setModel(combo_model_articulo)
+        self.codigo_data = codigo_data  # Guardar los códigos de los artículos para su uso posterior.
         
         # Conectar la señal currentIndexChanged del QComboBox a la función actualizar_codigo_cliente.
         self.cmbArticulo.currentIndexChanged.connect(self.actualizar_codigo_articulo)
 
         # Mostrar el código del cliente en el QLineEdit si hay al menos un cliente.
         if model.rowCount() > 0:
-            codigo_articulo = model.data(model.index(0, 1))
+            codigo_articulo = codigo_data[0]
             self.txtCodArticulo.setText(str(codigo_articulo))
     
-    def actualizar_codigo_articulo(self, index):
-        # Obtener el código del cliente seleccionado en el QComboBox y mostrarlo en el QLineEdit.
-        selected_client_data = self.articulo_data[index]
-        codigo_articulo = selected_client_data[1]
-        self.txtCodArticulo.setText(str(codigo_articulo))
+    def actualizar_codigo_articulo(self,index):
+        # Obtener el código del artículo seleccionado en el QComboBox y mostrarlo en el QLineEdit.
+        if index >= 0 and index < len(self.codigo_data):
+            codigo_articulo = self.codigo_data[index]
+            self.txtCodArticulo.setText(str(codigo_articulo))
+        else:
+            self.txtCodArticulo.setText("")  # Limpiar el QLineEdit si no hay selección válida.
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
