@@ -56,21 +56,40 @@ class VentanaVentas(QMainWindow):
         selected_client_data = self.client_data[index]
         codigo_cliente = selected_client_data[1]
         self.txtIdCliente.setText(str(codigo_cliente))
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
     def cargar_articulos(self):    
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
         model.setTable('articulo')
         model.select()
-        column_name = []
+        articulo_data = []
+        
         for i in range(model.rowCount()):
-            column_name.append(model.data(model.index(i, 3)))
+            articulo_data.append(model.data(model.index(i, 2)))
         
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model_articulo = QStandardItemModel()
-        for item in column_name:
+        for item in articulo_data:
             combo_model_articulo.appendRow(QStandardItem(str(item)))
         self.cmbArticulo.setModel(combo_model_articulo)
+        
+        self.articulo_data = articulo_data  # Guardar los datos del cliente para su uso posterior.
+        self.cmbCliente.setModel(combo_model_articulo)
+        
+        # Conectar la señal currentIndexChanged del QComboBox a la función actualizar_codigo_cliente.
+        self.cmbArticulo.currentIndexChanged.connect(self.actualizar_codigo_articulo)
+
+        # Mostrar el código del cliente en el QLineEdit si hay al menos un cliente.
+        if model.rowCount() > 0:
+            codigo_articulo = model.data(model.index(0, 1))
+            self.txtCodArticulo.setText(str(codigo_articulo))
+    
+    def actualizar_codigo_articulo(self, index):
+        # Obtener el código del cliente seleccionado en el QComboBox y mostrarlo en el QLineEdit.
+        selected_client_data = self.articulo_data[index]
+        codigo_articulo = selected_client_data[1]
+        self.txtCodArticulo.setText(str(codigo_articulo))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):

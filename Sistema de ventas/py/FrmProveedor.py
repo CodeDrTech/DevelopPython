@@ -88,7 +88,7 @@ class VentanaProveedor(QMainWindow):
                     num_documento AS 'NUMERO DOCUMENTO', direccion AS 'DIRECCION', telefono AS 'TELEFONO', email AS 'CORREO',\
                     url AS 'URL' FROM proveedor ORDER by idproveedor DESC")
         
-           
+        
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
         model = QSqlTableModel()    
         model.setQuery(query)        

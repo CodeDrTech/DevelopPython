@@ -28,6 +28,7 @@ class VentanaArticulo(QMainWindow):
         
         # Botones del formulario y sus funciones
         self.btnGuardar.clicked.connect(self.insertar_datos)
+        self.btnEditar.clicked.connect(self.editar_datos)
         #self.btnEditar.clicked.connect(self.editar_datos)
         #self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnCargar.clicked.connect(self.cargar_imagen)
@@ -36,13 +37,44 @@ class VentanaArticulo(QMainWindow):
 
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
+        query = QSqlQuery()
+        query.exec_(f"SELECT\
+                        articulo.codigo as 'CODIGO',\
+                        articulo.nombre AS 'NOMBRE',\
+                        articulo.descripcion AS 'DESCRIPCION',\
+                        categoria.nombre AS 'CATEGORIA',\
+                        presentacion.nombre AS 'PRESENTACION'\
+                    FROM\
+                        articulo\
+                    INNER JOIN\
+                        categoria ON articulo.idcategoria = categoria.idcategoria\
+                    INNER JOIN\
+                        presentacion ON articulo.idpresentacion = presentacion.idpresentacion;")
+        
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()
+        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
+    def editar_datos(self):
+        self.listado()
+        # Consulta SELECT * FROM Productos
         model = QSqlTableModel()
         model.setTable("articulo")
         model.select()        
         self.tbDatos.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbDatos.resizeColumnsToContents()
+        self.tbDatos.resizeColumnsToContents()    
+        self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        
+    def listado(self):
+        self.tabWidget.setCurrentIndex(0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
     def insertar_datos(self):

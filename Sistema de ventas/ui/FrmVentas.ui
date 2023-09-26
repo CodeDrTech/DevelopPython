@@ -1212,9 +1212,9 @@ QGroupBox:title {
        <widget class="QDateEdit" name="txtFechaVenc">
         <property name="geometry">
          <rect>
-          <x>640</x>
+          <x>669</x>
           <y>10</y>
-          <width>120</width>
+          <width>91</width>
           <height>35</height>
          </rect>
         </property>
@@ -1255,9 +1255,9 @@ QDateEdit QAbstractItemView {
        <widget class="QLabel" name="label_16">
         <property name="geometry">
          <rect>
-          <x>540</x>
+          <x>570</x>
           <y>20</y>
-          <width>101</width>
+          <width>91</width>
           <height>21</height>
          </rect>
         </property>
@@ -1279,7 +1279,7 @@ QLabel {
        <widget class="QLabel" name="label_17">
         <property name="geometry">
          <rect>
-          <x>540</x>
+          <x>580</x>
           <y>60</y>
           <width>91</width>
           <height>21</height>
@@ -1303,7 +1303,7 @@ QLabel {
        <widget class="QLabel" name="label_18">
         <property name="geometry">
          <rect>
-          <x>280</x>
+          <x>330</x>
           <y>20</y>
           <width>131</width>
           <height>21</height>
@@ -1327,9 +1327,9 @@ QLabel {
        <widget class="QLabel" name="label_19">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>340</x>
           <y>60</y>
-          <width>121</width>
+          <width>111</width>
           <height>21</height>
          </rect>
         </property>
@@ -1351,9 +1351,9 @@ QLabel {
        <widget class="QLineEdit" name="txtPrecioCom">
         <property name="geometry">
          <rect>
-          <x>410</x>
+          <x>459</x>
           <y>10</y>
-          <width>120</width>
+          <width>91</width>
           <height>35</height>
          </rect>
         </property>
@@ -1431,9 +1431,9 @@ QLineEdit::placeholder {
        <widget class="QLineEdit" name="txtPrecioVen">
         <property name="geometry">
          <rect>
-          <x>410</x>
+          <x>459</x>
           <y>50</y>
-          <width>120</width>
+          <width>91</width>
           <height>35</height>
          </rect>
         </property>
@@ -1513,7 +1513,7 @@ QLineEdit::placeholder {
          <rect>
           <x>120</x>
           <y>10</y>
-          <width>131</width>
+          <width>201</width>
           <height>35</height>
          </rect>
         </property>
@@ -1672,8 +1672,8 @@ QLabel {
          <rect>
           <x>10</x>
           <y>5</y>
-          <width>75</width>
-          <height>25</height>
+          <width>91</width>
+          <height>35</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -1857,9 +1857,9 @@ QLabel {
        <widget class="QLineEdit" name="txtDescuento">
         <property name="geometry">
          <rect>
-          <x>640</x>
+          <x>669</x>
           <y>50</y>
-          <width>120</width>
+          <width>91</width>
           <height>35</height>
          </rect>
         </property>
