@@ -12,7 +12,7 @@ from Consultas_db import insertar_nuevo_articulo, obtener_codigo_articulo, gener
 
 class VentanaArticulo(QMainWindow):
     ventana_abierta = False
-         
+    
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmArticulo.ui',self)
@@ -66,7 +66,7 @@ class VentanaArticulo(QMainWindow):
         # Consulta SELECT * FROM Productos
         model = QSqlTableModel()
         model.setTable("articulo")
-        model.select()        
+        model.select()      
         self.tbDatos.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido

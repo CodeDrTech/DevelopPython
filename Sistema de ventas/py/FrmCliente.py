@@ -93,7 +93,7 @@ class VentanaCliente(QMainWindow):
                     direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
                     email AS 'CORREO' FROM cliente ORDER BY idcliente DESC")
         
-           
+        
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
         model = QSqlTableModel()    
         model.setQuery(query)        

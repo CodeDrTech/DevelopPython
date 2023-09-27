@@ -1,1 +1,1 @@
-C:\Users\acer\OneDrive\Documentos\GitHub\DevelopPython\Inventario de almacen\Base de datos\Almacen.db
+C:\Users\acer\OneDrive\Documentos234\GitHub\DevelopPython\Inventario de almacen\Base de datos\Almacen.db
