@@ -37,7 +37,7 @@ class VentanaPrincipal(QMainWindow):
         self.btnHistorial.clicked.connect(self.abrirFrmHistorial)
         self.btnBaseSalidas.clicked.connect(self.abrirFrmBaseSalidas)
         self.bntBaseCompras.clicked.connect(self.abrirFrmBaseCompras)
-                
+        
         
         
 #------------------------------------------------------------------------------------------------------
