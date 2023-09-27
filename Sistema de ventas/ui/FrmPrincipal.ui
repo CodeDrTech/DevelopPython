@@ -36,40 +36,10 @@
      </sizepolicy>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="lblUsuario">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QWidget {
-    background-color: #9a9a9a;
-}
-
-QLabel {
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}</string>
-    </property>
-    <property name="text">
-     <string>Usuario:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lblEmpleado">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
       <y>0</y>
       <width>121</width>
       <height>21</height>
@@ -82,11 +52,33 @@ QLabel {
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QWidget {
-    background-color: #9a9a9a;
-}
-
-QLabel {
+     <string notr="true">QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Usuario:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblEmpleado">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>0</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
     color: #2980b9;
     font-size: 16px;
     font-weight: bold;
@@ -247,7 +239,7 @@ QLabel {
   </action>
   <action name="actionCambiar_de_usuario">
    <property name="text">
-    <string>Cambiar de usuario</string>
+    <string>Cerrar sesion</string>
    </property>
   </action>
  </widget>

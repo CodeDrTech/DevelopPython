@@ -1500,7 +1500,7 @@ QComboBox QAbstractItemView {
        </item>
        <item>
         <property name="text">
-         <string>Almacen</string>
+         <string>Almacenista</string>
         </property>
        </item>
       </widget>
