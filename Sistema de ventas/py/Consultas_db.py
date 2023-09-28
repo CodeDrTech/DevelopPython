@@ -35,7 +35,7 @@ def obtener_ultimo_codigo(tabla, codigo):
 
 def generar_nuevo_codigo(ultimo_codigo):
     if ultimo_codigo is None:
-        nuevo_codigo = 0
+        nuevo_codigo = 1
     else:
         nuevo_codigo = int(ultimo_codigo) + 1
 

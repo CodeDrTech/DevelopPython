@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>858</width>
-    <height>561</height>
+    <height>625</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@ QLabel {
       <x>10</x>
       <y>30</y>
       <width>831</width>
-      <height>501</height>
+      <height>571</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -310,7 +310,7 @@ QPushButton:pressed {
         <x>10</x>
         <y>110</y>
         <width>811</width>
-        <height>341</height>
+        <height>421</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -515,7 +515,7 @@ QLabel {
         <x>10</x>
         <y>10</y>
         <width>811</width>
-        <height>451</height>
+        <height>521</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -569,7 +569,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>410</y>
+         <y>480</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -606,7 +606,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>310</x>
-         <y>410</y>
+         <y>480</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -643,7 +643,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>220</x>
-         <y>410</y>
+         <y>480</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -680,7 +680,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>400</x>
-         <y>410</y>
+         <y>480</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -1186,7 +1186,7 @@ QLabel {
          <x>10</x>
          <y>119</y>
          <width>791</width>
-         <height>91</height>
+         <height>121</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -1215,8 +1215,8 @@ QGroupBox:title {
        <widget class="QDateEdit" name="txtFechaProd">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>10</y>
+          <x>620</x>
+          <y>40</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1258,8 +1258,8 @@ QDateEdit QAbstractItemView {
        <widget class="QDateEdit" name="txtFechaVenc">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>50</y>
+          <x>620</x>
+          <y>80</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1301,8 +1301,8 @@ QDateEdit QAbstractItemView {
        <widget class="QLabel" name="label_16">
         <property name="geometry">
          <rect>
-          <x>540</x>
-          <y>20</y>
+          <x>520</x>
+          <y>50</y>
           <width>91</width>
           <height>21</height>
          </rect>
@@ -1325,8 +1325,8 @@ QLabel {
        <widget class="QLabel" name="label_17">
         <property name="geometry">
          <rect>
-          <x>540</x>
-          <y>60</y>
+          <x>520</x>
+          <y>90</y>
           <width>91</width>
           <height>21</height>
          </rect>
@@ -1349,9 +1349,9 @@ QLabel {
        <widget class="QLabel" name="label_18">
         <property name="geometry">
          <rect>
-          <x>284</x>
-          <y>20</y>
-          <width>131</width>
+          <x>264</x>
+          <y>50</y>
+          <width>121</width>
           <height>21</height>
          </rect>
         </property>
@@ -1367,14 +1367,14 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Precion compra</string>
+         <string>Precio compra</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_19">
         <property name="geometry">
          <rect>
-          <x>299</x>
-          <y>60</y>
+          <x>279</x>
+          <y>90</y>
           <width>111</width>
           <height>21</height>
          </rect>
@@ -1391,14 +1391,14 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Precion venta</string>
+         <string>Precio venta</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtPrecioCom">
         <property name="geometry">
          <rect>
-          <x>410</x>
-          <y>10</y>
+          <x>390</x>
+          <y>40</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1477,8 +1477,8 @@ QLineEdit::placeholder {
        <widget class="QLineEdit" name="txtPrecioVen">
         <property name="geometry">
          <rect>
-          <x>410</x>
-          <y>50</y>
+          <x>390</x>
+          <y>80</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1557,8 +1557,8 @@ QLineEdit::placeholder {
        <widget class="QComboBox" name="cmbArticulo">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>10</y>
+          <x>100</x>
+          <y>40</y>
           <width>161</width>
           <height>35</height>
          </rect>
@@ -1588,8 +1588,8 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_15">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>5</x>
+          <y>50</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1612,8 +1612,8 @@ QLabel {
        <widget class="QLineEdit" name="txtStockInicial">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>50</y>
+          <x>105</x>
+          <y>80</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1692,8 +1692,8 @@ QLineEdit::placeholder {
        <widget class="QLabel" name="label_20">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>60</y>
+          <x>5</x>
+          <y>90</y>
           <width>101</width>
           <height>21</height>
          </rect>
@@ -1713,14 +1713,171 @@ QLabel {
          <string>Stock inicial</string>
         </property>
        </widget>
+       <widget class="QPushButton" name="btnAgregar">
+        <property name="geometry">
+         <rect>
+          <x>745</x>
+          <y>40</y>
+          <width>41</width>
+          <height>37</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnQuitar">
+        <property name="geometry">
+         <rect>
+          <x>745</x>
+          <y>80</y>
+          <width>41</width>
+          <height>37</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="txtCodArticulo">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>5</y>
+          <width>91</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3498db;
+    outline: none;
+}
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </widget>
       <widget class="QTableView" name="tbDatos2">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>220</y>
+         <y>380</y>
          <width>791</width>
-         <height>181</height>
+         <height>91</height>
         </rect>
        </property>
       </widget>
