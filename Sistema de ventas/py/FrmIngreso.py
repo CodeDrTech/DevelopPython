@@ -1,11 +1,11 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso
 
 class VentanaIngresoAlmacen(QMainWindow):
     ventana_abierta = False     
@@ -19,6 +19,69 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.setWindowTitle('.:. Mantenimiento de ingresos almacén .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        
+        # Botones del formulario y sus funciones
+        self.btnGuardar.clicked.connect(self.insertar_datos)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def insertar_datos(self):
+        try:
+            idempleado = self.txtNombre.text().upper()
+            idproveedor = self.txtApellidos.text().upper()
+            fecha = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            tipo_comprobante = self.cmbSexo.currentText()            
+            num_comprobante = self.cmbTipoDocumento.currentText().upper()
+            itbis = self.txtNumDocumento.text().upper()
+            estado = self.txtDireccion.toPlainText().upper()
+            
+            idingreso = int(self.txtTelefono.text())
+            idarticulo = self.txtEmail.text()
+            precio_compra = self.txtNombre.text().upper()
+            precio_venta = self.txtApellidos.text().upper()
+            stock_inicial = self.cmbSexo.currentText()
+            stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            fecha_produccion = self.cmbTipoDocumento.currentText().upper()
+            fecha_vencimiento = self.txtNumDocumento.text().upper()
+                
+            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not stock_actual or not fecha_produccion or not fecha_vencimiento:
+    
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            
+            else:
+                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado, idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento)
+        
+                self.visualiza_datos()
+        
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar ingreso")
+                mensaje.setText("ingreso registrado.")
+                mensaje.exec_()
+                
+                
+                #Limpia los TexBox
+                nombre = self.txtNombre.setText("")
+                apellidos = self.txtApellidos.setText("")
+                sexo = self.cmbSexo.setCurrentText("") 
+                tipo_doc = self.cmbTipoDocumento.setCurrentText("")
+                numdocumento = self.txtNumDocumento.setText("")
+                direccion = self.txtDireccion.setPlainText("")
+                telefono = self.txtTelefono.setText("")
+                email = self.txtEmail.setText("")
+                self.txtNombre.setFocus()
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
+            mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -70,7 +133,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         
         for i in range(model.rowCount()):
             articulo_data.append(model.data(model.index(i, 2)))
-            codigo_data.append(model.data(model.index(i, 1)))  # Obtenemos los códigos y los almacenamos.
+            codigo_data.append(model.data(model.index(i, 0)))  # Obtenemos los códigos y los almacenamos.
             
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model_articulo = QStandardItemModel()

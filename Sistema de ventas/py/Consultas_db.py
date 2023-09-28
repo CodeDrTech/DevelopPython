@@ -67,19 +67,24 @@ def insertar_dato_generico(tabla, columnas, valores):
 # Funciones para intercambiar datos de los formularios a la base de datos
 def insertar_nueva_presentacion(nombre, descripcion):
     insertar_dato_generico('presentacion', ['nombre', 'descripcion'], [nombre, descripcion])
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
 def insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password):
     insertar_dato_generico('empleado', ['nombre', 'apellidos', 'sexo', 'fecha_nac', 'num_documento', 'direccion', 'telefono', 'email', 'acceso', 'usuario', 'password'], [nombre, apellidos, sexo , fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password])
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
 def insertar_nueva_categoria(nombre, descripcion):
     insertar_dato_generico('categoria', ['nombre', 'descripcion'], [nombre, descripcion])
-    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------      
 def insertar_nuevo_proveedor(razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url):
     insertar_dato_generico('proveedor', ['razon_social', 'sector_comercial', 'tipo_documento', 'num_documento', 'direccion', 'telefono', 'email', 'url'], [razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url])
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
 def insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email):
     insertar_dato_generico('cliente', ['nombre', 'apellidos', 'sexo', 'fecha_nacimiento', 'tipo_documento', 'num_documento', 'direccion', 'telefono', 'email'], [nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email])
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
 def insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria, presentacion):
     try:
         # Obtener los IDs de Categoria y presentacion a partir de los nombres
@@ -120,7 +125,11 @@ def obtener_id_presentacion_por_nombre(nombre_presentacion):
     resultado = cursor.fetchone()
     conn.close()
     return resultado[0] if resultado else None
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
+def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado, idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento):
+    insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'], [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
+    insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'stock_inicial', 'stock_actual', 'fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento])
 
 
 

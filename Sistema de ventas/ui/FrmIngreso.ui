@@ -238,6 +238,9 @@ QPushButton:pressed {
         <height>37</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Anula el ingreso para que no se pueda vender posteriormente.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
       <property name="styleSheet">
        <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -1875,9 +1878,9 @@ QLineEdit::placeholder {
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>380</y>
+         <y>250</y>
          <width>791</width>
-         <height>91</height>
+         <height>221</height>
         </rect>
        </property>
       </widget>

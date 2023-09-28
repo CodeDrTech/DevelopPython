@@ -68,7 +68,7 @@ class VentanaVentas(QMainWindow):
         
         for i in range(model.rowCount()):
             articulo_data.append(model.data(model.index(i, 2)))
-            codigo_data.append(model.data(model.index(i, 1)))  # Obtenemos los códigos y los almacenamos.
+            codigo_data.append(model.data(model.index(i, 0)))  # Obtenemos los códigos y los almacenamos.
             
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model_articulo = QStandardItemModel()
