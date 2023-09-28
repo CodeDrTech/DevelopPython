@@ -38,10 +38,10 @@ class VentanaIngresoAlmacen(QMainWindow):
             idarticulo = self.txtEmail.text()
             precio_compra = self.txtNombre.text().upper()
             precio_venta = self.txtApellidos.text().upper()
-            stock_inicial = self.cmbSexo.currentText()
+            stock_inicial = int(self.txtStockInicial.text()) # me quede aqui de abajo hacia arriba
             stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd")
-            fecha_produccion = self.cmbTipoDocumento.currentText().upper()
-            fecha_vencimiento = self.txtNumDocumento.text().upper()
+            fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
+            fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
             if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not stock_actual or not fecha_produccion or not fecha_vencimiento:
     
@@ -65,16 +65,23 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
                 
                 
-                #Limpia los TexBox
-                nombre = self.txtNombre.setText("")
-                apellidos = self.txtApellidos.setText("")
-                sexo = self.cmbSexo.setCurrentText("") 
-                tipo_doc = self.cmbTipoDocumento.setCurrentText("")
-                numdocumento = self.txtNumDocumento.setText("")
-                direccion = self.txtDireccion.setPlainText("")
-                telefono = self.txtTelefono.setText("")
-                email = self.txtEmail.setText("")
-                self.txtNombre.setFocus()
+                # Limpia los TexBox
+                idempleado = self.txtNombre.text().upper()
+                idproveedor = self.txtApellidos.text().upper()
+                fecha = self.txtFechaNac.date().toString("yyyy-MM-dd")
+                tipo_comprobante = self.cmbSexo.currentText()            
+                num_comprobante = self.cmbTipoDocumento.currentText().upper()
+                itbis = self.txtNumDocumento.text().upper()
+                estado = self.txtDireccion.toPlainText().upper()
+                
+                idingreso = int(self.txtTelefono.text())
+                idarticulo = self.txtEmail.text()
+                precio_compra = self.txtNombre.text().upper()
+                precio_venta = self.txtApellidos.text().upper()
+                stock_inicial = self.cmbSexo.currentText()
+                stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd")
+                fecha_produccion = self.cmbTipoDocumento.currentText().upper()
+                fecha_vencimiento = self.txtNumDocumento.text().upper()
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
