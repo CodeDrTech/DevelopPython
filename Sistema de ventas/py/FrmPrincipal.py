@@ -107,6 +107,7 @@ class VentanaPrincipal(QMainWindow):
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmCategoria)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            subWindow.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()
         else:
@@ -125,6 +126,7 @@ class VentanaPrincipal(QMainWindow):
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmPresentacion)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            subWindow.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()
         else:
@@ -143,6 +145,7 @@ class VentanaPrincipal(QMainWindow):
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmIngreso)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            subWindow.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()
         else:
@@ -161,6 +164,7 @@ class VentanaPrincipal(QMainWindow):
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmArticulo)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            subWindow.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()
         else:
@@ -179,6 +183,7 @@ class VentanaPrincipal(QMainWindow):
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmProveedor)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            subWindow.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()
         else:
@@ -197,6 +202,7 @@ class VentanaPrincipal(QMainWindow):
             subWindow = QMdiSubWindow()
             subWindow.setWidget(frmVentas)
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            subWindow.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
             subWindow.show()
         else:
@@ -216,6 +222,7 @@ class VentanaPrincipal(QMainWindow):
             subWindow = QMdiSubWindow()  # Crea una ventana secundaria para VentanaCliente
             subWindow.setWidget(frmCliente)  # Establece VentanaCliente como contenido de la ventana secundaria
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore # Configura para que la ventana secundaria se elimine al cerrarse
+            subWindow.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)  # Agrega la ventana secundaria al mdiArea
             subWindow.show()  # Muestra la ventana secundaria
         else:
