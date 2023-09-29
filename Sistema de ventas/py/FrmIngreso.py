@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso, insertar_nuevo_detalle_ingreso
 
 class VentanaIngresoAlmacen(QMainWindow):
     ventana_abierta = False     
@@ -21,23 +21,24 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         # Botones del formulario y sus funciones
-        self.btnGuardar.clicked.connect(self.insertar_datos)
+        self.btnGuardar.clicked.connect(self.insertar_datos_ingreso)
+        self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def insertar_datos(self):
+    def insertar_datos_ingreso(self):
         impuesto = float(self.txtItbis.text())
 
         try:
-            idempleado = self.txtNombre.text().upper()
-            idproveedor = self.txtApellidos.text().upper()
-            fecha = self.txtFechaNac.date().toString("yyyy-MM-dd")
-            tipo_comprobante = self.cmbSexo.currentText()            
-            num_comprobante = self.cmbTipoDocumento.currentText().upper()
+            idempleado = int(self.txtIdProveedor.text()) #Falta ver como resolver este
+            idproveedor = int(self.txtIdProveedor.text())
+            fecha = self.txtFecha.date().toString("yyyy-MM-dd")
+            tipo_comprobante = self.cmbComprobante.currentText()            
+            num_comprobante = self.txtNumComprobante.text()
             itbis = impuesto/100
             estado = "Activo"
             
             idingreso = int(self.txtCodigo.text())
-            idarticulo = self.txtCodArticulo.text()
+            idarticulo = int(self.txtCodArticulo.text())
             precio_compra = float(self.txtPrecioCom.text())
             precio_venta = float(self.txtPrecioVen.text())
             stock_inicial = int(self.txtStockInicial.text())
@@ -55,9 +56,10 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             
             else:
-                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado, idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento)
-        
-                self.visualiza_datos()
+                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
+                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento)
+                #self.visualiza_datos_ingreso()
+                #self.visualiza_datos_detalle()
         
 
                 mensaje = QMessageBox()
@@ -67,23 +69,78 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
                 
                 
-                # Limpia los TexBox Falta trabajar toda esta porcion de codigo
-                idempleado = self.txtNombre.text().upper()
-            idproveedor = self.txtApellidos.text().upper()
-            fecha = self.txtFechaNac.date().toString("yyyy-MM-dd")
-            tipo_comprobante = self.cmbSexo.currentText()            
-            num_comprobante = self.cmbTipoDocumento.currentText().upper()
+                # Limpia los TexBox 
+                self.txtNumComprobante.setText("")
+                self.txtApellidos.setText(self.txtApellidos.text().upper())
+                self.txtFecha.setDate(QDate.currentDate())                
+                self.txtPrecioCom.setText("")
+                self.txtPrecioVen.setText("")
+                self.txtStockInicial.setText("")
+                self.txtFechaProd.setDate(QDate.currentDate())
+                self.txtFechaVenc.setDate(QDate.currentDate())
+
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
+            mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def insertar_datos_detalle(self):
+        impuesto = float(self.txtItbis.text())
+
+        try:
+            idempleado = int(self.txtIdProveedor.text()) #Falta ver como resolver este
+            idproveedor = int(self.txtIdProveedor.text())
+            fecha = self.txtFecha.date().toString("yyyy-MM-dd")
+            tipo_comprobante = self.cmbComprobante.currentText()            
+            num_comprobante = self.txtNumComprobante.text()
             itbis = impuesto/100
             estado = "Activo"
             
             idingreso = int(self.txtCodigo.text())
-            idarticulo = self.txtCodArticulo.text()
+            idarticulo = int(self.txtCodArticulo.text())
             precio_compra = float(self.txtPrecioCom.text())
             precio_venta = float(self.txtPrecioVen.text())
             stock_inicial = int(self.txtStockInicial.text())
             stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
+                
+            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not stock_actual or not fecha_produccion or not fecha_vencimiento:
+    
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
+            
+            
+            else:
+                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
+                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento)
+                #self.visualiza_datos_ingreso()
+                #self.visualiza_datos_detalle()
+        
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar detalles de ingreso")
+                mensaje.setText("detalles de ingreso registrado.")
+                mensaje.exec_()
+                
+                
+                # Limpia los TexBox 
+                self.txtNumComprobante.setText("")
+                self.txtApellidos.setText(self.txtApellidos.text().upper())
+                self.txtFecha.setDate(QDate.currentDate())                
+                self.txtPrecioCom.setText("")
+                self.txtPrecioVen.setText("")
+                self.txtStockInicial.setText("")
+                self.txtFechaProd.setDate(QDate.currentDate())
+                self.txtFechaVenc.setDate(QDate.currentDate())
 
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
@@ -198,6 +255,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
     GUI = VentanaIngresoAlmacen()

@@ -127,10 +127,12 @@ def obtener_id_presentacion_por_nombre(nombre_presentacion):
     return resultado[0] if resultado else None
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
-def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado, idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento):
+def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado):
     insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'], [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
-    insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'stock_inicial', 'stock_actual', 'fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento])
+    
 
+def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento):
+    insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'stock_inicial', 'stock_actual', 'fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento])
 
 
 

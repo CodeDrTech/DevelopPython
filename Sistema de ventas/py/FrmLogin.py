@@ -71,6 +71,7 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.administrador()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
+        self.llamar_venana_principal.ID_usuario(codigo_empleado)
         
         self.fn_Salir()
         
@@ -80,6 +81,7 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.almacen()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
+        self.llamar_venana_principal.ID_usuario(codigo_empleado)
         
         self.fn_Salir()
         
@@ -89,6 +91,7 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.vendedor()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
+        self.llamar_venana_principal.ID_usuario(codigo_empleado)
         
         self.fn_Salir()
         
@@ -103,11 +106,13 @@ class VentanaLogin(QMainWindow):
         if modelo is not None and 0 <= fila_id < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
+            columna_0 = modelo.index(fila_id, 0).data()
             columna_1 = modelo.index(fila_id, 1).data()
             columna_9 = modelo.index(fila_id, 9).data()
             columna_10 = modelo.index(fila_id, 10).data()
             columna_11 = modelo.index(fila_id, 11).data()
             
+            self.valor_columna_0 = columna_0
             self.valor_columna_1 = columna_1
             self.valor_columna_9 = columna_9
             self.valor_columna_10 = columna_10

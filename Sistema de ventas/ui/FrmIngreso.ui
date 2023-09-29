@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -93,7 +93,7 @@ QTabWidget {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -307,7 +307,7 @@ QPushButton:pressed {
        <string>Imprimir</string>
       </property>
      </widget>
-     <widget class="QTableView" name="tbDatos">
+     <widget class="QTableView" name="tbIngreso">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -458,7 +458,7 @@ QDateEdit QAbstractItemView {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -488,7 +488,7 @@ QLabel {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -1226,7 +1226,7 @@ QDateEdit QAbstractItemView {
          <rect>
           <x>520</x>
           <y>50</y>
-          <width>91</width>
+          <width>101</width>
           <height>21</height>
          </rect>
         </property>
@@ -1250,7 +1250,7 @@ QLabel {
          <rect>
           <x>520</x>
           <y>90</y>
-          <width>91</width>
+          <width>101</width>
           <height>21</height>
          </rect>
         </property>
@@ -1794,7 +1794,7 @@ QLineEdit::placeholder {
         </property>
        </widget>
       </widget>
-      <widget class="QTableView" name="tbDatos2">
+      <widget class="QTableView" name="tbDetalleIngreso">
        <property name="geometry">
         <rect>
          <x>10</x>
