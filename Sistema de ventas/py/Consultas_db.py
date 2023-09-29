@@ -131,8 +131,20 @@ def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num
     insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'], [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
     
 
-def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento):
+def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, fecha_produccion, fecha_vencimiento):
+    conn = conectar_db()
+    cursor = conn.execute("SELECT stock_actual FROM detalle_ingreso WHERE idarticulo = ?", (idarticulo,))
+    resultado = cursor.fetchone()
+    if resultado is None:
+        stock_actual = stock_inicial
+    else:
+        stock_actual = resultado[0]
+        if stock_actual > 0:
+            conn.execute("UPDATE detalle_ingreso SET stock_actual = ? WHERE idarticulo = ?", (stock_inicial, idarticulo,))
+        else:
+            stock_actual += stock_inicial
     insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'stock_inicial', 'stock_actual', 'fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento])
+    conn.close()
 
 
 

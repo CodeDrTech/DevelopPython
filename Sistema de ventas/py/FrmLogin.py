@@ -65,7 +65,7 @@ class VentanaLogin(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
-    def abrir_FrmPrincipal_admin(self, rol, nombre_usuario):
+    def abrir_FrmPrincipal_admin(self, rol, nombre_usuario, codigo_empleado):
         
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.administrador()
@@ -75,7 +75,7 @@ class VentanaLogin(QMainWindow):
         
         self.fn_Salir()
         
-    def abrir_FrmPrincipal_almacen(self, rol,  nombre_usuario):
+    def abrir_FrmPrincipal_almacen(self, rol,  nombre_usuario, codigo_empleado):
         
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.almacen()
@@ -85,7 +85,7 @@ class VentanaLogin(QMainWindow):
         
         self.fn_Salir()
         
-    def abrir_FrmPrincipal_vendedor(self, rol, nombre_usuario):
+    def abrir_FrmPrincipal_vendedor(self, rol, nombre_usuario, codigo_empleado):
         
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.vendedor()
@@ -126,6 +126,7 @@ class VentanaLogin(QMainWindow):
         try:
             fila = self.obtener_codigo_empleado(usuario)
             self.obtener_datos_de_fila(fila)
+            bd_usuadrio_id = self.valor_columna_0
             bd_nombre = self.valor_columna_1
             bd_acceso = self.valor_columna_9
             bd_usuario = self.valor_columna_10
@@ -145,7 +146,7 @@ class VentanaLogin(QMainWindow):
                 if bd_acceso == "Administrador":    
                     if usuario == bd_usuario and password == bd_password:
                         
-                        self.abrir_FrmPrincipal_admin(bd_acceso, bd_nombre)
+                        self.abrir_FrmPrincipal_admin(bd_acceso, bd_nombre, bd_usuadrio_id)
                         
                     else:
                         mensaje = QMessageBox()
@@ -159,7 +160,7 @@ class VentanaLogin(QMainWindow):
                         
                 elif bd_acceso == "Vendedor":
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_vendedor(bd_acceso, bd_nombre)
+                        self.abrir_FrmPrincipal_vendedor(bd_acceso, bd_nombre, bd_usuadrio_id)
                         
                     else:
                         mensaje = QMessageBox()
@@ -173,7 +174,7 @@ class VentanaLogin(QMainWindow):
                         
                 else:
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_almacen(bd_acceso, bd_nombre)
+                        self.abrir_FrmPrincipal_almacen(bd_acceso, bd_nombre, bd_usuadrio_id)
                         
                     else:
                         mensaje = QMessageBox()

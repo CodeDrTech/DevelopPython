@@ -1,9 +1,10 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
+from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtCore import QDate
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso, insertar_nuevo_detalle_ingreso
 
@@ -27,10 +28,19 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
     def insertar_datos_ingreso(self):
         impuesto = float(self.txtItbis.text())
+        
+        from FrmPrincipal import VentanaPrincipal
 
+        # Crear una instancia de la clase VentanaPrincipal
+        self.ventana_principal = VentanaPrincipal()
+
+        # Llamar a la función ID_usuario y almacenar su valor de retorno en una variable
+        #self.ventana_principal.ID_usuario()
+        Emp = 0
         try:
-            idempleado = int(self.txtIdProveedor.text()) #Falta ver como resolver este
-            idproveedor = int(self.txtIdProveedor.text())
+            # Variables usadas para los ingresos
+            idempleado = 1 #self.ventana_principal.ID_usuario(Emp) #Falta ver como resolver este
+            idproveedor = self.txtIdProveedor.text()
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            
             num_comprobante = self.txtNumComprobante.text()
@@ -42,11 +52,11 @@ class VentanaIngresoAlmacen(QMainWindow):
             precio_compra = float(self.txtPrecioCom.text())
             precio_venta = float(self.txtPrecioVen.text())
             stock_inicial = int(self.txtStockInicial.text())
-            stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
+            #stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
-            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not stock_actual or not fecha_produccion or not fecha_vencimiento:
+            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not fecha_produccion or not fecha_vencimiento:
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -57,9 +67,9 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             else:
                 insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
-                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento)
-                #self.visualiza_datos_ingreso()
-                #self.visualiza_datos_detalle()
+                
+                self.visualiza_datos_ingreso()
+                
         
 
                 mensaje = QMessageBox()
@@ -71,7 +81,6 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 # Limpia los TexBox 
                 self.txtNumComprobante.setText("")
-                self.txtApellidos.setText(self.txtApellidos.text().upper())
                 self.txtFecha.setDate(QDate.currentDate())                
                 self.txtPrecioCom.setText("")
                 self.txtPrecioVen.setText("")
@@ -100,16 +109,17 @@ class VentanaIngresoAlmacen(QMainWindow):
             itbis = impuesto/100
             estado = "Activo"
             
+            #Variables para detalles de ingreso
             idingreso = int(self.txtCodigo.text())
             idarticulo = int(self.txtCodArticulo.text())
             precio_compra = float(self.txtPrecioCom.text())
             precio_venta = float(self.txtPrecioVen.text())
             stock_inicial = int(self.txtStockInicial.text())
-            stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
+            #stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
-            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not stock_actual or not fecha_produccion or not fecha_vencimiento:
+            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not fecha_produccion or not fecha_vencimiento:
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -119,10 +129,12 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             
             else:
-                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
-                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento)
-                #self.visualiza_datos_ingreso()
-                #self.visualiza_datos_detalle()
+                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, fecha_produccion, fecha_vencimiento)
+                
+                
+                
+                
+                self.visualiza_datos_detalles()
         
 
                 mensaje = QMessageBox()
@@ -134,7 +146,6 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 # Limpia los TexBox 
                 self.txtNumComprobante.setText("")
-                self.txtApellidos.setText(self.txtApellidos.text().upper())
                 self.txtFecha.setDate(QDate.currentDate())                
                 self.txtPrecioCom.setText("")
                 self.txtPrecioVen.setText("")
@@ -151,7 +162,38 @@ class VentanaIngresoAlmacen(QMainWindow):
             mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    def visualiza_datos_detalles(self):
+        # Consulta SELECT * FROM Productos visualiza_datos_ingreso
+        query = QSqlQuery()
+        query.exec_(f"SELECT * FROM detalle_ingreso")
+        
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
+        self.tbDetalleIngreso.setModel(model)
 
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDetalleIngreso.resizeColumnsToContents()
+        self.tbDetalleIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
+    def visualiza_datos_ingreso(self):
+        # Consulta SELECT * FROM Productos 
+        query = QSqlQuery()
+        query.exec_(f"SELECT * FROM ingreso")
+        
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
+        self.tbIngreso.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbIngreso.resizeColumnsToContents()
+        self.tbIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def cargar_proveedores(self):    
         # Obtiene los datos de la columna Nombre de la tabla empleados.
         model = QSqlTableModel()
@@ -247,7 +289,8 @@ class VentanaIngresoAlmacen(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
-        
+        self.visualiza_datos_ingreso()
+        self.visualiza_datos_detalles()
         self.actualizar_ID_articulo()
         self.cargar_proveedores()
         self.cargar_articulos()
