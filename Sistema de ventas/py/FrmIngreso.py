@@ -25,21 +25,23 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def insertar_datos(self):
+        impuesto = float(self.txtItbis.text())
+
         try:
             idempleado = self.txtNombre.text().upper()
             idproveedor = self.txtApellidos.text().upper()
             fecha = self.txtFechaNac.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbSexo.currentText()            
             num_comprobante = self.cmbTipoDocumento.currentText().upper()
-            itbis = self.txtNumDocumento.text().upper()
-            estado = self.txtDireccion.toPlainText().upper()
+            itbis = impuesto/100
+            estado = "Activo"
             
-            idingreso = int(self.txtTelefono.text())
-            idarticulo = self.txtEmail.text()
-            precio_compra = self.txtNombre.text().upper()
-            precio_venta = self.txtApellidos.text().upper()
-            stock_inicial = int(self.txtStockInicial.text()) # me quede aqui de abajo hacia arriba
-            stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            idingreso = int(self.txtCodigo.text())
+            idarticulo = self.txtCodArticulo.text()
+            precio_compra = float(self.txtPrecioCom.text())
+            precio_venta = float(self.txtPrecioVen.text())
+            stock_inicial = int(self.txtStockInicial.text())
+            stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
@@ -65,23 +67,24 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
                 
                 
-                # Limpia los TexBox
+                # Limpia los TexBox Falta trabajar toda esta porcion de codigo
                 idempleado = self.txtNombre.text().upper()
-                idproveedor = self.txtApellidos.text().upper()
-                fecha = self.txtFechaNac.date().toString("yyyy-MM-dd")
-                tipo_comprobante = self.cmbSexo.currentText()            
-                num_comprobante = self.cmbTipoDocumento.currentText().upper()
-                itbis = self.txtNumDocumento.text().upper()
-                estado = self.txtDireccion.toPlainText().upper()
-                
-                idingreso = int(self.txtTelefono.text())
-                idarticulo = self.txtEmail.text()
-                precio_compra = self.txtNombre.text().upper()
-                precio_venta = self.txtApellidos.text().upper()
-                stock_inicial = self.cmbSexo.currentText()
-                stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd")
-                fecha_produccion = self.cmbTipoDocumento.currentText().upper()
-                fecha_vencimiento = self.txtNumDocumento.text().upper()
+            idproveedor = self.txtApellidos.text().upper()
+            fecha = self.txtFechaNac.date().toString("yyyy-MM-dd")
+            tipo_comprobante = self.cmbSexo.currentText()            
+            num_comprobante = self.cmbTipoDocumento.currentText().upper()
+            itbis = impuesto/100
+            estado = "Activo"
+            
+            idingreso = int(self.txtCodigo.text())
+            idarticulo = self.txtCodArticulo.text()
+            precio_compra = float(self.txtPrecioCom.text())
+            precio_venta = float(self.txtPrecioVen.text())
+            stock_inicial = int(self.txtStockInicial.text())
+            stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
+            fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
+            fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
+
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
