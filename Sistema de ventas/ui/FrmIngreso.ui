@@ -1532,7 +1532,7 @@ QLabel {
          <string>Articulo</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="txtStockInicial">
+       <widget class="QLineEdit" name="txtCantidad">
         <property name="geometry">
          <rect>
           <x>105</x>
@@ -1617,7 +1617,7 @@ QLineEdit::placeholder {
          <rect>
           <x>5</x>
           <y>90</y>
-          <width>101</width>
+          <width>81</width>
           <height>21</height>
          </rect>
         </property>
@@ -1633,7 +1633,7 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Stock inicial</string>
+         <string>Cantidad</string>
         </property>
        </widget>
        <widget class="QPushButton" name="btnAgregar">

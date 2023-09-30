@@ -131,36 +131,36 @@ def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num
     insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'], [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
     
 
-def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, fecha_produccion, fecha_vencimiento):
+def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento):
     conn = conectar_db()
 
     try:
-        cursor = conn.execute("SELECT stock_actual FROM detalle_ingreso WHERE idarticulo = ?", (idarticulo,))
-        resultado = cursor.fetchone()
+        cursor = conn.execute("SELECT stock FROM detalle_ingreso WHERE idarticulo = ?", (idarticulo,))
+        existing_stock = cursor.fetchone()
 
-        if resultado:
-            stock_actual = resultado[0] + stock_inicial
-            conn.execute("UPDATE detalle_ingreso SET stock_actual = ? WHERE idarticulo = ?", (stock_inicial, idarticulo,))
+        if existing_stock:
+            # Si el producto existe en Stock, actualizamos la cantidad disponible
+            nueva_cantidad = existing_stock[0] + cantidad
+            
+            #conn.execute("UPDATE detalle_ingreso SET stock = ? WHERE idarticulo = ?", (nueva_cantidad, idarticulo,))
+            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, nueva_cantidad, fecha_produccion, fecha_vencimiento])
+
         else:
-            # Si el producto no existe en Stock, lo agregamos
-            conn.execute("INSERT INTO detalle_ingreso (stock_inicial) VALUES (?)", (stock_inicial))
-        insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'stock_inicial', 'stock_actual', 'fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento])
+            # Si el producto no existe en Stock, lo agregamos con la cantidad proporcionada
+            #conn.execute("INSERT INTO detalle_ingreso (idarticulo, stock) VALUES (?, ?)", (idarticulo, cantidad))
 
-
+            # Luego de actualizar o insertar el stock, insertamos el detalle de ingreso
+            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, cantidad, fecha_produccion, fecha_vencimiento])
+    
     except Exception as e:
-        error_message = "Error: " + str(e)
-        # Mostrar mensaje de error utilizando QMessageBox
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Critical)
-        msg_box.setWindowTitle("Error")
-        msg_box.setText(error_message)
-        msg_box.exec_()
-        # Revertir cambios en caso de error
-        conn.rollback()
-        
+        # Mensaje de error
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al insertar nuevo detalle de ingreso para idarticulo {idarticulo}: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec_()
     finally:
-        # Cerrar la conexión
-        conn.close()
+        conn.close()    
 
 
 

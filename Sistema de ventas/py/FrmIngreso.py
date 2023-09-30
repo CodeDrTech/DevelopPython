@@ -51,12 +51,11 @@ class VentanaIngresoAlmacen(QMainWindow):
             idarticulo = int(self.txtCodArticulo.text())
             precio_compra = float(self.txtPrecioCom.text())
             precio_venta = float(self.txtPrecioVen.text())
-            stock_inicial = int(self.txtStockInicial.text())
-            #stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
+            cantidad = int(self.txtCantidad.text())
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
-            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not fecha_produccion or not fecha_vencimiento:
+            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -84,7 +83,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 self.txtFecha.setDate(QDate.currentDate())                
                 self.txtPrecioCom.setText("")
                 self.txtPrecioVen.setText("")
-                self.txtStockInicial.setText("")
+                self.txtCantidad.setText("")
                 self.txtFechaProd.setDate(QDate.currentDate())
                 self.txtFechaVenc.setDate(QDate.currentDate())
 
@@ -114,12 +113,11 @@ class VentanaIngresoAlmacen(QMainWindow):
             idarticulo = int(self.txtCodArticulo.text())
             precio_compra = float(self.txtPrecioCom.text())
             precio_venta = float(self.txtPrecioVen.text())
-            stock_inicial = int(self.txtStockInicial.text())
-            #stock_actual = self.txtFechaNac.date().toString("yyyy-MM-dd") #Falta ver como resolver este
+            cantidad = int(self.txtCantidad.text())
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
-            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not stock_inicial or not fecha_produccion or not fecha_vencimiento:
+            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -129,7 +127,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             
             else:
-                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, fecha_produccion, fecha_vencimiento)
+                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento)
                 
                 
                 
@@ -149,7 +147,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 self.txtFecha.setDate(QDate.currentDate())                
                 self.txtPrecioCom.setText("")
                 self.txtPrecioVen.setText("")
-                self.txtStockInicial.setText("")
+                self.txtCantidad.setText("")
                 self.txtFechaProd.setDate(QDate.currentDate())
                 self.txtFechaVenc.setDate(QDate.currentDate())
 
