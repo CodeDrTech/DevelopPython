@@ -133,19 +133,34 @@ def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num
 
 def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, fecha_produccion, fecha_vencimiento):
     conn = conectar_db()
-    cursor = conn.execute("SELECT stock_actual FROM detalle_ingreso WHERE idarticulo = ?", (idarticulo,))
-    resultado = cursor.fetchone()
-    if resultado is None:
-        stock_actual = stock_inicial
-    else:
-        stock_actual = resultado[0]
-        if stock_actual > 0:
+
+    try:
+        cursor = conn.execute("SELECT stock_actual FROM detalle_ingreso WHERE idarticulo = ?", (idarticulo,))
+        resultado = cursor.fetchone()
+
+        if resultado:
+            stock_actual = resultado[0] + stock_inicial
             conn.execute("UPDATE detalle_ingreso SET stock_actual = ? WHERE idarticulo = ?", (stock_inicial, idarticulo,))
         else:
-            stock_actual += stock_inicial
-    insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'stock_inicial', 'stock_actual', 'fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento])
-    conn.close()
+            # Si el producto no existe en Stock, lo agregamos
+            conn.execute("INSERT INTO detalle_ingreso (stock_inicial) VALUES (?)", (stock_inicial))
+        insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'stock_inicial', 'stock_actual', 'fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, stock_inicial, stock_actual, fecha_produccion, fecha_vencimiento])
 
+
+    except Exception as e:
+        error_message = "Error: " + str(e)
+        # Mostrar mensaje de error utilizando QMessageBox
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setWindowTitle("Error")
+        msg_box.setText(error_message)
+        msg_box.exec_()
+        # Revertir cambios en caso de error
+        conn.rollback()
+        
+    finally:
+        # Cerrar la conexión
+        conn.close()
 
 
 
