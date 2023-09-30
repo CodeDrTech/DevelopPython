@@ -29,17 +29,20 @@ class VentanaIngresoAlmacen(QMainWindow):
     def insertar_datos_ingreso(self):
         impuesto = float(self.txtItbis.text())
         
-        from FrmPrincipal import VentanaPrincipal
+        
+        #from FrmPrincipal import VentanaPrincipal
+        #from FrmLogin import VentanaLogin
 
         # Crear una instancia de la clase VentanaPrincipal
-        self.ventana_principal = VentanaPrincipal()
+        #self.ventana_principal = VentanaPrincipal()
+        #self.ventana_login = VentanaLogin()
 
         # Llamar a la función ID_usuario y almacenar su valor de retorno en una variable
-        #self.ventana_principal.ID_usuario()
-        Emp = 0
+        EmpID = self.ventana_login.dame_usuario()
+        
         try:
             # Variables usadas para los ingresos
-            idempleado = 1 #self.ventana_principal.ID_usuario(Emp) #Falta ver como resolver este
+            idempleado = EmpID 
             idproveedor = self.txtIdProveedor.text()
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            
@@ -296,6 +299,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())
+        self.txtFechaProd.setDate(QDate.currentDate())
+        self.txtFechaVenc.setDate(QDate.currentDate())
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
 if __name__ == '__main__':

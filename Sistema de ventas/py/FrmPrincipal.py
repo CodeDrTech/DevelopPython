@@ -28,9 +28,9 @@ class VentanaPrincipal(QMainWindow):
         self.lblUsuario.setText(rol + ":")
         self.lblEmpleado.setText(etiqueta)
         
-    def ID_usuario(self,empleadoID):
-        idempleado = empleadoID
-        return idempleado
+    #def ID_usuario(self,empleadoID):
+        #idempleado = empleadoID
+        #return idempleado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         

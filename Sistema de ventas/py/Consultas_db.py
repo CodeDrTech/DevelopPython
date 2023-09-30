@@ -142,14 +142,11 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
             # Si el producto existe en Stock, actualizamos la cantidad disponible
             nueva_cantidad = existing_stock[0] + cantidad
             
-            #conn.execute("UPDATE detalle_ingreso SET stock = ? WHERE idarticulo = ?", (nueva_cantidad, idarticulo,))
+            
             insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, nueva_cantidad, fecha_produccion, fecha_vencimiento])
 
         else:
             # Si el producto no existe en Stock, lo agregamos con la cantidad proporcionada
-            #conn.execute("INSERT INTO detalle_ingreso (idarticulo, stock) VALUES (?, ?)", (idarticulo, cantidad))
-
-            # Luego de actualizar o insertar el stock, insertamos el detalle de ingreso
             insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, cantidad, fecha_produccion, fecha_vencimiento])
     
     except Exception as e:
