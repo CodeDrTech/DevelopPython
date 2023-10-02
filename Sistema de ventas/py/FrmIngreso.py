@@ -29,11 +29,11 @@ class VentanaIngresoAlmacen(QMainWindow):
     def usuario_id(self):
         from FrmLogin import VentanaLogin
         self.ventana_principal = VentanaLogin()
-        texto = self.ventana_principal.guardar_usuario()
+        texto = self.ventana_principal.lbl_id_usuario.text()
         
         
         self.lblIdEmpleado.setText(texto)
-        print(texto)
+        
         
     def insertar_datos_ingreso(self):
         impuesto = float(self.txtItbis.text())
