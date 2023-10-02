@@ -30,19 +30,19 @@ class VentanaIngresoAlmacen(QMainWindow):
         impuesto = float(self.txtItbis.text())
         
         
-        #from FrmPrincipal import VentanaPrincipal
-        #from FrmLogin import VentanaLogin
+        from FrmPrincipal import VentanaPrincipal
+        
 
         # Crear una instancia de la clase VentanaPrincipal
-        #self.ventana_principal = VentanaPrincipal()
-        #self.ventana_login = VentanaLogin()
+        ventana_principal = VentanaPrincipal()
+        empleadoID = 10
 
-        # Llamar a la función ID_usuario y almacenar su valor de retorno en una variable
-        EmpID = self.ventana_login.dame_usuario()
-        
+        # Llama al método ID_usuario para obtener el valor de empleadoID
+        empleado_id = ventana_principal.ID_usuario(empleadoID)
+        print(f"ID del empleado: {empleado_id}")
         try:
             # Variables usadas para los ingresos
-            idempleado = EmpID 
+            idempleado = empleado_id 
             idproveedor = self.txtIdProveedor.text()
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            

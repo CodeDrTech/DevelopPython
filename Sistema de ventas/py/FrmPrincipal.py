@@ -24,13 +24,10 @@ class VentanaPrincipal(QMainWindow):
         #self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
-    def etiqueta_usuario(self, rol, etiqueta):
+    def etiqueta_usuario(self, rol, etiqueta,ID):
         self.lblUsuario.setText(rol + ":")
         self.lblEmpleado.setText(etiqueta)
-        
-    #def ID_usuario(self,empleadoID):
-        #idempleado = empleadoID
-        #return idempleado
+        self.lblIdEmpleado.setText(ID)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         
