@@ -13,26 +13,25 @@ from FrmIngreso import VentanaIngresoAlmacen
 from FrmVentas import VentanaVentas
 
 class VentanaPrincipal(QMainWindow):      
-    def __init__(self):
+    def __init__(self,):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmPrincipal.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
+        
+        
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Sistema de Ventas .:.')
         #self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
-    def etiqueta_usuario(self, rol, usuario,ID):
+    
+    def etiqueta_usuario(self, rol, usuario):
         self.lblUsuario.setText(rol + ":")
         self.lblEmpleado.setText(usuario)
-        self.lblIdEmpleado.setText(ID)
     
-    def obtener_contenido_lbl_id_empleado(self):
-        # Acceder al contenido de lblIdEmpleado
-        contenido_lbl_id_empleado = self.lblIdEmpleado.text()
-        return contenido_lbl_id_empleado
+    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         
