@@ -38,8 +38,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         
 
         # Llama al método ID_usuario para obtener el valor de empleadoID
-        empleado_id = ventana_principal.txtIdUsuario.text()
-        self.txtIdUsuario.setText(empleado_id)
+        empleado_id = ventana_principal.lblIdEmpleado.text()
+        print(empleado_id)
         try:
             # Variables usadas para los ingresos
             idempleado = empleado_id 

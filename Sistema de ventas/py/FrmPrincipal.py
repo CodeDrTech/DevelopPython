@@ -28,11 +28,10 @@ class VentanaPrincipal(QMainWindow):
         self.lblUsuario.setText(rol + ":")
         self.lblEmpleado.setText(usuario)
         self.lblIdEmpleado.setText(ID)
-        self.txtIdUsuario.setText(ID)
     
     def obtener_contenido_lbl_id_empleado(self):
         # Acceder al contenido de lblIdEmpleado
-        contenido_lbl_id_empleado = self.txtIdUsuario.text()
+        contenido_lbl_id_empleado = self.lblIdEmpleado.text()
         return contenido_lbl_id_empleado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -254,6 +253,7 @@ class VentanaPrincipal(QMainWindow):
         
     def showEvent(self, event):
         super().showEvent(event)
+        
         
         
         
