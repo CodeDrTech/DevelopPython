@@ -35,11 +35,11 @@ class VentanaIngresoAlmacen(QMainWindow):
 
         # Crear una instancia de la clase VentanaPrincipal
         ventana_principal = VentanaPrincipal()
-        empleadoID = 10
+        
 
         # Llama al método ID_usuario para obtener el valor de empleadoID
-        empleado_id = ventana_principal.ID_usuario(empleadoID)
-        print(f"ID del empleado: {empleado_id}")
+        empleado_id = ventana_principal.txtIdUsuario.text()
+        self.txtIdUsuario.setText(empleado_id)
         try:
             # Variables usadas para los ingresos
             idempleado = empleado_id 

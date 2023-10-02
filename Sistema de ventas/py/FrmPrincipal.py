@@ -12,7 +12,7 @@ from FrmCliente import VentanaCliente
 from FrmIngreso import VentanaIngresoAlmacen
 from FrmVentas import VentanaVentas
 
-class VentanaPrincipal(QMainWindow):       
+class VentanaPrincipal(QMainWindow):      
     def __init__(self):
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmPrincipal.ui',self)
@@ -24,10 +24,16 @@ class VentanaPrincipal(QMainWindow):
         #self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
-    def etiqueta_usuario(self, rol, etiqueta,ID):
+    def etiqueta_usuario(self, rol, usuario,ID):
         self.lblUsuario.setText(rol + ":")
-        self.lblEmpleado.setText(etiqueta)
+        self.lblEmpleado.setText(usuario)
         self.lblIdEmpleado.setText(ID)
+        self.txtIdUsuario.setText(ID)
+    
+    def obtener_contenido_lbl_id_empleado(self):
+        # Acceder al contenido de lblIdEmpleado
+        contenido_lbl_id_empleado = self.txtIdUsuario.text()
+        return contenido_lbl_id_empleado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         

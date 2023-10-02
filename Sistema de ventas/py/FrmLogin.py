@@ -127,7 +127,7 @@ class VentanaLogin(QMainWindow):
         try:
             fila = self.obtener_codigo_empleado(usuario)
             self.obtener_datos_de_fila(fila)
-            bd_usuadrio_id = self.valor_columna_0
+            bd_usuadrio_id = str(self.valor_columna_0)
             bd_nombre = self.valor_columna_1
             bd_acceso = self.valor_columna_9
             bd_usuario = self.valor_columna_10
