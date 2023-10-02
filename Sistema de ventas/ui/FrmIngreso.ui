@@ -1997,6 +1997,36 @@ QLineEdit::placeholder {
      </widget>
     </widget>
    </widget>
+   <widget class="QLabel" name="lblIdEmpleado">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>20</y>
+      <width>59</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Usuario</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
