@@ -27,9 +27,9 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def usuario_id(self):
-        from FrmLogin import VentanaLogin
-        self.ventana_principal = VentanaLogin()
-        texto = self.ventana_principal.lbl_id_usuario.text()
+        from FrmPrincipal import VentanaPrincipal
+        self.ventana_principal = VentanaPrincipal()
+        texto = self.ventana_principal.lblIdEmpleado.text()
         
         
         self.lblIdEmpleado.setText(texto)

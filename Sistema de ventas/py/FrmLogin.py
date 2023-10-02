@@ -69,12 +69,12 @@ class VentanaLogin(QMainWindow):
     def abrir_FrmPrincipal_admin(self, rol, nombre_usuario, usuario_id):
         
         self.llamar_venana_principal = VentanaPrincipal()
-        self.llamar_venana_principal.administrador()
+        self.llamar_venana_principal.administrador(usuario_id)
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
         #self.llamar_venana_principal.etiqueta_id_usuario(usuario_id)
         
-        self.lbl_id_usuario.setText(usuario_id)
+        #self.lbl_id_usuario.setText(str(usuario_id))
         
         self.hide()
         
@@ -86,7 +86,7 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
         #self.llamar_venana_principal.etiqueta_id_usuario(usuario_id)
         
-        self.lbl_id_usuario.setText(usuario_id)
+        self.lbl_id_usuario.setText(str(usuario_id))
         
         self.hide()
         

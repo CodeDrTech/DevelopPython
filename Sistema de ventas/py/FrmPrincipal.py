@@ -42,7 +42,7 @@ class VentanaPrincipal(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         
-    def administrador(self):
+    def administrador(self, usuario_id):
             self.actionSalir.triggered.connect(self.fn_Salir)
             self.actionEmpleados.triggered.connect(self.abrirFrmEmpleados)
             self.actionCategorias.triggered.connect(self.abrirFrmCategoria)
@@ -56,7 +56,7 @@ class VentanaPrincipal(QMainWindow):
             #self.menuConsultas
             #self.nemuHerramientas       
             #self.actionCategorias.setEnabled(False)
-            
+            self.lblIdEmpleado.setText(usuario_id)
     def vendedor(self):
             self.actionSalir.triggered.connect(self.fn_Salir)
             self.actionEmpleados.setEnabled(False)
