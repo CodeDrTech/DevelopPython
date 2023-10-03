@@ -400,8 +400,8 @@ QLabel {
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>175</width>
-      <height>165</height>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">

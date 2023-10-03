@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QTableView
 from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
@@ -25,14 +25,78 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos_ingreso)
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
 #------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+    def ultima_sesion(self):
+        query = QSqlQuery()
+        query.exec_(f"SELECT max(idsesion) FROM sesiones")
+        
+        # Almacena en una variable el resultado del select que es de tipo int
+        resultado = 0
+        if query.next():
+            resultado = query.value(0)
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.tbSesiones.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbSesiones.resizeColumnsToContents()    
+        
+        return resultado
+        
+        
+    def obtener_datos_de_fila(self, fila_id):
+        query = QSqlQuery()
+        query.exec_(f"SELECT * FROM sesiones")
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.tbSesiones.setModel(model)
+        
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbSesiones.model()
+        if modelo is not None and 0 <= fila_id < modelo.rowCount():
+            
+            # Obtener los datos de la fila seleccionada
+            columna_1 = modelo.index(fila_id, 1).data()
+            
+            self.valor_columna_1 = columna_1
+            
+            
+    def obtener_id_sesion(self, idsesion):
+        model = QSqlTableModel()
+        model.setTable('sesiones')
+        model.select()
+        
+            
+        # Encuentra el índice de la columna "idsesion"
+        idsesion_column_index = model.fieldIndex("idsesion")
+    
+        # Itera a través de las filas para encontrar el idsesion
+        for row in range(model.rowCount()):
+            index = model.index(row, idsesion_column_index)
+            if model.data(index) == idsesion:
+                # Si se encuentra el idsesion, devuelve el número de fila
+                return row
+    
+        # Si no se encuentra el idsesion, devuelve None
+        return -1
+#------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
         impuesto = float(self.txtItbis.text())
         
         
         try:
+            id_ultima_sesion = self.ultima_sesion()
+            fila = self.obtener_id_sesion(id_ultima_sesion)
+            self.obtener_datos_de_fila(fila)
+            id_empleado = self.valor_columna_1
+            
+            
             # Variables usadas para los ingresos
-            idempleado = 1
+            idempleado = id_empleado
             idproveedor = self.txtIdProveedor.text()
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            
@@ -280,7 +344,8 @@ class VentanaIngresoAlmacen(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
-        self.usuario_id()
+        self.tbSesiones.hide()
+        self.ultima_sesion()
         self.visualiza_datos_ingreso()
         self.visualiza_datos_detalles()
         self.actualizar_ID_articulo()
