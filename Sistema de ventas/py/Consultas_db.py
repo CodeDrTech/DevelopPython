@@ -86,8 +86,8 @@ def insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocum
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
-def insertar_datos_sesion(idempleado, nombre, apellidos, usuario, rol, fecha):
-    insertar_dato_generico('sesiones', ['idempleado', 'nombre', 'apellidos', 'usuario', 'rol', 'fecha'], [idempleado, nombre, apellidos, usuario, rol, fecha])
+def insertar_datos_sesion(idempleado, nombre, apellidos, usuario, rol, fechaHora):
+    insertar_dato_generico('sesiones', ['idempleado', 'nombre', 'apellidos', 'usuario', 'rol', 'fecha'], [idempleado, nombre, apellidos, usuario, rol, fechaHora])
 
 
 

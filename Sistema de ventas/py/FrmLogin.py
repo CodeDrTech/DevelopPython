@@ -129,14 +129,14 @@ class VentanaLogin(QMainWindow):
         password = self.txtPassword.text()
         usuario = self.txtUsuario.text()
         fecha_y_hora = QDateTime.currentDateTime()
-        fecha_y_hora_con_formato = fecha_y_hora.toString('yyyy-MM-dd HH:mm:ss')
+        fechaHora_formateada = fecha_y_hora.toString('yyyy-MM-dd HH:mm:ss')
         try:
             fila = self.obtener_codigo_empleado(usuario)
             self.obtener_datos_de_fila(fila)
             bd_usuadrio_id = self.valor_columna_0
             bd_nombre = self.valor_columna_1
             bd_apellidos = self.valor_columna_2
-            bd_acceso = self.valor_columna_9
+            bd_rol = self.valor_columna_9
             bd_usuario = self.valor_columna_10
             bd_password = self.valor_columna_11
         
@@ -151,11 +151,11 @@ class VentanaLogin(QMainWindow):
                 mensaje.exec_()
             
             else:
-                if bd_acceso == "Administrador":    
+                if bd_rol == "Administrador":    
                     if usuario == bd_usuario and password == bd_password:
                         
-                        self.abrir_FrmPrincipal_admin(bd_acceso, bd_nombre)
-                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_acceso, fecha_y_hora_con_formato)
+                        self.abrir_FrmPrincipal_admin(bd_rol, bd_nombre)
+                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                     else:
                         mensaje = QMessageBox()
                         mensaje.setIcon(QMessageBox.Critical)
@@ -166,10 +166,10 @@ class VentanaLogin(QMainWindow):
                         self.txtUsuario.setText("")
                         self.txtUsuario.setFocus()
                         
-                elif bd_acceso == "Vendedor":
+                elif bd_rol == "Vendedor":
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_vendedor(bd_acceso, bd_nombre)
-                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_acceso, fecha_y_hora_con_formato)
+                        self.abrir_FrmPrincipal_vendedor(bd_rol, bd_nombre)
+                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                         
                     else:
                         mensaje = QMessageBox()
@@ -183,8 +183,8 @@ class VentanaLogin(QMainWindow):
                         
                 else:
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_almacen(bd_acceso, bd_nombre)
-                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_acceso, fecha_y_hora_con_formato)
+                        self.abrir_FrmPrincipal_almacen(bd_rol, bd_nombre)
+                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                         
                     else:
                         mensaje = QMessageBox()
@@ -207,11 +207,11 @@ class VentanaLogin(QMainWindow):
             self.txtUsuario.setFocus()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def insertar_sesion(self, empleadoId, nombre, apellidos, usuario, rol, fecha):
+    def insertar_sesion(self, empleadoId, nombre, apellidos, usuario, rol, fechaHora):
         try:
 
 
-            insertar_datos_sesion(empleadoId, nombre, apellidos, usuario, rol, fecha)
+            insertar_datos_sesion(empleadoId, nombre, apellidos, usuario, rol, fechaHora)
 
 
         except Exception as e:
