@@ -67,7 +67,7 @@ class VentanaCategoria(QMainWindow):
         try:
             #codigo = self.txtCodigo.text().upper()
             nombre = self.txtNombre.text().upper()
-            descripcion = self.txtDescripcion.toPlainText().upper()
+            descripcion = self.txtDescripcion.toPlainText()
         
         
             if  not nombre:
