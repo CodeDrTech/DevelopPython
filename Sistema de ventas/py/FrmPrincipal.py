@@ -30,19 +30,12 @@ class VentanaPrincipal(QMainWindow):
     def etiqueta_usuario(self, rol, usuario):
         self.lblUsuario.setText(rol + ":")
         self.lblEmpleado.setText(usuario)
-    
-    def etiqueta_id_usuario(self, usuario_id):
-        self.lblIdEmpleado.setText(usuario_id)
-        #return self.lblIdEmpleado.setText(usuario_id)
-    def etiqueta_id_usuario2(self):
-        #self.lblIdEmpleado.setText(usuario_id)
-        return self.lblIdEmpleado.text()
         
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         
-    def administrador(self, usuario_id):
+    def administrador(self):
             self.actionSalir.triggered.connect(self.fn_Salir)
             self.actionEmpleados.triggered.connect(self.abrirFrmEmpleados)
             self.actionCategorias.triggered.connect(self.abrirFrmCategoria)
@@ -56,7 +49,7 @@ class VentanaPrincipal(QMainWindow):
             #self.menuConsultas
             #self.nemuHerramientas       
             #self.actionCategorias.setEnabled(False)
-            self.lblIdEmpleado.setText(usuario_id)
+            
     def vendedor(self):
             self.actionSalir.triggered.connect(self.fn_Salir)
             self.actionEmpleados.setEnabled(False)

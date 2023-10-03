@@ -452,32 +452,6 @@ QTableView::item:hover {
 </string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_id_usuario">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>170</y>
-      <width>21</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel {
-    color: #2980b9;
-    font-size: 20px;
-    font-weight: bold;
-}</string>
-    </property>
-    <property name="text">
-     <string>NU</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

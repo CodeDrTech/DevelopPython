@@ -25,23 +25,14 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos_ingreso)
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-    def usuario_id(self):
-        from FrmPrincipal import VentanaPrincipal
-        self.ventana_principal = VentanaPrincipal()
-        texto = self.ventana_principal.lblIdEmpleado.text()
-        
-        
-        self.lblIdEmpleado.setText(texto)
-        
-        
+#------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
         impuesto = float(self.txtItbis.text())
         
-        #self.usuario_id()
+        
         try:
             # Variables usadas para los ingresos
-            idempleado = self.lblIdEmpleado.text()
+            idempleado = 1
             idproveedor = self.txtIdProveedor.text()
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            

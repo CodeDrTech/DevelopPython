@@ -6,6 +6,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtCore import QDateTime
 from FrmPrincipal import VentanaPrincipal
+from Consultas_db import insertar_datos_sesion
 
 
 class VentanaLogin(QMainWindow):
@@ -66,39 +67,33 @@ class VentanaLogin(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
-    def abrir_FrmPrincipal_admin(self, rol, nombre_usuario, usuario_id):
+    def abrir_FrmPrincipal_admin(self, rol, nombre_usuario):
         
         self.llamar_venana_principal = VentanaPrincipal()
-        self.llamar_venana_principal.administrador(usuario_id)
+        self.llamar_venana_principal.administrador()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        #self.llamar_venana_principal.etiqueta_id_usuario(usuario_id)
         
-        #self.lbl_id_usuario.setText(str(usuario_id))
         
         self.hide()
         
-    def abrir_FrmPrincipal_almacen(self, rol,  nombre_usuario, usuario_id):
+    def abrir_FrmPrincipal_almacen(self, rol,  nombre_usuario):
         
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.almacen()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        #self.llamar_venana_principal.etiqueta_id_usuario(usuario_id)
         
-        self.lbl_id_usuario.setText(str(usuario_id))
         
         self.hide()
         
-    def abrir_FrmPrincipal_vendedor(self, rol, nombre_usuario, usuario_id):
+    def abrir_FrmPrincipal_vendedor(self, rol, nombre_usuario):
         
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.vendedor()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        #self.llamar_venana_principal.etiqueta_id_usuario(usuario_id)
-
-        self.lbl_id_usuario.setText(usuario_id)
+        
         
         
         
@@ -131,11 +126,12 @@ class VentanaLogin(QMainWindow):
     def validar_usuario(self):
         password = self.txtPassword.text()
         usuario = self.txtUsuario.text()
-        
+        fecha_y_hora = QDateTime.currentDateTime()
+        fecha_y_hora_con_formato = fecha_y_hora.toString('yyyy-MM-dd HH:mm:ss')
         try:
             fila = self.obtener_codigo_empleado(usuario)
             self.obtener_datos_de_fila(fila)
-            bd_usuadrio_id = str(self.valor_columna_0)
+            bd_usuadrio_id = self.valor_columna_0
             bd_nombre = self.valor_columna_1
             bd_acceso = self.valor_columna_9
             bd_usuario = self.valor_columna_10
@@ -155,8 +151,8 @@ class VentanaLogin(QMainWindow):
                 if bd_acceso == "Administrador":    
                     if usuario == bd_usuario and password == bd_password:
                         
-                        self.abrir_FrmPrincipal_admin(bd_acceso, bd_nombre, bd_usuadrio_id)
-                        
+                        self.abrir_FrmPrincipal_admin(bd_acceso, bd_nombre)
+                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, 'casicasi', bd_usuario, bd_acceso, fecha_y_hora_con_formato)
                     else:
                         mensaje = QMessageBox()
                         mensaje.setIcon(QMessageBox.Critical)
@@ -169,7 +165,8 @@ class VentanaLogin(QMainWindow):
                         
                 elif bd_acceso == "Vendedor":
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_vendedor(bd_acceso, bd_nombre, bd_usuadrio_id)
+                        self.abrir_FrmPrincipal_vendedor(bd_acceso, bd_nombre)
+                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, 'casicasi', bd_usuario, bd_acceso, fecha_y_hora_con_formato)
                         
                     else:
                         mensaje = QMessageBox()
@@ -183,7 +180,8 @@ class VentanaLogin(QMainWindow):
                         
                 else:
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_almacen(bd_acceso, bd_nombre, bd_usuadrio_id)
+                        self.abrir_FrmPrincipal_almacen(bd_acceso, bd_nombre)
+                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, 'casicasi', bd_usuario, bd_acceso, fecha_y_hora_con_formato)
                         
                     else:
                         mensaje = QMessageBox()
@@ -204,6 +202,24 @@ class VentanaLogin(QMainWindow):
             self.txtPassword.setText("")
             self.txtUsuario.setText("")
             self.txtUsuario.setFocus()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def insertar_sesion(self, empleadoId, nombre, apellidos, usuario, rol, fecha):
+        try:
+
+
+            insertar_datos_sesion(empleadoId, nombre, apellidos, usuario, rol, fecha)
+
+
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
+            mensaje.exec_()
+
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def fn_Salir(self):
