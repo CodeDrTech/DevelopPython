@@ -1,9 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QAbstractItemView, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PyQt5 import QtGui
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtSql import QSqlTableModel, QSqlQuery
+from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDateTime
 from FrmPrincipal import VentanaPrincipal
 from Consultas_db import insertar_datos_sesion
