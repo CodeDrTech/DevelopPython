@@ -41,9 +41,9 @@ class VentanaArticulo(QMainWindow):
         query.exec_(f"SELECT\
                         articulo.codigo as 'CODIGO',\
                         articulo.nombre AS 'NOMBRE',\
+                        presentacion.descripcion AS 'PRESENTACION',\
                         articulo.descripcion AS 'DESCRIPCION',\
-                        categoria.nombre AS 'CATEGORIA',\
-                        presentacion.nombre AS 'PRESENTACION'\
+                        categoria.descripcion AS 'CATEGORIA'\
                     FROM\
                         articulo\
                     INNER JOIN\
