@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QStyledItemDelegate
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Conexion_db import conectar_db
 from PyQt5.QtCore import Qt
-import pyodbc
 from PyQt5.QtWidgets import QMessageBox
 
 

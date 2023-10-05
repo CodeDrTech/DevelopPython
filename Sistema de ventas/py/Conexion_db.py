@@ -1,5 +1,7 @@
 import sqlite3
+import pyodbc
 from PyQt5.QtSql import QSqlDatabase
+from PyQt5.QtWidgets import QMessageBox
 
 
 
@@ -7,19 +9,27 @@ from PyQt5.QtSql import QSqlDatabase
 def ruta_database():
     ruta_configuracion = "Sistema de ventas/txt/configuracion.txt"
     with open(ruta_configuracion, "r") as f:
-         ruta_guardada = f.read().strip()
+         cadena_conexion = f.read().strip()
     
-    Ruta = ruta_guardada
-    return Ruta
+    return cadena_conexion
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 # Funcion usada para insertar datos a la base de datos.
 def conectar_db():
-    conn = sqlite3.connect(ruta_database())
-    return conn
+    cadena_conexion = ruta_database()
+    try:
+        conn = pyodbc.connect(cadena_conexion)
+        return conn
+    except Exception as e:
+        mensaje = QMessageBox()
+        mensaje.setIcon(QMessageBox.Critical)
+        mensaje.setWindowTitle("Error")
+        mensaje.setText(f"Se produjo un error: {str(e)}")
+        mensaje.exec_()
+        return None
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 # Conexion a la base de datos mediante driver usado por PYQT para QSQLITE.
-db = QSqlDatabase.addDatabase("QSQLITE")
-db.setDatabaseName(ruta_database())
+#db = QSqlDatabase.addDatabase("QSQLITE")
+#db.setDatabaseName(ruta_database())
