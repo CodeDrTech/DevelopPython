@@ -30,6 +30,6 @@ def conectar_db():
         return None
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Conexion a la base de datos mediante driver usado por PYQT para QSQLITE.
-#db = QSqlDatabase.addDatabase("QSQLITE")
-#db.setDatabaseName(ruta_database())
+# Conexion a la base de datos mediante driver usado por PYQT para QODBC.
+db = QSqlDatabase.addDatabase("QODBC")
+db.setDatabaseName("DRIVER={SQL Server Native Client 11.0};SERVER=LAPTOPTECNOLOGI;DATABASE=Ventas;UID=Sa;PWD=Ye.891916;")
