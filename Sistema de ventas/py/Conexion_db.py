@@ -8,16 +8,17 @@ from PyQt5.QtWidgets import QMessageBox
 # Funcion que lee la ruta a la base de datos establecida en el archivo configuracion.txt
 def ruta_database():
     ruta_configuracion = "Sistema de ventas/txt/configuracion.txt"
+    
     with open(ruta_configuracion, "r") as f:
          cadena_conexion = f.read().strip()
     
     return cadena_conexion
-
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 # Funcion usada para insertar datos a la base de datos.
 def conectar_db():
     cadena_conexion = ruta_database()
+    
     try:
         conn = pyodbc.connect(cadena_conexion)
         return conn
@@ -32,4 +33,4 @@ def conectar_db():
 #------------------------------------------------------------------------------------------------------
 # Conexion a la base de datos mediante driver usado por PYQT para QODBC.
 db = QSqlDatabase.addDatabase("QODBC")
-db.setDatabaseName("DRIVER={SQL Server Native Client 11.0};SERVER=LAPTOPTECNOLOGI;DATABASE=Ventas;UID=Sa;PWD=Ye.891916;")
+db.setDatabaseName("DRIVER={SQL Server Native Client 11.0};SERVER=LAPTOPTECNOLOGI;DATABASE=Ventas;UID=sa;PWD=Ye.891916;")

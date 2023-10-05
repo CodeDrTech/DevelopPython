@@ -5,6 +5,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
 
 
+
+
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 # Finciones para obtener y generar el codigo de los articulos de manera automatica 
