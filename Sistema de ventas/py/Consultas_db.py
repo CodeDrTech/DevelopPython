@@ -1,20 +1,8 @@
 from PyQt5.QtWidgets import QStyledItemDelegate
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
-from Conexion_db import ruta_database
-import pyodbc
+from Conexion_db import conectar_db
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
-
-
-
-
-def conectar_db():
-    cadena_conexion = ruta_database()
-    
-    
-        
-    conn = pyodbc.connect(cadena_conexion)        
-    return conn
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
