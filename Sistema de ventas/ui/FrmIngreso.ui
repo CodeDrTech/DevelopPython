@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>858</width>
-    <height>625</height>
+    <width>980</width>
+    <height>743</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,8 +57,8 @@ QLabel {
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>831</width>
-      <height>571</height>
+      <width>941</width>
+      <height>671</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -312,8 +312,8 @@ QPushButton:pressed {
        <rect>
         <x>10</x>
         <y>110</y>
-        <width>811</width>
-        <height>421</height>
+        <width>901</width>
+        <height>501</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -361,6 +361,11 @@ QTableView::item:hover {
     background-color: #d3d3d3;
     color: #333333;
 }
+
+QTableView {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+
 </string>
       </property>
      </widget>
@@ -517,8 +522,8 @@ QLabel {
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>811</width>
-        <height>521</height>
+        <width>901</width>
+        <height>591</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -572,7 +577,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>480</y>
+         <y>550</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -609,7 +614,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>310</x>
-         <y>480</y>
+         <y>550</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -646,7 +651,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>220</x>
-         <y>480</y>
+         <y>550</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -683,7 +688,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>400</x>
-         <y>480</y>
+         <y>550</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -1108,7 +1113,7 @@ QLabel {
         <rect>
          <x>10</x>
          <y>119</y>
-         <width>791</width>
+         <width>871</width>
          <height>121</height>
         </rect>
        </property>
@@ -1798,9 +1803,9 @@ QLineEdit::placeholder {
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>250</y>
-         <width>791</width>
-         <height>221</height>
+         <y>260</y>
+         <width>871</width>
+         <height>271</height>
         </rect>
        </property>
       </widget>
@@ -2005,6 +2010,9 @@ QLineEdit::placeholder {
       <width>51</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
    </widget>
   </widget>

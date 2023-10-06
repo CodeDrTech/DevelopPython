@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>907</width>
-    <height>590</height>
+    <width>961</width>
+    <height>628</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,8 +57,8 @@ QLabel {
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>891</width>
-      <height>531</height>
+      <width>921</width>
+      <height>551</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -371,8 +371,8 @@ QTableView::item:hover {
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>861</width>
-        <height>461</height>
+        <width>891</width>
+        <height>471</height>
        </rect>
       </property>
       <property name="styleSheet">

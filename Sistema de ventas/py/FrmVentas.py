@@ -1,7 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
@@ -18,6 +19,37 @@ class VentanaVentas(QMainWindow):
         self.setWindowTitle('.:. Mantenimiento de Ventas .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        
+        # Crear un efecto de sombra y aplicarlo a los QTableView
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(20)
+        shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))
+        self.tbDatos.setGraphicsEffect(shadow)      
+        
+        tbDetalleIngreso_shadow = QGraphicsDropShadowEffect()
+        tbDetalleIngreso_shadow.setBlurRadius(20)
+        tbDetalleIngreso_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.tbDatos2.setGraphicsEffect(tbDetalleIngreso_shadow)
+        
+        tabWidget_shadow = QGraphicsDropShadowEffect()
+        tabWidget_shadow.setBlurRadius(20)
+        tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.tabWidget.setGraphicsEffect(tabWidget_shadow)
+        
+        groupBox_shadow = QGraphicsDropShadowEffect()
+        groupBox_shadow.setBlurRadius(20)
+        groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox.setGraphicsEffect(groupBox_shadow)
+        
+        groupBox_shadow = QGraphicsDropShadowEffect()
+        groupBox_shadow.setBlurRadius(20)
+        groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox.setGraphicsEffect(groupBox_shadow)
+        
+        groupBox2_shadow = QGraphicsDropShadowEffect()
+        groupBox2_shadow.setBlurRadius(20)
+        groupBox2_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox_2.setGraphicsEffect(groupBox2_shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>806</width>
-    <height>513</height>
+    <width>848</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -57,8 +57,8 @@ QLabel {
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>791</width>
-      <height>461</height>
+      <width>811</width>
+      <height>481</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -244,7 +244,7 @@ QPushButton:pressed {
       <property name="geometry">
        <rect>
         <x>460</x>
-        <y>5</y>
+        <y>0</y>
         <width>85</width>
         <height>37</height>
        </rect>

@@ -1,74 +1,47 @@
-import sqlite3
-import random
-import string
-import io
-from PIL import Image, ImageDraw, ImageFont
-from Conexion_db import conectar_db
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFormLayout, QWidget, QTableView, QVBoxLayout, QFrame, QTabWidget, QGraphicsDropShadowEffect
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
 
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-from PIL import Image, ImageDraw
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
 
-def generate_image_blob(description):
-    """Genera un BLOB de imagen a partir de la descripción de texto."""
+        layout = QFormLayout(central_widget)
 
-    # Crea una imagen en blanco de 100x100 píxeles.
-    image = Image.new('RGB', (200, 200), color='white')
-    
-    # Crea un objeto de dibujo en la imagen.
-    draw = ImageDraw.Draw(image)
-    
-    # Configura la fuente y tamaño para el texto.
-    font = ImageFont.load_default()  # Puedes ajustar la fuente y el tamaño según tus preferencias.
+        tab_widget = QTabWidget(self)
+        layout.addWidget(tab_widget)
 
-    # Dibuja el texto en la imagen.
-    draw.text((10, 10), description, fill='black', font=font)
-    
-    # Convierte la imagen en un objeto BytesIO para obtener los datos binarios.
-    image_io = io.BytesIO()
-    image.save(image_io, format='PNG')
-    
-    # Obtiene los datos binarios de la imagen.
-    image_data = image_io.getvalue()
+        # Crear una pestaña en el QTabWidget
+        tab1 = QWidget()
+        tab_widget.addTab(tab1, "Tab 1")
 
-    # Crea un BLOB con los datos de la imagen.
-    blob = io.BytesIO(image_data)
-    blob.seek(0)
-    return blob
+        tab_layout = QVBoxLayout(tab1)
 
+        frame = QFrame(self)
+        frame_layout = QVBoxLayout(frame)
 
+        table_view = QTableView(self)
+        model = QStandardItemModel()
+        model.setHorizontalHeaderLabels(["Columna 1", "Columna 2"])
+        for i in range(10):
+            row = [QStandardItem(f'Dato {i}, 1'), QStandardItem(f'Dato {i}, 2')]
+            model.appendRow(row)
+        table_view.setModel(model)
 
-def update_table(conn, table_name, column_name, data):
-    """Actualiza la tabla con los datos proporcionados."""
+        # Crear un efecto de sombra y aplicarlo al QTableView
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(10)
+        shadow.setColor(QColor(200, 200, 200))
+        table_view.setGraphicsEffect(shadow)
 
-    # Obtiene un cursor para la conexión.
-    cursor = conn.cursor()
+        frame_layout.addWidget(table_view)
+        tab_layout.addWidget(frame)
 
-    # Crea una consulta UPDATE.
-    query = "UPDATE {} SET {}=? WHERE idarticulo=?".format(table_name, column_name)
-
-    # Ejecuta la consulta para cada registro.
-    for idarticulo, description in data:
-        blob = generate_image_blob(description)
-        
-        # Convierte el objeto _io.BytesIO en bytes.
-        blob_data = blob.read()
-
-        cursor.execute(query, (blob_data, idarticulo))
-
-    # Realiza los cambios en la base de datos.
-    conn.commit()
-
-
-# Conecta a la base de datos.
-conn = conectar_db()
-
-# Obtiene los datos de la tabla.
-data = []
-for idarticulo, name, description in conn.execute('SELECT idarticulo, nombre, descripcion FROM articulo'):
-    data.append((idarticulo, description))
-
-# Actualiza la tabla con los datos generados.
-update_table(conn, 'articulo', 'imagen', data)
-
-# Cierra la conexión a la base de datos.
-conn.close()
+if __name__ == '__main__':
+    app = QApplication([])
+    window = MainWindow()
+    window.show()
+    app.exec()

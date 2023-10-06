@@ -1,6 +1,7 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsDropShadowEffect
+from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Consultas_db import insertar_nuevo_cliente, obtener_ultimo_codigo, generar_nuevo_codigo
@@ -22,6 +23,18 @@ class VentanaCliente(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
         self.btnSalir.clicked.connect(self.fn_Salir)
+        
+        
+        # Crear un efecto de sombra y aplicarlo a los QTableView
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(20)
+        shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))
+        self.tbDatos.setGraphicsEffect(shadow)
+        
+        tabWidget_shadow = QGraphicsDropShadowEffect()
+        tabWidget_shadow.setBlurRadius(20)
+        tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.tabWidget.setGraphicsEffect(tabWidget_shadow)
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 

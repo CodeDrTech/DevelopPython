@@ -1,9 +1,9 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel
-from PyQt5.QtCore import QDateTime
+from PyQt5.QtCore import QDateTime, Qt
 from FrmPrincipal import VentanaPrincipal
 from Consultas_db import insertar_datos_sesion
 
@@ -22,6 +22,20 @@ class VentanaLogin(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
+        txtFecha_shadow = QGraphicsDropShadowEffect()
+        txtFecha_shadow.setBlurRadius(20)
+        txtFecha_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.txtFecha.setGraphicsEffect(txtFecha_shadow)
+        
+        groupBox_shadow = QGraphicsDropShadowEffect()
+        groupBox_shadow.setBlurRadius(20)
+        groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox.setGraphicsEffect(groupBox_shadow)
+        
+        graphicsView_shadow = QGraphicsDropShadowEffect()
+        graphicsView_shadow.setBlurRadius(20)
+        graphicsView_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.graphicsView.setGraphicsEffect(graphicsView_shadow)
         
         self.setTabOrder(self.txtUsuario, self.txtPassword)
         

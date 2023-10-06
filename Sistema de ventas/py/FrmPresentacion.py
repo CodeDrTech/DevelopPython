@@ -1,8 +1,9 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsDropShadowEffect
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 from Consultas_db import insertar_nueva_presentacion, obtener_ultimo_codigo, generar_nuevo_codigo
 
 
@@ -20,7 +21,21 @@ class VentanaPresentacion(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
+        # Crear un efecto de sombra y aplicarlo a los QTableView
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(20)
+        shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))
+        self.tbDatos.setGraphicsEffect(shadow)
         
+        tabWidget_shadow = QGraphicsDropShadowEffect()
+        tabWidget_shadow.setBlurRadius(20)
+        tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.tabWidget.setGraphicsEffect(tabWidget_shadow)
+        
+        groupBox_shadow = QGraphicsDropShadowEffect()
+        groupBox_shadow.setBlurRadius(20)
+        groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox.setGraphicsEffect(groupBox_shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         self.btnGuardar.clicked.connect(self.insertar_datos)

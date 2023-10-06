@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>574</width>
-    <height>363</height>
+    <width>606</width>
+    <height>406</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -57,8 +57,8 @@ QLabel {
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>551</width>
-      <height>301</height>
+      <width>571</width>
+      <height>331</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -93,7 +93,7 @@ QTabWidget {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>

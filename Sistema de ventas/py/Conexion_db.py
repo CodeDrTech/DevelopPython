@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 # Funcion que lee la ruta a la base de datos establecida en el archivo configuracion.txt
 def ruta_database():
-    ruta_configuracion = "Sistema de ventas/txt/configuracion2.txt"
+    ruta_configuracion = "Sistema de ventas/txt/configuracion.txt"
     
     with open(ruta_configuracion, "r") as f:
          cadena_conexion = f.read().strip()
