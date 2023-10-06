@@ -360,13 +360,7 @@ QTableView::item:focus {
 QTableView::item:hover {
     background-color: #d3d3d3;
     color: #333333;
-}
-
-QTableView {
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
-}
-
-</string>
+}</string>
       </property>
      </widget>
      <widget class="QDateEdit" name="txtFechaInicio">

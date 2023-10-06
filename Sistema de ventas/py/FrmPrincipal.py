@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMdiSubWindow, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMdiSubWindow, QMessageBox, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from FrmEmpleado import VentanaEmpleado
@@ -92,8 +92,14 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
-            subWindow.show()   
+               
             
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
+            subWindow.show()
             
         else:
             #mensaje al usuario
@@ -115,6 +121,12 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
+            
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
             subWindow.show()
         else:
             #mensaje al usuario
@@ -134,6 +146,12 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
+            
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
             subWindow.show()
         else:
             #mensaje al usuario
@@ -153,6 +171,12 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
+            
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
             subWindow.show()
         else:
             #mensaje al usuario
@@ -172,6 +196,12 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
+            
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
             subWindow.show()
         else:
             #mensaje al usuario
@@ -191,6 +221,12 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
+            
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
             subWindow.show()
         else:
             #mensaje al usuario
@@ -210,6 +246,12 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)
+            
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
             subWindow.show()
         else:
             #mensaje al usuario
@@ -230,6 +272,12 @@ class VentanaPrincipal(QMainWindow):
             subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore # Configura para que la ventana secundaria se elimine al cerrarse
             subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
             self.mdiArea.addSubWindow(subWindow)  # Agrega la ventana secundaria al mdiArea
+            
+            
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(20)
+            shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+            subWindow.setGraphicsEffect(shadow)
             subWindow.show()  # Muestra la ventana secundaria
         else:
             #mensaje al usuario
