@@ -357,8 +357,7 @@ QTableView::item:focus {
 QTableView::item:hover {
     background-color: #d3d3d3;
     color: #333333;
-}
-</string>
+}</string>
       </property>
      </widget>
     </widget>
