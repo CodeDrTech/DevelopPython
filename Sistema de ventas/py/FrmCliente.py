@@ -36,6 +36,11 @@ class VentanaCliente(QMainWindow):
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.tabWidget.setGraphicsEffect(tabWidget_shadow)
         
+        groupBox_shadow = QGraphicsDropShadowEffect()
+        groupBox_shadow.setBlurRadius(20)
+        groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox.setGraphicsEffect(groupBox_shadow)
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
         
