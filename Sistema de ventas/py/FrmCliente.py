@@ -107,7 +107,7 @@ class VentanaCliente(QMainWindow):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()
         query.exec_(f"SELECT idcliente as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
-                    fecha_nacimiento AS 'FECHA DE NACIMIENTO', tipo_documento AS 'TIPO DOCUMENTO', num_documento AS 'NUM DOCUMENTO',\
+                    UPPER(FORMAT(fecha_nacimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE NACIMIENTO', tipo_documento AS 'TIPO DOCUMENTO', num_documento AS 'NUM DOCUMENTO',\
                     direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
                     email AS 'CORREO' FROM cliente ORDER BY idcliente DESC")
         

@@ -207,7 +207,7 @@ class VentanaEmpleado(QMainWindow):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()
         query.exec_(f"SELECT idempleado as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
-                    fecha_nac AS 'FECHA DE NACIMIENTO', num_documento AS 'CEDULA', direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
+                    UPPER(FORMAT(fecha_nac, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE NACIMIENTO', num_documento AS 'CEDULA', direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
                     email AS 'CORREO', acceso AS 'ACCESO', usuario AS 'USUARIO', password AS 'CONTRASENA'  FROM empleado")
         
            
