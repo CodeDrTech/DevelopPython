@@ -1,0 +1,1 @@
+sqlcmd -S LAPTOPTECNOLOGI -d master -U Sa -P Ye.891916 -Q "RESTORE DATABASE Ventas FROM DISK='C:\Users\acer\OneDrive\Documentos\GitHub\DevelopPython\Sistema de ventas\Base de datos\SQLSERVER\Ventas.bak' WITH REPLACE"

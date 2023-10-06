@@ -1,0 +1,1 @@
+sqlcmd -S localhost -d master -U sa -P Jose.Luis.8715 -Q "RESTORE DATABASE Ventas FROM DISK='C:\Users\Jose\Documents\GitHub\DevelopPython\Sistema de ventas\Base de datos\SQLSERVER\Ventas.bak' WITH REPLACE"
