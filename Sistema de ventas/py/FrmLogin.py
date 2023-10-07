@@ -168,7 +168,7 @@ class VentanaLogin(QMainWindow):
                     if usuario == bd_usuario and password == bd_password:
                         
                         self.abrir_FrmPrincipal_admin(bd_rol, bd_nombre)
-                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
+                        #self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                     else:
                         mensaje = QMessageBox()
                         mensaje.setIcon(QMessageBox.Critical)
@@ -182,7 +182,7 @@ class VentanaLogin(QMainWindow):
                 elif bd_rol == "Vendedor":
                     if usuario == bd_usuario and password == bd_password:
                         self.abrir_FrmPrincipal_vendedor(bd_rol, bd_nombre)
-                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
+                        #self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                         
                     else:
                         mensaje = QMessageBox()
@@ -197,7 +197,7 @@ class VentanaLogin(QMainWindow):
                 else:
                     if usuario == bd_usuario and password == bd_password:
                         self.abrir_FrmPrincipal_almacen(bd_rol, bd_nombre)
-                        self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
+                        #self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                         
                     else:
                         mensaje = QMessageBox()
