@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMdiSubWindow, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -16,7 +16,7 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Mantenimiento de Ventas .:.')
+        self.setWindowTitle('.:. Mantenimiento de Cotizaciones .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
@@ -52,6 +52,26 @@ class VentanaCotizaciones(QMainWindow):
         self.groupBox_2.setGraphicsEffect(groupBox2_shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+        # Botones del formulario y sus funciones
+        self.btnBuscarCliente.clicked.connect(self.abrirFrmBuscarCliente)
+        #self.btnEditar.clicked.connect(self.editar_datos)
+        #self.btnSalir.clicked.connect(self.fn_Salir)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def abrirFrmBuscarCliente(self):
+        from FrmBuscarCliente import VentanaBuscarCliente
+        if not VentanaBuscarCliente.ventana_abierta:
+            VentanaBuscarCliente.ventana_abierta = True
+            self.llamar_ventana = VentanaBuscarCliente()
+            self.llamar_ventana.show()
+            
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
 
     def cargar_cientes(self):    
         # Obtiene los datos de las columnas Nombre y Apellido de la tabla cliente.

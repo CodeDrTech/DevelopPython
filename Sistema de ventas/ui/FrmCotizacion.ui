@@ -515,7 +515,7 @@ QLabel {
         <x>10</x>
         <y>10</y>
         <width>831</width>
-        <height>531</height>
+        <height>541</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -545,7 +545,7 @@ QGroupBox:title {
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>30</y>
+         <y>35</y>
          <width>55</width>
          <height>21</height>
         </rect>
@@ -569,7 +569,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>490</y>
+         <y>500</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -606,7 +606,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>310</x>
-         <y>490</y>
+         <y>500</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -643,7 +643,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>220</x>
-         <y>490</y>
+         <y>500</y>
          <width>85</width>
          <height>37</height>
         </rect>
@@ -680,7 +680,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>400</x>
-         <y>490</y>
+         <y>500</y>
          <width>90</width>
          <height>37</height>
         </rect>
@@ -717,7 +717,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>30</y>
+         <y>35</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -800,7 +800,7 @@ QLineEdit::placeholder {
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>70</y>
+         <y>75</y>
          <width>111</width>
          <height>21</height>
         </rect>
@@ -824,7 +824,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>645</x>
-         <y>30</y>
+         <y>35</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -891,7 +891,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>70</y>
+         <y>75</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -919,22 +919,7 @@ QComboBox QAbstractItemView {
        </property>
        <item>
         <property name="text">
-         <string>TICKET</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>BOLETA</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>FACTURA</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>GUI REMISION</string>
+         <string>COTIZACION</string>
         </property>
        </item>
       </widget>
@@ -973,7 +958,7 @@ QComboBox QAbstractItemView {
        <property name="geometry">
         <rect>
          <x>260</x>
-         <y>70</y>
+         <y>75</y>
          <width>67</width>
          <height>21</height>
         </rect>
@@ -997,87 +982,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>330</x>
-         <y>70</y>
-         <width>120</width>
-         <height>35</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QWidget {
-    background-color: #f2f2f2;
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-
-QLineEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QLineEdit:hover {
-    border: 1px solid #3498db;
-}
-
-QLineEdit:focus {
-    border: 1px solid #3498db;
-    outline: none;
-}
-
-QWidget {
-    background-color: #f2f2f2;
-}
-
-QLabel {
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-QLineEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #2980b9;
-}
-
-QLineEdit::placeholder {
-    color: #2980b9;
-    font-weight: bold;
-}
-
-</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="txtCorrelativo">
-       <property name="geometry">
-        <rect>
-         <x>450</x>
-         <y>70</y>
+         <y>75</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -1157,7 +1062,7 @@ QLineEdit::placeholder {
        <property name="geometry">
         <rect>
          <x>580</x>
-         <y>30</y>
+         <y>35</y>
          <width>51</width>
          <height>21</height>
         </rect>
@@ -1181,7 +1086,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>109</y>
+         <y>120</y>
          <width>791</width>
          <height>121</height>
         </rect>
@@ -1865,13 +1770,57 @@ QComboBox QAbstractItemView {
 }
 </string>
         </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnBuscarArticulo">
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>5</y>
+          <width>81</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+        </property>
+        <property name="text">
+         <string>Buscar</string>
+        </property>
+        <property name="icon">
+         <iconset theme="audio-card">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
        </widget>
       </widget>
       <widget class="QTableView" name="tbDatos2">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>250</y>
+         <y>260</y>
          <width>791</width>
          <height>221</height>
         </rect>
@@ -1881,7 +1830,7 @@ QComboBox QAbstractItemView {
        <property name="geometry">
         <rect>
          <x>590</x>
-         <y>80</y>
+         <y>75</y>
          <width>41</width>
          <height>21</height>
         </rect>
@@ -1905,7 +1854,7 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>645</x>
-         <y>70</y>
+         <y>75</y>
          <width>120</width>
          <height>35</height>
         </rect>
@@ -2065,6 +2014,47 @@ QLineEdit::placeholder {
        </property>
        <property name="readOnly">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnBuscarCliente">
+       <property name="geometry">
+        <rect>
+         <x>415</x>
+         <y>5</y>
+         <width>81</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+       </property>
+       <property name="text">
+        <string>Buscar</string>
+       </property>
+       <property name="icon">
+        <iconset theme="audio-card">
+         <normaloff>.</normaloff>.</iconset>
        </property>
       </widget>
      </widget>
