@@ -15,8 +15,6 @@ CREATE TABLE [dbo].[detalle_cotizacion](
 	[cantidad] [int] NOT NULL,
 	[precio_venta] [numeric](10, 2) NULL,
 	[descuento] [numeric](10, 2) NULL,
-	[precio_venta1] [numeric](10, 2) NULL,
-	[precio_venta2] [numeric](10, 2) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[iddetalle_cotizacion] ASC
