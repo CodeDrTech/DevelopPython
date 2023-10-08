@@ -137,7 +137,9 @@
      <string>Ventas</string>
     </property>
     <addaction name="actionVentas"/>
+    <addaction name="actionCotizacion"/>
     <addaction name="actionClientes"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuMantenimiento">
     <property name="title">
@@ -240,6 +242,11 @@
   <action name="actionCambiar_de_usuario">
    <property name="text">
     <string>Cerrar sesion</string>
+   </property>
+  </action>
+  <action name="actionCotizacion">
+   <property name="text">
+    <string>Cotizacion</string>
    </property>
   </action>
  </widget>
