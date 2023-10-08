@@ -1,0 +1,18 @@
+USE [Ventas]
+GO
+
+-- Agrega la columna precio_venta1 con el tipo de dato numeric(10,2) permitiendo nulos.
+ALTER TABLE [dbo].[detalle_ingreso]
+ADD [precio_venta1] NUMERIC(10, 2) NULL;
+
+-- Agrega la columna precio_venta2 con el tipo de dato numeric(10,2) permitiendo nulos.
+ALTER TABLE [dbo].[detalle_ingreso]
+ADD [precio_venta2] NUMERIC(10, 2) NULL;
+
+-- Modifica la columna precio_compra para cambiar su tipo de dato a numeric(10,2).
+ALTER TABLE [dbo].[detalle_ingreso]
+ALTER COLUMN [precio_compra] NUMERIC(10, 2);
+
+-- Modifica la columna precio_venta para cambiar su tipo de dato a numeric(10,2).
+ALTER TABLE [dbo].[detalle_ingreso]
+ALTER COLUMN [precio_venta] NUMERIC(10, 2);

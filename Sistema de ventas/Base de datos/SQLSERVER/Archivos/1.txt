@@ -1,7 +1,7 @@
 USE [Ventas]
 GO
 
-/****** Object:  Table [dbo].[cotizacion]]   Script Date: 10/7/2023 1:21:25 PM ******/
+/****** Object:  Table [dbo].[cotizacion]    Script Date: 10/7/2023 8:55:45 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[cotizacion](
 	[fecha] [date] NOT NULL,
 	[tipo_comprobante] [int] NOT NULL,
 	[serie] [nvarchar](max) NOT NULL,
-	[itbis] [real] NOT NULL,
+	[itbis] [numeric](10, 2) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[idcotizacion] ASC
@@ -30,4 +30,5 @@ GO
 ALTER TABLE [dbo].[cotizacion]  WITH CHECK ADD FOREIGN KEY([idempleado])
 REFERENCES [dbo].[empleado] ([idempleado])
 GO
+
 

@@ -1,7 +1,7 @@
 USE [Ventas]
 GO
 
-/****** Object:  Table [dbo].[detalle_venta]    Script Date: 10/7/2023 1:30:20 PM ******/
+/****** Object:  Table [dbo].[detalle_cotizacion]    Script Date: 10/7/2023 8:56:25 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -13,8 +13,10 @@ CREATE TABLE [dbo].[detalle_cotizacion](
 	[idcotizacion] [int] NOT NULL,
 	[iddetalle_ingreso] [int] NOT NULL,
 	[cantidad] [int] NOT NULL,
-	[precio_venta] [real] NOT NULL,
-	[descuento] [real] NOT NULL,
+	[precio_venta] [numeric](10, 2) NULL,
+	[descuento] [numeric](10, 2) NULL,
+	[precio_venta1] [numeric](10, 2) NULL,
+	[precio_venta2] [numeric](10, 2) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[iddetalle_cotizacion] ASC
@@ -22,12 +24,12 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[detalle_cotizacion]  WITH CHECK ADD FOREIGN KEY([iddetalle_ingreso])
-REFERENCES [dbo].[detalle_ingreso] ([iddetalle_ingreso])
-GO
-
 ALTER TABLE [dbo].[detalle_cotizacion]  WITH CHECK ADD FOREIGN KEY([idcotizacion])
 REFERENCES [dbo].[cotizacion] ([idcotizacion])
+GO
+
+ALTER TABLE [dbo].[detalle_cotizacion]  WITH CHECK ADD FOREIGN KEY([iddetalle_ingreso])
+REFERENCES [dbo].[detalle_ingreso] ([iddetalle_ingreso])
 GO
 
 
