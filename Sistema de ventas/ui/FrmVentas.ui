@@ -1300,30 +1300,6 @@ QLabel {
          <string>Descuento</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_18">
-        <property name="geometry">
-         <rect>
-          <x>300</x>
-          <y>50</y>
-          <width>131</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-    background-color: #9a9a9a;
-}
-
-QLabel {
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}</string>
-        </property>
-        <property name="text">
-         <string>Precion compra</string>
-        </property>
-       </widget>
        <widget class="QLabel" name="label_19">
         <property name="geometry">
          <rect>
@@ -1346,166 +1322,6 @@ QLabel {
         </property>
         <property name="text">
          <string>Precion venta</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="txtPrecioCom">
-        <property name="geometry">
-         <rect>
-          <x>429</x>
-          <y>40</y>
-          <width>91</width>
-          <height>35</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-    background-color: #f2f2f2;
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-
-QLineEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QLineEdit:hover {
-    border: 1px solid #3498db;
-}
-
-QLineEdit:focus {
-    border: 1px solid #3498db;
-    outline: none;
-}
-
-QWidget {
-    background-color: #f2f2f2;
-}
-
-QLabel {
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-QLineEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #2980b9;
-}
-
-QLineEdit::placeholder {
-    color: #2980b9;
-    font-weight: bold;
-}
-
-</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="txtPrecioVen">
-        <property name="geometry">
-         <rect>
-          <x>429</x>
-          <y>80</y>
-          <width>91</width>
-          <height>35</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-    background-color: #f2f2f2;
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-
-QLineEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QLineEdit:hover {
-    border: 1px solid #3498db;
-}
-
-QLineEdit:focus {
-    border: 1px solid #3498db;
-    outline: none;
-}
-
-QWidget {
-    background-color: #f2f2f2;
-}
-
-QLabel {
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-QLineEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #2980b9;
-}
-
-QLineEdit::placeholder {
-    color: #2980b9;
-    font-weight: bold;
-}
-
-</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cmbArticulo">
@@ -2019,6 +1835,37 @@ QPushButton:pressed {
           <normaloff>.</normaloff>.</iconset>
         </property>
        </widget>
+       <widget class="QComboBox" name="cmbPrecioVent">
+        <property name="geometry">
+         <rect>
+          <x>429</x>
+          <y>80</y>
+          <width>91</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QComboBox:hover {
+    border: 1px solid #3498db;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #cccccc;
+    background-color: white;
+    selection-background-color: #3498db;
+}
+</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QTableView" name="tbDatos2">
        <property name="geometry">
@@ -2134,7 +1981,7 @@ QLineEdit::placeholder {
 </string>
        </property>
        <property name="text">
-        <string>18</string>
+        <string/>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtIdCliente">

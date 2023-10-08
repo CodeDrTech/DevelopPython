@@ -1,0 +1,6 @@
+USE [Ventas]
+GO
+
+-- Modifica la columna itbis para cambiar su tipo de dato a numeric(10,2).
+ALTER TABLE [dbo].[articulo]
+ALTER COLUMN [imagen] image;
