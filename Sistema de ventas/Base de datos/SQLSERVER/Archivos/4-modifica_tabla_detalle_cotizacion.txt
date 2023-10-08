@@ -1,0 +1,10 @@
+USE [Ventas]
+GO
+
+-- Modifica la columna precio_venta para cambiar su tipo de dato a numeric(10,2).
+ALTER TABLE [dbo].[detalle_cotizacion]
+ALTER COLUMN [precio_venta] NUMERIC(10, 2);
+
+-- Modifica la columna descuento para cambiar su tipo de dato a numeric(10,2).
+ALTER TABLE [dbo].[detalle_cotizacion]
+ALTER COLUMN [descuento] NUMERIC(10, 2);
