@@ -53,25 +53,26 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
-        self.btnBuscarCliente.clicked.connect(self.abrirFrmBuscarCliente)
-        #self.btnEditar.clicked.connect(self.editar_datos)
+        self.txtIdCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
         #self.btnSalir.clicked.connect(self.fn_Salir)
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def abrirFrmBuscarCliente(self):
-        from FrmBuscarCliente import VentanaBuscarCliente
-        if not VentanaBuscarCliente.ventana_abierta:
-            VentanaBuscarCliente.ventana_abierta = True
-            self.llamar_ventana = VentanaBuscarCliente()
-            self.llamar_ventana.show()
+    def abrirFrmBuscarCliente(self, event):
+        if event.button() == Qt.LeftButton: # type: ignore
+            from FrmBuscarCliente import VentanaBuscarCliente
+            if not VentanaBuscarCliente.ventana_abierta:
+                VentanaBuscarCliente.ventana_abierta = True
+                self.llamar_ventana = VentanaBuscarCliente()
+                self.llamar_ventana.show()
             
-        else:
-            #mensaje al usuario
-            mensaje = QMessageBox()
-            mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Ventana duplicada")
-            mensaje.setText("La ventana ya esta abierta.")
-            mensaje.exec_()
+            else:
+                #mensaje al usuario
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Ventana duplicada")
+                mensaje.setText("La ventana ya esta abierta.")
+                mensaje.exec_()
 
     def cargar_cientes(self):    
         # Obtiene los datos de las columnas Nombre y Apellido de la tabla cliente.
