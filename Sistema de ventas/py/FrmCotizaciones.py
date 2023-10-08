@@ -54,7 +54,7 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
         self.txtIdCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
-        #self.btnSalir.clicked.connect(self.fn_Salir)
+        self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -64,6 +64,22 @@ class VentanaCotizaciones(QMainWindow):
             if not VentanaBuscarCliente.ventana_abierta:
                 VentanaBuscarCliente.ventana_abierta = True
                 self.llamar_ventana = VentanaBuscarCliente()
+                self.llamar_ventana.show()
+            
+            else:
+                #mensaje al usuario
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Ventana duplicada")
+                mensaje.setText("La ventana ya esta abierta.")
+                mensaje.exec_()
+
+    def abrirFrmBuscarArticulo(self, event):
+        if event.button() == Qt.LeftButton: # type: ignore
+            from FrmBuscarArticulo import VentanaBuscarArticulo
+            if not VentanaBuscarArticulo.ventana_abierta:
+                VentanaBuscarArticulo.ventana_abierta = True
+                self.llamar_ventana = VentanaBuscarArticulo()
                 self.llamar_ventana.show()
             
             else:
