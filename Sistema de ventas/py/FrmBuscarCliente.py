@@ -15,7 +15,7 @@ class VentanaBuscarCliente(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Mantenimiento de Clientes .:.')
+        self.setWindowTitle('.:. Buscar Clientes .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         

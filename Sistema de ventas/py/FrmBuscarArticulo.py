@@ -15,7 +15,7 @@ class VentanaBuscarArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Mantenimiento de Articulos .:.')
+        self.setWindowTitle('.:. Buscar Articulos .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
