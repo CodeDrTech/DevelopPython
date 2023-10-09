@@ -61,7 +61,7 @@ class VentanaBuscarCliente(QMainWindow):
         
         
         ventana.traer_cliente(id_cliente, nombre_cliente, apellidos_cliente)
-
+        self.close()
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()

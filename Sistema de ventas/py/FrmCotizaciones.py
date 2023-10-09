@@ -91,14 +91,18 @@ class VentanaCotizaciones(QMainWindow):
                 mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    
+    
     def traer_cliente(self, id, nombre, apellido):
         nombre_apellidos = f"{nombre} {apellido}"
         
         
-        self.txtIdCliente.setText(str(id))
-        self.cmbCliente.setCurrentText(f"{nombre} {apellido}")
+        self.txtIdCliente.setText("20")
+        self.cmbCliente.setCurrentText("Loco viejo")
+        print(f"El id del cliente es {id} y el nombre completo es {nombre} {apellido}")
         
-
+    
+    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def cargar_cientes(self):    
@@ -184,7 +188,7 @@ class VentanaCotizaciones(QMainWindow):
         super().showEvent(event)
         
         #self.cargar_cientes()
-        self.cargar_articulos()
+        #self.cargar_articulos()
                 
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
