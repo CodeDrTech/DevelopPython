@@ -1,28 +1,45 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGraphicsDropShadowEffect
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableView
+from PyQt5.QtCore import Qt, QAbstractTableModel
 
-def main():
-    app = QApplication(sys.argv)
-    window = QMainWindow()
-    window.setGeometry(100, 100, 400, 200)
-    window.setWindowTitle('Botón con Efectos')
+class MyTableModel(QAbstractTableModel):
+    def __init__(self, data):
+        super().__init__()
+        self.data = data
 
-    button = QPushButton('+', window)
-    button.setGeometry(150, 75, 100, 40)
+    def rowCount(self, parent):
+        return len(self.data)
 
-    # Configura un efecto de sombra en el botón
-    shadow_effect = QGraphicsDropShadowEffect()
-    shadow_effect.setBlurRadius(10)
-    shadow_effect.setColor(Qt.black) # type: ignore
-    button.setGraphicsEffect(shadow_effect)
+    def columnCount(self, parent):
+        return len(self.data[0])
 
-    # Cambia el estilo del botón (opcional)
-    button.setStyleSheet("background-color: #3498db; color: white;")
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            return str(self.data[index.row()][index.column()])
+        return None
 
-    window.show()
-    sys.exit(app.exec_())
+class MyWindow(QMainWindow):
+    def __init__(self, data):
+        super().__init__()
+        self.setGeometry(100, 100, 600, 400)
+        self.table_view = QTableView(self)
+        self.setCentralWidget(self.table_view)
+
+        self.model = MyTableModel(data)
+        self.table_view.setModel(self.model)
+
+        self.table_view.doubleClicked.connect(self.double_click_event)
+
+    def double_click_event(self, index):
+        # Aquí puedes manejar el evento de doble clic en la celda
+        row = index.row()
+        column = index.column()
+        value = self.model.data[row][column]
+        print(f"Doble clic en la celda ({row}, {column}): {value}")
 
 if __name__ == '__main__':
-    main()
+    app = QApplication(sys.argv)
+    data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    window = MyWindow(data)
+    window.show()
+    sys.exit(app.exec_())

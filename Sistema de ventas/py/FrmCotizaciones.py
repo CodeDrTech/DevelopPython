@@ -172,7 +172,7 @@ class VentanaCotizaciones(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
-        self.cargar_cientes()
+        #self.cargar_cientes()
         self.cargar_articulos()
                 
         self.txtFecha.setDate(QDate.currentDate())

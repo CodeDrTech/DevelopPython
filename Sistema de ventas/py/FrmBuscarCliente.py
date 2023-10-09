@@ -23,6 +23,7 @@ class VentanaBuscarCliente(QMainWindow):
         #self.btnGuardar.clicked.connect(self.insertar_datos)
         #self.btnEditar.clicked.connect(self.editar_datos)
         #self.btnSalir.clicked.connect(self.fn_Salir)
+        self.tbDatos.doubleClicked.connect(self.insertar_cliente_en_cotizacion)
         
         
         # Crear un efecto de sombra y aplicarlo a los QTableView
@@ -45,7 +46,12 @@ class VentanaBuscarCliente(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 
     # Funciones conectadas a los botones
-            
+    def insertar_cliente_en_cotizacion(self):
+        
+        from FrmCotizaciones import VentanaCotizaciones
+        self.ventana = VentanaCotizaciones()
+        self.ventana.cargar_cientes()
+
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()
