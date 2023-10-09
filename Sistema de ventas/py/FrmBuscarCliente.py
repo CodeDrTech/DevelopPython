@@ -6,6 +6,7 @@ from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Consultas_db import insertar_nuevo_cliente, obtener_ultimo_codigo, generar_nuevo_codigo
 
+
 class VentanaBuscarCliente(QMainWindow):
     ventana_abierta = False    
     def __init__(self):
@@ -59,9 +60,9 @@ class VentanaBuscarCliente(QMainWindow):
         apellidos_cliente = self.tbDatos.model().index(row, 2).data()
         
         
-        
         ventana.traer_cliente(id_cliente, nombre_cliente, apellidos_cliente)
         self.close()
+
         
         
     def visualiza_datos(self):

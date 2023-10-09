@@ -65,7 +65,7 @@ class VentanaCotizaciones(QMainWindow):
                 VentanaBuscarCliente.ventana_abierta = True
                 self.llamar_ventana = VentanaBuscarCliente()
                 self.llamar_ventana.show()
-            
+                
             else:
                 #mensaje al usuario
                 mensaje = QMessageBox()
