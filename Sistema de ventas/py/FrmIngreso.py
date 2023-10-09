@@ -53,6 +53,53 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.groupBox_2.setGraphicsEffect(groupBox2_shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+        self.txtIdProveedor.mouseDoubleClickEvent = self.abrirFrmBuscarProveedor
+        self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def abrirFrmBuscarProveedor(self, event):
+        if event.button() == Qt.LeftButton: # type: ignore
+            from FrmBuscarProveedor import VentanaBuscarproveedor
+            if not VentanaBuscarproveedor.ventana_abierta:
+                VentanaBuscarproveedor.ventana_abierta = True
+                self.llamar_ventana = VentanaBuscarproveedor(self)
+                self.llamar_ventana.show()
+            
+            else:
+                #mensaje al usuario
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Ventana duplicada")
+                mensaje.setText("La ventana ya esta abierta.")
+                mensaje.exec_()
+
+    def abrirFrmBuscarArticulo(self, event):
+        if event.button() == Qt.LeftButton: # type: ignore
+            from FrmBuscarArticulo import VentanaBuscarArticulo
+            if not VentanaBuscarArticulo.ventana_abierta:
+                VentanaBuscarArticulo.ventana_abierta = True
+                self.llamar_ventana = VentanaBuscarArticulo(self)
+                self.llamar_ventana.show()
+            
+            else:
+                #mensaje al usuario
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Ventana duplicada")
+                mensaje.setText("La ventana ya esta abierta.")
+                mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def traer_proveedor(self, id, nombre):
+        
+        
+        self.txtIdProveedor.setText(str(id))
+        self.cmbProveedor.clear()
+        self.cmbProveedor.addItem(str(nombre))
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 
     def ultima_sesion(self):
         query = QSqlQuery()
@@ -376,8 +423,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.visualiza_datos_ingreso()
         self.visualiza_datos_detalles()
         self.actualizar_ID_articulo()
-        self.cargar_proveedores()
-        self.cargar_articulos()
+        #self.cargar_proveedores()
+        #self.cargar_articulos()
                 
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
