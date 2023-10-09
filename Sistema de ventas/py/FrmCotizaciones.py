@@ -79,7 +79,7 @@ class VentanaCotizaciones(QMainWindow):
             from FrmBuscarArticulo import VentanaBuscarArticulo
             if not VentanaBuscarArticulo.ventana_abierta:
                 VentanaBuscarArticulo.ventana_abierta = True
-                self.llamar_ventana = VentanaBuscarArticulo()
+                self.llamar_ventana = VentanaBuscarArticulo(self)
                 self.llamar_ventana.show()
             
             else:
@@ -94,13 +94,17 @@ class VentanaCotizaciones(QMainWindow):
     
     
     def traer_cliente(self, id, nombre, apellido):
-        nombre_apellidos = nombre + apellido
+        nombre_apellidos = nombre + apellido 
         
-        id_cliente = str(id)
-        
-        self.txtIdCliente.setText(id_cliente)
-        #self.cmbCliente.setCurretText("")
+        self.txtIdCliente.setText(str(id))
+        self.cmbCliente.clear()
         self.cmbCliente.addItem(str(nombre_apellidos))
+        
+    def traer_articulo(self, id_articulo, nombre_articulo):
+        
+        self.txtCodArticulo.setText(str(id_articulo))
+        self.cmbArticulo.clear()
+        self.cmbArticulo.addItem(str(nombre_articulo))
         
     
 #------------------------------------------------------------------------------------------------------
@@ -144,42 +148,42 @@ class VentanaCotizaciones(QMainWindow):
     #    self.txtIdCliente.setText(str(codigo_cliente))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
-    def cargar_articulos(self):    
-        # Obtiene los datos de la columna Nombre de la tabla empleados.
-        model = QSqlTableModel()
-        model.setTable('articulo')
-        model.select()
-        articulo_data = []
-        codigo_data = []  # Agregamos una lista para almacenar los códigos de los artículos.
-        
-        for i in range(model.rowCount()):
-            articulo_data.append(model.data(model.index(i, 2)))
-            codigo_data.append(model.data(model.index(i, 0)))  # Obtenemos los códigos y los almacenamos.
-            
-        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
-        combo_model_articulo = QStandardItemModel()
-        for item2 in articulo_data:
-            combo_model_articulo.appendRow(QStandardItem(str(item2)))
-        self.cmbArticulo.setModel(combo_model_articulo)
-        
-        self.articulo_data = articulo_data  # Guardar los datos del cliente para su uso posterior.
-        self.codigo_data = codigo_data  # Guardar los códigos de los artículos para su uso posterior.
-        
-        # Conectar la señal currentIndexChanged del QComboBox a la función actualizar_codigo_cliente.
-        self.cmbArticulo.currentIndexChanged.connect(self.actualizar_codigo_articulo)
-
-        # Mostrar el código del cliente en el QLineEdit si hay al menos un cliente.
-        if model.rowCount() > 0:
-            codigo_articulo = codigo_data[0]
-            self.txtCodArticulo.setText(str(codigo_articulo))
-    
-    def actualizar_codigo_articulo(self,index):
-        # Obtener el código del artículo seleccionado en el QComboBox y mostrarlo en el QLineEdit.
-        if index >= 0 and index < len(self.codigo_data):
-            codigo_articulo = self.codigo_data[index]
-            self.txtCodArticulo.setText(str(codigo_articulo))
-        else:
-            self.txtCodArticulo.setText("")  # Limpiar el QLineEdit si no hay selección válida.
+    # def cargar_articulos(self):    
+    #     # Obtiene los datos de la columna Nombre de la tabla empleados.
+    #     model = QSqlTableModel()
+    #     model.setTable('articulo')
+    #     model.select()
+    #     articulo_data = []
+    #     codigo_data = []  # Agregamos una lista para almacenar los códigos de los artículos.
+    #     
+    #     for i in range(model.rowCount()):
+    #         articulo_data.append(model.data(model.index(i, 2)))
+    #         codigo_data.append(model.data(model.index(i, 0)))  # Obtenemos los códigos y los almacenamos.
+    #         
+    #     # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+    #     combo_model_articulo = QStandardItemModel()
+    #     for item2 in articulo_data:
+    #         combo_model_articulo.appendRow(QStandardItem(str(item2)))
+    #     self.cmbArticulo.setModel(combo_model_articulo)
+    #     
+    #     self.articulo_data = articulo_data  # Guardar los datos del cliente para su uso posterior.
+    #     self.codigo_data = codigo_data  # Guardar los códigos de los artículos para su uso posterior.
+    #     
+    #     # Conectar la señal currentIndexChanged del QComboBox a la función actualizar_codigo_cliente.
+    #     self.cmbArticulo.currentIndexChanged.connect(self.actualizar_codigo_articulo)
+    #
+    #     # Mostrar el código del cliente en el QLineEdit si hay al menos un cliente.
+    #     if model.rowCount() > 0:
+    #         codigo_articulo = codigo_data[0]
+    #         self.txtCodArticulo.setText(str(codigo_articulo))
+    # 
+    # def actualizar_codigo_articulo(self,index):
+    #     # Obtener el código del artículo seleccionado en el QComboBox y mostrarlo en el QLineEdit.
+    #     if index >= 0 and index < len(self.codigo_data):
+    #         codigo_articulo = self.codigo_data[index]
+    #         self.txtCodArticulo.setText(str(codigo_articulo))
+    #     else:
+    #         self.txtCodArticulo.setText("")  # Limpiar el QLineEdit si no hay selección válida.
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
