@@ -92,9 +92,11 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def traer_cliente(self, id, nombre, apellido):
-        apellidos = f"{nombre} {apellido}"
+        nombre_apellidos = f"{nombre} {apellido}"
+        
+        
         self.txtIdCliente.setText(str(id))
-        self.cmbCliente.setCurrentText(apellidos)
+        self.cmbCliente.setCurrentText(f"{nombre} {apellido}")
         
 
 #------------------------------------------------------------------------------------------------------
