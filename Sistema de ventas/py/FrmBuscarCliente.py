@@ -9,8 +9,9 @@ from Consultas_db import insertar_nuevo_cliente, obtener_ultimo_codigo, generar_
 
 class VentanaBuscarCliente(QMainWindow):
     ventana_abierta = False    
-    def __init__(self):
-        super().__init__()        
+    def __init__(self, ventana_cotizaciones):
+        super().__init__()
+        self.ventana_cotizaciones = ventana_cotizaciones        
         uic.loadUi('Sistema de ventas/ui/FrmBuscarCliente.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -48,20 +49,25 @@ class VentanaBuscarCliente(QMainWindow):
     # Funciones conectadas a los botones
     def insertar_cliente_en_cotizacion(self, index):
         from FrmCotizaciones import VentanaCotizaciones
-        ventana = VentanaCotizaciones()
         
-        
-        # Obtener la fila seleccionada
-        row = index.row()
+        if not VentanaCotizaciones.ventana_abierta:
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana cerrada")
+            mensaje.setText("La ventana Cotizaciones está cerrada.")
+            mensaje.exec_()
+        else:
+            # Obtener la fila seleccionada
+            row = index.row()
 
-        # Obtener los datos de la fila seleccionada
-        id_cliente = self.tbDatos.model().index(row, 0).data()
-        nombre_cliente = self.tbDatos.model().index(row, 1).data()
-        apellidos_cliente = self.tbDatos.model().index(row, 2).data()
-        
-        
-        ventana.traer_cliente(id_cliente, nombre_cliente, apellidos_cliente)
-        self.close()
+            # Obtener los datos de la fila seleccionada
+            id_cliente = self.tbDatos.model().index(row, 0).data()
+            nombre_cliente = self.tbDatos.model().index(row, 1).data()
+            apellidos_cliente = self.tbDatos.model().index(row, 2).data()
+
+            # Llamar a la función traer_cliente en la instancia de VentanaCotizaciones
+            self.ventana_cotizaciones.traer_cliente(id_cliente, nombre_cliente, apellidos_cliente)
+            self.close()
 
         
         

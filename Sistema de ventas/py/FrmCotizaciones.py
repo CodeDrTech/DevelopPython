@@ -63,7 +63,7 @@ class VentanaCotizaciones(QMainWindow):
             from FrmBuscarCliente import VentanaBuscarCliente
             if not VentanaBuscarCliente.ventana_abierta:
                 VentanaBuscarCliente.ventana_abierta = True
-                self.llamar_ventana = VentanaBuscarCliente()
+                self.llamar_ventana = VentanaBuscarCliente(self)
                 self.llamar_ventana.show()
                 
             else:
@@ -94,16 +94,13 @@ class VentanaCotizaciones(QMainWindow):
     
     
     def traer_cliente(self, id, nombre, apellido):
-        nombre_apellidos = f"{nombre} {apellido}"
+        nombre_apellidos = nombre + apellido
         
         id_cliente = str(id)
         
         self.txtIdCliente.setText(id_cliente)
-        self.cmbCliente.setCurrentText(nombre_apellidos)
-        
-        
-        # Este print los datos salen correctamente
-        print(f"El id del cliente es {id} y el nombre completo es {nombre} {apellido}")
+        #self.cmbCliente.setCurretText("")
+        self.cmbCliente.addItem(str(nombre_apellidos))
         
     
 #------------------------------------------------------------------------------------------------------
