@@ -46,11 +46,21 @@ class VentanaBuscarCliente(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 
     # Funciones conectadas a los botones
-    def insertar_cliente_en_cotizacion(self):
-        
+    def insertar_cliente_en_cotizacion(self, index):
         from FrmCotizaciones import VentanaCotizaciones
-        self.ventana = VentanaCotizaciones()
-        self.ventana.cargar_cientes()
+        ventana = VentanaCotizaciones()
+        
+        
+        # Obtener la fila seleccionada
+        row = index.row()
+
+        # Obtener los datos de la fila seleccionada
+        id_cliente = self.tbDatos.model().index(row, 0).data()
+        nombre_cliente = self.tbDatos.model().index(row, 1).data()
+        apellidos_cliente = self.tbDatos.model().index(row, 2).data()
+        
+        
+        ventana.traer_cliente(id_cliente, nombre_cliente, apellidos_cliente)
 
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos

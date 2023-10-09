@@ -89,7 +89,16 @@ class VentanaCotizaciones(QMainWindow):
                 mensaje.setWindowTitle("Ventana duplicada")
                 mensaje.setText("La ventana ya esta abierta.")
                 mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def traer_cliente(self, id, nombre, apellido):
+        apellidos = f"{nombre} {apellido}"
+        self.txtIdCliente.setText(str(id))
+        self.cmbCliente.setCurrentText(apellidos)
+        
 
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def cargar_cientes(self):    
         # Obtiene los datos de las columnas Nombre y Apellido de la tabla cliente.
         model = QSqlTableModel()
