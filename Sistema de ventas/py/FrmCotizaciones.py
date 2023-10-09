@@ -96,50 +96,55 @@ class VentanaCotizaciones(QMainWindow):
     def traer_cliente(self, id, nombre, apellido):
         nombre_apellidos = f"{nombre} {apellido}"
         
+        id_cliente = str(id)
         
-        self.txtIdCliente.setText("20")
-        self.cmbCliente.setCurrentText("Loco viejo")
+        self.txtIdCliente.setText(id_cliente)
+        self.cmbCliente.setCurrentText(nombre_apellidos)
+        
+        
+        # Este print los datos salen correctamente
         print(f"El id del cliente es {id} y el nombre completo es {nombre} {apellido}")
         
     
-    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def cargar_cientes(self):    
-        # Obtiene los datos de las columnas Nombre y Apellido de la tabla cliente.
-        model = QSqlTableModel()
-        model.setTable('cliente')
-        model.select()
-        client_data = []
-
-        for i in range(model.rowCount()):
-            codigo = model.data(model.index(i, 0))
-            nombre = model.data(model.index(i, 1))
-            apellido = model.data(model.index(i, 2))
-            nombre_completo = f"{nombre} {apellido}"
-            client_data.append((nombre_completo, codigo))
-            
-        # Cargar los datos en el QComboBox.
-        combo_model = QStandardItemModel()
-        for item, _ in client_data:
-            combo_model.appendRow(QStandardItem(item))
+    # Esta función carga los clientes en un QComboBox.
+    # No es necesario para esta solicitud, por lo que se comenta.
+    # def cargar_cientes(self):    
+    #     # Obtiene los datos de las columnas Nombre y Apellido de la tabla cliente.
+    #     model = QSqlTableModel()
+    #     model.setTable('cliente')
+    #     model.select()
+    #     client_data = []
+    #
+    #     for i in range(model.rowCount()):
+    #         codigo = model.data(model.index(i, 0))
+    #         nombre = model.data(model.index(i, 1))
+    #         apellido = model.data(model.index(i, 2))
+    #         nombre_completo = f"{nombre} {apellido}"
+    #         client_data.append((nombre_completo, codigo))
+    #         
+    #     # Cargar los datos en el QComboBox.
+    #     combo_model = QStandardItemModel()
+    #     for item, _ in client_data:
+    #         combo_model.appendRow(QStandardItem(item))
+    # 
+    #     self.client_data = client_data  # Guardar los datos del cliente para su uso posterior.
+    #     self.cmbCliente.setModel(combo_model)
+    #
+    #     # Conectar la señal currentIndexChanged del QComboBox a la función actualizar_codigo_cliente.
+    #     self.cmbCliente.currentIndexChanged.connect(self.actualizar_codigo_cliente)
+    #
+    #     # Mostrar el código del cliente en el QLineEdit si hay al menos un cliente.
+    #     if model.rowCount() > 0:
+    #         codigo_cliente = model.data(model.index(0, 0))
+    #         self.txtIdCliente.setText(str(codigo_cliente))
     
-        self.client_data = client_data  # Guardar los datos del cliente para su uso posterior.
-        self.cmbCliente.setModel(combo_model)
-
-        # Conectar la señal currentIndexChanged del QComboBox a la función actualizar_codigo_cliente.
-        self.cmbCliente.currentIndexChanged.connect(self.actualizar_codigo_cliente)
-
-        # Mostrar el código del cliente en el QLineEdit si hay al menos un cliente.
-        if model.rowCount() > 0:
-            codigo_cliente = model.data(model.index(0, 0))
-            self.txtIdCliente.setText(str(codigo_cliente))
-    
-    def actualizar_codigo_cliente(self, index):
-        # Obtener el código del cliente seleccionado en el QComboBox y mostrarlo en el QLineEdit.
-        selected_client_data = self.client_data[index]
-        codigo_cliente = selected_client_data[1]
-        self.txtIdCliente.setText(str(codigo_cliente))
+    #def actualizar_codigo_cliente(self, index):
+    #    # Obtener el código del cliente seleccionado en el QComboBox y mostrarlo en el QLineEdit.
+    #    selected_client_data = self.client_data[index]
+    #    codigo_cliente = selected_client_data[1]
+    #    self.txtIdCliente.setText(str(codigo_cliente))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def cargar_articulos(self):    

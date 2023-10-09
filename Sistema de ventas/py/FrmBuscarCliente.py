@@ -20,9 +20,8 @@ class VentanaBuscarCliente(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         # Botones del formulario y sus funciones
-        #self.btnGuardar.clicked.connect(self.insertar_datos)
-        #self.btnEditar.clicked.connect(self.editar_datos)
-        #self.btnSalir.clicked.connect(self.fn_Salir)
+        #self.btnBuscar.clicked.connect(self.insertar_cliente_en_cotizacion)
+        
         self.tbDatos.doubleClicked.connect(self.insertar_cliente_en_cotizacion)
         
         
@@ -60,8 +59,11 @@ class VentanaBuscarCliente(QMainWindow):
         apellidos_cliente = self.tbDatos.model().index(row, 2).data()
         
         
+        
         ventana.traer_cliente(id_cliente, nombre_cliente, apellidos_cliente)
         self.close()
+        
+        
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()
@@ -77,25 +79,7 @@ class VentanaBuscarCliente(QMainWindow):
         self.tbDatos.resizeColumnsToContents()
         self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
-    def actualizar_codigo_categoria(self):
-        ultimo_codigo = obtener_ultimo_codigo("cliente","idcliente")
-        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
-        self.txtCodigo.setText(nuevo_codigo)
-            
-    def editar_datos(self):
-        self.listado()
-        # Consulta SELECT * FROM Productos
-        model = QSqlTableModel()
-        model.setTable("cliente")
-        model.select()        
-        self.tbDatos.setModel(model)
-
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbDatos.resizeColumnsToContents()    
-        self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        
-    def listado(self):
-        self.tabWidget.setCurrentIndex(0)
+    
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------       
@@ -103,18 +87,9 @@ class VentanaBuscarCliente(QMainWindow):
         VentanaBuscarCliente.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
         
-    def fn_Salir(self):
-        # Preguntar si el usuario está seguro de cerrar la ventana
-        confirmacion = QMessageBox.question(self, "", "¿ESTAS SEGURO QUE QUIERE CERRAR LA VENTANA?",
-                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-            
-            
-        # Si el usuario hace clic en el botón "Sí", se cierra la ventana
-        if confirmacion == QMessageBox.Yes:
-            self.close()
     def showEvent(self, event):
         super().showEvent(event)
-        #self.actualizar_codigo_categoria()
+        
         self.visualiza_datos()   
                 
 if __name__ == '__main__':
