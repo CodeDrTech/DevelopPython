@@ -55,6 +55,9 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
         self.txtIdProveedor.mouseDoubleClickEvent = self.abrirFrmBuscarProveedor
         self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
+        
+        self.cmbProveedor.mouseDoubleClickEvent = self.abrirFrmBuscarProveedor
+        self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------

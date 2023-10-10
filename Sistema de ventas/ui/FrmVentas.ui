@@ -947,6 +947,9 @@ QComboBox QAbstractItemView {
          <height>35</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Doble click para buscar clientes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">QComboBox {
     background-color: #ffffff;
@@ -1332,6 +1335,9 @@ QLabel {
           <width>201</width>
           <height>35</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Doble click para buscar articulos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QComboBox {

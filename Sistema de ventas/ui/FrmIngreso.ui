@@ -942,6 +942,9 @@ QComboBox QAbstractItemView {
          <height>35</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Doble click para buscar proveedores&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">QComboBox {
     background-color: #ffffff;
@@ -1474,6 +1477,9 @@ QLineEdit::placeholder {
           <width>161</width>
           <height>35</height>
          </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Doble click para buscar articulos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QComboBox {

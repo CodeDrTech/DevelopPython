@@ -55,6 +55,9 @@ class VentanaVentas(QMainWindow):
         # Botones del formulario y sus funciones
         self.txtIdCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
         self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
+        
+        self.cmbCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
+        self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
