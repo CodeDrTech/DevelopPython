@@ -172,7 +172,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
-        impuesto = float(self.txtItbis.text())
+        impuesto = self.txtItbis.text()
         
         
         try:
@@ -188,7 +188,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            
             num_comprobante = self.txtNumComprobante.text()
-            itbis = impuesto/100
+            itbis = float(impuesto/100)
             estado = "Activo"
             
             idingreso = int(self.txtCodigo.text())
@@ -199,7 +199,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
-            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
+            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -241,15 +241,15 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def insertar_datos_detalle(self):
-        impuesto = float(self.txtItbis.text())
+        #impuesto = float(self.txtItbis.text())
 
         try:
             idempleado = int(self.txtIdProveedor.text()) #Falta ver como resolver este
             idproveedor = int(self.txtIdProveedor.text())
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
-            tipo_comprobante = self.cmbComprobante.currentText()            
-            num_comprobante = self.txtNumComprobante.text()
-            itbis = impuesto/100
+            #tipo_comprobante = self.cmbComprobante.currentText()            
+            #num_comprobante = self.txtNumComprobante.text()
+            #itbis = impuesto/100
             estado = "Activo"
             
             #Variables para detalles de ingreso
@@ -257,11 +257,13 @@ class VentanaIngresoAlmacen(QMainWindow):
             idarticulo = int(self.txtCodArticulo.text())
             precio_compra = float(self.txtPrecioCom.text())
             precio_venta = float(self.txtPrecioVen.text())
+            precio_venta1 = float(self.txtPrecioVen1.text())
+            precio_venta2 = float(self.txtPrecioVen2.text())
             cantidad = int(self.txtCantidad.text())
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
                 
-            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante or not itbis or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
+            if  not idempleado or not idproveedor or not fecha or not estado or not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -271,7 +273,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             
             else:
-                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento)
+                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2)
                 
                 
                 
@@ -287,10 +289,12 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 
                 # Limpia los TexBox 
-                self.txtNumComprobante.setText("")
+                #self.txtNumComprobante.setText("")
                 self.txtFecha.setDate(QDate.currentDate())                
                 self.txtPrecioCom.setText("")
                 self.txtPrecioVen.setText("")
+                self.txtPrecioVen1.setText("")
+                self.txtPrecioVen2.setText("")
                 self.txtCantidad.setText("")
                 self.txtFechaProd.setDate(QDate.currentDate())
                 self.txtFechaVenc.setDate(QDate.currentDate())

@@ -138,7 +138,7 @@ def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num
     insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'], [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
     
 
-def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento):
+def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2):
     conn = conectar_db()
 
     try:
@@ -150,11 +150,11 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
             nueva_cantidad = existing_stock[0] + cantidad
             
             
-            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, nueva_cantidad, fecha_produccion, fecha_vencimiento])
+            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, nueva_cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2])
 
         else:
             # Si el producto no existe en Stock, lo agregamos con la cantidad proporcionada
-            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, cantidad, fecha_produccion, fecha_vencimiento])
+            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2])
     
     except Exception as e:
         # Mensaje de error
