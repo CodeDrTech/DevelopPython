@@ -76,10 +76,10 @@ class VentanaIngresoAlmacen(QMainWindow):
 
     def abrirFrmBuscarArticulo(self, event):
         if event.button() == Qt.LeftButton: # type: ignore
-            from FrmBuscarArticulo import VentanaBuscarArticulo
-            if not VentanaBuscarArticulo.ventana_abierta:
-                VentanaBuscarArticulo.ventana_abierta = True
-                self.llamar_ventana = VentanaBuscarArticulo(self)
+            from FrmBuscarArticuloIngreso import VentanaBuscarArticuloIngreso
+            if not VentanaBuscarArticuloIngreso.ventana_abierta:
+                VentanaBuscarArticuloIngreso.ventana_abierta = True
+                self.llamar_ventana = VentanaBuscarArticuloIngreso(self)
                 self.llamar_ventana.show()
             
             else:
@@ -97,6 +97,12 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.txtIdProveedor.setText(str(id))
         self.cmbProveedor.clear()
         self.cmbProveedor.addItem(str(nombre))
+        
+    def traer_articulo(self, id_articulo, nombre_articulo):
+        
+        self.txtCodArticulo.setText(str(id_articulo))
+        self.cmbArticulo.clear()
+        self.cmbArticulo.addItem(str(nombre_articulo))
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------

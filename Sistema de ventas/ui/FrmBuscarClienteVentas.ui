@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>437</width>
+    <height>556</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Clientes</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>35</y>
+      <width>391</width>
+      <height>481</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    border: 2px solid #2980b9;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #9a9a9a;
+}
+
+QGroupBox:title {
+    color: #2980b9;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+
+</string>
+    </property>
+    <property name="title">
+     <string>Seleccionar Cliente</string>
+    </property>
+    <widget class="QComboBox" name="comboBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>35</y>
+       <width>120</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QComboBox:hover {
+    border: 1px solid #3498db;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #cccccc;
+    background-color: white;
+    selection-background-color: #3498db;
+}
+</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Documento</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Razon social</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QPushButton" name="btnBuscar">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>35</y>
+       <width>85</width>
+       <height>37</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Buscar</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtBuscar">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>35</y>
+       <width>120</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inserte el dato para buscar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+    background-color: #f2f2f2;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3498db;
+    outline: none;
+}
+
+QWidget {
+    background-color: #f2f2f2;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2980b9;
+}
+
+QLineEdit::placeholder {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+</string>
+     </property>
+    </widget>
+    <widget class="QTableView" name="tbDatos">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>361</width>
+       <height>351</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QTableView {
+    background-color: #9a9a9a;
+    border: 1px solid #cccccc;
+    selection-background-color: #3498db;
+    selection-color: #ffffff;
+}
+
+QTableView QHeaderView {
+    background-color: #d3d3d3;
+    color: #333333;
+    border: none;
+}
+
+QTableView QHeaderView::section {
+    background-color: #bbbbbb;
+    color: #333333;
+    padding: 6px;
+    border: 1px solid #cccccc;
+}
+
+QTableView QHeaderView::section:checked {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+QTableView::item {
+    padding: 6px;
+}
+
+QTableView::item:selected {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+QTableView::item:focus {
+    background-color: #3498db;
+    color: #ffffff;
+    outline: none;
+}
+
+QTableView::item:hover {
+    background-color: #d3d3d3;
+    color: #333333;
+}
+</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

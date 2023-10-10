@@ -6,12 +6,12 @@ from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Consultas_db import insertar_nuevo_cliente, obtener_ultimo_codigo, generar_nuevo_codigo
 
-class VentanaBuscarArticulo(QMainWindow):
+class VentanaBuscarArticuloCotizacion(QMainWindow):
     ventana_abierta = False    
     def __init__(self, ventana_cotizaciones):
         super().__init__()
         self.ventana_cotizaciones = ventana_cotizaciones        
-        uic.loadUi('Sistema de ventas/ui/FrmBuscarArticulo.ui',self)
+        uic.loadUi('Sistema de ventas/ui/FrmBuscarArticuloCotizacion.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
@@ -49,7 +49,7 @@ class VentanaBuscarArticulo(QMainWindow):
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
             mensaje.setWindowTitle("Ventana cerrada")
-            mensaje.setText("La ventana Cotizaciones está cerrada.")
+            mensaje.setText("La ventana Ingreso está cerrada.")
             mensaje.exec_()
         else:
             # Obtener la fila seleccionada
@@ -106,7 +106,7 @@ class VentanaBuscarArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------       
     def closeEvent(self, event):
-        VentanaBuscarArticulo.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
+        VentanaBuscarArticuloCotizacion.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
         
     def fn_Salir(self):
@@ -125,6 +125,6 @@ class VentanaBuscarArticulo(QMainWindow):
                 
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
-    GUI = VentanaBuscarArticulo()
+    GUI = VentanaBuscarArticuloCotizacion()
     GUI.show()
     sys.exit(app.exec_())

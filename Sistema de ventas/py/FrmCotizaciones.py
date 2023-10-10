@@ -60,10 +60,10 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
     def abrirFrmBuscarCliente(self, event):
         if event.button() == Qt.LeftButton: # type: ignore
-            from FrmBuscarCliente import VentanaBuscarCliente
-            if not VentanaBuscarCliente.ventana_abierta:
-                VentanaBuscarCliente.ventana_abierta = True
-                self.llamar_ventana = VentanaBuscarCliente(self)
+            from FrmBuscarClienteCotizacion import VentanaBuscarClienteCotizacion
+            if not VentanaBuscarClienteCotizacion.ventana_abierta:
+                VentanaBuscarClienteCotizacion.ventana_abierta = True
+                self.llamar_ventana = VentanaBuscarClienteCotizacion(self)
                 self.llamar_ventana.show()
                 
             else:
@@ -76,10 +76,10 @@ class VentanaCotizaciones(QMainWindow):
 
     def abrirFrmBuscarArticulo(self, event):
         if event.button() == Qt.LeftButton: # type: ignore
-            from FrmBuscarArticulo import VentanaBuscarArticulo
-            if not VentanaBuscarArticulo.ventana_abierta:
-                VentanaBuscarArticulo.ventana_abierta = True
-                self.llamar_ventana = VentanaBuscarArticulo(self)
+            from FrmBuscarArticuloCotizacion import VentanaBuscarArticuloCotizacion
+            if not VentanaBuscarArticuloCotizacion.ventana_abierta:
+                VentanaBuscarArticuloCotizacion.ventana_abierta = True
+                self.llamar_ventana = VentanaBuscarArticuloCotizacion(self)
                 self.llamar_ventana.show()
             
             else:

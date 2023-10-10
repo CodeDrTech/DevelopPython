@@ -7,12 +7,12 @@ from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Consultas_db import insertar_nuevo_cliente, obtener_ultimo_codigo, generar_nuevo_codigo
 
 
-class VentanaBuscarCliente(QMainWindow):
+class VentanaBuscarClienteCotizacion(QMainWindow):
     ventana_abierta = False    
     def __init__(self, ventana_cotizaciones):
         super().__init__()
         self.ventana_cotizaciones = ventana_cotizaciones        
-        uic.loadUi('Sistema de ventas/ui/FrmBuscarCliente.ui',self)
+        uic.loadUi('Sistema de ventas/ui/FrmBuscarClienteCotizacion.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
@@ -91,7 +91,7 @@ class VentanaBuscarCliente(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------       
     def closeEvent(self, event):
-        VentanaBuscarCliente.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
+        VentanaBuscarClienteCotizacion.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
         
     def showEvent(self, event):
@@ -101,6 +101,6 @@ class VentanaBuscarCliente(QMainWindow):
                 
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
-    GUI = VentanaBuscarCliente()
+    GUI = VentanaBuscarClienteCotizacion()
     GUI.show()
     sys.exit(app.exec_())
