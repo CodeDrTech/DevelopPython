@@ -94,6 +94,10 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def traer_proveedor(self, id, nombre):
         
         
@@ -363,7 +367,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.visualiza_datos_detalles()
         self.actualizar_ID_articulo()
         
-                
+        
+        
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())
