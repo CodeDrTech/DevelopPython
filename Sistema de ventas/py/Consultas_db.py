@@ -45,22 +45,24 @@ def generar_nuevo_codigo(ultimo_codigo):
 #------------------------------------------------------------------------------------------------------
 # Funcion generica para insertar datos en la base en alguno de los formularios 
 def insertar_dato_generico(tabla, columnas, valores):
-    
-
     # Conectar a la base de datos
     conn = conectar_db()
 
-    # Construir la consulta SQL dinámica
-    columnas_str = ', '.join(columnas)
-    valores_str = ', '.join(['?'] * len(columnas))
-    query = f"INSERT INTO {tabla} ({columnas_str}) VALUES ({valores_str})"
-
-    # Realizar la inserción en la base de datos
-    conn.execute(query, valores)
-    conn.commit()
-
-    # Cerrar la conexión
-    conn.close()
+    try:
+        cursor = conn.cursor()
+        columnas_str = ', '.join(columnas)
+        valores_str = ', '.join(['?'] * len(columnas))
+        query = f"INSERT INTO {tabla} ({columnas_str}) VALUES ({valores_str})"
+        cursor.execute(query, valores)
+        conn.commit()
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al insertar datos en la tabla {tabla}: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec_()
+    finally:
+        conn.close()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
 # Funciones para intercambiar datos de los formularios a la base de datos
@@ -160,7 +162,7 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
         # Mensaje de error
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
-        mensaje_error.setText(f"Error al insertar nuevo detalle de ingreso para idarticulo {idarticulo}: {str(e)}")
+        mensaje_error.setText(f"Error al insertar nuevo detalle de ingreso {str(e)}")
         mensaje_error.setIcon(QMessageBox.Critical)
         mensaje_error.exec_()
     finally:
