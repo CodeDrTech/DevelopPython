@@ -641,12 +641,12 @@ QPushButton:pressed {
         <string>Editar</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnGuardar">
+      <widget class="QPushButton" name="btnRegistrar">
        <property name="geometry">
         <rect>
-         <x>220</x>
-         <y>560</y>
-         <width>85</width>
+         <x>790</x>
+         <y>80</y>
+         <width>88</width>
          <height>37</height>
         </rect>
        </property>
@@ -675,7 +675,7 @@ QPushButton:pressed {
 </string>
        </property>
        <property name="text">
-        <string> Guardar </string>
+        <string>Registrar</string>
        </property>
       </widget>
       <widget class="QPushButton" name="btnCancelar">
@@ -1134,8 +1134,8 @@ QGroupBox:title {
        <widget class="QDateEdit" name="txtFechaProd">
         <property name="geometry">
          <rect>
-          <x>700</x>
-          <y>40</y>
+          <x>580</x>
+          <y>50</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1177,8 +1177,8 @@ QDateEdit QAbstractItemView {
        <widget class="QDateEdit" name="txtFechaVenc">
         <property name="geometry">
          <rect>
-          <x>700</x>
-          <y>80</y>
+          <x>580</x>
+          <y>90</y>
           <width>120</width>
           <height>35</height>
          </rect>
@@ -1220,7 +1220,7 @@ QDateEdit QAbstractItemView {
        <widget class="QLabel" name="label_16">
         <property name="geometry">
          <rect>
-          <x>600</x>
+          <x>480</x>
           <y>50</y>
           <width>101</width>
           <height>21</height>
@@ -1244,7 +1244,7 @@ QLabel {
        <widget class="QLabel" name="label_17">
         <property name="geometry">
          <rect>
-          <x>600</x>
+          <x>480</x>
           <y>90</y>
           <width>101</width>
           <height>21</height>
@@ -1639,7 +1639,7 @@ QLabel {
         <property name="geometry">
          <rect>
           <x>825</x>
-          <y>40</y>
+          <y>50</y>
           <width>41</width>
           <height>37</height>
          </rect>
@@ -1676,7 +1676,7 @@ QPushButton:pressed {
         <property name="geometry">
          <rect>
           <x>825</x>
-          <y>80</y>
+          <y>90</y>
           <width>41</width>
           <height>37</height>
          </rect>
@@ -1998,6 +1998,54 @@ QLineEdit::placeholder {
 }
 
 </string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_24">
+        <property name="geometry">
+         <rect>
+          <x>750</x>
+          <y>50</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+        </property>
+        <property name="text">
+         <string>Agregar </string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_25">
+        <property name="geometry">
+         <rect>
+          <x>750</x>
+          <y>90</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #9a9a9a;
+}
+
+QLabel {
+    color: #2980b9;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+        </property>
+        <property name="text">
+         <string>Eliminar</string>
         </property>
        </widget>
       </widget>

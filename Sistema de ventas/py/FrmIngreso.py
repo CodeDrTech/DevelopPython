@@ -22,8 +22,9 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         # Botones del formulario y sus funciones
-        self.btnGuardar.clicked.connect(self.insertar_datos_ingreso)
+        self.btnRegistrar.clicked.connect(self.insertar_datos_ingreso)
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
+        #self.btnQuitar.clicked.connect(self.insertar_datos_detalle)
         
         # Crear un efecto de sombra y aplicarlo a los QTableView
         shadow = QGraphicsDropShadowEffect()
@@ -172,7 +173,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
-        impuesto = self.txtItbis.text()
+        #impuesto = self.txtItbis.text()
         
         
         try:
@@ -188,7 +189,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            
             num_comprobante = self.txtNumComprobante.text()
-            itbis = impuesto
+            itbis = self.txtItbis.text()
             estado = "Activo"
             
             #idingreso = int(self.txtCodigo.text())
@@ -198,38 +199,43 @@ class VentanaIngresoAlmacen(QMainWindow):
             #cantidad = int(self.txtCantidad.text())
             #fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             #fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
-                
-            if  not idempleado or not idproveedor or not fecha or not tipo_comprobante or not num_comprobante:
-    
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Faltan datos importantes")
-                mensaje.setText("Por favor, complete todos los campos.")
-                mensaje.exec_()
             
+            if not itbis:
+                
+                itbis = 0
             
-            else:
-                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
-                
-                self.visualiza_datos_ingreso()
-                
+                if not idproveedor or not idempleado or not fecha or not tipo_comprobante or not num_comprobante:
         
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Critical)
+                    mensaje.setWindowTitle("Faltan datos importantes")
+                    mensaje.setText("Por favor, complete todos los campos.")
+                    mensaje.exec_()
+                
+                
+                else:
+                    insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
+                    
+                    self.visualiza_datos_ingreso()
+                    
+            
 
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Articulos")
-                mensaje.setText("Ingrese los articulos para este nuevo ingreso.")
-                mensaje.exec_()
-                
-                
-                # Limpia los TexBox 
-                #self.txtNumComprobante.setText("")
-                #self.txtFecha.setDate(QDate.currentDate())                
-                #self.txtPrecioCom.setText("")
-                #self.txtPrecioVen.setText("")
-                #self.txtCantidad.setText("")
-                #self.txtFechaProd.setDate(QDate.currentDate())
-                #self.txtFechaVenc.setDate(QDate.currentDate())
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Critical)
+                    mensaje.setWindowTitle("Articulos")
+                    mensaje.setText("Ingrese los articulos para este nuevo ingreso.")
+                    mensaje.exec_()
+                    
+                    self.activar_botones_detalle()
+                    self.desactivar_botones_ingreso()
+                    # Limpia los TexBox 
+                    #self.txtNumComprobante.setText("")
+                    #self.txtFecha.setDate(QDate.currentDate())                
+                    #self.txtPrecioCom.setText("")
+                    #self.txtPrecioVen.setText("")
+                    #self.txtCantidad.setText("")
+                    #self.txtFechaProd.setDate(QDate.currentDate())
+                    #self.txtFechaVenc.setDate(QDate.currentDate())
 
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
@@ -238,8 +244,8 @@ class VentanaIngresoAlmacen(QMainWindow):
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
+            
         
-        self.activar_botones_detalle()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def insertar_datos_detalle(self):
@@ -403,6 +409,28 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.txtFechaVenc.setEnabled(True)
         self.btnAgregar.setEnabled(True)
         self.btnQuitar.setEnabled(True)
+        
+    def desactivar_botones_ingreso(self):
+        self.txtCodigo.setEnabled(False)
+        self.cmbComprobante.setEnabled(False)
+        self.txtIdProveedor.setEnabled(False)
+        self.cmbProveedor.setEnabled(False)
+        self.txtNumComprobante.setEnabled(False)
+        self.txtFecha.setEnabled(False)
+        self.txtItbis.setEnabled(False)
+        self.btnRegistrar.setEnabled(False)
+        
+        
+    def activar_botones_ingreso(self):
+        self.txtCodigo.setEnabled(True)
+        self.cmbComprobante.setEnabled(True)
+        self.txtIdProveedor.setEnabled(True)
+        self.cmbProveedor.setEnabled(True)
+        self.txtNumComprobante.setEnabled(True)
+        self.txtFecha.setEnabled(True)
+        self.txtItbis.setEnabled(True)
+        self.btnRegistrar.setEnabled(True)
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     
@@ -412,7 +440,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def actualizar_ID_articulo(self):
+    def actualizar_ID_ingreso(self):
         ultimo_codigo = obtener_ultimo_codigo("ingreso","idingreso")
         nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
         self.txtCodigo.setText(nuevo_codigo)
@@ -431,7 +459,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.ultima_sesion()
         self.visualiza_datos_ingreso()
         self.visualiza_datos_detalles()
-        self.actualizar_ID_articulo()
+        self.actualizar_ID_ingreso()
         self.desactivar_botones_detalle()
         
         
