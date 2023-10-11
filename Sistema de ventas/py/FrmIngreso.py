@@ -175,7 +175,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     def insertar_datos_ingreso(self):
         #impuesto = self.txtItbis.text()
         
-        
+            
         try:
             id_ultima_sesion = self.ultima_sesion()
             fila = self.obtener_id_sesion(id_ultima_sesion)
