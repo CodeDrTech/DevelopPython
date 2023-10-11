@@ -683,7 +683,7 @@ QPushButton:pressed {
         <rect>
          <x>400</x>
          <y>560</y>
-         <width>85</width>
+         <width>91</width>
          <height>37</height>
         </rect>
        </property>
@@ -924,12 +924,17 @@ QComboBox QAbstractItemView {
        </property>
        <item>
         <property name="text">
-         <string>TICKET</string>
+         <string>FACTURA</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>FACTURA</string>
+         <string>RECIBO</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>CONDUCE</string>
         </property>
        </item>
       </widget>
@@ -1121,7 +1126,6 @@ QGroupBox:title {
     padding-right: 5px;
     border: none;
 }
-
 </string>
        </property>
        <property name="title">
@@ -1306,7 +1310,7 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Precio venta 1</string>
+         <string>Precio venta 2</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtPrecioCom">
@@ -1913,7 +1917,7 @@ QLabel {
 }</string>
         </property>
         <property name="text">
-         <string>Precio venta 2</string>
+         <string>Precio venta 3</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="txtPrecioVen2">
