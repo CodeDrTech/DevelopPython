@@ -2,8 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsDropShadowEffect, QWidget
 from PyQt5 import QtGui
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
-from PyQt5.QtSql import QSqlTableModel
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor, QDoubleValidator, QIntValidator
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtCore import QDate, Qt
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso, insertar_nuevo_detalle_ingreso
@@ -173,9 +172,9 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
-        #impuesto = self.txtItbis.text()
-        
-            
+        #impuesto = self.txtItbis.text()        
+        int_validator = QIntValidator()
+        self.txtItbis.setValidator(int_validator)    
         try:
             id_ultima_sesion = self.ultima_sesion()
             fila = self.obtener_id_sesion(id_ultima_sesion)
@@ -186,7 +185,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 
             # Variables usadas para los ingresos
             idempleado = id_empleado
-            idproveedor = int(self.txtIdProveedor.text())
+            idproveedor = self.txtIdProveedor.text()
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
             tipo_comprobante = self.cmbComprobante.currentText()            
             num_comprobante = self.txtNumComprobante.text()
@@ -205,7 +204,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 itbis = 0
             
-            if not idproveedor or not idempleado or not fecha or not tipo_comprobante or not num_comprobante:
+            if not idempleado or not idproveedor or not idempleado or not fecha or not tipo_comprobante or not num_comprobante:
         
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -217,7 +216,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             else:
                 insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
                     
-                self.visualiza_datos_ingreso()
+                
                     
             
 
@@ -231,6 +230,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 
                     self.activar_botones_detalle()
                     self.desactivar_botones_ingreso()
+                    self.visualiza_datos_ingreso()
                     # Limpia los TexBox 
                     #self.txtNumComprobante.setText("")
                     #self.txtFecha.setDate(QDate.currentDate())                
@@ -252,40 +252,42 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def insertar_datos_detalle(self):
-        #impuesto = float(self.txtItbis.text())
-
-        try:
-            #idempleado = int(self.txtIdProveedor.text())
-            #idproveedor = int(self.txtIdProveedor.text())
-            #fecha = self.txtFecha.date().toString("yyyy-MM-dd")
-            #tipo_comprobante = self.cmbComprobante.currentText()            
-            #num_comprobante = self.txtNumComprobante.text()
-            #itbis = impuesto/100
-            #estado = "Activo"
-            
-            #Variables para detalles de ingreso
-            idingreso = int(self.txtCodigo.text())
-            idarticulo = int(self.txtCodArticulo.text())
+        # Crea un validador de enteros
+        int_validator = QIntValidator()
+        self.txtCodigo.setValidator(int_validator)
+        self.txtCodArticulo.setValidator(int_validator)
+        self.txtPrecioCom.setValidator(int_validator)
+        self.txtPrecioVen.setValidator(int_validator)
+        self.txtPrecioVen1.setValidator(int_validator)
+        self.txtPrecioVen2.setValidator(int_validator)
+        self.txtCantidad.setValidator(int_validator)
+        try:            
+            #Almacena en las variables los valores insertados en los controles txt y cmb
+            idingreso = self.txtCodigo.text()
+            idarticulo = self.txtCodArticulo.text()
             precio_compra = self.txtPrecioCom.text()
             precio_venta = self.txtPrecioVen.text()
             precio_venta1 = self.txtPrecioVen1.text()
             precio_venta2 = self.txtPrecioVen2.text()
-            cantidad = int(self.txtCantidad.text())
+            cantidad = self.txtCantidad.text()
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
             
-            
+            # controla que los precios de venta 1 y 2 pasen como 0 a la base de datosi uno de ellos esta vacio o ambos lo estan.
             if not precio_venta1:
                 precio_venta1 = 0
-            elif not precio_venta2:
+            if not precio_venta2:
                 precio_venta2 = 0
-            
-            if  not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
+            if not precio_venta1 and not precio_venta2:
+                precio_venta1 = 0
+                precio_venta2 = 0
+                
+            if not all([idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento]):
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Faltan datos importantes")
-                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.setWindowTitle("Hay un error en los datos")
+                mensaje.setText("Por favor, complete todos los campos correctamente..")
                 mensaje.exec_()
             
             
