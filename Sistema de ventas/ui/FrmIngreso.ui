@@ -798,7 +798,7 @@ QLineEdit::placeholder {
 </string>
        </property>
        <property name="readOnly">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_6">
@@ -1517,11 +1517,7 @@ QComboBox QAbstractItemView {
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">QWidget {
-    background-color: #9a9a9a;
-}
-
-QLabel {
+         <string notr="true">QLabel {
     color: #2980b9;
     font-size: 16px;
     font-weight: bold;

@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsDropShadowEffect, QWidget
 from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor
 from PyQt5.QtSql import QSqlTableModel
@@ -183,6 +183,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             id_empleado = self.valor_columna_1
             
             
+
             # Variables usadas para los ingresos
             idempleado = id_empleado
             idproveedor = int(self.txtIdProveedor.text())
@@ -204,28 +205,30 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 itbis = 0
             
-                if not idproveedor or not idempleado or not fecha or not tipo_comprobante or not num_comprobante:
+            if not idproveedor or not idempleado or not fecha or not tipo_comprobante or not num_comprobante:
         
-                    mensaje = QMessageBox()
-                    mensaje.setIcon(QMessageBox.Critical)
-                    mensaje.setWindowTitle("Faltan datos importantes")
-                    mensaje.setText("Por favor, complete todos los campos.")
-                    mensaje.exec_()
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Faltan datos importantes")
+                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.exec_()
                 
                 
-                else:
-                    insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
+            else:
+                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
                     
-                    self.visualiza_datos_ingreso()
+                self.visualiza_datos_ingreso()
                     
             
 
-                    mensaje = QMessageBox()
-                    mensaje.setIcon(QMessageBox.Critical)
-                    mensaje.setWindowTitle("Articulos")
-                    mensaje.setText("Ingrese los articulos para este nuevo ingreso.")
-                    mensaje.exec_()
-                    
+                # Preguntar si el usuario está seguro de insertar los detalle_ingreso
+                confirmacion = QMessageBox.question(self, "INSERTAR LOS DETALLES", "¿ESTAS SEGURO QUE DESEA CONTINUAR?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+                # Si el usuario hace clic en el botón "Sí", inserta los detalle_ingreso
+                if confirmacion == QMessageBox.Yes:
+
                     self.activar_botones_detalle()
                     self.desactivar_botones_ingreso()
                     # Limpia los TexBox 
@@ -236,7 +239,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                     #self.txtCantidad.setText("")
                     #self.txtFechaProd.setDate(QDate.currentDate())
                     #self.txtFechaVenc.setDate(QDate.currentDate())
-
+            
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
             mensaje = QMessageBox()
@@ -383,33 +386,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.tbIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-    def desactivar_botones_detalle(self):
-        self.txtCodArticulo.setEnabled(False)
-        self.cmbArticulo.setEnabled(False)
-        self.txtCantidad.setEnabled(False)
-        self.txtPrecioVen.setEnabled(False)
-        self.txtPrecioVen1.setEnabled(False)
-        self.txtPrecioVen2.setEnabled(False)
-        self.txtPrecioCom.setEnabled(False)
-        self.txtFechaProd.setEnabled(False)
-        self.txtFechaVenc.setEnabled(False)
-        self.btnAgregar.setEnabled(False)
-        self.btnQuitar.setEnabled(False)
-        
-    def activar_botones_detalle(self):
-        self.txtCodArticulo.setEnabled(True)
-        self.cmbArticulo.setEnabled(True)
-        self.txtCantidad.setEnabled(True)
-        self.txtPrecioVen.setEnabled(True)
-        self.txtPrecioVen1.setEnabled(True)
-        self.txtPrecioVen2.setEnabled(True)
-        self.txtPrecioCom.setEnabled(True)
-        self.txtFechaProd.setEnabled(True)
-        self.txtFechaVenc.setEnabled(True)
-        self.btnAgregar.setEnabled(True)
-        self.btnQuitar.setEnabled(True)
-        
+#------------------------------------------------------------------------------------------------------        
     def desactivar_botones_ingreso(self):
         self.txtCodigo.setEnabled(False)
         self.cmbComprobante.setEnabled(False)
@@ -433,8 +410,13 @@ class VentanaIngresoAlmacen(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
-    
-        
+    def ocultar_botones_detalle(self):
+        for widget in self.groupBox_2.findChildren(QWidget):
+            widget.setVisible(False)
+
+    def activar_botones_detalle(self):
+        for widget in self.groupBox_2.findChildren(QWidget):
+            widget.setVisible(True)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     
@@ -460,7 +442,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.visualiza_datos_ingreso()
         self.visualiza_datos_detalles()
         self.actualizar_ID_ingreso()
-        self.desactivar_botones_detalle()
+        self.ocultar_botones_detalle()
         
         
         self.txtFecha.setDate(QDate.currentDate())
