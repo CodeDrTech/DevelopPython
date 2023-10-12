@@ -295,8 +295,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 self.visualiza_datos_detalles()
                 
                 
-                # Limpia los TexBox 
-                #self.txtNumComprobante.setText("")
+                # Limpia los TexBox
                 #self.txtFecha.setDate(QDate.currentDate())                
                 self.txtPrecioCom.setText("")
                 self.txtPrecioVen.setText("")
@@ -364,8 +363,8 @@ class VentanaIngresoAlmacen(QMainWindow):
                         i.num_comprobante AS 'NUM COMPROBANTE', \
                         i.itbis AS 'IMPUESTO', \
                         i.estado AS 'ESTADO', \
-                        di.fecha_produccion AS 'FECHA DE PRODUCCION', \
-                        di.fecha_vencimiento AS 'FEHCA DE VENCIMIENTO' \
+                        UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
+                        UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
                     FROM detalle_ingreso di \
                     INNER JOIN ingreso i ON di.idingreso = i.idingreso \
                     INNER JOIN articulo a ON di.idarticulo = a.idarticulo;")
