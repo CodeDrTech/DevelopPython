@@ -1,0 +1,2 @@
+ALTER TABLE detalle_ingreso
+DROP COLUMN stock

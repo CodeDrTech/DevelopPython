@@ -1,0 +1,28 @@
+USE [Ventas]
+GO
+
+/****** Object:  Table [dbo].[stock]    Script Date: 10/12/2023 4:21:03 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[stock](
+	[idstock] [int] IDENTITY(1,1) NOT NULL,
+	[idarticulo] [int] NOT NULL,
+	[disponible] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idstock] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[stock]  WITH CHECK ADD FOREIGN KEY([idarticulo])
+REFERENCES [dbo].[articulo] ([idarticulo])
+GO
+
+ALTER TABLE [dbo].[stock]  WITH CHECK ADD FOREIGN KEY([idarticulo])
+REFERENCES [dbo].[articulo] ([idarticulo])
+GO
