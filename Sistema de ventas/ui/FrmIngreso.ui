@@ -1631,80 +1631,6 @@ QLabel {
          <string>Cantidad</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnAgregar">
-        <property name="geometry">
-         <rect>
-          <x>825</x>
-          <y>50</y>
-          <width>41</width>
-          <height>37</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btnQuitar">
-        <property name="geometry">
-         <rect>
-          <x>825</x>
-          <y>90</y>
-          <width>41</width>
-          <height>37</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
        <widget class="QLineEdit" name="txtCodArticulo">
         <property name="geometry">
          <rect>
@@ -1999,7 +1925,7 @@ QLineEdit::placeholder {
        <widget class="QLabel" name="label_24">
         <property name="geometry">
          <rect>
-          <x>750</x>
+          <x>770</x>
           <y>50</y>
           <width>71</width>
           <height>21</height>
@@ -2023,7 +1949,7 @@ QLabel {
        <widget class="QLabel" name="label_25">
         <property name="geometry">
          <rect>
-          <x>750</x>
+          <x>770</x>
           <y>90</y>
           <width>71</width>
           <height>21</height>
@@ -2042,6 +1968,88 @@ QLabel {
         </property>
         <property name="text">
          <string>Eliminar</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnAgregar">
+        <property name="geometry">
+         <rect>
+          <x>845</x>
+          <y>50</y>
+          <width>21</width>
+          <height>37</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+        </property>
+        <property name="text">
+         <string>+</string>
+        </property>
+        <property name="icon">
+         <iconset theme="audio-card">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnQuitar">
+        <property name="geometry">
+         <rect>
+          <x>845</x>
+          <y>90</y>
+          <width>21</width>
+          <height>37</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+    color: #ffffff;
+    border: 1px solid #2980b9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
+    border: 1px solid #2471a3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3C89B4, stop: 1 #1f618d);
+    border: 1px solid #1f618d;
+}
+</string>
+        </property>
+        <property name="text">
+         <string>-</string>
+        </property>
+        <property name="icon">
+         <iconset theme="audio-card">
+          <normaloff>.</normaloff>.</iconset>
         </property>
        </widget>
       </widget>

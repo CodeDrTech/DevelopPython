@@ -209,8 +209,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Faltan datos importantes")
-                mensaje.setText("Por favor, complete todos los campos.")
+                mensaje.setWindowTitle("Hay un error en los datos")
+                mensaje.setText("Por favor, complete todos los campos correctamente.")
                 mensaje.exec_()
                 
                 
@@ -273,7 +273,13 @@ class VentanaIngresoAlmacen(QMainWindow):
             cantidad = int(self.txtCantidad.text())
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
-                
+            
+            
+            if not precio_venta1:
+                precio_venta1 = 0
+            elif not precio_venta2:
+                precio_venta2 = 0
+            
             if  not idingreso or not idarticulo or not precio_compra or not precio_venta or not cantidad or not fecha_produccion or not fecha_vencimiento:
     
                 mensaje = QMessageBox()
@@ -284,13 +290,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             
             else:
-                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2)
-                
-                
-                
-                
-                self.visualiza_datos_detalles()
-        
+                insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2)      
 
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -298,6 +298,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.setText("detalles de ingreso registrado.")
                 mensaje.exec_()
                 
+                self.visualiza_datos_detalles()
                 
                 # Limpia los TexBox 
                 #self.txtNumComprobante.setText("")
@@ -320,7 +321,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos_detalles(self):
-        # Consulta SELECT * FROM Productos visualiza_datos_ingreso
+        idarticulo = self.txtCodigo.text()
         query = QSqlQuery()
         query.exec_(f"SELECT \
                         di.iddetalle_ingreso as 'CODIGO', \
@@ -331,16 +332,17 @@ class VentanaIngresoAlmacen(QMainWindow):
                         di.precio_venta2 AS 'PRECIO DE VENTA 3', \
                         di.cantidad AS 'CANTIDAD', \
                         di.stock AS 'DISPONIBLE', \
-                        i.fecha AS 'FECHA', \
+                        UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA', \
                         i.tipo_comprobante AS 'COMPROBANTE', \
                         i.num_comprobante AS 'NUM COMPROBANTE', \
                         i.itbis AS 'IMPUESTO', \
                         i.estado AS 'ESTADO', \
-                        di.fecha_produccion AS 'FECHA DE PRODUCCION', \
-                        di.fecha_vencimiento AS 'FEHCA DE VENCIMIENTO' \
+                        UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
+                        UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
                     FROM detalle_ingreso di \
-                    INNER JOIN ingreso i ON di.idingreso = i.idingreso \
-                    INNER JOIN articulo a ON di.idarticulo = a.idarticulo;")
+                    INNER JOIN ingreso i ON di.idingreso = i.idingreso\
+                    INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
+                    WHERE i.idingreso = {idarticulo}")
         
         
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
@@ -364,7 +366,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                         di.precio_venta2 AS 'PRECIO DE VENTA 3', \
                         di.cantidad AS 'CANTIDAD', \
                         di.stock AS 'DISPONIBLE', \
-                        i.fecha AS 'FECHA', \
+                        UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA', \
                         i.tipo_comprobante AS 'COMPROBANTE', \
                         i.num_comprobante AS 'NUM COMPROBANTE', \
                         i.itbis AS 'IMPUESTO', \
