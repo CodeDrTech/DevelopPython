@@ -144,29 +144,28 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
     conn = conectar_db()
 
     try:
-        cursor = conn.execute("SELECT stock FROM detalle_ingreso WHERE idarticulo = ?", (idarticulo,))
+        cursor = conn.execute("SELECT disponible FROM stock WHERE idarticulo = ?", (idarticulo,))
         existing_stock = cursor.fetchone()
 
         if existing_stock:
             # Si el producto existe en Stock, actualizamos la cantidad disponible
             nueva_cantidad = existing_stock[0] + cantidad
-            
-            
-            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, nueva_cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2])
-
+            conn.execute("UPDATE stock SET disponible = ? WHERE idarticulo = ?", (nueva_cantidad, idarticulo))
         else:
             # Si el producto no existe en Stock, lo agregamos con la cantidad proporcionada
-            insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'stock','fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2])
+            insertar_dato_generico('stock', ['idarticulo', 'disponible'], [idarticulo, cantidad])
     
+        conn.commit()  # Confirmar los cambios en la base de datos
     except Exception as e:
         # Mensaje de error
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
         mensaje_error.setText(f"Error al insertar nuevo detalle de ingreso {str(e)}")
         mensaje_error.setIcon(QMessageBox.Critical)
-        mensaje_error.exec_()
+        mensaje_error.exec()
     finally:
-        conn.close()    
+        conn.close()
+  
 
 
 
