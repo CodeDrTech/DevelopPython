@@ -53,12 +53,23 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.groupBox_2.setGraphicsEffect(groupBox2_shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+        # Abre formulario para buscar articulos y/o proveedores e insertarlos en el formulario ingreso.
         self.txtIdProveedor.mouseDoubleClickEvent = self.abrirFrmBuscarProveedor
-        self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
-        
+        self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo        
         self.cmbProveedor.mouseDoubleClickEvent = self.abrirFrmBuscarProveedor
         self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
 
+        
+        # Evita que se inserte letras en los campos donde solo lleva numeros 0.0
+        double_validator = QDoubleValidator()
+        self.txtCodigo.setValidator(double_validator)
+        self.txtCodArticulo.setValidator(double_validator)
+        self.txtPrecioCom.setValidator(double_validator)
+        self.txtPrecioVen.setValidator(double_validator)
+        self.txtPrecioVen1.setValidator(double_validator)
+        self.txtPrecioVen2.setValidator(double_validator)
+        self.txtCantidad.setValidator(double_validator)        
+        self.txtItbis.setValidator(double_validator)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def abrirFrmBuscarProveedor(self, event):
@@ -98,15 +109,12 @@ class VentanaIngresoAlmacen(QMainWindow):
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def traer_proveedor(self, id, nombre):
-        
-        
+    def traer_proveedor(self, id, nombre):        
         self.txtIdProveedor.setText(str(id))
         self.cmbProveedor.clear()
         self.cmbProveedor.addItem(str(nombre))
         
-    def traer_articulo(self, id_articulo, nombre_articulo):
-        
+    def traer_articulo(self, id_articulo, nombre_articulo):        
         self.txtCodArticulo.setText(str(id_articulo))
         self.cmbArticulo.clear()
         self.cmbArticulo.addItem(str(nombre_articulo))
@@ -172,9 +180,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
-        #impuesto = self.txtItbis.text()        
-        int_validator = QIntValidator()
-        self.txtItbis.setValidator(int_validator)    
+            
         try:
             id_ultima_sesion = self.ultima_sesion()
             fila = self.obtener_id_sesion(id_ultima_sesion)
@@ -204,7 +210,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 itbis = 0
             
-            if not idempleado or not idproveedor or not idempleado or not fecha or not tipo_comprobante or not num_comprobante:
+            if not all([idempleado, idproveedor, idempleado, fecha, tipo_comprobante, num_comprobante]):
         
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -231,14 +237,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                     self.activar_botones_detalle()
                     self.desactivar_botones_ingreso()
                     self.visualiza_datos_ingreso()
-                    # Limpia los TexBox 
-                    #self.txtNumComprobante.setText("")
-                    #self.txtFecha.setDate(QDate.currentDate())                
-                    #self.txtPrecioCom.setText("")
-                    #self.txtPrecioVen.setText("")
-                    #self.txtCantidad.setText("")
-                    #self.txtFechaProd.setDate(QDate.currentDate())
-                    #self.txtFechaVenc.setDate(QDate.currentDate())
+                    
             
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
@@ -251,16 +250,9 @@ class VentanaIngresoAlmacen(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    
     def insertar_datos_detalle(self):
-        # Crea un validador de enteros
-        int_validator = QIntValidator()
-        self.txtCodigo.setValidator(int_validator)
-        self.txtCodArticulo.setValidator(int_validator)
-        self.txtPrecioCom.setValidator(int_validator)
-        self.txtPrecioVen.setValidator(int_validator)
-        self.txtPrecioVen1.setValidator(int_validator)
-        self.txtPrecioVen2.setValidator(int_validator)
-        self.txtCantidad.setValidator(int_validator)
+        
         try:            
             #Almacena en las variables los valores insertados en los controles txt y cmb
             idingreso = self.txtCodigo.text()
@@ -269,7 +261,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             precio_venta = self.txtPrecioVen.text()
             precio_venta1 = self.txtPrecioVen1.text()
             precio_venta2 = self.txtPrecioVen2.text()
-            cantidad = self.txtCantidad.text()
+            cantidad = int(self.txtCantidad.text())
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
             
