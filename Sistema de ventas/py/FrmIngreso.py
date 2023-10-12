@@ -300,6 +300,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 self.visualiza_datos_detalles()
                 
+                
                 # Limpia los TexBox 
                 #self.txtNumComprobante.setText("")
                 #self.txtFecha.setDate(QDate.currentDate())                
@@ -331,7 +332,6 @@ class VentanaIngresoAlmacen(QMainWindow):
                         di.precio_venta1 AS 'PRECIO DE VENTA 2', \
                         di.precio_venta2 AS 'PRECIO DE VENTA 3', \
                         di.cantidad AS 'CANTIDAD', \
-                        di.stock AS 'DISPONIBLE', \
                         UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA', \
                         i.tipo_comprobante AS 'COMPROBANTE', \
                         i.num_comprobante AS 'NUM COMPROBANTE', \
@@ -364,8 +364,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                         di.precio_venta AS 'PRECIO DE VENTA', \
                         di.precio_venta1 AS 'PRECIO DE VENTA 2', \
                         di.precio_venta2 AS 'PRECIO DE VENTA 3', \
-                        di.cantidad AS 'CANTIDAD', \
-                        di.stock AS 'DISPONIBLE', \
+                        di.cantidad AS 'CANTIDAD',\
                         UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA', \
                         i.tipo_comprobante AS 'COMPROBANTE', \
                         i.num_comprobante AS 'NUM COMPROBANTE', \

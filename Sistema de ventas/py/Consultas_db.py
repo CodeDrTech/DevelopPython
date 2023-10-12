@@ -144,6 +144,7 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
     conn = conectar_db()
 
     try:
+        insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2])
         cursor = conn.execute("SELECT disponible FROM stock WHERE idarticulo = ?", (idarticulo,))
         existing_stock = cursor.fetchone()
 
