@@ -182,6 +182,8 @@ class VentanaIngresoAlmacen(QMainWindow):
     def insertar_datos_ingreso(self):
             
         try:
+            # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
+            # Ese dato es usado para saber quien esta registrando datos de ingreso/ventas etc.
             id_ultima_sesion = self.ultima_sesion()
             fila = self.obtener_id_sesion(id_ultima_sesion)
             self.obtener_datos_de_fila(fila)
@@ -189,7 +191,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             
 
-            # Variables usadas para los ingresos
+            #Almacena en las variables los valores insertados en los controles inputs txt y cmb.
             idempleado = id_empleado
             idproveedor = self.txtIdProveedor.text()
             fecha = self.txtFecha.date().toString("yyyy-MM-dd")
@@ -198,16 +200,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             itbis = self.txtItbis.text()
             estado = "Activo"
             
-            #idingreso = int(self.txtCodigo.text())
-            #idarticulo = int(self.txtCodArticulo.text())
-            #precio_compra = self.txtPrecioCom.text()
-            #precio_venta = self.txtPrecioVen.text()
-            #cantidad = int(self.txtCantidad.text())
-            #fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
-            #fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
-            
-            if not itbis:
-                
+            if not itbis:                
                 itbis = 0
             
             if not all([idempleado, idproveedor, idempleado, fecha, tipo_comprobante, num_comprobante]):
@@ -220,18 +213,15 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 
             else:
-                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
-                    
-                
-                    
+                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)                    
             
 
-                # Preguntar si el usuario está seguro de insertar los detalle_ingreso
+                # Preguntar si el usuario está seguro de empezar a insertar los detalle_ingreso
                 confirmacion = QMessageBox.question(self, "INSERTAR LOS DETALLES", "¿ESTAS SEGURO QUE DESEA CONTINUAR?",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
-                # Si el usuario hace clic en el botón "Sí", inserta los detalle_ingreso
+                # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso
                 if confirmacion == QMessageBox.Yes:
 
                     self.activar_botones_detalle()
@@ -254,7 +244,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     def insertar_datos_detalle(self):
         
         try:            
-            #Almacena en las variables los valores insertados en los controles txt y cmb
+            #Almacena en las variables los valores insertados en los controles inputs txt y cmb.
             idingreso = self.txtCodigo.text()
             idarticulo = self.txtCodArticulo.text()
             precio_compra = self.txtPrecioCom.text()
@@ -265,7 +255,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             fecha_produccion = self.txtFechaProd.date().toString("yyyy-MM-dd")
             fecha_vencimiento = self.txtFechaVenc.date().toString("yyyy-MM-dd")
             
-            # controla que los precios de venta 1 y 2 pasen como 0 a la base de datosi uno de ellos esta vacio o ambos lo estan.
+            # controla que los precios de venta 1 y 2 tenga valor 0 a la base de dato si uno de ellos o ambos lo estan vacio.
             if not precio_venta1:
                 precio_venta1 = 0
             if not precio_venta2:
@@ -273,13 +263,13 @@ class VentanaIngresoAlmacen(QMainWindow):
             if not precio_venta1 and not precio_venta2:
                 precio_venta1 = 0
                 precio_venta2 = 0
-                
-            if not all([idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento]):
+            
+            if not all([cantidad, idingreso, idarticulo, precio_compra, precio_venta, fecha_produccion, fecha_vencimiento]):
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("Hay un error en los datos")
-                mensaje.setText("Por favor, complete todos los campos correctamente..")
+                mensaje.setText("Por favor, complete todos los campos correctamente.")
                 mensaje.exec_()
             
             
@@ -289,7 +279,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("Agregar detalles de ingreso")
-                mensaje.setText("detalles de ingreso registrado.")
+                mensaje.setText("Detalles de ingreso registrado.")
                 mensaje.exec_()
                 
                 self.visualiza_datos_detalles()
@@ -312,6 +302,10 @@ class VentanaIngresoAlmacen(QMainWindow):
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos_detalles(self):
@@ -423,9 +417,18 @@ class VentanaIngresoAlmacen(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------                
-    def closeEvent(self, event):
-        VentanaIngresoAlmacen.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
-        event.accept()
+    def closeEvent(self, event):        
+        # Preguntar si el usuario está seguro de insertar los detalle_ingreso
+        confirmacion = QMessageBox.question(self, "¿ESTAS SEGURO QUE DESEA SALIR?", "Cotinue solo ha terminado de insertar todos los ariculos",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+                                                                
+        # Si el usuario hace clic en el botón "Sí", inserta los detalle_ingreso
+        if confirmacion == QMessageBox.No:
+            event.ignore()
+        else:
+            VentanaIngresoAlmacen.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
+            event.accept()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def showEvent(self, event):
