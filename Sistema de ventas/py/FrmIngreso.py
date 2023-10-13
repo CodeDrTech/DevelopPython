@@ -326,23 +326,23 @@ class VentanaIngresoAlmacen(QMainWindow):
         else:
             query = QSqlQuery()
             query.exec_(f"SELECT \
-                                di.iddetalle_ingreso as 'CODIGO', \
-                                a.nombre AS ARTICULO, \
-                                di.precio_compra AS 'PRECIO DE COMPRA', \
-                                di.precio_venta AS 'PRECIO DE VENTA', \
-                                di.precio_venta1 AS 'PRECIO DE VENTA 2', \
-                                di.precio_venta2 AS 'PRECIO DE VENTA 3', \
-                                di.cantidad AS 'CANTIDAD', \
-                                UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA', \
-                                i.tipo_comprobante AS 'COMPROBANTE', \
-                                i.num_comprobante AS 'NUM COMPROBANTE', \
-                                i.itbis AS 'IMPUESTO', \
-                                i.estado AS 'ESTADO', \
+                                i.idingreso as 'CODIGO',\
+                                a.nombre AS ARTICULO,\
+                                di.precio_compra AS 'PRECIO DE COMPRA',\
+                                di.precio_venta AS 'PRECIO DE VENTA',\
+                                di.precio_venta1 AS 'PRECIO DE VENTA 2',\
+                                di.precio_venta2 AS 'PRECIO DE VENTA 3',\
+                                di.cantidad AS 'CANTIDAD',\
+                                UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                i.tipo_comprobante AS 'COMPROBANTE',\
+                                i.num_comprobante AS 'NUM COMPROBANTE',\
+                                i.itbis AS 'IMPUESTO',\
+                                i.estado AS 'ESTADO',\
                                 UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
                                 UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
-                            FROM detalle_ingreso di \
+                            FROM detalle_ingreso di\
                             INNER JOIN ingreso i ON di.idingreso = i.idingreso\
-                            INNER JOIN articulo a ON di.idarticulo = a.idarticulo \
+                            INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
                             WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}';")
             
             

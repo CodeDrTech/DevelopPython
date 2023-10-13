@@ -166,7 +166,39 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
         mensaje_error.exec()
     finally:
         conn.close()
-  
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+def anular_ingreso(id_ingreso):
+    try:
+        # Obtener la cantidad ingresada para el ingreso específico
+        conn = conectar_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT SUM(cantidad) FROM detalle_ingreso WHERE idingreso = ?", (id_ingreso,))
+        cantidad_ingresada = cursor.fetchone()[0]
+
+        # Restar la cantidad correspondiente en la tabla "stock"
+        cursor.execute("SELECT idarticulo FROM detalle_ingreso WHERE idingreso = ?", (id_ingreso,))
+        idarticulos = [row[0] for row in cursor.fetchall()]
+        for idarticulo in idarticulos:
+            cursor.execute("SELECT disponible FROM stock WHERE idarticulo = ?", (idarticulo,))
+            existing_stock = cursor.fetchone()
+            if existing_stock:
+                nueva_cantidad = existing_stock[0] - cantidad_ingresada
+                cursor.execute("UPDATE stock SET disponible = ? WHERE idarticulo = ?", (nueva_cantidad, idarticulo))
+
+        # Cambiar el estado del ingreso a "Inactivo"
+        cursor.execute("UPDATE ingreso SET estado = ? WHERE idingreso = ?", ("Inactivo", id_ingreso))
+
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al anular el ingreso: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec_()
+
+
 
 
 
