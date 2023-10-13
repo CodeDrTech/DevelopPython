@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor, QDoubleValidator, QIntValidator
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtCore import QDate, Qt
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso, insertar_nuevo_detalle_ingreso
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso, insertar_nuevo_detalle_ingreso, anular_ingreso
 
 class VentanaIngresoAlmacen(QMainWindow):
     ventana_abierta = False     
@@ -36,6 +36,9 @@ class VentanaIngresoAlmacen(QMainWindow):
         
         self.txtFechaInicio.dateChanged.connect(self.buscar_datos)
         self.txtFechaFin.dateChanged.connect(self.buscar_datos)
+        self.cmbEstado.currentIndexChanged.connect(self.buscar_datos)
+        
+        self.btnAnular.clicked.connect(self.inhabilita_ingreso)
         
         # Crear un efecto de sombra y aplicarlo a los QTableView
         shadow = QGraphicsDropShadowEffect()
@@ -130,10 +133,79 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.txtCodArticulo.setText(str(id_articulo))
         self.cmbArticulo.clear()
         self.cmbArticulo.addItem(str(nombre_articulo))
-
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-
+    def inhabilita_ingreso(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbIngreso.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla
+            index = indexes[0]
+            row = index.row()
+            
+            self.obtener_datos_de_fila_ingresos(row)
+            idingreso = self.valor_columna_id
+            
+            
+            
+            # Preguntar si el usuario está seguro de inhabilitar el ingreso de la fila seleccionada
+            confirmacion = QMessageBox.question(self, "INHABILITAR?", "¿ESTAS SEGURO QUE QUIERE INHABILITAR ESTE INGRESO?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", inhabilita el ingreso
+            if confirmacion == QMessageBox.Yes:
+                anular_ingreso(idingreso)
+                QMessageBox.warning(self, "INHABILITADO", "INGRESO INHABILITADO.")
+                self.buscar_datos()
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
+            
+        # Pasando como parametro el numero de fila, obtengo el id del empleado
+    def obtener_datos_de_fila_ingresos(self, fila_id):
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
+        query = QSqlQuery()
+        query.exec_(f"SELECT \
+                                i.idingreso as 'CODIGO',\
+                                a.nombre AS ARTICULO,\
+                                di.precio_compra AS 'PRECIO DE COMPRA',\
+                                di.precio_venta AS 'PRECIO DE VENTA',\
+                                di.precio_venta1 AS 'PRECIO DE VENTA 2',\
+                                di.precio_venta2 AS 'PRECIO DE VENTA 3',\
+                                di.cantidad AS 'CANTIDAD',\
+                                UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                i.tipo_comprobante AS 'COMPROBANTE',\
+                                i.num_comprobante AS 'NUM COMPROBANTE',\
+                                i.itbis AS 'IMPUESTO',\
+                                i.estado AS 'ESTADO',\
+                                UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
+                                UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
+                            FROM detalle_ingreso di\
+                            INNER JOIN ingreso i ON di.idingreso = i.idingreso\
+                            INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
+                            WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}';")
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.tbIngreso.setModel(model)
+        
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbIngreso.model()
+        if modelo is not None and 0 <= fila_id < modelo.rowCount():
+            
+            # Obtener los datos de la fila seleccionada
+            columna_0 = modelo.index(fila_id, 0).data()
+            
+            self.valor_columna_id = columna_0
+            
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Estas 3 funciones obtienen el id de empleado que inicio sesion.
+    # Este id de empleado se usa para saber quien ingreso dato a la base de datos
+    
+    # Obtengo el id del ultimo inicio de sesion, lo usao para buscar el id del usuario que inició.
     def ultima_sesion(self):
         query = QSqlQuery()
         query.exec_(f"SELECT max(idsesion) FROM sesiones")
@@ -153,7 +225,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         
         return resultado
         
-        
+    # Pasando como parametro el numero de fila, obtengo el id del empleado
     def obtener_datos_de_fila(self, fila_id):
         query = QSqlQuery()
         query.exec_(f"SELECT * FROM sesiones")
@@ -170,7 +242,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             self.valor_columna_1 = columna_1
             
-            
+    # obtengo el numero de fila correspondiente a la sesion, el numero de la fila es igual al idsesion        
     def obtener_id_sesion(self, idsesion):
         model = QSqlTableModel()
         model.setTable('sesiones')
@@ -319,7 +391,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     def buscar_datos(self):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
-        
+        estado = self.cmbEstado.currentText()
         if FechaInicio > FechaFinal:
                 QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
                 return
@@ -343,7 +415,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                             FROM detalle_ingreso di\
                             INNER JOIN ingreso i ON di.idingreso = i.idingreso\
                             INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
-                            WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}';")
+                            WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}';")
             
             
             # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
@@ -486,8 +558,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         
         self.tbSesiones.hide()
         self.ultima_sesion()
-        self.visualiza_datos_ingreso()
-        self.visualiza_datos_detalles()
+        #self.visualiza_datos_ingreso()
+        #self.visualiza_datos_detalles()
         self.actualizar_ID_ingreso()
         self.ocultar_botones_detalle()       
         
