@@ -264,7 +264,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 return row
     
         # Si no se encuentra el idsesion, devuelve -1
-        return 1
+        return -1
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
@@ -316,7 +316,6 @@ class VentanaIngresoAlmacen(QMainWindow):
 
                     self.activar_botones_detalle()
                     self.desactivar_botones_ingreso()
-                    self.visualiza_datos_ingreso()
                     
             
         except Exception as e:
@@ -373,7 +372,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
                 
                 self.visualiza_datos_detalles()
-                
+                self.buscar_datos()
                 
                 # Limpia los TexBox
                 #self.txtFecha.setDate(QDate.currentDate())                
