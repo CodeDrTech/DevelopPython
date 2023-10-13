@@ -170,6 +170,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     def obtener_datos_de_fila_ingresos(self, fila_id):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
+        estado = self.cmbEstado.currentText()
         query = QSqlQuery()
         query.exec_(f"SELECT \
                                 i.idingreso as 'CODIGO',\
@@ -189,7 +190,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                             FROM detalle_ingreso di\
                             INNER JOIN ingreso i ON di.idingreso = i.idingreso\
                             INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
-                            WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}';")
+                            WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'AND i.estado = '{estado}';")
         model = QSqlTableModel()    
         model.setQuery(query)
         self.tbIngreso.setModel(model)
@@ -199,9 +200,9 @@ class VentanaIngresoAlmacen(QMainWindow):
         if modelo is not None and 0 <= fila_id < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
-            columna_0 = modelo.index(fila_id, 0).data()
+            columna_id = modelo.index(fila_id, 0).data()
             
-            self.valor_columna_id = columna_0
+            self.valor_columna_id = columna_id
             
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -263,11 +264,13 @@ class VentanaIngresoAlmacen(QMainWindow):
                 return row
     
         # Si no se encuentra el idsesion, devuelve -1
-        return -1
+        return 1
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
-            
+        #id_ultima_sesion = self.ultima_sesion()
+        #fila = self.obtener_id_sesion(id_ultima_sesion)
+        #print(fila)    
         try:
             # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
             # Ese dato es usado para saber quien esta registrando datos de ingreso/ventas etc.
@@ -275,7 +278,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             fila = self.obtener_id_sesion(id_ultima_sesion)
             self.obtener_datos_de_fila(fila)
             id_empleado = self.valor_columna_1
-            
+            print(id_ultima_sesion)
             
 
             #Almacena en las variables los valores insertados en los controles inputs txt y cmb.
