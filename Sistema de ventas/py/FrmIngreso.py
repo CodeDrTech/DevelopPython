@@ -20,6 +20,13 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
+        # Establece la echa actual en los inputs que contienen fechas
+        self.txtFecha.setDate(QDate.currentDate())
+        self.txtFechaInicio.setDate(QDate.currentDate())
+        self.txtFechaFin.setDate(QDate.currentDate())
+        self.txtFechaProd.setDate(QDate.currentDate())
+        self.txtFechaVenc.setDate(QDate.currentDate())
+        
         # Botones del formulario y sus funciones
         self.btnRegistrar.clicked.connect(self.insertar_datos_ingreso)
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
@@ -475,11 +482,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
-        self.txtFecha.setDate(QDate.currentDate())
-        self.txtFechaInicio.setDate(QDate.currentDate())
-        self.txtFechaFin.setDate(QDate.currentDate())
-        self.txtFechaProd.setDate(QDate.currentDate())
-        self.txtFechaVenc.setDate(QDate.currentDate())
+        
         
         self.tbSesiones.hide()
         self.ultima_sesion()
