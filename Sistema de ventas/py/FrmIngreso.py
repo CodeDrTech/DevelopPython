@@ -19,14 +19,16 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.setWindowTitle('.:. Mantenimiento de ingresos almacén .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
         # Establece la echa actual en los inputs que contienen fechas
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())
         self.txtFechaProd.setDate(QDate.currentDate())
         self.txtFechaVenc.setDate(QDate.currentDate())
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
         # Botones del formulario y sus funciones
         self.btnRegistrar.clicked.connect(self.insertar_datos_ingreso)
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
@@ -39,7 +41,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.cmbEstado.currentIndexChanged.connect(self.buscar_datos)
         
         self.btnAnular.clicked.connect(self.inhabilita_ingreso)
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
         # Crear un efecto de sombra y aplicarlo a los QTableView
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(20)
