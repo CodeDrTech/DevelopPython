@@ -272,8 +272,7 @@ class VentanaDatosReportes(QMainWindow):
     # Funion para cerar la ventana llamado desde el boton Salir.    
     def fn_Salir(self):
         self.close()
-          
-        
+
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------    
     def showEvent(self, event):

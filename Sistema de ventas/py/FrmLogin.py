@@ -85,9 +85,7 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.administrador()
         self.llamar_venana_principal.showMaximized()
-        self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        
-        
+        self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)        
         self.hide()
         
     def abrir_FrmPrincipal_almacen(self, rol,  nombre_usuario):
@@ -96,8 +94,6 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.almacen()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        
-        
         self.hide()
         
     def abrir_FrmPrincipal_vendedor(self, rol, nombre_usuario):
@@ -106,10 +102,6 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.vendedor()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        
-        
-        
-        
         self.hide()
         
         
