@@ -255,9 +255,10 @@ class VentanaIngresoAlmacen(QMainWindow):
             
         # Encuentra el índice de la columna "idsesion"
         idsesion_column_index = model.fieldIndex("idsesion")
-    
+        
         # Itera a través de las filas para encontrar el idsesion
         for row in range(model.rowCount()):
+            
             index = model.index(row, idsesion_column_index)
             if model.data(index) == idsesion:
                 # Si se encuentra el idsesion, devuelve el número de fila
@@ -270,7 +271,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     def insertar_datos_ingreso(self):
         id_ultima_sesion = self.ultima_sesion()
         fila = self.obtener_id_sesion(id_ultima_sesion)
-        print(id_ultima_sesion)    
+        print(fila)    
         try:
             # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
             # Ese dato es usado para saber quien esta registrando datos de ingreso/ventas etc.
@@ -278,7 +279,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             fila = self.obtener_id_sesion(id_ultima_sesion)
             self.obtener_datos_de_fila(fila)
             id_empleado = self.valor_columna_1
-            print(id_ultima_sesion)
+            
             
 
             #Almacena en las variables los valores insertados en los controles inputs txt y cmb.
