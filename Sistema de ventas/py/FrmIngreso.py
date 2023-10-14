@@ -268,9 +268,9 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def insertar_datos_ingreso(self):
-        #id_ultima_sesion = self.ultima_sesion()
-        #fila = self.obtener_id_sesion(id_ultima_sesion)
-        #print(fila)    
+        id_ultima_sesion = self.ultima_sesion()
+        fila = self.obtener_id_sesion(id_ultima_sesion)
+        print(id_ultima_sesion)    
         try:
             # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
             # Ese dato es usado para saber quien esta registrando datos de ingreso/ventas etc.
