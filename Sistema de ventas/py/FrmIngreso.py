@@ -268,10 +268,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         return -1
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
-    def insertar_datos_ingreso(self):
-        id_ultima_sesion = self.ultima_sesion()
-        fila = self.obtener_id_sesion(id_ultima_sesion)
-        print(id_ultima_sesion)    
+    def insertar_datos_ingreso(self):   
         try:
             # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
             # Ese dato es usado para saber quien esta registrando datos de ingreso/ventas etc.
@@ -304,7 +301,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
                 
             else:
-                insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)                    
+                                    
             
 
                 # Preguntar si el usuario está seguro de empezar a insertar los detalle_ingreso
@@ -314,7 +311,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             
                 # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso
                 if confirmacion == QMessageBox.Yes:
-
+                    insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
                     self.activar_botones_detalle()
                     self.desactivar_botones_ingreso()
                     
