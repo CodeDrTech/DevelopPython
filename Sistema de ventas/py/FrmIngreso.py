@@ -167,7 +167,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
             
         # Pasando como parametro el numero de fila, obtengo el id del empleado
-    def obtener_datos_de_fila_ingresos(self, fila_id):
+    def obtener_datos_de_fila_ingresos(self, num_fila):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
         estado = self.cmbEstado.currentText()
@@ -197,10 +197,10 @@ class VentanaIngresoAlmacen(QMainWindow):
         
         # Obtener el modelo de datos del QTableView
         modelo = self.tbIngreso.model()
-        if modelo is not None and 0 <= fila_id < modelo.rowCount():
+        if modelo is not None and 0 <= num_fila < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
-            columna_id = modelo.index(fila_id, 0).data()
+            columna_id = modelo.index(num_fila, 0).data()
             
             self.valor_columna_id = columna_id
             
@@ -271,7 +271,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     def insertar_datos_ingreso(self):
         id_ultima_sesion = self.ultima_sesion()
         fila = self.obtener_id_sesion(id_ultima_sesion)
-        print(fila)    
+        print(id_ultima_sesion)    
         try:
             # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
             # Ese dato es usado para saber quien esta registrando datos de ingreso/ventas etc.
