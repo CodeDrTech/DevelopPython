@@ -396,7 +396,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
         estado = self.cmbEstado.currentText()
         if FechaInicio > FechaFinal:
-                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")                
                 return
         else:
             query = QSqlQuery()
