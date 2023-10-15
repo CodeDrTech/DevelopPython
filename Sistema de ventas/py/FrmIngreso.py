@@ -392,43 +392,82 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def buscar_datos(self):
+        # Variables con datos de los inputs para usar como criterios/filtros de busquedas
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
         estado = self.cmbEstado.currentText()
-        if FechaInicio > FechaFinal:
-                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")                
-                return
-        else:
-            query = QSqlQuery()
-            query.exec_(f"SELECT \
-                                i.idingreso as 'CODIGO',\
-                                a.nombre AS ARTICULO,\
-                                di.precio_compra AS 'PRECIO DE COMPRA',\
-                                di.precio_venta AS 'PRECIO DE VENTA',\
-                                di.precio_venta1 AS 'PRECIO DE VENTA 2',\
-                                di.precio_venta2 AS 'PRECIO DE VENTA 3',\
-                                di.cantidad AS 'CANTIDAD',\
-                                UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                                i.tipo_comprobante AS 'COMPROBANTE',\
-                                i.num_comprobante AS 'NUM COMPROBANTE',\
-                                i.itbis AS 'IMPUESTO',\
-                                i.estado AS 'ESTADO',\
-                                UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
-                                UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
-                            FROM detalle_ingreso di\
-                            INNER JOIN ingreso i ON di.idingreso = i.idingreso\
-                            INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
-                            WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}';")
-            
-            
-            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
-            model = QSqlTableModel()    
-            model.setQuery(query)        
-            self.tbIngreso.setModel(model)
+        buscar_nombre = self.txtBuscar.text()
 
-            # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            self.tbIngreso.resizeColumnsToContents()
-            self.tbIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        if not buscar_nombre:
+            if FechaInicio > FechaFinal:
+                    QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")                
+                    return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT \
+                                    i.idingreso as 'CODIGO',\
+                                    a.nombre AS ARTICULO,\
+                                    di.precio_compra AS 'PRECIO DE COMPRA',\
+                                    di.precio_venta AS 'PRECIO DE VENTA',\
+                                    di.precio_venta1 AS 'PRECIO DE VENTA 2',\
+                                    di.precio_venta2 AS 'PRECIO DE VENTA 3',\
+                                    di.cantidad AS 'CANTIDAD',\
+                                    UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                    i.tipo_comprobante AS 'COMPROBANTE',\
+                                    i.num_comprobante AS 'NUM COMPROBANTE',\
+                                    i.itbis AS 'IMPUESTO',\
+                                    i.estado AS 'ESTADO',\
+                                    UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
+                                    UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
+                                FROM detalle_ingreso di\
+                                INNER JOIN ingreso i ON di.idingreso = i.idingreso\
+                                INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
+                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}';")
+                
+                
+                # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+                model = QSqlTableModel()    
+                model.setQuery(query)        
+                self.tbIngreso.setModel(model)
+
+                # Ajustar el tamaño de las columnas para que se ajusten al contenido
+                self.tbIngreso.resizeColumnsToContents()
+                self.tbIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        else:
+            if FechaInicio > FechaFinal:
+                    QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")                
+                    return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT \
+                                    i.idingreso as 'CODIGO',\
+                                    a.nombre AS ARTICULO,\
+                                    di.precio_compra AS 'PRECIO DE COMPRA',\
+                                    di.precio_venta AS 'PRECIO DE VENTA',\
+                                    di.precio_venta1 AS 'PRECIO DE VENTA 2',\
+                                    di.precio_venta2 AS 'PRECIO DE VENTA 3',\
+                                    di.cantidad AS 'CANTIDAD',\
+                                    UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                    i.tipo_comprobante AS 'COMPROBANTE',\
+                                    i.num_comprobante AS 'NUM COMPROBANTE',\
+                                    i.itbis AS 'IMPUESTO',\
+                                    i.estado AS 'ESTADO',\
+                                    UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
+                                    UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
+                                FROM detalle_ingreso di\
+                                INNER JOIN ingreso i ON di.idingreso = i.idingreso\
+                                INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
+                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}' AND a.nombre LIKE '%{buscar_nombre}%';")
+                
+                
+                # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+                model = QSqlTableModel()    
+                model.setQuery(query)        
+                self.tbIngreso.setModel(model)
+
+                # Ajustar el tamaño de las columnas para que se ajusten al contenido
+                self.tbIngreso.resizeColumnsToContents()
+                self.tbIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos_detalles(self):
