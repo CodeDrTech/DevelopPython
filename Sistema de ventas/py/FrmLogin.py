@@ -1,7 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QGraphicsDropShadowEffect, QGraphicsView, QGraphicsScene
 from PyQt5 import QtGui
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDateTime, Qt
 from FrmPrincipal import VentanaPrincipal
@@ -45,7 +46,22 @@ class VentanaLogin(QMainWindow):
         self.btnIngresar.clicked.connect(self.validar_usuario)
         
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------------------------------
+    # Funcion para cargar una imgen en la ventana de login
+    def cargar_imagen(self):
+        # Crea una instancia de QGraphicsScene
+        scene = QGraphicsScene()
+
+        # Carga una imagen en la escena
+        pixmap = QPixmap('Sistema de ventas/imagenes/login.jpg')  # Reemplaza 'ruta_de_tu_imagen.jpg' con la ruta de tu imagen
+        scene.addPixmap(pixmap)
+
+        # Establece la escala de la vista para que se ajuste automáticamente al tamaño de la ventana
+        self.graphicsView.setScene(scene)
+        self.graphicsView.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)  # type: ignore # El valor 1 es para ajustar la vista
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
 
     def visualizar_datos(self):
         # Consulta SELECT * FROM Productos
@@ -239,6 +255,8 @@ class VentanaLogin(QMainWindow):
         
     def showEvent(self, event):
         super().showEvent(event)
+        
+        self.cargar_imagen()
         
         self.tbDatos.hide()
         self.visualizar_datos()        
