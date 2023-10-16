@@ -987,7 +987,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>550</x>
-         <y>110</y>
+         <y>70</y>
          <width>100</width>
          <height>25</height>
         </rect>
@@ -1018,7 +1018,7 @@ QComboBox QAbstractItemView {
        <property name="geometry">
         <rect>
          <x>550</x>
-         <y>70</y>
+         <y>30</y>
          <width>100</width>
          <height>25</height>
         </rect>
@@ -1049,7 +1049,7 @@ QComboBox QAbstractItemView {
        <property name="geometry">
         <rect>
          <x>465</x>
-         <y>70</y>
+         <y>30</y>
          <width>81</width>
          <height>21</height>
         </rect>
@@ -1069,35 +1069,11 @@ QLabel {
         <string>Categoria</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_8">
-       <property name="geometry">
-        <rect>
-         <x>520</x>
-         <y>30</y>
-         <width>21</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QWidget {
-    background-color: #9a9a9a;
-}
-
-QLabel {
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}</string>
-       </property>
-       <property name="text">
-        <string>Id</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_9">
        <property name="geometry">
         <rect>
          <x>440</x>
-         <y>110</y>
+         <y>70</y>
          <width>111</width>
          <height>21</height>
         </rect>
@@ -1115,37 +1091,6 @@ QLabel {
        </property>
        <property name="text">
         <string>Presentacion</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_3">
-       <property name="geometry">
-        <rect>
-         <x>550</x>
-         <y>30</y>
-         <width>100</width>
-         <height>25</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QComboBox {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #2980b9;
-}
-
-QComboBox:hover {
-    border: 1px solid #3498db;
-}
-
-QComboBox QAbstractItemView {
-    border: 1px solid #cccccc;
-    background-color: white;
-    selection-background-color: #3498db;
-}
-</string>
        </property>
       </widget>
      </widget>
