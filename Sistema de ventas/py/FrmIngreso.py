@@ -406,6 +406,11 @@ class VentanaIngresoAlmacen(QMainWindow):
             num_detalles = query.value(0)
         
             if num_detalles == 0:
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
+                mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
+                mensaje.exec_()
                 self.ocultar_botones_detalle()  # Llama a la función para ocultar botones
 
 
