@@ -300,9 +300,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
                 
                 
-            else:
-                                    
-            
+            else:           
 
                 # Preguntar si el usuario está seguro de empezar a insertar los detalle_ingreso
                 confirmacion = QMessageBox.question(self, "INSERTAR LOS DETALLES", "¿ESTAS SEGURO QUE DESEA CONTINUAR?",
@@ -314,7 +312,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                     insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
                     self.activar_botones_detalle()
                     self.desactivar_botones_ingreso()
-                    
+                    self.txtCantidad.setFocus()
             
         except Exception as e:
             # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
@@ -507,7 +505,26 @@ class VentanaIngresoAlmacen(QMainWindow):
                                 FROM detalle_ingreso di\
                                 INNER JOIN ingreso i ON di.idingreso = i.idingreso\
                                 INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
-                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}';")
+                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}'\
+                                UNION ALL\
+                                SELECT \
+                                    i.idingreso as 'CODIGO',\
+                                    'ARTICULO ELIMINADO' AS ARTICULO,\
+                                    '0' AS 'PRECIO DE COMPRA',\
+                                    '0' AS 'PRECIO DE VENTA',\
+                                    '0' AS 'PRECIO DE VENTA 2',\
+                                    '0' AS 'PRECIO DE VENTA 3',\
+                                    '0' AS 'CANTIDAD',\
+                                    UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                    'ELIMINADO' AS 'COMPROBANTE',\
+                                    '0' AS 'NUM COMPROBANTE',\
+                                    '0' AS 'IMPUESTO',\
+                                    'Inactivo' AS 'ESTADO',\
+                                    NULL AS 'FECHA DE PRODUCCION',\
+                                    NULL AS 'FECHA DE VENCIMIENTO'\
+                                FROM ingreso i\
+                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}'\
+                                AND i.idingreso NOT IN (SELECT idingreso FROM detalle_ingreso);")
                 
                 
                 # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
