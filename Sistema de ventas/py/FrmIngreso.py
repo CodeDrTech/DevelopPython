@@ -570,6 +570,11 @@ class VentanaIngresoAlmacen(QMainWindow):
                 # Ajustar el tamaño de las columnas para que se ajusten al contenido
                 self.tbIngreso.resizeColumnsToContents()
                 self.tbIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
+                
+        if estado == "Inactivo":
+            self.btnAnular.setEnabled(False)
+        else:
+            self.btnAnular.setEnabled(True)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos_detalles(self):
