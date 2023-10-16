@@ -196,6 +196,50 @@ def anular_ingreso(id_ingreso):
         mensaje_error.setText(f"Error al anular el ingreso: {str(e)}")
         mensaje_error.setIcon(QMessageBox.Critical)
         mensaje_error.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+def quitar_detalle_ingreso(id_detalle_ingreso):
+    try:
+        conn = conectar_db()  # Utiliza tu función de conexión a la base de datos
+        cursor = conn.cursor()
+
+        # Obtener el idarticulo y la cantidad ingresada
+        cursor.execute("SELECT idarticulo, cantidad, idingreso FROM detalle_ingreso WHERE iddetalle_ingreso = ?", (id_detalle_ingreso,))
+        detalle = cursor.fetchone()
+
+        if detalle:
+            idarticulo, cantidad_ingresada, idingreso = detalle
+
+            # Actualizar la cantidad disponible en la tabla stock
+            cursor.execute("UPDATE stock SET disponible = disponible - ? WHERE idarticulo = ?", (cantidad_ingresada, idarticulo))
+
+            # Eliminar el detalle de ingreso
+            cursor.execute("DELETE FROM detalle_ingreso WHERE iddetalle_ingreso = ?", (id_detalle_ingreso,))
+
+            # Comprobar si el ingreso ya no tiene más detalles
+            cursor.execute("SELECT COUNT(*) FROM detalle_ingreso WHERE idingreso = ?", (idingreso,))
+            num_detalles = cursor.fetchone()[0]
+
+            if num_detalles == 0:
+                # Cambiar el estado del ingreso a "Inactivo" si no hay más detalles
+                cursor.execute("UPDATE ingreso SET estado = 'Inactivo' WHERE idingreso = ?", (idingreso,))
+
+            conn.commit()
+        else:
+            mensaje_error = QMessageBox()
+            mensaje_error.setWindowTitle("Error")
+            mensaje_error.setText("Detalle de ingreso no encontrado.")
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.exec()
+
+        conn.close()
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al anular el ingreso: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
+
 
 
 

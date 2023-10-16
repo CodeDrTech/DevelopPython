@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor, QDoubleValidator, QIntValidator
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtCore import QDate, Qt
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso, insertar_nuevo_detalle_ingreso, anular_ingreso
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nuevo_ingreso, insertar_nuevo_detalle_ingreso, anular_ingreso, quitar_detalle_ingreso
 
 class VentanaIngresoAlmacen(QMainWindow):
     ventana_abierta = False     
@@ -32,7 +32,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         # Botones del formulario y sus funciones
         self.btnRegistrar.clicked.connect(self.insertar_datos_ingreso)
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
-        #self.btnQuitar.clicked.connect(self.insertar_datos_detalle)
+        self.btnQuitar.clicked.connect(self.quitar_datos_detalle)
         
         self.btnBuscar.clicked.connect(self.buscar_datos)
         
@@ -166,7 +166,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
             
-        # Pasando como parametro el numero de fila, obtengo el id del empleado
+        # Pasando como parametro el numero de fila, obtengo el id del ingreso
     def obtener_datos_de_fila_ingresos(self, num_fila):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
@@ -327,6 +327,91 @@ class VentanaIngresoAlmacen(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    def quitar_datos_detalle(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbDetalleIngreso.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla tbDetalleIngreso
+            index = indexes[0]
+            row = index.row()
+            
+            self.obtener_datos_de_fila_detalle_ingresos(row)
+            id_detalle = self.bd_id_detalle_ingreso
+            
+            
+            
+            # Preguntar si el usuario está seguro de inhabilitar el ingreso de la fila seleccionada
+            confirmacion = QMessageBox.question(self, "ELIMINAR?", "¿QUIERE ELIMINAR ESTE ARTICULO DE LA LISTA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", inhabilita el ingreso
+            if confirmacion == QMessageBox.Yes:
+                quitar_detalle_ingreso(id_detalle)
+                QMessageBox.warning(self, "ELIMINADO", "ARTICULO ELIMINADO.")
+                self.visualiza_datos_detalles()
+                self.buscar_datos()
+                self.verificar_y_ocultar_botones()
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL ARTICULO QUE VAS A ELIMINAR.")
+            
+        # Pasando como parametro el numero de fila, obtengo el id del ingreso
+    def obtener_datos_de_fila_detalle_ingresos(self, num_fila):
+        idingreso = self.txtCodigo.text()
+        query = QSqlQuery()
+        query.exec_(f"SELECT \
+                        di.iddetalle_ingreso as 'CODIGO', \
+                        a.nombre AS ARTICULO, \
+                        di.precio_compra AS 'PRECIO DE COMPRA', \
+                        di.precio_venta AS 'PRECIO DE VENTA', \
+                        di.precio_venta1 AS 'PRECIO DE VENTA 2', \
+                        di.precio_venta2 AS 'PRECIO DE VENTA 3', \
+                        di.cantidad AS 'CANTIDAD', \
+                        UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA', \
+                        i.tipo_comprobante AS 'COMPROBANTE', \
+                        i.num_comprobante AS 'NUM COMPROBANTE', \
+                        i.itbis AS 'IMPUESTO', \
+                        i.estado AS 'ESTADO', \
+                        UPPER(FORMAT(di.fecha_produccion, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE PRODUCCION',\
+                        UPPER(FORMAT(di.fecha_vencimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE VENCIMIENTO'\
+                    FROM detalle_ingreso di \
+                    INNER JOIN ingreso i ON di.idingreso = i.idingreso\
+                    INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
+                    WHERE i.idingreso = {idingreso}")
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.tbDetalleIngreso.setModel(model)
+        
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbDetalleIngreso.model()
+        if modelo is not None and 0 <= num_fila < modelo.rowCount():
+            
+            # Obtener los datos de la fila seleccionada
+            columna_id = modelo.index(num_fila, 0).data()
+            
+            self.bd_id_detalle_ingreso = columna_id
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def verificar_y_ocultar_botones(self):
+        idingreso = self.txtCodigo.text()
+        
+        query = QSqlQuery()
+        query.prepare("SELECT COUNT(*) FROM detalle_ingreso WHERE idingreso = :idingreso")
+        query.bindValue(":idingreso", idingreso)
+        
+        if query.exec_() and query.next():
+            num_detalles = query.value(0)
+        
+            if num_detalles == 0:
+                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones
+
+
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     
     def insertar_datos_detalle(self):
         
@@ -471,7 +556,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos_detalles(self):
-        idarticulo = self.txtCodigo.text()
+        idingreso = self.txtCodigo.text()
         query = QSqlQuery()
         query.exec_(f"SELECT \
                         di.iddetalle_ingreso as 'CODIGO', \
@@ -491,7 +576,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                     FROM detalle_ingreso di \
                     INNER JOIN ingreso i ON di.idingreso = i.idingreso\
                     INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
-                    WHERE i.idingreso = {idarticulo}")
+                    WHERE i.idingreso = {idingreso}")
         
         
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
