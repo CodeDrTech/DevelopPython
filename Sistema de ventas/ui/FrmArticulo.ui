@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -93,7 +93,7 @@ QTabWidget {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -469,47 +469,10 @@ QLabel {
         <string>Descripcion</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnNuevo">
-       <property name="geometry">
-        <rect>
-         <x>130</x>
-         <y>240</y>
-         <width>85</width>
-         <height>37</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-</string>
-       </property>
-       <property name="text">
-        <string>Nuevo</string>
-       </property>
-      </widget>
       <widget class="QPushButton" name="btnEditar">
        <property name="geometry">
         <rect>
-         <x>310</x>
+         <x>220</x>
          <y>240</y>
          <width>85</width>
          <height>37</height>
@@ -546,7 +509,7 @@ QPushButton:pressed {
       <widget class="QPushButton" name="btnGuardar">
        <property name="geometry">
         <rect>
-         <x>220</x>
+         <x>130</x>
          <y>240</y>
          <width>85</width>
          <height>37</height>
@@ -578,43 +541,6 @@ QPushButton:pressed {
        </property>
        <property name="text">
         <string> Guardar </string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="btnSalir">
-       <property name="geometry">
-        <rect>
-         <x>400</x>
-         <y>240</y>
-         <width>85</width>
-         <height>37</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-</string>
-       </property>
-       <property name="text">
-        <string>Salir</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtCodigo">
@@ -708,7 +634,7 @@ QLineEdit::placeholder {
         <rect>
          <x>130</x>
          <y>110</y>
-         <width>120</width>
+         <width>221</width>
          <height>35</height>
         </rect>
        </property>
@@ -789,7 +715,7 @@ QLineEdit::placeholder {
          <x>130</x>
          <y>150</y>
          <width>221</width>
-         <height>41</height>
+         <height>51</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -974,9 +900,9 @@ QLabel {
        <property name="geometry">
         <rect>
          <x>360</x>
-         <y>110</y>
-         <width>151</width>
-         <height>121</height>
+         <y>150</y>
+         <width>201</width>
+         <height>171</height>
         </rect>
        </property>
        <property name="toolTip">
@@ -986,8 +912,8 @@ QLabel {
       <widget class="QPushButton" name="btnCargar">
        <property name="geometry">
         <rect>
-         <x>515</x>
-         <y>110</y>
+         <x>565</x>
+         <y>150</y>
          <width>85</width>
          <height>31</height>
         </rect>
@@ -1023,8 +949,8 @@ QPushButton:pressed {
       <widget class="QPushButton" name="btnLimpiar">
        <property name="geometry">
         <rect>
-         <x>515</x>
-         <y>150</y>
+         <x>565</x>
+         <y>190</y>
          <width>85</width>
          <height>31</height>
         </rect>
@@ -1060,8 +986,8 @@ QPushButton:pressed {
       <widget class="QComboBox" name="cmbPresentacion">
        <property name="geometry">
         <rect>
-         <x>500</x>
-         <y>80</y>
+         <x>550</x>
+         <y>110</y>
          <width>100</width>
          <height>25</height>
         </rect>
@@ -1091,8 +1017,8 @@ QComboBox QAbstractItemView {
       <widget class="QComboBox" name="cmbCategoria">
        <property name="geometry">
         <rect>
-         <x>500</x>
-         <y>50</y>
+         <x>550</x>
+         <y>70</y>
          <width>100</width>
          <height>25</height>
         </rect>
@@ -1122,8 +1048,8 @@ QComboBox QAbstractItemView {
       <widget class="QLabel" name="label_7">
        <property name="geometry">
         <rect>
-         <x>415</x>
-         <y>50</y>
+         <x>465</x>
+         <y>70</y>
          <width>81</width>
          <height>21</height>
         </rect>
@@ -1146,8 +1072,8 @@ QLabel {
       <widget class="QLabel" name="label_8">
        <property name="geometry">
         <rect>
-         <x>470</x>
-         <y>20</y>
+         <x>520</x>
+         <y>30</y>
          <width>21</width>
          <height>21</height>
         </rect>
@@ -1170,8 +1096,8 @@ QLabel {
       <widget class="QLabel" name="label_9">
        <property name="geometry">
         <rect>
-         <x>390</x>
-         <y>80</y>
+         <x>440</x>
+         <y>110</y>
          <width>111</width>
          <height>21</height>
         </rect>
@@ -1194,8 +1120,8 @@ QLabel {
       <widget class="QComboBox" name="comboBox_3">
        <property name="geometry">
         <rect>
-         <x>500</x>
-         <y>20</y>
+         <x>550</x>
+         <y>30</y>
          <width>100</width>
          <height>25</height>
         </rect>

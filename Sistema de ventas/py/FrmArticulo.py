@@ -30,7 +30,7 @@ class VentanaArticulo(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
         #self.btnEditar.clicked.connect(self.editar_datos)
-        #self.btnSalir.clicked.connect(self.fn_Salir)
+        self.btnLimpiar.clicked.connect(self.limpiar_imagen)
         self.btnCargar.clicked.connect(self.cargar_imagen)
         
         
@@ -105,7 +105,7 @@ class VentanaArticulo(QMainWindow):
             presentacion = self.cmbPresentacion.currentText()
             
                 
-            if  not codigoventa or not nombre or not categoria or not presentacion:
+            if  not all([codigoventa, nombre, categoria, presentacion]):
     
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -179,7 +179,7 @@ class VentanaArticulo(QMainWindow):
             
                 # Establece la escena en el QGraphicsView
                 self.gFoto.setScene(scene)
-                
+                self.scene = scene
                 # Ajusta la vista para que la imagen ocupe todo el espacio disponible en el QGraphicsView
                 self.gFoto.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)   # type: ignore
                 self.imagen_cargada = imagen_data
@@ -193,6 +193,11 @@ class VentanaArticulo(QMainWindow):
                 mensaje_error.exec_()
     
         return None
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+    def limpiar_imagen(self):
+        self.scene.clear()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
