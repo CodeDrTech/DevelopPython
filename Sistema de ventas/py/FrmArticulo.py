@@ -29,7 +29,7 @@ class VentanaArticulo(QMainWindow):
         # Botones del formulario y sus funciones
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
-        #self.btnEditar.clicked.connect(self.editar_datos)
+        self.btnBuscar.clicked.connect(self.buscar_articulo)
         self.btnLimpiar.clicked.connect(self.limpiar_imagen)
         self.btnCargar.clicked.connect(self.cargar_imagen)
         
@@ -114,10 +114,7 @@ class VentanaArticulo(QMainWindow):
                 mensaje.exec_()
             
             
-            else:
-                
-                #imagen = self.cargar_imagen()
-                
+            else:                
                 insertar_nuevo_articulo(codigoventa, nombre, descripcion, self.imagen_cargada, categoria, presentacion)
                 
                 ultimo_codigo = obtener_codigo_articulo("articulo")
@@ -137,7 +134,7 @@ class VentanaArticulo(QMainWindow):
                 self.txtCodVenta.setText(nuevo_codigo)
                 self.txtNombre.setText("")
                 self.txtDescripcion.setPlainText("")
-                #self.gFoto
+                self.limpiar_imagen()
                 self.cmbCategoria.setCurrentText("")
                 self.cmbPresentacion.setCurrentText("")
                 self.txtNombre.setFocus()
@@ -195,7 +192,39 @@ class VentanaArticulo(QMainWindow):
         return None
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    def buscar_articulo(self):
+        # Variables con datos de los inputs para usar como criterios/filtros de busquedas
+        buscar_nombre = self.txtBuscar.text()
 
+        if not buscar_nombre:
+            self.visualiza_datos()
+        else:    
+            query = QSqlQuery()
+            query.exec_(f"SELECT\
+                        articulo.codigo as 'CODIGO',\
+                        articulo.nombre AS 'NOMBRE',\
+                        presentacion.descripcion AS 'PRESENTACION',\
+                        articulo.descripcion AS 'DESCRIPCION',\
+                        categoria.descripcion AS 'CATEGORIA'\
+                    FROM\
+                        articulo\
+                    INNER JOIN\
+                        categoria ON articulo.idcategoria = categoria.idcategoria\
+                    INNER JOIN\
+                        presentacion ON articulo.idpresentacion = presentacion.idpresentacion\
+                    WHERE articulo.nombre LIKE '%{buscar_nombre}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def limpiar_imagen(self):
         self.scene.clear()
 

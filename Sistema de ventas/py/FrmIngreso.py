@@ -32,15 +32,17 @@ class VentanaIngresoAlmacen(QMainWindow):
         # Botones del formulario y sus funciones
         self.btnRegistrar.clicked.connect(self.insertar_datos_ingreso)
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
-        self.btnQuitar.clicked.connect(self.quitar_datos_detalle)
-        
-        self.btnBuscar.clicked.connect(self.buscar_datos)
-        
-        self.txtFechaInicio.dateChanged.connect(self.buscar_datos)
-        self.txtFechaFin.dateChanged.connect(self.buscar_datos)
-        self.cmbEstado.currentIndexChanged.connect(self.buscar_datos)
-        
+        self.btnQuitar.clicked.connect(self.quitar_datos_detalle)        
+        self.btnBuscar.clicked.connect(self.buscar_ingresos)
         self.btnAnular.clicked.connect(self.inhabilita_ingreso)
+        
+        # Controles de fecha conectados a la funcion buscar_ingresos
+        self.txtFechaInicio.dateChanged.connect(self.buscar_ingresos)
+        self.txtFechaFin.dateChanged.connect(self.buscar_ingresos)
+        
+        # Control combobox conectado a la funcion buscar_ingresos
+        self.cmbEstado.currentIndexChanged.connect(self.buscar_ingresos)        
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         # Crear un efecto de sombra y aplicarlo a los QTableView
@@ -162,7 +164,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             if confirmacion == QMessageBox.Yes:
                 anular_ingreso(idingreso)
                 QMessageBox.warning(self, "INHABILITADO", "INGRESO INHABILITADO.")
-                self.buscar_datos()
+                self.buscar_ingresos()
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
             
@@ -350,7 +352,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 quitar_detalle_ingreso(id_detalle)
                 QMessageBox.warning(self, "ELIMINADO", "ARTICULO ELIMINADO.")
                 self.visualiza_datos_detalles()
-                self.buscar_datos()
+                self.buscar_ingresos()
                 self.verificar_y_ocultar_botones()
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL ARTICULO QUE VAS A ELIMINAR.")
@@ -453,7 +455,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
                 
                 self.visualiza_datos_detalles()
-                self.buscar_datos()
+                self.buscar_ingresos()
                 
                 # Limpia los TexBox
                 #self.txtFecha.setDate(QDate.currentDate())                
@@ -474,7 +476,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def buscar_datos(self):
+    def buscar_ingresos(self):
         # Variables con datos de los inputs para usar como criterios/filtros de busquedas
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
@@ -559,7 +561,26 @@ class VentanaIngresoAlmacen(QMainWindow):
                                 FROM detalle_ingreso di\
                                 INNER JOIN ingreso i ON di.idingreso = i.idingreso\
                                 INNER JOIN articulo a ON di.idarticulo = a.idarticulo\
-                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}' AND a.nombre LIKE '%{buscar_nombre}%';")
+                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}' AND a.nombre LIKE '%{buscar_nombre}%'\
+                                UNION ALL\
+                                SELECT \
+                                    i.idingreso as 'CODIGO',\
+                                    'ARTICULO ELIMINADO' AS ARTICULO,\
+                                    '0' AS 'PRECIO DE COMPRA',\
+                                    '0' AS 'PRECIO DE VENTA',\
+                                    '0' AS 'PRECIO DE VENTA 2',\
+                                    '0' AS 'PRECIO DE VENTA 3',\
+                                    '0' AS 'CANTIDAD',\
+                                    UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                    'ELIMINADO' AS 'COMPROBANTE',\
+                                    '0' AS 'NUM COMPROBANTE',\
+                                    '0' AS 'IMPUESTO',\
+                                    'Inactivo' AS 'ESTADO',\
+                                    NULL AS 'FECHA DE PRODUCCION',\
+                                    NULL AS 'FECHA DE VENCIMIENTO'\
+                                FROM ingreso i\
+                                WHERE i.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND i.estado = '{estado}'\
+                                AND i.idingreso NOT IN (SELECT idingreso FROM detalle_ingreso);")
                 
                 
                 # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
@@ -712,7 +733,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.actualizar_ID_ingreso()
         self.ocultar_botones_detalle()       
         
-        self.buscar_datos()
+        self.buscar_ingresos()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
 if __name__ == '__main__':

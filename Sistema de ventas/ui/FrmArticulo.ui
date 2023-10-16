@@ -228,6 +228,9 @@ QPushButton:pressed {
       <property name="text">
        <string>Buscar</string>
       </property>
+      <property name="shortcut">
+       <string>Return</string>
+      </property>
      </widget>
      <widget class="QPushButton" name="btnEliminar">
       <property name="geometry">
@@ -309,7 +312,7 @@ QPushButton:pressed {
        <rect>
         <x>10</x>
         <y>70</y>
-        <width>871</width>
+        <width>891</width>
         <height>421</height>
        </rect>
       </property>
