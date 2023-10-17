@@ -23,14 +23,15 @@ combo_box.addItems(["Opción 1", "Opción 2", "Opción 3"])
 layout.addWidget(combo_box)
 
 line_edit = QLineEdit()
-line_edit.setPlaceholderText("Escribe algo aquí")
+line_edit.setPlaceholderText("Escribe algo ok")
 layout.addWidget(line_edit)
 
 date_edit = QDateEdit()
 layout.addWidget(date_edit)
 
 push_button = QPushButton("Botón")
-layout.addWidget(push_button)
+new_var = push_button
+layout.addWidget(new_var)
 
 toggle_button = QPushButton("Activar/Desactivar Widgets")
 toggle_button.clicked.connect(toggle_widgets_state)
