@@ -47,7 +47,7 @@ class VentanaLogin(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    # Funcion para cargar una imgen en la ventana de login
+    # Funcion para cargar una imgen en la ventana de login.
     def cargar_imagen(self):
         # Crea una instancia de QGraphicsScene
         scene = QGraphicsScene()

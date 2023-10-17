@@ -269,7 +269,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 # Si se encuentra el idsesion, devuelve el número de fila
                 return row
     
-        # Si no se encuentra el idsesion, devuelve -1
+        # Si no se encuentra el idsesion, devuelve -1.
         return -1
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        

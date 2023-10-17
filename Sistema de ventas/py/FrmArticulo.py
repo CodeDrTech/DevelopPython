@@ -26,7 +26,7 @@ class VentanaArticulo(QMainWindow):
         
         self.imagen_cargada = None
         
-        # Botones del formulario y sus funciones
+        # Botones del formulario y sus funciones.
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
         self.btnBuscar.clicked.connect(self.buscar_articulo)
@@ -34,7 +34,7 @@ class VentanaArticulo(QMainWindow):
         self.btnCargar.clicked.connect(self.cargar_imagen)
         
         
-        # Crear un efecto de sombra y aplicarlo a los QTableView
+        # Crear un efecto de sombra y aplicarlo a los QTableView.
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(20)
         shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))
