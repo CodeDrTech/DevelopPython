@@ -72,7 +72,7 @@ class VentanaArticulo(QMainWindow):
         model.setQuery(query)
 
         # Configura el modelo para permitir la edición
-        model.setEditStrategy(QSqlTableModel.OnFieldChange) # type: ignore
+        #model.setEditStrategy(QSqlTableModel.OnFieldChange) # type: ignore
 
         # Establece el modelo en la tabla
         self.tbDatos.setModel(model)
@@ -80,7 +80,7 @@ class VentanaArticulo(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()
         # Permitir la edición en las celdas
-        self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def editar_datos(self):
