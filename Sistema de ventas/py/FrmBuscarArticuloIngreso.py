@@ -60,7 +60,7 @@ class VentanaBuscarArticuloIngreso(QMainWindow):
             nombre_articulo = self.tbDatos.model().index(row, 1).data()
             
 
-            # Llamar a la función traer_cliente en la instancia de VentanaCotizaciones
+            # Llamar a la función traer_cliente en la instancia de VentanaCotizaciones y mandarle el id y nombre de articulo
             self.ventana_ingreso.traer_articulo(id_articulo, nombre_articulo)
             self.close()
 #------------------------------------------------------------------------------------------------------

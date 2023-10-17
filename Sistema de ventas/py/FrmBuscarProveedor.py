@@ -65,7 +65,7 @@ class VentanaBuscarproveedor(QMainWindow):
             nombre_proveedor = self.tbDatos.model().index(row, 1).data()
             
 
-            # Llamar a la función traer_cliente en la instancia de VentanaCotizaciones
+            # Llamar a la función traer_proveedor en la instancia de VentanaCotizaciones y mandarle el id y nombre de proveedor.
             self.ventana_ingreso.traer_proveedor(id_proveedor, nombre_proveedor)
             self.close()
 
