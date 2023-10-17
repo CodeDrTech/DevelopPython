@@ -307,7 +307,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 
             else:           
 
-                # Preguntar si el usuario está seguro de empezar a insertar los detalle_ingreso
+                # Preguntar si el usuario está seguro de empezar a insertar los detalle_ingreso.
                 confirmacion = QMessageBox.question(self, "INSERTAR LOS DETALLES", "¿ESTAS SEGURO QUE DESEA CONTINUAR?",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
