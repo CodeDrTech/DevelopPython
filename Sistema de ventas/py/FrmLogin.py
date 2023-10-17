@@ -42,6 +42,7 @@ class VentanaLogin(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
+        # Botones del formulario conectados a funciones.
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnIngresar.clicked.connect(self.validar_usuario)
         
