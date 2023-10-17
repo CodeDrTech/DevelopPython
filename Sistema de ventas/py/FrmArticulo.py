@@ -225,9 +225,16 @@ class VentanaArticulo(QMainWindow):
             self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    #Limpiar la seccion de imaen en casod e que haya alguna.
     def limpiar_imagen(self):
-        self.scene.clear()
-
+        try:
+            self.scene.clear()
+        except Exception as e:
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("No hay imagen en la caja")
+            mensaje.setText(f"Falta la imagen en: {str(e)}")
+            mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def cargar_categoria(self):    

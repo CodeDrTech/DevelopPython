@@ -92,6 +92,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.txtItbis.setValidator(double_validator)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    # Abre un formulario para buscar un proveedor e insertarlo en el nuevo ingreso.
     def abrirFrmBuscarProveedor(self, event):
         if event.button() == Qt.LeftButton: # type: ignore
             from FrmBuscarProveedor import VentanaBuscarproveedor
@@ -107,7 +108,8 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.setWindowTitle("Ventana duplicada")
                 mensaje.setText("La ventana ya esta abierta.")
                 mensaje.exec_()
-
+    
+    # Abre un formulario para insertarlo en el nuevo detalle de ingreso.
     def abrirFrmBuscarArticulo(self, event):
         if event.button() == Qt.LeftButton: # type: ignore
             from FrmBuscarArticuloIngreso import VentanaBuscarArticuloIngreso
@@ -129,6 +131,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    # Estas funciones reciben el cliente/proveedor y lo insertan en sus respectivos controles de textos y combobox
     def traer_proveedor(self, id, nombre):        
         self.txtIdProveedor.setText(str(id))
         self.cmbProveedor.clear()
