@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -93,7 +93,7 @@ QTabWidget {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -460,7 +460,7 @@ QDateEdit QAbstractItemView {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -490,7 +490,7 @@ QLabel {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -564,7 +564,7 @@ QComboBox QAbstractItemView {
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
