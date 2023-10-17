@@ -312,7 +312,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
-                # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso
+                # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso.
                 if confirmacion == QMessageBox.Yes:
                     insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado)
                     self.activar_botones_detalle()
