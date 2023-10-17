@@ -70,6 +70,14 @@ class VentanaCategoria(QMainWindow):
         model.select()        
         self.tbDatos.setModel(model)
 
+        # Ocultar columnas para que no sean editadas
+        self.tbDatos.setColumnHidden(0, True)
+        
+        # Renombra las cabeceras y organiza las columnas para mejorar la vista a la información.
+        model.setHeaderData(1, Qt.Horizontal, "NOMBRE") # type: ignore
+        model.setHeaderData(2, Qt.Horizontal, "DESCRIPCION") # type: ignore
+        
+        
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()    
         self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)

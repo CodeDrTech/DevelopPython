@@ -81,8 +81,8 @@ class VentanaArticulo(QMainWindow):
         self.tbDatos.resizeColumnsToContents()
         # Permitir la edición en las celdas
         self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
-
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def editar_datos(self):
         self.listado()
         # Consulta SELECT * FROM Productos
@@ -90,6 +90,17 @@ class VentanaArticulo(QMainWindow):
         model.setTable("articulo")
         model.select()      
         self.tbDatos.setModel(model)
+        
+        # Ocultar columnas para que no sean editadas
+        self.tbDatos.setColumnHidden(0, True)
+        self.tbDatos.setColumnHidden(1, True)
+        self.tbDatos.setColumnHidden(4, True)
+        
+        # Renombra las cabeceras y organiza las columnas para mojorar la vista a la informacion
+        model.setHeaderData(2, Qt.Horizontal, "NOMBRE") # type: ignore
+        model.setHeaderData(6, Qt.Horizontal, "PRESENTACION") # type: ignore
+        model.setHeaderData(3, Qt.Horizontal, "DESCRIPCION") # type: ignore
+        model.setHeaderData(5, Qt.Horizontal, "CATEGORIA") # type: ignore        
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()    
