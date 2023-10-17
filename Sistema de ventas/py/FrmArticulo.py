@@ -32,6 +32,7 @@ class VentanaArticulo(QMainWindow):
         self.btnBuscar.clicked.connect(self.buscar_articulo)
         self.btnLimpiar.clicked.connect(self.limpiar_imagen)
         self.btnCargar.clicked.connect(self.cargar_imagen)
+        self.btnEliminar.clicked.connect(self.eliminar_articulo)
         
         
         # Crear un efecto de sombra y aplicarlo a los QTableView.
@@ -51,7 +52,6 @@ class VentanaArticulo(QMainWindow):
         self.groupBox.setGraphicsEffect(groupBox_shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()
@@ -67,16 +67,22 @@ class VentanaArticulo(QMainWindow):
                         categoria ON articulo.idcategoria = categoria.idcategoria\
                     INNER JOIN\
                         presentacion ON articulo.idpresentacion = presentacion.idpresentacion;")
-        
-        
-        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
-        model = QSqlTableModel()    
-        model.setQuery(query)        
+
+        # Crear un modelo de tabla SQL, ejecutar el query y establecer el modelo en la tabla
+        model = QSqlTableModel()
+        model.setQuery(query)
+
+        # Configura el modelo para permitir la edición
+        model.setEditStrategy(QSqlTableModel.OnFieldChange) # type: ignore
+
+        # Establece el modelo en la tabla
         self.tbDatos.setModel(model)
 
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()
-        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # Permitir la edición en las celdas
+        self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
+
         
     def editar_datos(self):
         self.listado()
@@ -190,6 +196,46 @@ class VentanaArticulo(QMainWindow):
                 mensaje_error.exec_()
     
         return None
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
+    def eliminar_articulo(self):
+        try:
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+            if indexes:
+                # Obtener la fila al seleccionar una celda de la tabla
+                index = indexes[0]
+                row = index.row()
+                
+                # Obtiene el modelo de datos de la tabla
+                model = self.tbDatos.model()
+                
+                # Obtiene el valor de la columna 'CODIGO' en la fila seleccionada
+                codigo = model.data(model.index(row, 0))  # 0 es el índice de la columna 'CODIGO'
+                
+                # Preguntar si el usuario está seguro de eliminar el artículo
+                confirmacion = QMessageBox.question(self, "¿ELIMINAR?", f"¿Estás seguro que quieres eliminar el artículo con el código {codigo}?",
+                                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                
+                if confirmacion == QMessageBox.Yes:
+                    # Eliminar el artículo de la base de datos
+                    query = QSqlQuery()
+                    if query.exec_(f"DELETE FROM articulo WHERE codigo = '{codigo}'"):
+                        # Eliminar la fila seleccionada del modelo de datos
+                        model.removeRow(index.row())
+                        QMessageBox.warning(self, "ELIMINADO", "ARTÍCULO ELIMINADO.")
+                        # Vuelve a vizualizar os datos, pero esta vez sin el articulo que se elimino.
+                        self.visualiza_datos()
+                    else:
+                        QMessageBox.warning(self, "ERROR", "NO SE PUDO ELIMINAR EL ARTÍCULO.")
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA EL ARTICULO QUE VAS A ELIMINAR.")
+        except Exception as e:
+                mensaje_error = QMessageBox()
+                mensaje_error.setIcon(QMessageBox.Critical)
+                mensaje_error.setWindowTitle("Error")
+                mensaje_error.setText(f"Se produjo un error: {str(e)}")
+                mensaje_error.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def buscar_articulo(self):
