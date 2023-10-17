@@ -1,1 +1,1 @@
-GitLens — Git supercharged
+GitLens — Git supercharged.
