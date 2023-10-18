@@ -1,55 +1,59 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QComboBox, QLineEdit, QDateEdit, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QComboBox, QLineEdit, QTableView
 from PyQt5.QtCore import Qt
 
-def toggle_widgets_state():
-    # Función para activar/desactivar los widgets
-    state = not combo_box.isEnabled()
-    
-    combo_box.setEnabled(state)
-    line_edit.setEnabled(state)
-    date_edit.setEnabled(state)
-    push_button.setEnabled(state)
-    
-app = QApplication(sys.argv)
-app.setStyle("Fusion")  # Usar el estilo Fusion para poder aplicar hojas de estilo
-window = QWidget()
-window.setWindowTitle("Ejemplo de Activar/Desactivar Widgets")
-layout = QVBoxLayout()
+class VentanaPrincipal(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Sistema de Ventas")
 
-# Crear los widgets
-combo_box = QComboBox()
-combo_box.addItems(["Opción 1", "Opción 2", "Opción 3"])
-layout.addWidget(combo_box)
+        # Definir una hoja de estilo CSS personalizada con verde esmeralda
+        self.setStyleSheet('''
+            /* Estilo para botones */
+            QPushButton {
+                background-color: #2ECC71; /* Verde esmeralda */
+                color: white;
+                border: 2px solid #2ECC71;
+                border-radius: 5px;
+            }
+            
+            QPushButton:hover {
+                background-color: #27AE60; /* Verde esmeralda más oscuro al pasar el mouse */
+            }
 
-line_edit = QLineEdit()
-line_edit.setPlaceholderText("Escribe algo ok")
-layout.addWidget(line_edit)
+            /* Estilo para cajas de texto */
+            QLineEdit {
+                background-color: #2ECC71; /* Verde esmeralda */
+                border: 2px solid #2ECC71;
+                border-radius: 5px;
+                color: white;
+            }
 
-date_edit = QDateEdit()
-layout.addWidget(date_edit)
+            /* Estilo para ComboBox */
+            QComboBox {
+                background-color: #2ECC71; /* Verde esmeralda */
+                border: 2px solid #2ECC71;
+                border-radius: 5px;
+                color: white;
+            }
 
-push_button = QPushButton("Botón")
-new_var = push_button
-layout.addWidget(new_var)
+            /* Estilo para TableView */
+            QTableView {
+                background-color: #2ECC71; /* Verde esmeralda */
+                color: #333; /* Color de texto más oscuro */
+            }
+        ''')
 
-toggle_button = QPushButton("Activar/Desactivar Widgets")
-toggle_button.clicked.connect(toggle_widgets_state)
-layout.addWidget(toggle_button)
+        # Agregar controles a la ventana
+        button = QPushButton("Botón")
+        line_edit = QLineEdit()
+        combo_box = QComboBox()
+        table_view = QTableView()
 
-# Establecer un estilo de hoja de estilo para widgets deshabilitados
-style = """
-QComboBox:disabled,
-QLineEdit:disabled,
-QDateEdit:disabled,
-QPushButton:disabled {
-    background-color: #D3D3D3;  /* Color de fondo gris claro para indicar deshabilitado */
-    color: #888888;  /* Color de texto gris claro */
-}
-"""
-app.setStyleSheet(style)
+        self.setCentralWidget(button)  # Puedes cambiar esto según tu diseño
 
-window.setLayout(layout)
-window.show()
-
-sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ventana = VentanaPrincipal()
+    ventana.show()
+    sys.exit(app.exec_())
