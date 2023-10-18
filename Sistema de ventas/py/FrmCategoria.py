@@ -43,7 +43,7 @@ class VentanaCategoria(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos) 
         self.btnSalir.clicked.connect(self.fn_Salir)
-        self.btnBuscar.clicked.connect(self.buscar_articulo)
+        self.btnBuscar.clicked.connect(self.buscar_categoria)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -88,7 +88,7 @@ class VentanaCategoria(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
 
-    def buscar_articulo(self):
+    def buscar_categoria(self):
         # Variables con datos de los inputs para usar como criterios/filtros de busquedas.
         buscar_nombre = self.txtBuscar.text()
 
