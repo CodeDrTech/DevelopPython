@@ -89,7 +89,7 @@ class VentanaCategoria(QMainWindow):
 #------------------------------------------------------------------------------------------------------ 
 
     def buscar_articulo(self):
-        # Variables con datos de los inputs para usar como criterios/filtros de busquedas
+        # Variables con datos de los inputs para usar como criterios/filtros de busquedas.
         buscar_nombre = self.txtBuscar.text()
 
         if not buscar_nombre:
