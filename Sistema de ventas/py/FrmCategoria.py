@@ -182,7 +182,7 @@ class VentanaCategoria(QMainWindow):
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
-        # Si el usuario hace clic en el botón "Sí", se cierra la ventana
+        # Si el usuario hace clic en el botón "Sí", se cierra la ventana.
         if confirmacion == QMessageBox.Yes:
             self.close()   
         
