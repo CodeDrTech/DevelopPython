@@ -23,6 +23,7 @@ class VentanaCliente(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos)
         self.btnSalir.clicked.connect(self.fn_Salir)
+        self.btnBuscar.clicked.connect(self.buscar_clientes)
         
         
         # Crear un efecto de sombra y aplicarlo a los QTableView
@@ -43,12 +44,50 @@ class VentanaCliente(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
-        
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
+    def buscar_clientes(self):
+        # Variables con datos de los inputs para usar como criterios / filtros de busquedas.
+        criterio_de_busqueda = self.comboBox.currentText()
+        nombre_a_buscar = self.txtBuscar.text()
 
-    # Funciones conectadas a los botones
-        
+        if criterio_de_busqueda == "Nombre":
+            
+            
+            query = QSqlQuery()
+            query.exec_(f"SELECT idcliente as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
+                    UPPER(FORMAT(fecha_nacimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE NACIMIENTO', tipo_documento AS 'TIPO DOCUMENTO', num_documento AS 'NUM DOCUMENTO',\
+                    direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
+                    email AS 'CORREO' FROM cliente WHERE nombre LIKE '%{nombre_a_buscar}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            
+        elif criterio_de_busqueda == "Documento":
+            query = QSqlQuery()
+            query.exec_(f"SELECT idcliente as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
+                    UPPER(FORMAT(fecha_nacimiento, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE NACIMIENTO', tipo_documento AS 'TIPO DOCUMENTO', num_documento AS 'NUM DOCUMENTO',\
+                    direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
+                    email AS 'CORREO' FROM cliente WHERE num_documento LIKE '%{nombre_a_buscar}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        else:
+            self.visualiza_datos()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def insertar_datos(self):
         
         

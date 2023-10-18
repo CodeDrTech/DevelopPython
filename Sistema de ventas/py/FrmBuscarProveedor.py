@@ -22,6 +22,7 @@ class VentanaBuscarproveedor(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         # Botones del formulario y sus funciones
+        self.btnBuscar.clicked.connect(self.buscar_proveedores)
         #self.btnBuscar.clicked.connect(self.insertar_cliente_en_cotizacion)
         
         self.tbDatos.doubleClicked.connect(self.insertar_proveedor_en_ingreso)
@@ -42,7 +43,42 @@ class VentanaBuscarproveedor(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
-        
+    def buscar_proveedores(self):
+        # Variables con datos de los inputs para usar como criterios / filtros de busquedas.
+        criterio_de_busqueda = self.comboBox.currentText()
+        nombre_a_buscar = self.txtBuscar.text()
+
+        if criterio_de_busqueda == "Razon social":
+            
+            
+            query = QSqlQuery()
+            query.exec_(f"SELECT idproveedor as 'CODIGO', razon_social AS 'NOMBRE' FROM proveedor WHERE razon_social LIKE '%{nombre_a_buscar}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            
+        elif criterio_de_busqueda == "Codigo":
+            query = QSqlQuery()
+            query.exec_(f"SELECT idproveedor as 'CODIGO', razon_social AS 'NOMBRE' FROM proveedor WHERE idproveedor LIKE '%{nombre_a_buscar}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        else:
+            self.visualiza_datos()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 

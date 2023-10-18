@@ -21,9 +21,7 @@ class VentanaBuscarArticuloVentas(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         # Botones del formulario y sus funciones
-        #self.btnGuardar.clicked.connect(self.insertar_datos)
-        #self.btnEditar.clicked.connect(self.editar_datos)
-        #self.btnSalir.clicked.connect(self.fn_Salir)
+        self.btnBuscar.clicked.connect(self.buscar_articulo)
         
         self.tbDatos.doubleClicked.connect(self.insertar_articulo_en_ventas)
         
@@ -102,6 +100,44 @@ class VentanaBuscarArticuloVentas(QMainWindow):
         
     def listado(self):
         self.tabWidget.setCurrentIndex(0)
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def buscar_articulo(self):
+        # Variables con datos de los inputs para usar como criterios/filtros de busquedas
+        criterio_de_busqueda = self.comboBox.currentText()
+        buscar_nombre = self.txtBuscar.text()
+
+        if criterio_de_busqueda == "Nombre":
+                
+            query = QSqlQuery()
+            query.exec_(f"SELECT idarticulo as 'ID', nombre as 'NOMBRE', descripcion as 'DESCRIPCION' from articulo WHERE nombre LIKE '%{buscar_nombre}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        elif criterio_de_busqueda == "Codigo":
+                
+            query = QSqlQuery()
+            query.exec_(f"SELECT idarticulo as 'ID', nombre as 'NOMBRE', descripcion as 'DESCRIPCION' from articulo WHERE idarticulo LIKE '%{buscar_nombre}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        else:
+            self.visualiza_datos()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------       

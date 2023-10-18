@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -366,12 +366,12 @@ QComboBox QAbstractItemView {
       </property>
       <item>
        <property name="text">
-        <string>Documentos</string>
+        <string>Nombre</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Nombre</string>
+        <string>Cedula</string>
        </property>
       </item>
      </widget>

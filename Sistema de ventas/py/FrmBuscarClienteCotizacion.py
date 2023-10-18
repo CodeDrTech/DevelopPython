@@ -22,7 +22,7 @@ class VentanaBuscarClienteCotizacion(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         # Botones del formulario y sus funciones
-        #self.btnBuscar.clicked.connect(self.insertar_cliente_en_cotizacion)
+        self.btnBuscar.clicked.connect(self.buscar_clientes)
         
         self.tbDatos.doubleClicked.connect(self.insertar_cliente_en_cotizacion)
         
@@ -86,7 +86,44 @@ class VentanaBuscarClienteCotizacion(QMainWindow):
         self.tbDatos.resizeColumnsToContents()
         self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
-    
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------ 
+    def buscar_clientes(self):
+        # Variables con datos de los inputs para usar como criterios / filtros de busquedas.
+        criterio_de_busqueda = self.comboBox.currentText()
+        nombre_a_buscar = self.txtBuscar.text()
+
+        if criterio_de_busqueda == "Nombre":
+            
+            
+            query = QSqlQuery()
+            query.exec_(f"SELECT idcliente as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS' FROM cliente WHERE nombre LIKE '%{nombre_a_buscar}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            
+        elif criterio_de_busqueda == "Codigo":
+            query = QSqlQuery()
+            query.exec_(f"SELECT idcliente as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS' FROM cliente WHERE idcliente LIKE '%{nombre_a_buscar}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        else:
+            self.visualiza_datos()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------       
