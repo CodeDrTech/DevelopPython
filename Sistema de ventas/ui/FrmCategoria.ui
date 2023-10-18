@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -89,14 +89,14 @@ QTabWidget {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>0</y>
-        <width>73</width>
-        <height>27</height>
+        <y>5</y>
+        <width>101</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
+        <pointsize>-1</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -112,13 +112,13 @@ QLabel {
 }</string>
       </property>
       <property name="text">
-       <string>Nombre</string>
+       <string>Descripcion</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="txtBuscar">
       <property name="geometry">
        <rect>
-        <x>90</x>
+        <x>120</x>
         <y>5</y>
         <width>120</width>
         <height>35</height>
@@ -201,7 +201,7 @@ QLineEdit::placeholder {
      <widget class="QPushButton" name="btnBuscar">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>250</x>
         <y>5</y>
         <width>85</width>
         <height>37</height>
@@ -238,7 +238,7 @@ QPushButton:pressed {
      <widget class="QPushButton" name="btnEliminar">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>340</x>
         <y>5</y>
         <width>85</width>
         <height>37</height>
@@ -276,7 +276,7 @@ QPushButton:pressed {
      <widget class="QPushButton" name="btnImprimir">
       <property name="geometry">
        <rect>
-        <x>400</x>
+        <x>430</x>
         <y>5</y>
         <width>85</width>
         <height>37</height>

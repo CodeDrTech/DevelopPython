@@ -43,6 +43,7 @@ class VentanaCategoria(QMainWindow):
         self.btnGuardar.clicked.connect(self.insertar_datos)
         self.btnEditar.clicked.connect(self.editar_datos) 
         self.btnSalir.clicked.connect(self.fn_Salir)
+        self.btnBuscar.clicked.connect(self.buscar_articulo)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -87,6 +88,29 @@ class VentanaCategoria(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
 
+    def buscar_articulo(self):
+        # Variables con datos de los inputs para usar como criterios/filtros de busquedas
+        buscar_nombre = self.txtBuscar.text()
+
+        if not buscar_nombre:
+            self.visualiza_datos()
+        else:    
+            query = QSqlQuery()
+            query.exec_(f"SELECT idcategoria as 'CODIGO', nombre AS 'NOMBRE', descripcion AS 'DESCRIPCION' FROM categoria\
+                                WHERE descripcion LIKE '%{buscar_nombre}%';")
+                
+                
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------ 
         
     def insertar_datos(self):
         
