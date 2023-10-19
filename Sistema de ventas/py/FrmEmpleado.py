@@ -50,6 +50,7 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     def imprimir(self):
+        
         # Consulta SQL y carga datos en una lista
         query = QSqlQuery()
         query.exec_(f"SELECT idempleado as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
@@ -68,8 +69,9 @@ class VentanaEmpleado(QMainWindow):
         data = pd.DataFrame(data_list, columns=column_names)
 
         # Cargar la plantilla HTML
-        env = Environment(loader=FileSystemLoader('Sistema de ventas/pdf'))
+        env = Environment(loader=FileSystemLoader('Sistema de ventas/pdf/'))
         template = env.get_template('plantilla.html')
+
 
         # Renderizar la plantilla con los datos
         output = template.render(data=data)

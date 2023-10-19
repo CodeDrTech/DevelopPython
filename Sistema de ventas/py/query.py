@@ -1,59 +1,23 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QComboBox, QLineEdit, QTableView
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWebEngineWidgets import QWebEngineView  # Importar QWebEngineView
+from PyQt5.QtCore import QUrl  # Importar QUrl desde QtCore
 
-class VentanaPrincipal(QMainWindow):
+class ReportViewer(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Sistema de Ventas")
 
-        # Definir una hoja de estilo CSS personalizada con verde esmeralda
-        self.setStyleSheet('''
-            /* Estilo para botones */
-            QPushButton {
-                background-color: #2ECC71; /* Verde esmeralda */
-                color: white;
-                border: 2px solid #2ECC71;
-                border-radius: 5px;
-            }
-            
-            QPushButton:hover {
-                background-color: #27AE60; /* Verde esmeralda más oscuro al pasar el mouse */
-            }
+        # Crear un componente WebEngineView para mostrar el informe HTML
+        self.webview = QWebEngineView()
+        self.setCentralWidget(self.webview)
 
-            /* Estilo para cajas de texto */
-            QLineEdit {
-                background-color: #2ECC71; /* Verde esmeralda */
-                border: 2px solid #2ECC71;
-                border-radius: 5px;
-                color: white;
-            }
+    def show_report(self, html_file):
+        # Cargar el archivo HTML en el WebEngineView
+        self.webview.setUrl(QUrl.fromLocalFile(html_file))
 
-            /* Estilo para ComboBox */
-            QComboBox {
-                background-color: #2ECC71; /* Verde esmeralda */
-                border: 2px solid #2ECC71;
-                border-radius: 5px;
-                color: white;
-            }
-
-            /* Estilo para TableView */
-            QTableView {
-                background-color: #2ECC71; /* Verde esmeralda */
-                color: #333; /* Color de texto más oscuro */
-            }
-        ''')
-
-        # Agregar controles a la ventana
-        button = QPushButton("Botón")
-        line_edit = QLineEdit()
-        combo_box = QComboBox()
-        table_view = QTableView()
-
-        self.setCentralWidget(button)  # Puedes cambiar esto según tu diseño
-
-if __name__ == '__main__':
+if __name__ == "__main__":
+    import sys
     app = QApplication(sys.argv)
-    ventana = VentanaPrincipal()
-    ventana.show()
+    viewer = ReportViewer()
+    viewer.show_report("informe.html")  # Reemplaza "informe.html" con la ubicación de tu archivo HTML
+    viewer.show()
     sys.exit(app.exec_())
