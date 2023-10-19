@@ -1,0 +1,194 @@
+/* Estilos comunes para varios controles */
+QWidget {
+    background-color: #dafeef;
+}
+
+QGroupBox {
+    border: 2px solid #1acd81;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #effef7;
+}
+
+QGroupBox:title {
+    color: #1acd81;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+
+QLabel {
+    color: #1acd81;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Estilos para QPushButton */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #b8fadd, stop: 1 #1acd81);
+    color: #ffffff;
+    border: 1px solid #1acd81;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #43e5a0, stop: 1 #81f4c3);
+    border: 1px solid #81f4c3;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #108554, stop: 1 #0fa968);
+    border: 1px solid #0fa968;
+}
+
+/* Estilos para QLineEdit */
+QLineEdit {
+    background-color: #dafeef;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #43e5a0;
+}
+
+QLineEdit:focus {
+    border: 1px solid #43e5a0;
+    outline: none;
+}
+
+QLineEdit::placeholder {
+    color: #1acd81;
+    font-weight: bold;
+}
+
+/* Estilos para QTableView */
+QTableView {
+    background-color: #effef7;
+    border: 1px solid #cccccc;
+    selection-background-color: #81f4c3;
+    selection-color: #ffffff;
+}
+
+QTableView QHeaderView {
+    background-color: #b8fadd;
+    color: #333333;
+    border: none;
+}
+
+QTableView QHeaderView::section {
+    background-color: #dafeef;
+    color: #333333;
+    padding: 6px;
+    border: 1px solid #1acd81;
+}
+
+QTableView QHeaderView::section:checked {
+    background-color: #81f4c3;
+    color: #ffffff;
+}
+
+QTableView::item {
+    padding: 6px;
+}
+
+QTableView::item:selected {
+    background-color: #81f4c3;
+    color: #ffffff;
+}
+
+QTableView::item:focus {
+    background-color: #81f4c3;
+    color: #ffffff;
+    outline: none;
+}
+
+/* Estilos para QComboBox */
+QComboBox {
+    background-color: #dafeef;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QComboBox:hover {
+    border: 1px solid #43e5a0;
+}
+
+QComboBox:focus {
+    border: 1px solid #43e5a0;
+    outline: none;
+}
+
+QComboBox::placeholder {
+    color: #1acd81;
+    font-weight: bold;
+}
+
+/* Estilos para QTextEdit */
+QTextEdit {
+    background-color: #dafeef;
+    border: 1px solid #cccccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QTextEdit:hover {
+    border: 1px solid #43e5a0;
+}
+
+QTextEdit:focus {
+    border: 1px solid #43e5a0;
+    outline: none;
+}
+
+/* Estilos para QGraphicsView */
+QGraphicsView {
+    background-color: #effef7;
+    border: 1px solid #cccccc;
+}
+
+/* Estilos para QTabWidget */
+QTabWidget {
+    background-color: #dafeef;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+
+QTabWidget::tab-bar {
+    left: 5px;
+}
+
+QTabWidget::tab {
+    background-color: #dafeef;
+    border: 1px solid #1acd81;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 6px 12px;
+}
+
+QTabWidget::tab:selected {
+    background-color: #b8fadd;
+    border: 1px solid #1acd81;
+    border-bottom: 1px solid #b8fadd;
+}
+
+QTabWidget::pane {
+    background-color: #dafeef;
+    border: 1px solid #1acd81;
+    border-top: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
