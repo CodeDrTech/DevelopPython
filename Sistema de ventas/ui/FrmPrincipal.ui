@@ -19,7 +19,16 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">/* Estilos comunes para varios controles */
+QWidget {
+    background-color: #deede3;
+}</string>
+   </property>
    <widget class="QMdiArea" name="mdiArea">
     <property name="geometry">
      <rect>
@@ -35,6 +44,9 @@
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
    </widget>
    <widget class="QLabel" name="lblUsuario">
     <property name="geometry">
@@ -47,13 +59,17 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel {
-    color: #2980b9;
+     <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
+    color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
 }</string>
@@ -73,13 +89,17 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel {
-    color: #2980b9;
+     <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
+    color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
 }</string>
@@ -98,7 +118,13 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <widget class="QMenu" name="menuSistema">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>SisVentas</string>
     </property>
@@ -106,10 +132,16 @@
     <addaction name="actionSalir"/>
    </widget>
    <widget class="QMenu" name="menuHerramientas">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>Herramientas</string>
     </property>
     <widget class="QMenu" name="menuBase_de_datos">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="title">
       <string>Base de datos</string>
      </property>
@@ -118,6 +150,9 @@
     <addaction name="menuBase_de_datos"/>
    </widget>
    <widget class="QMenu" name="menuAlmacen">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>Almacen</string>
     </property>
@@ -126,6 +161,9 @@
     <addaction name="actionPresentaciones"/>
    </widget>
    <widget class="QMenu" name="menuCompras">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>Compras</string>
     </property>
@@ -133,6 +171,9 @@
     <addaction name="actionProveedores"/>
    </widget>
    <widget class="QMenu" name="menuVentas">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>Ventas</string>
     </property>
@@ -142,12 +183,18 @@
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuMantenimiento">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>Mantenimiento</string>
     </property>
     <addaction name="actionEmpleados"/>
    </widget>
    <widget class="QMenu" name="menuConsultas">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>Consultas</string>
     </property>

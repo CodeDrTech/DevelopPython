@@ -37,6 +37,11 @@ class VentanaEmpleado(QMainWindow):
         groupBox_shadow.setBlurRadius(20)
         groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox.setGraphicsEffect(groupBox_shadow)
+        
+        groupBox_2shadow = QGraphicsDropShadowEffect()
+        groupBox_2shadow.setBlurRadius(20)
+        groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox_2.setGraphicsEffect(groupBox_2shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones

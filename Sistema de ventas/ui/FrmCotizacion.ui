@@ -139,7 +139,7 @@ QGroupBox:title {
       <widget class="QLabel" name="label_2">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>25</x>
          <y>30</y>
          <width>73</width>
          <height>27</height>

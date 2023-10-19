@@ -105,7 +105,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_2 = QLabel(self.groupBox_3)
         self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(20, 30, 73, 27))
+        self.label_2.setGeometry(QRect(25, 30, 73, 27))
         self.label_2.setFont(font)
         self.label_2.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
