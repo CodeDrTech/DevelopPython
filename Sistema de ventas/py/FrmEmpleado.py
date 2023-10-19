@@ -50,16 +50,25 @@ class VentanaEmpleado(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     def imprimir(self):
-        # Consulta SQL y carga datos en un DataFrame
+        # Consulta SQL y carga datos en una lista
         query = QSqlQuery()
         query.exec_(f"SELECT idempleado as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
-                UPPER(FORMAT(fecha_nac, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE NACIMIENTO', num_documento AS 'CEDULA', direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
-                email AS 'CORREO', acceso AS 'ACCESO', usuario AS 'USUARIO', password AS 'CONTRASENA'  FROM empleado")
-        connection = None
-        data = pd.read_sql(query, connection) # type: ignore
+                    UPPER(FORMAT(fecha_nac, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE NACIMIENTO', num_documento AS 'CEDULA', direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
+                    email AS 'CORREO', acceso AS 'ACCESO', usuario AS 'USUARIO', password AS 'CONTRASENA'  FROM empleado")
+        
+        data_list = []
+        while query.next():
+            row = []
+            for col in range(query.record().count()):
+                row.append(query.value(col))
+            data_list.append(row)
+
+        # Crear un DataFrame a partir de la lista de datos
+        column_names = [query.record().fieldName(i) for i in range(query.record().count())]
+        data = pd.DataFrame(data_list, columns=column_names)
 
         # Cargar la plantilla HTML
-        env = Environment(loader=FileSystemLoader('ruta_a_tus_plantillas'))
+        env = Environment(loader=FileSystemLoader('Sistema de ventas/pdf'))
         template = env.get_template('plantilla.html')
 
         # Renderizar la plantilla con los datos
