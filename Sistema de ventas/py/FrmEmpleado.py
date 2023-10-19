@@ -3,6 +3,8 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
+import pandas as pd
+from jinja2 import Environment, FileSystemLoader
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Consultas_db import insertar_nuevo_empleados, obtener_ultimo_codigo, generar_nuevo_codigo
 
@@ -43,7 +45,30 @@ class VentanaEmpleado(QMainWindow):
         self.btnSalir.clicked.connect(self.fn_Salir)
         self.btnEliminar.clicked.connect(self.borrar_fila)
         self.btnBuscar.clicked.connect(self.buscar_empleados)
+        self.btnImprimir.clicked.connect(self.imprimir)
         
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------ 
+    def imprimir(self):
+        # Consulta SQL y carga datos en un DataFrame
+        query = QSqlQuery()
+        query.exec_(f"SELECT idempleado as 'CODIGO', nombre AS 'NOMBRE', apellidos AS 'APELLIDOS', sexo AS 'SEXO',\
+                UPPER(FORMAT(fecha_nac, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA DE NACIMIENTO', num_documento AS 'CEDULA', direccion AS 'DIRECCION', telefono AS 'TELEFONO',\
+                email AS 'CORREO', acceso AS 'ACCESO', usuario AS 'USUARIO', password AS 'CONTRASENA'  FROM empleado")
+        connection = None
+        data = pd.read_sql(query, connection) # type: ignore
+
+        # Cargar la plantilla HTML
+        env = Environment(loader=FileSystemLoader('ruta_a_tus_plantillas'))
+        template = env.get_template('plantilla.html')
+
+        # Renderizar la plantilla con los datos
+        output = template.render(data=data)
+
+        # Guardar el informe en un archivo HTML (opcional)
+        with open('informe.html', 'w') as f:
+            f.write(output)
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     # Funciones conectadas a los botones
