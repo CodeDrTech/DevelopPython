@@ -17,8 +17,9 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget {
-    background-color: #9a9a9a;
+   <string notr="true">/* Estilos comunes para varios controles */
+QWidget {
+    background-color: #deede3;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -39,11 +40,11 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-    background-color: #9a9a9a;
+    background-color: var(--jade-50);
 }
 
 QLabel {
-    color: #2980b9;
+    color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
 }</string>
@@ -63,23 +64,21 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QGroupBox {
-    border: 2px solid #2980b9;
+    border: 2px solid #1e362d;
     border-radius: 8px;
     padding: 10px;
-    background-color: #9a9a9a;
+    background-color: var(--jade-50);
 }
 
 QGroupBox:title {
-    color: #2980b9;
+    color: #1e362d;
     subcontrol-origin: margin;
     subcontrol-position: top left;
     left: 10px;
     padding-left: 5px;
     padding-right: 5px;
     border: none;
-}
-
-</string>
+}</string>
     </property>
     <property name="title">
      <string>Seleccionar Proveedor</string>
@@ -95,24 +94,26 @@ QGroupBox:title {
      </property>
      <property name="styleSheet">
       <string notr="true">QComboBox {
-    background-color: #ffffff;
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
     font-size: 14px;
-    color: #2980b9;
 }
 
 QComboBox:hover {
-    border: 1px solid #3498db;
+    border: 1px solid #689f84;
 }
 
-QComboBox QAbstractItemView {
-    border: 1px solid #cccccc;
-    background-color: white;
-    selection-background-color: #3498db;
+QComboBox:focus {
+    border: 1px solid #689f84;
+    outline: none;
 }
-</string>
+
+QComboBox::placeholder {
+    color: #1e362d;
+    font-weight: bold;
+}</string>
      </property>
      <item>
       <property name="text">
@@ -137,9 +138,9 @@ QComboBox QAbstractItemView {
      <property name="styleSheet">
       <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid #2980b9;
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -147,16 +148,15 @@ QComboBox QAbstractItemView {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-</string>
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
+}</string>
      </property>
      <property name="text">
       <string>Buscar</string>
@@ -175,34 +175,8 @@ QPushButton:pressed {
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inserte el dato para buscar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget {
-    background-color: #f2f2f2;
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #5DADE2, stop: 1 #2980b9);
-    color: #ffffff;
-    border: 1px solid #2980b9;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #4DA8DB, stop: 1 #2471a3);
-    border: 1px solid #2471a3;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #3C89B4, stop: 1 #1f618d);
-    border: 1px solid #1f618d;
-}
-
-QLineEdit {
-    background-color: #ffffff;
+      <string notr="true">QLineEdit {
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -210,39 +184,18 @@ QLineEdit {
 }
 
 QLineEdit:hover {
-    border: 1px solid #3498db;
+    border: 1px solid #689f84;
 }
 
 QLineEdit:focus {
-    border: 1px solid #3498db;
+    border: 1px solid #689f84;
     outline: none;
 }
 
-QWidget {
-    background-color: #f2f2f2;
-}
-
-QLabel {
-    color: #2980b9;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-QLineEdit {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #2980b9;
-}
-
 QLineEdit::placeholder {
-    color: #2980b9;
+    color: #1e362d;
     font-weight: bold;
-}
-
-</string>
+}</string>
      </property>
     </widget>
     <widget class="QTableView" name="tbDatos">
@@ -256,27 +209,27 @@ QLineEdit::placeholder {
      </property>
      <property name="styleSheet">
       <string notr="true">QTableView {
-    background-color: #9a9a9a;
+    background-color: #f2f7f4;
     border: 1px solid #cccccc;
-    selection-background-color: #3498db;
+    selection-background-color: #96bfaa;
     selection-color: #ffffff;
 }
 
 QTableView QHeaderView {
-    background-color: #d3d3d3;
+    background-color: #c0dacb;
     color: #333333;
     border: none;
 }
 
 QTableView QHeaderView::section {
-    background-color: #bbbbbb;
+    background-color: #deede3;
     color: #333333;
     padding: 6px;
-    border: 1px solid #cccccc;
+    border: 1px solid #1e362d;
 }
 
 QTableView QHeaderView::section:checked {
-    background-color: #3498db;
+    background-color: #96bfaa;
     color: #ffffff;
 }
 
@@ -285,21 +238,15 @@ QTableView::item {
 }
 
 QTableView::item:selected {
-    background-color: #3498db;
+    background-color: #96bfaa;
     color: #ffffff;
 }
 
 QTableView::item:focus {
-    background-color: #3498db;
+    background-color: #96bfaa;
     color: #ffffff;
     outline: none;
-}
-
-QTableView::item:hover {
-    background-color: #d3d3d3;
-    color: #333333;
-}
-</string>
+}</string>
      </property>
     </widget>
    </widget>

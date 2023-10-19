@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'FrmLogin.ui'
+## Form generated from reading UI file 'FrmBuscarArticuloCotizacion.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.5.2
 ##
@@ -15,29 +15,24 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDateTimeEdit, QGraphicsView, QGroupBox,
-    QHeaderView, QLabel, QLineEdit, QMainWindow,
-    QPushButton, QSizePolicy, QStatusBar, QTableView,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QHeaderView,
+    QLabel, QLineEdit, QMainWindow, QPushButton,
+    QSizePolicy, QStatusBar, QTableView, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(558, 266)
+        MainWindow.setWindowModality(Qt.ApplicationModal)
+        MainWindow.resize(697, 556)
         MainWindow.setStyleSheet(u"QWidget {\n"
 "    background-color: #deede3;\n"
 "}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.txtFecha = QDateTimeEdit(self.centralwidget)
-        self.txtFecha.setObjectName(u"txtFecha")
-        self.txtFecha.setGeometry(QRect(410, 20, 121, 25))
-        self.txtFecha.setReadOnly(True)
-        self.txtFecha.setCalendarPopup(True)
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(180, 10, 191, 21))
+        self.label.setGeometry(QRect(20, 0, 81, 21))
         font = QFont()
         font.setBold(True)
         self.label.setFont(font)
@@ -50,12 +45,9 @@ class Ui_MainWindow(object):
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
 "}")
-        self.graphicsView = QGraphicsView(self.centralwidget)
-        self.graphicsView.setObjectName(u"graphicsView")
-        self.graphicsView.setGeometry(QRect(10, 60, 160, 160))
         self.groupBox = QGroupBox(self.centralwidget)
         self.groupBox.setObjectName(u"groupBox")
-        self.groupBox.setGeometry(QRect(210, 60, 321, 161))
+        self.groupBox.setGeometry(QRect(20, 35, 651, 481))
         self.groupBox.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #1e362d;\n"
 "    border-radius: 8px;\n"
@@ -72,10 +64,36 @@ class Ui_MainWindow(object):
 "    padding-right: 5px;\n"
 "    border: none;\n"
 "}")
-        self.btnIngresar = QPushButton(self.groupBox)
-        self.btnIngresar.setObjectName(u"btnIngresar")
-        self.btnIngresar.setGeometry(QRect(113, 110, 85, 37))
-        self.btnIngresar.setStyleSheet(u"QPushButton {\n"
+        self.comboBox = QComboBox(self.groupBox)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+        self.comboBox.setGeometry(QRect(10, 35, 120, 35))
+        self.comboBox.setStyleSheet(u"QComboBox {\n"
+"    background-color: #deede3;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QComboBox:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QComboBox::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.btnBuscar = QPushButton(self.groupBox)
+        self.btnBuscar.setObjectName(u"btnBuscar")
+        self.btnBuscar.setGeometry(QRect(280, 35, 85, 37))
+        self.btnBuscar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
 "    color: #ffffff;\n"
@@ -96,34 +114,10 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnSalir = QPushButton(self.groupBox)
-        self.btnSalir.setObjectName(u"btnSalir")
-        self.btnSalir.setGeometry(QRect(210, 110, 85, 37))
-        self.btnSalir.setStyleSheet(u"QPushButton {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
-"    color: #ffffff;\n"
-"    border: 1px solid #1e362d;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 4px;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #689f84, stop: 1 #96bfaa);\n"
-"    border: 1px solid #96bfaa;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
-"    border: 1px solid #32624d;\n"
-"}")
-        self.txtPassword = QLineEdit(self.groupBox)
-        self.txtPassword.setObjectName(u"txtPassword")
-        self.txtPassword.setGeometry(QRect(113, 70, 181, 35))
-        self.txtPassword.setStyleSheet(u"QLineEdit {\n"
+        self.txtBuscar = QLineEdit(self.groupBox)
+        self.txtBuscar.setObjectName(u"txtBuscar")
+        self.txtBuscar.setGeometry(QRect(150, 35, 120, 35))
+        self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
@@ -144,58 +138,9 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
-        self.txtPassword.setEchoMode(QLineEdit.Password)
-        self.txtUsuario = QLineEdit(self.groupBox)
-        self.txtUsuario.setObjectName(u"txtUsuario")
-        self.txtUsuario.setGeometry(QRect(113, 30, 181, 35))
-        self.txtUsuario.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
-"    border: 1px solid #cccccc;\n"
-"    padding: 6px;\n"
-"    border-radius: 4px;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #689f84;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 1px solid #689f84;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QLineEdit::placeholder {\n"
-"    color: #1e362d;\n"
-"    font-weight: bold;\n"
-"}")
-        self.label_2 = QLabel(self.groupBox)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(10, 80, 101, 21))
-        self.label_2.setStyleSheet(u"QWidget {\n"
-"    background-color: var(--jade-50);\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"    color: var(--jade-500);\n"
-"    font-size: 16px;\n"
-"    font-weight: bold;\n"
-"}")
-        self.label_3 = QLabel(self.groupBox)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(10, 40, 71, 21))
-        self.label_3.setStyleSheet(u"QWidget {\n"
-"    background-color: var(--jade-50);\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"    color: var(--jade-500);\n"
-"    font-size: 16px;\n"
-"    font-weight: bold;\n"
-"}")
-        self.tbDatos = QTableView(self.centralwidget)
+        self.tbDatos = QTableView(self.groupBox)
         self.tbDatos.setObjectName(u"tbDatos")
-        self.tbDatos.setGeometry(QRect(10, 0, 51, 41))
+        self.tbDatos.setGeometry(QRect(10, 100, 621, 351))
         self.tbDatos.setStyleSheet(u"QTableView {\n"
 "    background-color: #f2f7f4;\n"
 "    border: 1px solid #cccccc;\n"
@@ -247,17 +192,14 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Sistema de Ventas", None))
-        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Acceso al Sistema", None))
-        self.btnIngresar.setText(QCoreApplication.translate("MainWindow", u"Ingresar", None))
-#if QT_CONFIG(shortcut)
-        self.btnIngresar.setShortcut(QCoreApplication.translate("MainWindow", u"Return", None))
-#endif // QT_CONFIG(shortcut)
-        self.btnSalir.setText(QCoreApplication.translate("MainWindow", u"Salir", None))
-#if QT_CONFIG(shortcut)
-        self.btnSalir.setShortcut(QCoreApplication.translate("MainWindow", u"Esc", None))
-#endif // QT_CONFIG(shortcut)
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Contrase\u00f1a:", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Usuario:", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Articulos", None))
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Seleccionar articulo", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Nombre", None))
+        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Codigo", None))
+
+        self.btnBuscar.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
+#if QT_CONFIG(tooltip)
+        self.txtBuscar.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Inserte el dato para buscar</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
     # retranslateUi
 

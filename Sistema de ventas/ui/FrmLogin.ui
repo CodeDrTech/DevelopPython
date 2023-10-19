@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
-    background-color: var(--jade-50);
+    background-color: #deede3;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -46,14 +46,18 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel {
+     <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
 }</string>
     </property>
@@ -82,23 +86,21 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QGroupBox {
-    border: 2px solid var(--jade-500);
+    border: 2px solid #1e362d;
     border-radius: 8px;
     padding: 10px;
     background-color: var(--jade-50);
 }
 
 QGroupBox:title {
-    color: var(--jade-500);
+    color: #1e362d;
     subcontrol-origin: margin;
     subcontrol-position: top left;
     left: 10px;
     padding-left: 5px;
     padding-right: 5px;
     border: none;
-}
-
-</string>
+}</string>
     </property>
     <property name="title">
      <string>Acceso al Sistema</string>
@@ -115,9 +117,9 @@ QGroupBox:title {
      <property name="styleSheet">
       <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-200), stop: 1 var(--jade-500));
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid var(--jade-500);
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -125,16 +127,15 @@ QGroupBox:title {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-400), stop: 1 var(--jade-300));
-    border: 1px solid var(--jade-300);
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-700), stop: 1 var(--jade-600));
-    border: 1px solid var(--jade-600);
-}
-</string>
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
+}</string>
      </property>
      <property name="text">
       <string>Ingresar</string>
@@ -155,9 +156,9 @@ QPushButton:pressed {
      <property name="styleSheet">
       <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-200), stop: 1 var(--jade-500));
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid var(--jade-500);
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -165,16 +166,15 @@ QPushButton:pressed {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-400), stop: 1 var(--jade-300));
-    border: 1px solid var(--jade-300);
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-700), stop: 1 var(--jade-600));
-    border: 1px solid var(--jade-600);
-}
-</string>
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
+}</string>
      </property>
      <property name="text">
       <string>Salir</string>
@@ -193,34 +193,8 @@ QPushButton:pressed {
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget {
-    background-color: var(--jade-100);
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-200), stop: 1 var(--jade-500));
-    color: #ffffff;
-    border: 1px solid var(--jade-500);
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-400), stop: 1 var(--jade-300));
-    border: 1px solid var(--jade-300);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-700), stop: 1 var(--jade-600));
-    border: 1px solid var(--jade-600);
-}
-
-QLineEdit {
-    background-color: var(--jade-100);
+      <string notr="true">QLineEdit {
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -228,39 +202,18 @@ QLineEdit {
 }
 
 QLineEdit:hover {
-    border: 1px solid var(--jade-400);
+    border: 1px solid #689f84;
 }
 
 QLineEdit:focus {
-    border: 1px solid var(--jade-400);
+    border: 1px solid #689f84;
     outline: none;
 }
 
-QWidget {
-    background-color: var(--jade-100);
-}
-
-QLabel {
-    color: var(--jade-500);
-    font-size: 16px;
-    font-weight: bold;
-}
-
-QLineEdit {
-    background-color: var(--jade-100);
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: var(--jade-500);
-}
-
 QLineEdit::placeholder {
-    color: var(--jade-500);
+    color: #1e362d;
     font-weight: bold;
-}
-
-</string>
+}</string>
      </property>
      <property name="echoMode">
       <enum>QLineEdit::Password</enum>
@@ -276,34 +229,8 @@ QLineEdit::placeholder {
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget {
-    background-color: var(--jade-100);
-}
-
-QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-200), stop: 1 var(--jade-500));
-    color: #ffffff;
-    border: 1px solid var(--jade-500);
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-400), stop: 1 var(--jade-300));
-    border: 1px solid var(--jade-300);
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 var(--jade-700), stop: 1 var(--jade-600));
-    border: 1px solid var(--jade-600);
-}
-
-QLineEdit {
-    background-color: var(--jade-100);
+      <string notr="true">QLineEdit {
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -311,39 +238,18 @@ QLineEdit {
 }
 
 QLineEdit:hover {
-    border: 1px solid var(--jade-400);
+    border: 1px solid #689f84;
 }
 
 QLineEdit:focus {
-    border: 1px solid var(--jade-400);
+    border: 1px solid #689f84;
     outline: none;
 }
 
-QWidget {
-    background-color: var(--jade-100);
-}
-
-QLabel {
-    color: var(--jade-500);
-    font-size: 16px;
-    font-weight: bold;
-}
-
-QLineEdit {
-    background-color: var(--jade-100);
-    border: 1px solid #cccccc;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: var(--jade-500);
-}
-
 QLineEdit::placeholder {
-    color: var(--jade-500);
+    color: #1e362d;
     font-weight: bold;
-}
-
-</string>
+}</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_2">
@@ -406,27 +312,27 @@ QLabel {
     </property>
     <property name="styleSheet">
      <string notr="true">QTableView {
-    background-color: var(--jade-50);
+    background-color: #f2f7f4;
     border: 1px solid #cccccc;
-    selection-background-color: var(--jade-300);
+    selection-background-color: #96bfaa;
     selection-color: #ffffff;
 }
 
 QTableView QHeaderView {
-    background-color: var(--jade-200);
+    background-color: #c0dacb;
     color: #333333;
     border: none;
 }
 
 QTableView QHeaderView::section {
-    background-color: var(--jade-100);
+    background-color: #deede3;
     color: #333333;
     padding: 6px;
-    border: 1px solid var(--jade-500);
+    border: 1px solid #1e362d;
 }
 
 QTableView QHeaderView::section:checked {
-    background-color: var(--jade-300);
+    background-color: #96bfaa;
     color: #ffffff;
 }
 
@@ -435,21 +341,15 @@ QTableView::item {
 }
 
 QTableView::item:selected {
-    background-color: var(--jade-300);
+    background-color: #96bfaa;
     color: #ffffff;
 }
 
 QTableView::item:focus {
-    background-color: var(--jade-300);
+    background-color: #96bfaa;
     color: #ffffff;
     outline: none;
-}
-
-QTableView::item:hover {
-    background-color: var(--jade-100);
-    color: #333333;
-}
-</string>
+}</string>
     </property>
    </widget>
   </widget>

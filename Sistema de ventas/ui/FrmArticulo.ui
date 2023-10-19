@@ -18,7 +18,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
-    background-color: #dafeef;
+    background-color: #deede3;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -38,7 +38,11 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel {
+     <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
@@ -62,7 +66,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QTabWidget {
-    background-color: #dafeef;
+    background-color: #deede3;
     border: 1px solid #cccccc;
     border-radius: 4px;
 }
@@ -72,22 +76,22 @@ QTabWidget::tab-bar {
 }
 
 QTabWidget::tab {
-    background-color: #dafeef;
-    border: 1px solid #1acd81;
+    background-color: #deede3;
+    border: 1px solid #1e362d;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     padding: 6px 12px;
 }
 
 QTabWidget::tab:selected {
-    background-color: #b8fadd;
-    border: 1px solid #1acd81;
-    border-bottom: 1px solid #b8fadd;
+    background-color: #c0dacb;
+    border: 1px solid #1e362d;
+    border-bottom: 1px solid #c0dacb;
 }
 
 QTabWidget::pane {
-    background-color: #dafeef;
-    border: 1px solid #1acd81;
+    background-color: #deede3;
+    border: 1px solid #1e362d;
     border-top: none;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -116,7 +120,11 @@ QTabWidget::pane {
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QLabel {
+       <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
@@ -140,7 +148,7 @@ QTabWidget::pane {
       </property>
       <property name="styleSheet">
        <string notr="true">QLineEdit {
-    background-color: #dafeef;
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -148,16 +156,16 @@ QTabWidget::pane {
 }
 
 QLineEdit:hover {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
 }
 
 QLineEdit:focus {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
     outline: none;
 }
 
 QLineEdit::placeholder {
-    color: #1acd81;
+    color: #1e362d;
     font-weight: bold;
 }</string>
       </property>
@@ -174,9 +182,9 @@ QLineEdit::placeholder {
       <property name="styleSheet">
        <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #b8fadd, stop: 1 #1acd81);
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid #1acd81;
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -184,14 +192,14 @@ QLineEdit::placeholder {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #43e5a0, stop: 1 #81f4c3);
-    border: 1px solid #81f4c3;
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #108554, stop: 1 #0fa968);
-    border: 1px solid #0fa968;
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
 }</string>
       </property>
       <property name="text">
@@ -210,9 +218,9 @@ QPushButton:pressed {
       <property name="styleSheet">
        <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #b8fadd, stop: 1 #1acd81);
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid #1acd81;
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -220,14 +228,14 @@ QPushButton:pressed {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #43e5a0, stop: 1 #81f4c3);
-    border: 1px solid #81f4c3;
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #108554, stop: 1 #0fa968);
-    border: 1px solid #0fa968;
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
 }</string>
       </property>
       <property name="text">
@@ -245,27 +253,27 @@ QPushButton:pressed {
       </property>
       <property name="styleSheet">
        <string notr="true">QTableView {
-    background-color: #effef7;
+    background-color: #f2f7f4;
     border: 1px solid #cccccc;
-    selection-background-color: #81f4c3;
+    selection-background-color: #96bfaa;
     selection-color: #ffffff;
 }
 
 QTableView QHeaderView {
-    background-color: #b8fadd;
+    background-color: #c0dacb;
     color: #333333;
     border: none;
 }
 
 QTableView QHeaderView::section {
-    background-color: #dafeef;
+    background-color: #deede3;
     color: #333333;
     padding: 6px;
-    border: 1px solid #1acd81;
+    border: 1px solid #1e362d;
 }
 
 QTableView QHeaderView::section:checked {
-    background-color: #81f4c3;
+    background-color: #96bfaa;
     color: #ffffff;
 }
 
@@ -274,12 +282,12 @@ QTableView::item {
 }
 
 QTableView::item:selected {
-    background-color: #81f4c3;
+    background-color: #96bfaa;
     color: #ffffff;
 }
 
 QTableView::item:focus {
-    background-color: #81f4c3;
+    background-color: #96bfaa;
     color: #ffffff;
     outline: none;
 }</string>
@@ -301,21 +309,22 @@ QTableView::item:focus {
       </property>
       <property name="styleSheet">
        <string notr="true">QGroupBox {
-    border: 2px solid var(--jade-500);
+    border: 2px solid #1e362d;
     border-radius: 8px;
     padding: 10px;
     background-color: var(--jade-50);
 }
 
 QGroupBox:title {
-    color: var(--jade-500);
+    color: #1e362d;
     subcontrol-origin: margin;
     subcontrol-position: top left;
     left: 10px;
     padding-left: 5px;
     padding-right: 5px;
     border: none;
-}</string>
+}
+</string>
       </property>
       <property name="title">
        <string>Articulos</string>
@@ -330,7 +339,11 @@ QGroupBox:title {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel {
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
@@ -350,7 +363,11 @@ QGroupBox:title {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel {
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
@@ -370,7 +387,11 @@ QGroupBox:title {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel {
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
@@ -392,9 +413,9 @@ QGroupBox:title {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #b8fadd, stop: 1 #1acd81);
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid #1acd81;
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -402,14 +423,14 @@ QGroupBox:title {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #43e5a0, stop: 1 #81f4c3);
-    border: 1px solid #81f4c3;
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #108554, stop: 1 #0fa968);
-    border: 1px solid #0fa968;
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
 }</string>
        </property>
        <property name="text">
@@ -428,9 +449,9 @@ QPushButton:pressed {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #b8fadd, stop: 1 #1acd81);
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid #1acd81;
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -438,14 +459,14 @@ QPushButton:pressed {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #43e5a0, stop: 1 #81f4c3);
-    border: 1px solid #81f4c3;
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #108554, stop: 1 #0fa968);
-    border: 1px solid #0fa968;
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
 }</string>
        </property>
        <property name="text">
@@ -466,7 +487,7 @@ QPushButton:pressed {
        </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-    background-color: #dafeef;
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -474,16 +495,16 @@ QPushButton:pressed {
 }
 
 QLineEdit:hover {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
 }
 
 QLineEdit:focus {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
     outline: none;
 }
 
 QLineEdit::placeholder {
-    color: #1acd81;
+    color: #1e362d;
     font-weight: bold;
 }</string>
        </property>
@@ -502,7 +523,7 @@ QLineEdit::placeholder {
        </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-    background-color: #dafeef;
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -510,16 +531,16 @@ QLineEdit::placeholder {
 }
 
 QLineEdit:hover {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
 }
 
 QLineEdit:focus {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
     outline: none;
 }
 
 QLineEdit::placeholder {
-    color: #1acd81;
+    color: #1e362d;
     font-weight: bold;
 }</string>
        </property>
@@ -535,7 +556,7 @@ QLineEdit::placeholder {
        </property>
        <property name="styleSheet">
         <string notr="true">QTextEdit {
-    background-color: #dafeef;
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -543,11 +564,11 @@ QLineEdit::placeholder {
 }
 
 QTextEdit:hover {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
 }
 
 QTextEdit:focus {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
     outline: none;
 }</string>
        </property>
@@ -563,7 +584,7 @@ QTextEdit:focus {
        </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-    background-color: #dafeef;
+    background-color: #deede3;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -571,16 +592,16 @@ QTextEdit:focus {
 }
 
 QLineEdit:hover {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
 }
 
 QLineEdit:focus {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
     outline: none;
 }
 
 QLineEdit::placeholder {
-    color: #1acd81;
+    color: #1e362d;
     font-weight: bold;
 }</string>
        </property>
@@ -598,7 +619,11 @@ QLineEdit::placeholder {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel {
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
@@ -622,7 +647,7 @@ QLineEdit::placeholder {
        </property>
        <property name="styleSheet">
         <string notr="true">QGraphicsView {
-    background-color: #effef7;
+    background-color: #f2f7f4;
     border: 1px solid #cccccc;
 }</string>
        </property>
@@ -639,9 +664,9 @@ QLineEdit::placeholder {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #b8fadd, stop: 1 #1acd81);
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid #1acd81;
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -649,14 +674,14 @@ QLineEdit::placeholder {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #43e5a0, stop: 1 #81f4c3);
-    border: 1px solid #81f4c3;
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #108554, stop: 1 #0fa968);
-    border: 1px solid #0fa968;
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
 }</string>
        </property>
        <property name="text">
@@ -675,9 +700,9 @@ QPushButton:pressed {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #b8fadd, stop: 1 #1acd81);
+                                 stop: 0 #c0dacb, stop: 1 #1e362d);
     color: #ffffff;
-    border: 1px solid #1acd81;
+    border: 1px solid #1e362d;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
@@ -685,14 +710,14 @@ QPushButton:pressed {
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #43e5a0, stop: 1 #81f4c3);
-    border: 1px solid #81f4c3;
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
 }
 
 QPushButton:pressed {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #108554, stop: 1 #0fa968);
-    border: 1px solid #0fa968;
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
 }</string>
        </property>
        <property name="text">
@@ -777,7 +802,11 @@ QComboBox::placeholder {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel {
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;
@@ -797,7 +826,11 @@ QComboBox::placeholder {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel {
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
     color: var(--jade-500);
     font-size: 16px;
     font-weight: bold;

@@ -42,6 +42,11 @@ class VentanaCliente(QMainWindow):
         groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox.setGraphicsEffect(groupBox_shadow)
         
+        groupBox_shadow = QGraphicsDropShadowEffect()
+        groupBox_shadow.setBlurRadius(20)
+        groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox_2.setGraphicsEffect(groupBox_shadow)
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
     def buscar_clientes(self):
