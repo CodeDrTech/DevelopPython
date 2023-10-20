@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>558</width>
-    <height>266</height>
+    <width>567</width>
+    <height>306</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
    <widget class="QDateTimeEdit" name="txtFecha">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>420</x>
       <y>20</y>
       <width>121</width>
       <height>25</height>
@@ -38,15 +38,15 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>10</y>
+      <x>210</x>
+      <y>30</y>
       <width>191</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -80,8 +80,8 @@ QLabel {
      <rect>
       <x>210</x>
       <y>60</y>
-      <width>321</width>
-      <height>161</height>
+      <width>331</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -103,13 +103,13 @@ QGroupBox:title {
 }</string>
     </property>
     <property name="title">
-     <string>Acceso al Sistema</string>
+     <string/>
     </property>
     <widget class="QPushButton" name="btnIngresar">
      <property name="geometry">
       <rect>
-       <x>113</x>
-       <y>110</y>
+       <x>120</x>
+       <y>140</y>
        <width>85</width>
        <height>37</height>
       </rect>
@@ -147,8 +147,8 @@ QPushButton:pressed {
     <widget class="QPushButton" name="btnSalir">
      <property name="geometry">
       <rect>
-       <x>210</x>
-       <y>110</y>
+       <x>217</x>
+       <y>140</y>
        <width>85</width>
        <height>37</height>
       </rect>
@@ -186,8 +186,8 @@ QPushButton:pressed {
     <widget class="QLineEdit" name="txtPassword">
      <property name="geometry">
       <rect>
-       <x>113</x>
-       <y>70</y>
+       <x>120</x>
+       <y>90</y>
        <width>181</width>
        <height>35</height>
       </rect>
@@ -222,7 +222,7 @@ QLineEdit::placeholder {
     <widget class="QLineEdit" name="txtUsuario">
      <property name="geometry">
       <rect>
-       <x>113</x>
+       <x>120</x>
        <y>30</y>
        <width>181</width>
        <height>35</height>
@@ -256,7 +256,7 @@ QLineEdit::placeholder {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>100</y>
        <width>101</width>
        <height>21</height>
       </rect>

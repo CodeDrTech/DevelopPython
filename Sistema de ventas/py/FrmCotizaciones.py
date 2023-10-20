@@ -20,17 +20,7 @@ class VentanaCotizaciones(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
-        # Crear un efecto de sombra y aplicarlo a los QTableView
-        shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(20)
-        shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))
-        self.tbDatos.setGraphicsEffect(shadow)      
-        
-        tbDetalleIngreso_shadow = QGraphicsDropShadowEffect()
-        tbDetalleIngreso_shadow.setBlurRadius(20)
-        tbDetalleIngreso_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
-        self.tbDatos2.setGraphicsEffect(tbDetalleIngreso_shadow)
-        
+        # Crear un efecto de sombra        
         tabWidget_shadow = QGraphicsDropShadowEffect()
         tabWidget_shadow.setBlurRadius(20)
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        

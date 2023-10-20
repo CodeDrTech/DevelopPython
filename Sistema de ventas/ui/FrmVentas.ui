@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -286,7 +286,7 @@ QLineEdit::placeholder {
        </property>
        <property name="font">
         <font>
-         <pointsize>1</pointsize>
+         <pointsize>-1</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -387,7 +387,7 @@ QDateEdit:focus {
        </property>
        <property name="font">
         <font>
-         <pointsize>1</pointsize>
+         <pointsize>-1</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -417,7 +417,7 @@ QLabel {
        </property>
        <property name="font">
         <font>
-         <pointsize>1</pointsize>
+         <pointsize>-1</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -1596,6 +1596,30 @@ QLineEdit::placeholder {
        </property>
        <property name="readOnly">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>285</x>
+         <y>30</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
+    color: var(--jade-500);
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+       </property>
+       <property name="text">
+        <string>Codigo</string>
        </property>
       </widget>
      </widget>

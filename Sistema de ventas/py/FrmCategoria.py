@@ -20,12 +20,7 @@ class VentanaCategoria(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
         
         
-        # Crear un efecto de sombra y aplicarlo a los QTableView
-        shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(20)
-        shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))
-        self.tbDatos.setGraphicsEffect(shadow)
-        
+        # Crear un efecto de sombra        
         tabWidget_shadow = QGraphicsDropShadowEffect()
         tabWidget_shadow.setBlurRadius(20)
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
@@ -35,6 +30,11 @@ class VentanaCategoria(QMainWindow):
         groupBox_shadow.setBlurRadius(20)
         groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox.setGraphicsEffect(groupBox_shadow)
+
+        groupBox_2shadow = QGraphicsDropShadowEffect()
+        groupBox_2shadow.setBlurRadius(20)
+        groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox_2.setGraphicsEffect(groupBox_2shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
