@@ -46,6 +46,7 @@ class VentanaCotizaciones(QMainWindow):
         self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
         
         self.cmbArticulo.currentIndexChanged.connect(self.cargar_precios_venta)
+        self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -135,7 +136,7 @@ class VentanaCotizaciones(QMainWindow):
 
             self.txtStock.setText(str(stock_disponible)) 
         else:
-            self.txtStock.setText("Sin existencia")
+            self.txtStock.setText("0")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):

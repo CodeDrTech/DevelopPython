@@ -584,7 +584,7 @@ class Ui_MainWindow(object):
 "}")
         self.txtFechaVenc = QDateEdit(self.groupBox_2)
         self.txtFechaVenc.setObjectName(u"txtFechaVenc")
-        self.txtFechaVenc.setGeometry(QRect(650, 80, 91, 35))
+        self.txtFechaVenc.setGeometry(QRect(650, 80, 120, 35))
         self.txtFechaVenc.setAcceptDrops(False)
         self.txtFechaVenc.setStyleSheet(u"/* Estilos para QDateEdit */\n"
 "QDateEdit {\n"
@@ -768,6 +768,7 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
+        self.txtStock.setReadOnly(True)
         self.label_22 = QLabel(self.groupBox_2)
         self.label_22.setObjectName(u"label_22")
         self.label_22.setGeometry(QRect(180, 150, 41, 21))
@@ -783,7 +784,7 @@ class Ui_MainWindow(object):
 "")
         self.txtDescuento = QLineEdit(self.groupBox_2)
         self.txtDescuento.setObjectName(u"txtDescuento")
-        self.txtDescuento.setGeometry(QRect(650, 140, 91, 35))
+        self.txtDescuento.setGeometry(QRect(650, 140, 120, 35))
         self.txtDescuento.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
@@ -807,7 +808,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnAgrgar = QPushButton(self.groupBox_2)
         self.btnAgrgar.setObjectName(u"btnAgrgar")
-        self.btnAgrgar.setGeometry(QRect(840, 80, 21, 37))
+        self.btnAgrgar.setGeometry(QRect(860, 80, 21, 37))
         self.btnAgrgar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
@@ -839,7 +840,7 @@ class Ui_MainWindow(object):
         self.btnAgrgar.setIcon(icon)
         self.btnQuitar = QPushButton(self.groupBox_2)
         self.btnQuitar.setObjectName(u"btnQuitar")
-        self.btnQuitar.setGeometry(QRect(840, 140, 21, 37))
+        self.btnQuitar.setGeometry(QRect(860, 140, 21, 37))
         self.btnQuitar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
@@ -903,7 +904,7 @@ class Ui_MainWindow(object):
 "")
         self.label_23 = QLabel(self.groupBox_2)
         self.label_23.setObjectName(u"label_23")
-        self.label_23.setGeometry(QRect(760, 90, 71, 21))
+        self.label_23.setGeometry(QRect(780, 90, 71, 21))
         self.label_23.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -916,7 +917,7 @@ class Ui_MainWindow(object):
 "")
         self.label_24 = QLabel(self.groupBox_2)
         self.label_24.setObjectName(u"label_24")
-        self.label_24.setGeometry(QRect(770, 150, 61, 21))
+        self.label_24.setGeometry(QRect(790, 150, 61, 21))
         self.label_24.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
