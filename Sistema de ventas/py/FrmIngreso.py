@@ -142,30 +142,43 @@ class VentanaIngresoAlmacen(QMainWindow):
         # Obtener el índice de la fila seleccionada
         indexes = self.tbIngreso.selectedIndexes()
         
-        if indexes:
-            
-            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla
-            index = indexes[0]
-            row = index.row()
-            
-            self.obtener_datos_de_fila_ingresos(row)
-            idingreso = self.valor_columna_id
-            
-            
-            
-            # Preguntar si el usuario está seguro de inhabilitar el ingreso de la fila seleccionada
-            confirmacion = QMessageBox.question(self, "INHABILITAR?", "¿ESTAS SEGURO QUE QUIERE INHABILITAR ESTE INGRESO?",
-                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-            
-            
-            # Si el usuario hace clic en el botón "Sí", inhabilita el ingreso
-            if confirmacion == QMessageBox.Yes:
-                anular_ingreso(idingreso)
-                QMessageBox.warning(self, "INHABILITADO", "INGRESO INHABILITADO.")
-                self.buscar_ingresos()
-        else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
-            
+        estado = self.cmbEstado.currentText()
+        try:
+            if indexes:
+                
+                # Obtener el numero (int) de la fila al seleccionar una celda de la tabla
+                index = indexes[0]
+                row = index.row()
+                
+                self.obtener_datos_de_fila_ingresos(row)
+                idingreso = self.valor_columna_id
+                
+                # Si el ComboBox Estado esta inactivo avisa al usuario con este mensaje
+                if estado == "Inactivo":
+                    QMessageBox.warning(self, "ERROR", "ESTE INGRESO YA ESTA INACTIVO.")
+                    return
+                
+                # Preguntar si el usuario está seguro de inhabilitar el ingreso de la fila seleccionada
+                confirmacion = QMessageBox.question(self, "INHABILITAR?", "¿ESTAS SEGURO QUE QUIERE INHABILITAR ESTE INGRESO?",
+                                                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                
+                
+                # Si el usuario hace clic en el botón "Sí", inhabilita el ingreso
+                if confirmacion == QMessageBox.Yes:
+                    anular_ingreso(idingreso)
+                    QMessageBox.warning(self, "INHABILITADO", "INGRESO INHABILITADO.")
+                    self.buscar_ingresos()
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
+        except Exception as e:
+            # Mensaje de error
+            mensaje_error = QMessageBox()
+            mensaje_error.setWindowTitle("Ingreso sin articulos")
+            mensaje_error.setText(f"No puedes desactivar un ingreso que no tiene articulos")
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.exec()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------    
         # Pasando como parametro el numero de fila, obtengo el id del ingreso
     def obtener_datos_de_fila_ingresos(self, num_fila):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
@@ -485,7 +498,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
         estado = self.cmbEstado.currentText()
         buscar_nombre = self.txtBuscar.text()
-
+        
         if not buscar_nombre:
             if FechaInicio > FechaFinal:
                     QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")                
@@ -514,14 +527,14 @@ class VentanaIngresoAlmacen(QMainWindow):
                                 UNION ALL\
                                 SELECT \
                                     i.idingreso as 'CODIGO',\
-                                    'ARTICULO ELIMINADO' AS ARTICULO,\
+                                    'SIN ARTICULO' AS ARTICULO,\
                                     '0' AS 'PRECIO DE COMPRA',\
                                     '0' AS 'PRECIO DE VENTA',\
                                     '0' AS 'PRECIO DE VENTA 2',\
                                     '0' AS 'PRECIO DE VENTA 3',\
                                     '0' AS 'CANTIDAD',\
                                     UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                                    'ELIMINADO' AS 'COMPROBANTE',\
+                                    '0' AS 'COMPROBANTE',\
                                     '0' AS 'NUM COMPROBANTE',\
                                     '0' AS 'IMPUESTO',\
                                     'Inactivo' AS 'ESTADO',\
@@ -568,14 +581,14 @@ class VentanaIngresoAlmacen(QMainWindow):
                                 UNION ALL\
                                 SELECT \
                                     i.idingreso as 'CODIGO',\
-                                    'ARTICULO ELIMINADO' AS ARTICULO,\
+                                    'SIN ARTICULO' AS ARTICULO,\
                                     '0' AS 'PRECIO DE COMPRA',\
                                     '0' AS 'PRECIO DE VENTA',\
                                     '0' AS 'PRECIO DE VENTA 2',\
                                     '0' AS 'PRECIO DE VENTA 3',\
                                     '0' AS 'CANTIDAD',\
                                     UPPER(FORMAT(i.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                                    'ELIMINADO' AS 'COMPROBANTE',\
+                                    '0' AS 'COMPROBANTE',\
                                     '0' AS 'NUM COMPROBANTE',\
                                     '0' AS 'IMPUESTO',\
                                     'Inactivo' AS 'ESTADO',\
@@ -595,10 +608,10 @@ class VentanaIngresoAlmacen(QMainWindow):
                 self.tbIngreso.resizeColumnsToContents()
                 self.tbIngreso.setEditTriggers(QAbstractItemView.NoEditTriggers)
                 
-        if estado == "Inactivo":
-            self.btnAnular.setEnabled(False)
-        else:
-            self.btnAnular.setEnabled(True)
+        #if estado == "Inactivo":
+            #self.btnAnular.setEnabled(False)
+        #else:
+            #self.btnAnular.setEnabled(True)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos_detalles(self):

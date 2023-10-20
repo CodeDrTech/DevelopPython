@@ -84,6 +84,7 @@ class Ui_MainWindow(object):
         self.lblUsuario.setObjectName(u"lblUsuario")
         self.lblUsuario.setGeometry(QRect(10, 0, 121, 21))
         font = QFont()
+        font.setPointSize(1)
         font.setBold(True)
         self.lblUsuario.setFont(font)
         self.lblUsuario.setStyleSheet(u"QWidget {\n"

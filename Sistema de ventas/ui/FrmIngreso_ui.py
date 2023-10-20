@@ -1015,7 +1015,7 @@ class Ui_MainWindow(object):
 "}")
         self.tbDetalleIngreso = QTableView(self.groupBox)
         self.tbDetalleIngreso.setObjectName(u"tbDetalleIngreso")
-        self.tbDetalleIngreso.setGeometry(QRect(20, 380, 891, 221))
+        self.tbDetalleIngreso.setGeometry(QRect(15, 380, 891, 221))
         self.tbDetalleIngreso.setStyleSheet(u"QTableView {\n"
 "    background-color: #f2f7f4;\n"
 "    border: 1px solid #cccccc;\n"
@@ -1116,6 +1116,18 @@ class Ui_MainWindow(object):
 "    font-weight: bold;\n"
 "}")
         self.txtIdProveedor.setReadOnly(True)
+        self.label_4 = QLabel(self.groupBox)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setGeometry(QRect(285, 30, 55, 21))
+        self.label_4.setStyleSheet(u"QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
         self.tabWidget.addTab(self.tab_2, "")
         self.tbSesiones = QTableView(self.centralwidget)
         self.tbSesiones.setObjectName(u"tbSesiones")
@@ -1197,6 +1209,7 @@ class Ui_MainWindow(object):
         self.label_27.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Itbis", None))
         self.txtItbis.setText("")
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Mantenimiento", None))
     # retranslateUi
 

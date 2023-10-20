@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setWindowModality(Qt.NonModal)
-        MainWindow.resize(961, 628)
+        MainWindow.resize(1019, 658)
         MainWindow.setStyleSheet(u"QWidget {\n"
 "    background-color: #deede3;\n"
 "}")
@@ -48,7 +48,7 @@ class Ui_MainWindow(object):
 "}")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(10, 30, 931, 551))
+        self.tabWidget.setGeometry(QRect(10, 30, 981, 581))
         self.tabWidget.setStyleSheet(u"QTabWidget {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -82,9 +82,29 @@ class Ui_MainWindow(object):
 "}")
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
-        self.label_2 = QLabel(self.tab)
+        self.groupBox_2 = QGroupBox(self.tab)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.groupBox_2.setGeometry(QRect(20, 10, 931, 521))
+        self.groupBox_2.setStyleSheet(u"QGroupBox {\n"
+"    border: 2px solid #1e362d;\n"
+"    border-radius: 8px;\n"
+"    padding: 10px;\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QGroupBox:title {\n"
+"    color: #1e362d;\n"
+"    subcontrol-origin: margin;\n"
+"    subcontrol-position: top left;\n"
+"    left: 10px;\n"
+"    padding-left: 5px;\n"
+"    padding-right: 5px;\n"
+"    border: none;\n"
+"}\n"
+"")
+        self.label_2 = QLabel(self.groupBox_2)
         self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(10, 0, 73, 27))
+        self.label_2.setGeometry(QRect(15, 20, 73, 27))
         self.label_2.setFont(font)
         self.label_2.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
@@ -95,9 +115,9 @@ class Ui_MainWindow(object):
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
 "}")
-        self.txtBuscar = QLineEdit(self.tab)
+        self.txtBuscar = QLineEdit(self.groupBox_2)
         self.txtBuscar.setObjectName(u"txtBuscar")
-        self.txtBuscar.setGeometry(QRect(90, 5, 120, 35))
+        self.txtBuscar.setGeometry(QRect(100, 20, 120, 35))
         self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -119,9 +139,9 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
-        self.btnBuscar = QPushButton(self.tab)
+        self.btnBuscar = QPushButton(self.groupBox_2)
         self.btnBuscar.setObjectName(u"btnBuscar")
-        self.btnBuscar.setGeometry(QRect(220, 5, 85, 37))
+        self.btnBuscar.setGeometry(QRect(240, 20, 85, 37))
         self.btnBuscar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -143,9 +163,9 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnImprimir = QPushButton(self.tab)
+        self.btnImprimir = QPushButton(self.groupBox_2)
         self.btnImprimir.setObjectName(u"btnImprimir")
-        self.btnImprimir.setGeometry(QRect(310, 5, 85, 37))
+        self.btnImprimir.setGeometry(QRect(340, 20, 85, 37))
         self.btnImprimir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -167,9 +187,9 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.tbDatos = QTableView(self.tab)
+        self.tbDatos = QTableView(self.groupBox_2)
         self.tbDatos.setObjectName(u"tbDatos")
-        self.tbDatos.setGeometry(QRect(10, 70, 891, 421))
+        self.tbDatos.setGeometry(QRect(15, 70, 891, 421))
         self.tbDatos.setStyleSheet(u"QTableView {\n"
 "    background-color: #f2f7f4;\n"
 "    border: 1px solid #cccccc;\n"
@@ -214,7 +234,7 @@ class Ui_MainWindow(object):
         self.tab_2.setObjectName(u"tab_2")
         self.groupBox = QGroupBox(self.tab_2)
         self.groupBox.setObjectName(u"groupBox")
-        self.groupBox.setGeometry(QRect(10, 20, 891, 471))
+        self.groupBox.setGeometry(QRect(10, 20, 721, 351))
         self.groupBox.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #1e362d;\n"
 "    border-radius: 8px;\n"
@@ -234,7 +254,7 @@ class Ui_MainWindow(object):
 "")
         self.label_3 = QLabel(self.groupBox)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(10, 30, 55, 21))
+        self.label_3.setGeometry(QRect(10, 40, 61, 21))
         self.label_3.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -246,7 +266,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_4 = QLabel(self.groupBox)
         self.label_4.setObjectName(u"label_4")
-        self.label_4.setGeometry(QRect(10, 110, 63, 21))
+        self.label_4.setGeometry(QRect(10, 160, 63, 21))
         self.label_4.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -258,7 +278,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_5 = QLabel(self.groupBox)
         self.label_5.setObjectName(u"label_5")
-        self.label_5.setGeometry(QRect(10, 150, 101, 21))
+        self.label_5.setGeometry(QRect(10, 240, 101, 21))
         self.label_5.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -270,7 +290,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnEditar = QPushButton(self.groupBox)
         self.btnEditar.setObjectName(u"btnEditar")
-        self.btnEditar.setGeometry(QRect(220, 240, 85, 37))
+        self.btnEditar.setGeometry(QRect(220, 290, 85, 37))
         self.btnEditar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -294,7 +314,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnGuardar = QPushButton(self.groupBox)
         self.btnGuardar.setObjectName(u"btnGuardar")
-        self.btnGuardar.setGeometry(QRect(130, 240, 85, 37))
+        self.btnGuardar.setGeometry(QRect(120, 290, 85, 37))
         self.btnGuardar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -318,7 +338,7 @@ class Ui_MainWindow(object):
 "}")
         self.txtCodigo = QLineEdit(self.groupBox)
         self.txtCodigo.setObjectName(u"txtCodigo")
-        self.txtCodigo.setGeometry(QRect(130, 30, 120, 35))
+        self.txtCodigo.setGeometry(QRect(120, 30, 120, 35))
         self.txtCodigo.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -343,7 +363,7 @@ class Ui_MainWindow(object):
         self.txtCodigo.setReadOnly(True)
         self.txtNombre = QLineEdit(self.groupBox)
         self.txtNombre.setObjectName(u"txtNombre")
-        self.txtNombre.setGeometry(QRect(130, 110, 221, 35))
+        self.txtNombre.setGeometry(QRect(120, 150, 221, 35))
         self.txtNombre.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -367,7 +387,7 @@ class Ui_MainWindow(object):
 "}")
         self.txtDescripcion = QTextEdit(self.groupBox)
         self.txtDescripcion.setObjectName(u"txtDescripcion")
-        self.txtDescripcion.setGeometry(QRect(130, 150, 221, 51))
+        self.txtDescripcion.setGeometry(QRect(120, 210, 221, 51))
         self.txtDescripcion.setStyleSheet(u"QTextEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -386,7 +406,7 @@ class Ui_MainWindow(object):
 "}")
         self.txtCodVenta = QLineEdit(self.groupBox)
         self.txtCodVenta.setObjectName(u"txtCodVenta")
-        self.txtCodVenta.setGeometry(QRect(130, 70, 120, 35))
+        self.txtCodVenta.setGeometry(QRect(120, 90, 120, 35))
         self.txtCodVenta.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -411,7 +431,7 @@ class Ui_MainWindow(object):
         self.txtCodVenta.setReadOnly(True)
         self.label_6 = QLabel(self.groupBox)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setGeometry(QRect(10, 70, 101, 21))
+        self.label_6.setGeometry(QRect(10, 100, 101, 21))
         self.label_6.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -423,14 +443,14 @@ class Ui_MainWindow(object):
 "}")
         self.gFoto = QGraphicsView(self.groupBox)
         self.gFoto.setObjectName(u"gFoto")
-        self.gFoto.setGeometry(QRect(360, 150, 201, 171))
+        self.gFoto.setGeometry(QRect(365, 150, 211, 181))
         self.gFoto.setStyleSheet(u"QGraphicsView {\n"
 "    background-color: #f2f7f4;\n"
 "    border: 1px solid #cccccc;\n"
 "}")
         self.btnCargar = QPushButton(self.groupBox)
         self.btnCargar.setObjectName(u"btnCargar")
-        self.btnCargar.setGeometry(QRect(565, 150, 85, 31))
+        self.btnCargar.setGeometry(QRect(600, 150, 85, 31))
         self.btnCargar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -454,7 +474,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnLimpiar = QPushButton(self.groupBox)
         self.btnLimpiar.setObjectName(u"btnLimpiar")
-        self.btnLimpiar.setGeometry(QRect(565, 190, 85, 31))
+        self.btnLimpiar.setGeometry(QRect(600, 190, 85, 31))
         self.btnLimpiar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -478,7 +498,7 @@ class Ui_MainWindow(object):
 "}")
         self.cmbPresentacion = QComboBox(self.groupBox)
         self.cmbPresentacion.setObjectName(u"cmbPresentacion")
-        self.cmbPresentacion.setGeometry(QRect(550, 70, 100, 25))
+        self.cmbPresentacion.setGeometry(QRect(580, 90, 100, 25))
         self.cmbPresentacion.setStyleSheet(u"QComboBox {\n"
 "    background-color: #dafeef;\n"
 "    border: 1px solid #cccccc;\n"
@@ -503,7 +523,7 @@ class Ui_MainWindow(object):
 "")
         self.cmbCategoria = QComboBox(self.groupBox)
         self.cmbCategoria.setObjectName(u"cmbCategoria")
-        self.cmbCategoria.setGeometry(QRect(550, 30, 100, 25))
+        self.cmbCategoria.setGeometry(QRect(580, 30, 100, 25))
         self.cmbCategoria.setStyleSheet(u"QComboBox {\n"
 "    background-color: #dafeef;\n"
 "    border: 1px solid #cccccc;\n"
@@ -528,7 +548,7 @@ class Ui_MainWindow(object):
 "")
         self.label_7 = QLabel(self.groupBox)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setGeometry(QRect(465, 30, 81, 21))
+        self.label_7.setGeometry(QRect(480, 30, 81, 21))
         self.label_7.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -540,7 +560,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_9 = QLabel(self.groupBox)
         self.label_9.setObjectName(u"label_9")
-        self.label_9.setGeometry(QRect(440, 70, 111, 21))
+        self.label_9.setGeometry(QRect(460, 90, 111, 21))
         self.label_9.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -570,6 +590,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.tabWidget.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.groupBox_2.setTitle("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
 #if QT_CONFIG(tooltip)
         self.txtBuscar.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Inserte el nombre del articulo</p></body></html>", None))
@@ -577,7 +598,7 @@ class Ui_MainWindow(object):
         self.btnBuscar.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
         self.btnImprimir.setText(QCoreApplication.translate("MainWindow", u"Imprimir", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Listado", None))
-        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Articulos", None))
+        self.groupBox.setTitle("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Descripcion", None))

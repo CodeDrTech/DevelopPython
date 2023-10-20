@@ -677,7 +677,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_11 = QLabel(self.groupBox)
         self.label_11.setObjectName(u"label_11")
-        self.label_11.setGeometry(QRect(270, 160, 158, 21))
+        self.label_11.setGeometry(QRect(270, 160, 171, 21))
         self.label_11.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"

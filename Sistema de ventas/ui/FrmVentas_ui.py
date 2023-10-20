@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'FrmCotizacion.ui'
+## Form generated from reading UI file 'FrmVentas.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.5.2
 ##
@@ -26,15 +26,14 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setWindowModality(Qt.NonModal)
         MainWindow.resize(999, 769)
-        MainWindow.setStyleSheet(u"/* Estilos comunes para varios controles */\n"
-"QWidget {\n"
+        MainWindow.setStyleSheet(u"QWidget {\n"
 "    background-color: #deede3;\n"
 "}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(20, 0, 111, 21))
+        self.label.setGeometry(QRect(20, 0, 61, 21))
         font = QFont()
         font.setBold(True)
         self.label.setFont(font)
@@ -46,8 +45,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setGeometry(QRect(10, 30, 961, 691))
@@ -103,48 +101,10 @@ class Ui_MainWindow(object):
 "    padding-right: 5px;\n"
 "    border: none;\n"
 "}")
-        self.label_2 = QLabel(self.groupBox_3)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(25, 30, 73, 27))
-        self.label_2.setFont(font)
-        self.label_2.setStyleSheet(u"QWidget {\n"
-"    background-color: var(--jade-50);\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"    color: var(--jade-500);\n"
-"    font-size: 16px;\n"
-"    font-weight: bold;\n"
-"}\n"
-"")
-        self.txtBuscar = QLineEdit(self.groupBox_3)
-        self.txtBuscar.setObjectName(u"txtBuscar")
-        self.txtBuscar.setGeometry(QRect(100, 20, 120, 35))
-        self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
-"    border: 1px solid #cccccc;\n"
-"    padding: 6px;\n"
-"    border-radius: 4px;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #689f84;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 1px solid #689f84;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QLineEdit::placeholder {\n"
-"    color: #1e362d;\n"
-"    font-weight: bold;\n"
-"}")
-        self.btnBuscar = QPushButton(self.groupBox_3)
-        self.btnBuscar.setObjectName(u"btnBuscar")
-        self.btnBuscar.setGeometry(QRect(235, 20, 85, 37))
-        self.btnBuscar.setStyleSheet(u"QPushButton {\n"
+        self.btnImprimir = QPushButton(self.groupBox_3)
+        self.btnImprimir.setObjectName(u"btnImprimir")
+        self.btnImprimir.setGeometry(QRect(425, 20, 85, 37))
+        self.btnImprimir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
 "    color: #ffffff;\n"
@@ -189,10 +149,10 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnImprimir = QPushButton(self.groupBox_3)
-        self.btnImprimir.setObjectName(u"btnImprimir")
-        self.btnImprimir.setGeometry(QRect(425, 20, 85, 37))
-        self.btnImprimir.setStyleSheet(u"QPushButton {\n"
+        self.btnBuscar = QPushButton(self.groupBox_3)
+        self.btnBuscar.setObjectName(u"btnBuscar")
+        self.btnBuscar.setGeometry(QRect(235, 20, 85, 37))
+        self.btnBuscar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
 "    color: #ffffff;\n"
@@ -213,11 +173,47 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
+        self.txtBuscar = QLineEdit(self.groupBox_3)
+        self.txtBuscar.setObjectName(u"txtBuscar")
+        self.txtBuscar.setGeometry(QRect(100, 20, 120, 35))
+        self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
+"    background-color: #deede3;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_2 = QLabel(self.groupBox_3)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setGeometry(QRect(25, 30, 73, 27))
+        self.label_2.setFont(font)
+        self.label_2.setStyleSheet(u"QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
         self.txtFechaFin = QDateEdit(self.groupBox_3)
         self.txtFechaFin.setObjectName(u"txtFechaFin")
         self.txtFechaFin.setGeometry(QRect(145, 100, 110, 30))
-        self.txtFechaFin.setStyleSheet(u"/* Estilos para QDateEdit */\n"
-"QDateEdit {\n"
+        self.txtFechaFin.setStyleSheet(u"QDateEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    border-radius: 4px;\n"
@@ -239,8 +235,7 @@ class Ui_MainWindow(object):
         self.txtFechaInicio.setObjectName(u"txtFechaInicio")
         self.txtFechaInicio.setGeometry(QRect(20, 100, 110, 30))
         self.txtFechaInicio.setAcceptDrops(False)
-        self.txtFechaInicio.setStyleSheet(u"/* Estilos para QDateEdit */\n"
-"QDateEdit {\n"
+        self.txtFechaInicio.setStyleSheet(u"QDateEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    border-radius: 4px;\n"
@@ -270,8 +265,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.label_10 = QLabel(self.groupBox_3)
         self.label_10.setObjectName(u"label_10")
         self.label_10.setGeometry(QRect(25, 70, 101, 21))
@@ -284,8 +278,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.tbDatos = QTableView(self.groupBox_3)
         self.tbDatos.setObjectName(u"tbDatos")
         self.tbDatos.setGeometry(QRect(20, 150, 871, 451))
@@ -352,7 +345,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_3 = QLabel(self.groupBox)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(20, 70, 55, 21))
+        self.label_3.setGeometry(QRect(20, 70, 61, 21))
         self.label_3.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -361,8 +354,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.btnAgregar = QPushButton(self.groupBox)
         self.btnAgregar.setObjectName(u"btnAgregar")
         self.btnAgregar.setGeometry(QRect(820, 110, 85, 37))
@@ -423,14 +415,12 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.txtFecha = QDateEdit(self.groupBox)
         self.txtFecha.setObjectName(u"txtFecha")
         self.txtFecha.setGeometry(QRect(670, 60, 120, 35))
         self.txtFecha.setAcceptDrops(False)
-        self.txtFecha.setStyleSheet(u"/* Estilos para QDateEdit */\n"
-"QDateEdit {\n"
+        self.txtFecha.setStyleSheet(u"QDateEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    border-radius: 4px;\n"
@@ -459,14 +449,15 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.cmbComprobante = QComboBox(self.groupBox)
+        self.cmbComprobante.addItem("")
+        self.cmbComprobante.addItem("")
+        self.cmbComprobante.addItem("")
         self.cmbComprobante.addItem("")
         self.cmbComprobante.setObjectName(u"cmbComprobante")
         self.cmbComprobante.setGeometry(QRect(135, 110, 120, 35))
-        self.cmbComprobante.setStyleSheet(u"/* Estilos para QComboBox */\n"
-"QComboBox {\n"
+        self.cmbComprobante.setStyleSheet(u"QComboBox {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
@@ -490,8 +481,7 @@ class Ui_MainWindow(object):
         self.cmbCliente = QComboBox(self.groupBox)
         self.cmbCliente.setObjectName(u"cmbCliente")
         self.cmbCliente.setGeometry(QRect(355, 60, 241, 35))
-        self.cmbCliente.setStyleSheet(u"/* Estilos para QComboBox */\n"
-"QComboBox {\n"
+        self.cmbCliente.setStyleSheet(u"QComboBox {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
@@ -512,7 +502,6 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
-        self.cmbCliente.setEditable(False)
         self.label_13 = QLabel(self.groupBox)
         self.label_13.setObjectName(u"label_13")
         self.label_13.setGeometry(QRect(285, 120, 67, 21))
@@ -524,8 +513,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.txtSerie = QLineEdit(self.groupBox)
         self.txtSerie.setObjectName(u"txtSerie")
         self.txtSerie.setGeometry(QRect(355, 110, 120, 35))
@@ -561,8 +549,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.groupBox_2 = QGroupBox(self.groupBox)
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.groupBox_2.setGeometry(QRect(15, 160, 891, 201))
@@ -586,8 +573,7 @@ class Ui_MainWindow(object):
         self.txtFechaVenc.setObjectName(u"txtFechaVenc")
         self.txtFechaVenc.setGeometry(QRect(650, 80, 91, 35))
         self.txtFechaVenc.setAcceptDrops(False)
-        self.txtFechaVenc.setStyleSheet(u"/* Estilos para QDateEdit */\n"
-"QDateEdit {\n"
+        self.txtFechaVenc.setStyleSheet(u"QDateEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    border-radius: 4px;\n"
@@ -607,7 +593,7 @@ class Ui_MainWindow(object):
         self.txtFechaVenc.setCalendarPopup(True)
         self.label_16 = QLabel(self.groupBox_2)
         self.label_16.setObjectName(u"label_16")
-        self.label_16.setGeometry(QRect(550, 90, 91, 21))
+        self.label_16.setGeometry(QRect(550, 90, 101, 21))
         self.label_16.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -616,8 +602,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.label_17 = QLabel(self.groupBox_2)
         self.label_17.setObjectName(u"label_17")
         self.label_17.setGeometry(QRect(560, 150, 91, 21))
@@ -629,8 +614,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.label_19 = QLabel(self.groupBox_2)
         self.label_19.setObjectName(u"label_19")
         self.label_19.setGeometry(QRect(310, 150, 111, 21))
@@ -642,13 +626,11 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.cmbArticulo = QComboBox(self.groupBox_2)
         self.cmbArticulo.setObjectName(u"cmbArticulo")
         self.cmbArticulo.setGeometry(QRect(100, 80, 201, 35))
-        self.cmbArticulo.setStyleSheet(u"/* Estilos para QComboBox */\n"
-"QComboBox {\n"
+        self.cmbArticulo.setStyleSheet(u"QComboBox {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
@@ -680,8 +662,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.txtCantidad = QLineEdit(self.groupBox_2)
         self.txtCantidad.setObjectName(u"txtCantidad")
         self.txtCantidad.setGeometry(QRect(100, 140, 61, 35))
@@ -717,8 +698,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.txtCodArticulo = QLineEdit(self.groupBox_2)
         self.txtCodArticulo.setObjectName(u"txtCodArticulo")
         self.txtCodArticulo.setGeometry(QRect(100, 20, 91, 30))
@@ -770,7 +750,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_22 = QLabel(self.groupBox_2)
         self.label_22.setObjectName(u"label_22")
-        self.label_22.setGeometry(QRect(180, 150, 41, 21))
+        self.label_22.setGeometry(QRect(180, 150, 51, 21))
         self.label_22.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -779,8 +759,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.txtDescuento = QLineEdit(self.groupBox_2)
         self.txtDescuento.setObjectName(u"txtDescuento")
         self.txtDescuento.setGeometry(QRect(650, 140, 91, 35))
@@ -865,8 +844,7 @@ class Ui_MainWindow(object):
         self.cmbPrecioVent = QComboBox(self.groupBox_2)
         self.cmbPrecioVent.setObjectName(u"cmbPrecioVent")
         self.cmbPrecioVent.setGeometry(QRect(440, 140, 91, 35))
-        self.cmbPrecioVent.setStyleSheet(u"/* Estilos para QComboBox */\n"
-"QComboBox {\n"
+        self.cmbPrecioVent.setStyleSheet(u"QComboBox {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
@@ -887,11 +865,10 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
-        self.cmbPrecioVent.setEditable(True)
-        self.label_18 = QLabel(self.groupBox_2)
-        self.label_18.setObjectName(u"label_18")
-        self.label_18.setGeometry(QRect(10, 30, 61, 21))
-        self.label_18.setStyleSheet(u"QWidget {\n"
+        self.label_24 = QLabel(self.groupBox_2)
+        self.label_24.setObjectName(u"label_24")
+        self.label_24.setGeometry(QRect(770, 150, 61, 21))
+        self.label_24.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
 "\n"
@@ -914,10 +891,10 @@ class Ui_MainWindow(object):
 "    font-weight: bold;\n"
 "}\n"
 "")
-        self.label_24 = QLabel(self.groupBox_2)
-        self.label_24.setObjectName(u"label_24")
-        self.label_24.setGeometry(QRect(770, 150, 61, 21))
-        self.label_24.setStyleSheet(u"QWidget {\n"
+        self.label_18 = QLabel(self.groupBox_2)
+        self.label_18.setObjectName(u"label_18")
+        self.label_18.setGeometry(QRect(10, 30, 61, 21))
+        self.label_18.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
 "\n"
@@ -980,8 +957,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.txtItbis = QLineEdit(self.groupBox)
         self.txtItbis.setObjectName(u"txtItbis")
         self.txtItbis.setGeometry(QRect(670, 110, 120, 35))
@@ -1033,7 +1009,7 @@ class Ui_MainWindow(object):
         self.txtIdCliente.setReadOnly(True)
         self.label_4 = QLabel(self.groupBox)
         self.label_4.setObjectName(u"label_4")
-        self.label_4.setGeometry(QRect(285, 30, 55, 21))
+        self.label_4.setGeometry(QRect(285, 30, 61, 21))
         self.label_4.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -1042,8 +1018,7 @@ class Ui_MainWindow(object):
 "    color: var(--jade-500);\n"
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.tabWidget.addTab(self.tab_2, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -1060,15 +1035,15 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Cotizaciones", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Ventas", None))
 #if QT_CONFIG(tooltip)
-        self.tabWidget.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><br/></p></body></html>", None))
+        self.tabWidget.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Mantenimiento de los ingresos a almacen</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.groupBox_3.setTitle("")
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
-        self.btnBuscar.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
-        self.btnAnular.setText(QCoreApplication.translate("MainWindow", u"Anular", None))
         self.btnImprimir.setText(QCoreApplication.translate("MainWindow", u"Imprimir", None))
+        self.btnAnular.setText(QCoreApplication.translate("MainWindow", u"Anular", None))
+        self.btnBuscar.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"Fecha Fin", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Fecha Inicio", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Listado", None))
@@ -1080,7 +1055,10 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Comprobante", None))
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Cliente", None))
-        self.cmbComprobante.setItemText(0, QCoreApplication.translate("MainWindow", u"COTIZACION", None))
+        self.cmbComprobante.setItemText(0, QCoreApplication.translate("MainWindow", u"TICKET", None))
+        self.cmbComprobante.setItemText(1, QCoreApplication.translate("MainWindow", u"BOLETA", None))
+        self.cmbComprobante.setItemText(2, QCoreApplication.translate("MainWindow", u"FACTURA", None))
+        self.cmbComprobante.setItemText(3, QCoreApplication.translate("MainWindow", u"GUI REMISION", None))
 
 #if QT_CONFIG(tooltip)
         self.cmbCliente.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Doble click para buscar clientes</p></body></html>", None))
@@ -1097,20 +1075,14 @@ class Ui_MainWindow(object):
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"Articulo", None))
         self.txtCantidad.setText("")
         self.label_20.setText(QCoreApplication.translate("MainWindow", u"Cantidad", None))
-#if QT_CONFIG(tooltip)
-        self.txtCodArticulo.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Doble click para buscar articulos</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"Disp.", None))
         self.btnAgrgar.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.btnQuitar.setText(QCoreApplication.translate("MainWindow", u"-", None))
-        self.label_18.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
-        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Agregar", None))
         self.label_24.setText(QCoreApplication.translate("MainWindow", u"Quitar", None))
+        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Agregar", None))
+        self.label_18.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Itbis", None))
         self.txtItbis.setText("")
-#if QT_CONFIG(tooltip)
-        self.txtIdCliente.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Doble click para buscar clientes</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Mantenimiento", None))
     # retranslateUi

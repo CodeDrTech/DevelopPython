@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(558, 266)
+        MainWindow.resize(567, 306)
         MainWindow.setStyleSheet(u"QWidget {\n"
 "    background-color: #deede3;\n"
 "}")
@@ -32,12 +32,12 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.txtFecha = QDateTimeEdit(self.centralwidget)
         self.txtFecha.setObjectName(u"txtFecha")
-        self.txtFecha.setGeometry(QRect(410, 20, 121, 25))
+        self.txtFecha.setGeometry(QRect(420, 20, 121, 25))
         self.txtFecha.setReadOnly(True)
         self.txtFecha.setCalendarPopup(True)
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(180, 10, 191, 21))
+        self.label.setGeometry(QRect(210, 30, 191, 21))
         font = QFont()
         font.setBold(True)
         self.label.setFont(font)
@@ -55,7 +55,7 @@ class Ui_MainWindow(object):
         self.graphicsView.setGeometry(QRect(10, 60, 160, 160))
         self.groupBox = QGroupBox(self.centralwidget)
         self.groupBox.setObjectName(u"groupBox")
-        self.groupBox.setGeometry(QRect(210, 60, 321, 161))
+        self.groupBox.setGeometry(QRect(210, 60, 331, 201))
         self.groupBox.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #1e362d;\n"
 "    border-radius: 8px;\n"
@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnIngresar = QPushButton(self.groupBox)
         self.btnIngresar.setObjectName(u"btnIngresar")
-        self.btnIngresar.setGeometry(QRect(113, 110, 85, 37))
+        self.btnIngresar.setGeometry(QRect(120, 140, 85, 37))
         self.btnIngresar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -98,7 +98,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnSalir = QPushButton(self.groupBox)
         self.btnSalir.setObjectName(u"btnSalir")
-        self.btnSalir.setGeometry(QRect(210, 110, 85, 37))
+        self.btnSalir.setGeometry(QRect(217, 140, 85, 37))
         self.btnSalir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
@@ -122,7 +122,7 @@ class Ui_MainWindow(object):
 "}")
         self.txtPassword = QLineEdit(self.groupBox)
         self.txtPassword.setObjectName(u"txtPassword")
-        self.txtPassword.setGeometry(QRect(113, 70, 181, 35))
+        self.txtPassword.setGeometry(QRect(120, 90, 181, 35))
         self.txtPassword.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -147,7 +147,7 @@ class Ui_MainWindow(object):
         self.txtPassword.setEchoMode(QLineEdit.Password)
         self.txtUsuario = QLineEdit(self.groupBox)
         self.txtUsuario.setObjectName(u"txtUsuario")
-        self.txtUsuario.setGeometry(QRect(113, 30, 181, 35))
+        self.txtUsuario.setGeometry(QRect(120, 30, 181, 35))
         self.txtUsuario.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #deede3;\n"
 "    border: 1px solid #cccccc;\n"
@@ -171,7 +171,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_2 = QLabel(self.groupBox)
         self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(10, 80, 101, 21))
+        self.label_2.setGeometry(QRect(10, 100, 101, 21))
         self.label_2.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -248,7 +248,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Sistema de Ventas", None))
-        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Acceso al Sistema", None))
+        self.groupBox.setTitle("")
         self.btnIngresar.setText(QCoreApplication.translate("MainWindow", u"Ingresar", None))
 #if QT_CONFIG(shortcut)
         self.btnIngresar.setShortcut(QCoreApplication.translate("MainWindow", u"Return", None))

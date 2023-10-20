@@ -1647,7 +1647,7 @@ QLabel {
       <widget class="QTableView" name="tbDetalleIngreso">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>15</x>
          <y>380</y>
          <width>891</width>
          <height>221</height>

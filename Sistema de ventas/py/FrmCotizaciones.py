@@ -2,6 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox
 from PyQt5 import QtGui
+from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
@@ -31,16 +32,6 @@ class VentanaCotizaciones(QMainWindow):
         groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox.setGraphicsEffect(groupBox_shadow)
         
-        groupBox_shadow = QGraphicsDropShadowEffect()
-        groupBox_shadow.setBlurRadius(20)
-        groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
-        self.groupBox.setGraphicsEffect(groupBox_shadow)
-        
-        groupBox2_shadow = QGraphicsDropShadowEffect()
-        groupBox2_shadow.setBlurRadius(20)
-        groupBox2_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
-        self.groupBox_2.setGraphicsEffect(groupBox2_shadow)
-        
         groupBox3_shadow = QGraphicsDropShadowEffect()
         groupBox3_shadow.setBlurRadius(20)
         groupBox3_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
@@ -53,6 +44,8 @@ class VentanaCotizaciones(QMainWindow):
         
         self.cmbCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
         self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
+        
+        self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -107,10 +100,42 @@ class VentanaCotizaciones(QMainWindow):
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-
+    # Cargar los precion de ventas de los articulos en cmbPrecioVent
+    def cargar_precios_venta(self):
+        idarticulo = self.txtCodArticulo.text()
+        
+        query = QSqlQuery()
+        query.prepare(f"SELECT precio_venta, precio_venta1, precio_venta2 from detalle_ingreso where idarticulo = {idarticulo} ")
+        query.bindValue(":idarticulo", int(idarticulo))
+        
+        
+        
+        if query.exec_():
+            self.cmbPrecioVent.clear()
+            while query.next():
+                precio = query.value(0)
+                precio1 = query.value(1)
+                precio2 = query.value(2)
+                self.cmbPrecioVent.addItem(str(precio))
+                self.cmbPrecioVent.addItem(str(precio1))
+                self.cmbPrecioVent.addItem(str(precio2))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
+    # Actualiza el stock disponible del articulo
+    def actualizar_existencia_producto(self):
+        idarticulo = self.txtCodArticulo.text()
+        model = QSqlTableModel()
+        model.setTable('stock')
+        model.setFilter(f"idarticulo='{idarticulo}'")
+        model.select()
 
+        stock_disponible = ""
+        if model.rowCount() > 0:
+            stock_disponible = model.data(model.index(0, 2))
+
+            self.txtStock.setText(str(stock_disponible)) 
+        else:
+            self.txtStock.setText("Sin existencia")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
