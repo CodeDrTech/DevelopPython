@@ -35,7 +35,6 @@ class Ui_MainWindow(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(20, 0, 131, 21))
         font = QFont()
-        font.setPointSize(1)
         font.setBold(True)
         self.label.setFont(font)
         self.label.setStyleSheet(u"QWidget {\n"
@@ -119,7 +118,7 @@ class Ui_MainWindow(object):
         self.txtBuscar.setObjectName(u"txtBuscar")
         self.txtBuscar.setGeometry(QRect(100, 20, 120, 35))
         self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -144,7 +143,7 @@ class Ui_MainWindow(object):
         self.btnBuscar.setGeometry(QRect(240, 20, 85, 37))
         self.btnBuscar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -168,7 +167,7 @@ class Ui_MainWindow(object):
         self.btnEliminar.setGeometry(QRect(340, 20, 85, 37))
         self.btnEliminar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -192,7 +191,7 @@ class Ui_MainWindow(object):
         self.btnImprimir.setGeometry(QRect(440, 20, 85, 37))
         self.btnImprimir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -316,7 +315,7 @@ class Ui_MainWindow(object):
         self.btnEditar.setGeometry(QRect(230, 180, 85, 37))
         self.btnEditar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -340,7 +339,7 @@ class Ui_MainWindow(object):
         self.btnGuardar.setGeometry(QRect(120, 180, 85, 37))
         self.btnGuardar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -364,7 +363,7 @@ class Ui_MainWindow(object):
         self.btnSalir.setGeometry(QRect(340, 180, 85, 37))
         self.btnSalir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -387,7 +386,7 @@ class Ui_MainWindow(object):
         self.txtCodigo.setObjectName(u"txtCodigo")
         self.txtCodigo.setGeometry(QRect(120, 20, 120, 35))
         self.txtCodigo.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -412,7 +411,7 @@ class Ui_MainWindow(object):
         self.txtNombre.setObjectName(u"txtNombre")
         self.txtNombre.setGeometry(QRect(120, 70, 120, 35))
         self.txtNombre.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -436,7 +435,7 @@ class Ui_MainWindow(object):
         self.txtDescripcion.setObjectName(u"txtDescripcion")
         self.txtDescripcion.setGeometry(QRect(120, 120, 221, 41))
         self.txtDescripcion.setStyleSheet(u"QTextEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"

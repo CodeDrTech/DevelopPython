@@ -34,7 +34,6 @@ class Ui_MainWindow(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(20, 0, 71, 21))
         font = QFont()
-        font.setPointSize(1)
         font.setBold(True)
         self.label.setFont(font)
         self.label.setStyleSheet(u"QWidget {\n"
@@ -70,8 +69,9 @@ class Ui_MainWindow(object):
         self.comboBox.addItem("")
         self.comboBox.setObjectName(u"comboBox")
         self.comboBox.setGeometry(QRect(10, 35, 120, 35))
-        self.comboBox.setStyleSheet(u"QComboBox {\n"
-"    background-color: #deede3;\n"
+        self.comboBox.setStyleSheet(u"/* Estilos para QComboBox */\n"
+"QComboBox {\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -96,7 +96,7 @@ class Ui_MainWindow(object):
         self.btnBuscar.setGeometry(QRect(280, 35, 85, 37))
         self.btnBuscar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -119,7 +119,7 @@ class Ui_MainWindow(object):
         self.txtBuscar.setObjectName(u"txtBuscar")
         self.txtBuscar.setGeometry(QRect(150, 35, 120, 35))
         self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"

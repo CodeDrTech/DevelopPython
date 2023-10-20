@@ -65,36 +65,26 @@ QLabel {
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">QTabWidget {
-    background-color: #deede3;
+     <string notr="true">QLineEdit {
+    background-color: #96bfab;
     border: 1px solid #cccccc;
+    padding: 6px;
     border-radius: 4px;
+    font-size: 14px;
 }
 
-QTabWidget::tab-bar {
-    left: 5px;
+QLineEdit:hover {
+    border: 1px solid #689f84;
 }
 
-QTabWidget::tab {
-    background-color: #deede3;
-    border: 1px solid #1e362d;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    padding: 6px 12px;
+QLineEdit:focus {
+    border: 1px solid #689f84;
+    outline: none;
 }
 
-QTabWidget::tab:selected {
-    background-color: #c0dacb;
-    border: 1px solid #1e362d;
-    border-bottom: 1px solid #c0dacb;
-}
-
-QTabWidget::pane {
-    background-color: #deede3;
-    border: 1px solid #1e362d;
-    border-top: none;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+QLineEdit::placeholder {
+    color: #1e362d;
+    font-weight: bold;
 }</string>
     </property>
     <property name="currentIndex">
@@ -179,7 +169,7 @@ QLabel {
        </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -213,7 +203,7 @@ QLineEdit::placeholder {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #c0dacb, stop: 1 #1e362d);
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
     color: #ffffff;
     border: 1px solid #1e362d;
     padding: 8px 16px;
@@ -249,7 +239,7 @@ QPushButton:pressed {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #c0dacb, stop: 1 #1e362d);
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
     color: #ffffff;
     border: 1px solid #1e362d;
     padding: 8px 16px;
@@ -445,7 +435,7 @@ QLabel {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #c0dacb, stop: 1 #1e362d);
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
     color: #ffffff;
     border: 1px solid #1e362d;
     padding: 8px 16px;
@@ -481,7 +471,7 @@ QPushButton:pressed {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #c0dacb, stop: 1 #1e362d);
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
     color: #ffffff;
     border: 1px solid #1e362d;
     padding: 8px 16px;
@@ -519,7 +509,7 @@ QPushButton:pressed {
        </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -555,7 +545,7 @@ QLineEdit::placeholder {
        </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -588,7 +578,7 @@ QLineEdit::placeholder {
        </property>
        <property name="styleSheet">
         <string notr="true">QTextEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -616,7 +606,7 @@ QTextEdit:focus {
        </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -696,7 +686,7 @@ QLabel {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #c0dacb, stop: 1 #1e362d);
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
     color: #ffffff;
     border: 1px solid #1e362d;
     padding: 8px 16px;
@@ -732,7 +722,7 @@ QPushButton:pressed {
        <property name="styleSheet">
         <string notr="true">QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #c0dacb, stop: 1 #1e362d);
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
     color: #ffffff;
     border: 1px solid #1e362d;
     padding: 8px 16px;
@@ -766,8 +756,9 @@ QPushButton:pressed {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QComboBox {
-    background-color: #dafeef;
+        <string notr="true">/* Estilos para QComboBox */
+QComboBox {
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -775,19 +766,18 @@ QPushButton:pressed {
 }
 
 QComboBox:hover {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
 }
 
 QComboBox:focus {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
     outline: none;
 }
 
 QComboBox::placeholder {
-    color: #1acd81;
+    color: #1e362d;
     font-weight: bold;
-}
-</string>
+}</string>
        </property>
       </widget>
       <widget class="QComboBox" name="cmbCategoria">
@@ -800,8 +790,9 @@ QComboBox::placeholder {
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QComboBox {
-    background-color: #dafeef;
+        <string notr="true">/* Estilos para QComboBox */
+QComboBox {
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -809,19 +800,18 @@ QComboBox::placeholder {
 }
 
 QComboBox:hover {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
 }
 
 QComboBox:focus {
-    border: 1px solid #43e5a0;
+    border: 1px solid #689f84;
     outline: none;
 }
 
 QComboBox::placeholder {
-    color: #1acd81;
+    color: #1e362d;
     font-weight: bold;
-}
-</string>
+}</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_7">

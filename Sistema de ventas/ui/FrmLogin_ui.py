@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         self.btnIngresar.setGeometry(QRect(120, 140, 85, 37))
         self.btnIngresar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -101,7 +101,7 @@ class Ui_MainWindow(object):
         self.btnSalir.setGeometry(QRect(217, 140, 85, 37))
         self.btnSalir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -124,7 +124,7 @@ class Ui_MainWindow(object):
         self.txtPassword.setObjectName(u"txtPassword")
         self.txtPassword.setGeometry(QRect(120, 90, 181, 35))
         self.txtPassword.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -149,7 +149,7 @@ class Ui_MainWindow(object):
         self.txtUsuario.setObjectName(u"txtUsuario")
         self.txtUsuario.setGeometry(QRect(120, 30, 181, 35))
         self.txtUsuario.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"

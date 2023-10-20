@@ -60,7 +60,7 @@ QPushButton:pressed {
 
 /* Estilos para QLineEdit */
 QLineEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -124,7 +124,7 @@ QTableView::item:focus {
 
 /* Estilos para QComboBox */
 QComboBox {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -147,7 +147,7 @@ QComboBox::placeholder {
 
 /* Estilos para QTextEdit */
 QTextEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     padding: 6px;
     border-radius: 4px;
@@ -204,7 +204,7 @@ QTabWidget::pane {
 
 /* Estilos para QDateEdit */
 QDateEdit {
-    background-color: #deede3;
+    background-color: #96bfab;
     border: 1px solid #cccccc;
     border-radius: 4px;
     font-size: 14px;

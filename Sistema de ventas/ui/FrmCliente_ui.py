@@ -109,7 +109,7 @@ class Ui_MainWindow(object):
         self.comboBox.setObjectName(u"comboBox")
         self.comboBox.setGeometry(QRect(20, 15, 120, 35))
         self.comboBox.setStyleSheet(u"QComboBox {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -133,7 +133,7 @@ class Ui_MainWindow(object):
         self.txtBuscar.setObjectName(u"txtBuscar")
         self.txtBuscar.setGeometry(QRect(150, 15, 120, 35))
         self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -158,7 +158,7 @@ class Ui_MainWindow(object):
         self.btnBuscar.setGeometry(QRect(285, 15, 85, 37))
         self.btnBuscar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -182,7 +182,7 @@ class Ui_MainWindow(object):
         self.btnEliminar.setGeometry(QRect(375, 15, 85, 37))
         self.btnEliminar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -206,7 +206,7 @@ class Ui_MainWindow(object):
         self.btnImprimir.setGeometry(QRect(465, 15, 85, 37))
         self.btnImprimir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -330,7 +330,7 @@ class Ui_MainWindow(object):
         self.btnGuardar.setGeometry(QRect(150, 350, 86, 37))
         self.btnGuardar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -354,7 +354,7 @@ class Ui_MainWindow(object):
         self.btnEditar.setGeometry(QRect(260, 350, 86, 37))
         self.btnEditar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -378,7 +378,7 @@ class Ui_MainWindow(object):
         self.btnSalir.setGeometry(QRect(370, 350, 86, 37))
         self.btnSalir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #1e362d);\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
 "    border: 1px solid #1e362d;\n"
 "    padding: 8px 16px;\n"
@@ -401,7 +401,7 @@ class Ui_MainWindow(object):
         self.txtCodigo.setObjectName(u"txtCodigo")
         self.txtCodigo.setGeometry(QRect(150, 20, 105, 35))
         self.txtCodigo.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -426,7 +426,7 @@ class Ui_MainWindow(object):
         self.txtNombre.setObjectName(u"txtNombre")
         self.txtNombre.setGeometry(QRect(150, 60, 105, 35))
         self.txtNombre.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -450,7 +450,7 @@ class Ui_MainWindow(object):
         self.txtDireccion.setObjectName(u"txtDireccion")
         self.txtDireccion.setGeometry(QRect(150, 200, 221, 41))
         self.txtDireccion.setStyleSheet(u"QTextEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -484,7 +484,7 @@ class Ui_MainWindow(object):
         self.cmbTipoDocumento.setObjectName(u"cmbTipoDocumento")
         self.cmbTipoDocumento.setGeometry(QRect(150, 100, 105, 35))
         self.cmbTipoDocumento.setStyleSheet(u"QComboBox {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -503,8 +503,7 @@ class Ui_MainWindow(object):
 "QComboBox::placeholder {\n"
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
-"}\n"
-"")
+"}")
         self.label_7 = QLabel(self.groupBox)
         self.label_7.setObjectName(u"label_7")
         self.label_7.setGeometry(QRect(15, 110, 131, 21))
@@ -521,7 +520,7 @@ class Ui_MainWindow(object):
         self.txtNumDocumento.setObjectName(u"txtNumDocumento")
         self.txtNumDocumento.setGeometry(QRect(270, 100, 181, 35))
         self.txtNumDocumento.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -557,7 +556,7 @@ class Ui_MainWindow(object):
         self.txtTelefono.setObjectName(u"txtTelefono")
         self.txtTelefono.setGeometry(QRect(150, 250, 120, 35))
         self.txtTelefono.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -593,7 +592,7 @@ class Ui_MainWindow(object):
         self.txtEmail.setObjectName(u"txtEmail")
         self.txtEmail.setGeometry(QRect(150, 300, 181, 35))
         self.txtEmail.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -617,7 +616,7 @@ class Ui_MainWindow(object):
         self.txtApellidos.setObjectName(u"txtApellidos")
         self.txtApellidos.setGeometry(QRect(370, 60, 161, 35))
         self.txtApellidos.setStyleSheet(u"QLineEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -655,7 +654,7 @@ class Ui_MainWindow(object):
         self.cmbSexo.setObjectName(u"cmbSexo")
         self.cmbSexo.setGeometry(QRect(150, 150, 105, 35))
         self.cmbSexo.setStyleSheet(u"QComboBox {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
 "    border-radius: 4px;\n"
@@ -693,7 +692,7 @@ class Ui_MainWindow(object):
         self.txtFechaNac.setAcceptDrops(False)
         self.txtFechaNac.setStyleSheet(u"/* Estilos para QDateEdit */\n"
 "QDateEdit {\n"
-"    background-color: #deede3;\n"
+"    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    border-radius: 4px;\n"
 "    font-size: 14px;\n"
@@ -707,11 +706,7 @@ class Ui_MainWindow(object):
 "QDateEdit:focus {\n"
 "    border: 1px solid #689f84;\n"
 "    outline: none;\n"
-"}\n"
-"\n"
-"\n"
-"\n"
-"")
+"}")
         self.txtFechaNac.setCalendarPopup(True)
         self.tabWidget.addTab(self.tab_2, "")
         MainWindow.setCentralWidget(self.centralwidget)

@@ -45,7 +45,7 @@ class VentanaCotizaciones(QMainWindow):
         self.cmbCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
         self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
         
-        self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto)
+        self.cmbArticulo.currentIndexChanged.connect(self.cargar_precios_venta)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ class VentanaCotizaciones(QMainWindow):
         idarticulo = self.txtCodArticulo.text()
         
         query = QSqlQuery()
-        query.prepare(f"SELECT precio_venta, precio_venta1, precio_venta2 from detalle_ingreso where idarticulo = {idarticulo} ")
+        query.prepare(f"SELECT top 1 precio_venta, precio_venta1, precio_venta2 from detalle_ingreso where idarticulo = {idarticulo} ORDER BY iddetalle_ingreso DESC")
         query.bindValue(":idarticulo", int(idarticulo))
         
         
