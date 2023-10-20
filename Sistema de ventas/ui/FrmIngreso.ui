@@ -34,7 +34,7 @@ QWidget {
     </property>
     <property name="font">
      <font>
-      <pointsize>-1</pointsize>
+      <pointsize>1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -147,7 +147,7 @@ QGroupBox:title {
        </property>
        <property name="font">
         <font>
-         <pointsize>-1</pointsize>
+         <pointsize>1</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -324,7 +324,7 @@ QPushButton:pressed {
        </property>
        <property name="font">
         <font>
-         <pointsize>-1</pointsize>
+         <pointsize>1</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -354,7 +354,7 @@ QLabel {
        </property>
        <property name="font">
         <font>
-         <pointsize>-1</pointsize>
+         <pointsize>1</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -384,7 +384,7 @@ QLabel {
        </property>
        <property name="font">
         <font>
-         <pointsize>-1</pointsize>
+         <pointsize>1</pointsize>
          <bold>true</bold>
         </font>
        </property>
