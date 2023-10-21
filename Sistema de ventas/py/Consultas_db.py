@@ -137,14 +137,16 @@ def obtener_id_presentacion_por_nombre(nombre_presentacion):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
 def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado):
-    insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'], [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
+    insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'],
+                                                     [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
     
 
 def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2):
     conn = conectar_db()
 
     try:
-        insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'], [idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2])
+        insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'],
+                                [idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2])
         cursor = conn.execute("SELECT disponible FROM stock WHERE idarticulo = ?", (idarticulo,))
         existing_stock = cursor.fetchone()
 
@@ -166,6 +168,11 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
         mensaje_error.exec()
     finally:
         conn.close()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
+def insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis):
+    insertar_dato_generico('cotizacion', ['idcliente', 'idempleado', 'fecha', 'tipo_comprobante', 'serie', 'itbis'], 
+                                                    [idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis])
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 def anular_ingreso(id_ingreso):

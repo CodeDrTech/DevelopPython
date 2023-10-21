@@ -21,7 +21,7 @@ class VentanaLogin(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Acceso al sistema de ventas .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
         txtFecha_shadow = QGraphicsDropShadowEffect()
         txtFecha_shadow.setBlurRadius(20)

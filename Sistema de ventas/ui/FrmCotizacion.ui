@@ -555,12 +555,12 @@ QLabel {
         <string>Codigo</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnAgregar">
+      <widget class="QPushButton" name="btnRegistrar">
        <property name="geometry">
         <rect>
-         <x>820</x>
+         <x>810</x>
          <y>110</y>
-         <width>85</width>
+         <width>92</width>
          <height>37</height>
         </rect>
        </property>
@@ -588,7 +588,7 @@ QPushButton:pressed {
 }</string>
        </property>
        <property name="text">
-        <string>Agregar</string>
+        <string> Registrar</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtCodigo">
@@ -1216,7 +1216,7 @@ QLineEdit::placeholder {
 }</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnAgrgar">
+       <widget class="QPushButton" name="btnAgregar">
         <property name="geometry">
          <rect>
           <x>860</x>
@@ -1637,6 +1637,19 @@ QLabel {
       </widget>
      </widget>
     </widget>
+   </widget>
+   <widget class="QTableView" name="tbSesiones">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>0</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

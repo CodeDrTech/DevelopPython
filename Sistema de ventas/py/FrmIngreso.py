@@ -16,9 +16,9 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Mantenimiento de ingresos almacén .:.')
+        self.setWindowTitle('.:. Mantenimiento de ingresos a almacén .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         # Establece la echa actual en los inputs que contienen fechas
@@ -704,6 +704,7 @@ class VentanaIngresoAlmacen(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
+    # Oculta los bototnes de los detalles para obligar al usuario a que coloque el ingreso antes que los detalles
     def ocultar_botones_detalle(self):
         for widget in self.groupBox_2.findChildren(QWidget):
             widget.setVisible(False)
@@ -716,6 +717,7 @@ class VentanaIngresoAlmacen(QMainWindow):
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    # Coloca el id del ingreso en su txt actulizado para el proximo registro
     def actualizar_ID_ingreso(self):
         ultimo_codigo = obtener_ultimo_codigo("ingreso","idingreso")
         nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
