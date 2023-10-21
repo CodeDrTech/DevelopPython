@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nueva_cotizacion
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion
 
 class VentanaCotizaciones(QMainWindow):
     ventana_abierta = False     
@@ -49,7 +49,8 @@ class VentanaCotizaciones(QMainWindow):
         self.cmbArticulo.currentIndexChanged.connect(self.cargar_precios_venta)
         self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto) 
 
-        self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion)
+        self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion) 
+        self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -187,6 +188,50 @@ class VentanaCotizaciones(QMainWindow):
             mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    def insertar_detalle_cotizacion(self):
+        try:
+            idoctizacion = self.txtCodigo.text()
+            idarticulo = self.txtCodArticulo.text()
+            catidad = self.txtCantidad.text()
+            precio_venta = self.cmbPrecioVent.currentText()
+            descuento = self.txtDescuento.text()
+
+            if not descuento:                
+                descuento = 0
+
+            if not all([idoctizacion, idarticulo, catidad, precio_venta]):
+    
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Hay un error en los datos")
+                mensaje.setText("Por favor, complete todos los campos correctamente.")
+                mensaje.exec_()
+            
+            
+            else:
+                insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)      
+
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Agregar detalles de cotizaion")
+                mensaje.setText("Detalles de cotizacion registrado.")
+                mensaje.exec_()
+                
+                
+                
+                # Limpia los TexBox
+                self.txtDescuento.setText("")
+                self.txtCantidad.setText("")
+                self.txtCantidad.setFocus()
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error: {str(e)}")
+            mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     # Estas 3 funciones obtienen el id de empleado que inicio sesion.
     # Este id de empleado se usa para saber quien ingreso dato a la base de datos
     
@@ -297,7 +342,8 @@ class VentanaCotizaciones(QMainWindow):
 
         self.tbSesiones.hide()
         self.actualizar_ID_cotizacion()
-                
+        self.ocultar_botones_detalle()
+
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())

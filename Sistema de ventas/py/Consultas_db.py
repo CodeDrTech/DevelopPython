@@ -173,6 +173,11 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
 def insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis):
     insertar_dato_generico('cotizacion', ['idcliente', 'idempleado', 'fecha', 'tipo_comprobante', 'serie', 'itbis'], 
                                                     [idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis])
+    
+
+def insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento):
+    insertar_dato_generico('detalle_cotizacion', ['idcotizacion', 'idarticulo', 'cantidad', 'precio_venta', 'descuento'], 
+                                                    [idoctizacion, idarticulo, catidad, precio_venta, descuento])
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 def anular_ingreso(id_ingreso):
