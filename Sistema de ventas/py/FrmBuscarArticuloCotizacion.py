@@ -67,9 +67,16 @@ class VentanaBuscarArticuloCotizacion(QMainWindow):
     # Funciones conectadas a los botones
             
     def visualiza_datos(self):
-        # Consulta SELECT * FROM Productos
         query = QSqlQuery()
-        query.exec_(f"SELECT idarticulo as 'ID', nombre as 'NOMBRE', descripcion as 'DESCRIPCION' from articulo")
+        query.exec_(f"SELECT a.idarticulo as 'ID', a.nombre as 'NOMBRE', s.disponible as 'CANTIDAD DISPONIBLE', a.descripcion as 'DESCRIPCION'\
+                            FROM articulo a\
+                            LEFT JOIN stock s ON a.idarticulo = s.idarticulo\
+                            WHERE s.disponible IS NOT NULL\
+                            UNION\
+                            SELECT a.idarticulo as 'ID', a.nombre as 'NOMBRE', '0' as 'CANTIDAD DISPONIBLE', a.descripcion as 'DESCRIPCION'\
+                            FROM articulo a\
+                            LEFT JOIN stock s ON a.idarticulo = s.idarticulo\
+                            WHERE s.disponible IS NULL;")
         
         
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
