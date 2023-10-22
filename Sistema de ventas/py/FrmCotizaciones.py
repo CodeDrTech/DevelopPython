@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
@@ -135,6 +135,63 @@ class VentanaCotizaciones(QMainWindow):
         self.btnRegistrar.setEnabled(False)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    def visualizar_datos_cotizacion(self):
+        query = QSqlQuery()
+        query.exec_(f"SELECT\
+                        co.idcotizacion as 'ID',\
+                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                        dc.descuento as 'DESCUENTO',\
+                        co.itbis as 'IMPUESTOS',\
+                        co.serie as 'NO. COTIZACION',\
+                        em.nombre as 'VENDEDOR',\
+                        SUM(dc.precio_venta) as 'TOTAL'\
+                    FROM cotizacion co\
+                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                    GROUP BY co.idcotizacion, CONCAT(cl.nombre, ' ', cl.apellidos), dc.descuento, co.itbis, co.serie, em.nombre;")
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()
+        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def visualizar_datos_detalle_cotizacion(self):
+        cotizacion = self.txtCodigo.text()
+        query = QSqlQuery()
+        query.exec_(f"SELECT dc.iddetalle_cotizacion as 'ID DETALLE',\
+                        dc.idcotizacion as 'ID COTIZACION',\
+                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                        ar.nombre as 'ARTICULO',\
+                        dc.precio_venta as 'PRECIO',\
+                        dc.cantidad as 'CANTIDAD',\
+                        dc.descuento as 'DESCUENTO',\
+                        co.itbis as 'IMPUESTOS',\
+                        co.serie as 'NO. COTIZACION',\
+                        em.nombre as 'VENDEDOR'\
+                    FROM cotizacion co\
+                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                    INNER JOIN articulo ar ON dc.idarticulo = ar.idarticulo\
+                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                    WHERE dc.idcotizacion = {cotizacion};")
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
+        self.tbDatos2.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos2.resizeColumnsToContents()
+        self.tbDatos2.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def insertar_datos_cotiacion(self):
         try:
             # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
@@ -211,16 +268,19 @@ class VentanaCotizaciones(QMainWindow):
             else:
                 insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)      
 
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Agregar detalles de cotizaion")
-                mensaje.setText("Detalles de cotizacion registrado.")
-                mensaje.exec_()
+                self.visualizar_datos_cotizacion()
+                self.visualizar_datos_detalle_cotizacion()
+
+                
+                # mensaje = QMessageBox()
+                # mensaje.setIcon(QMessageBox.Critical)
+                # mensaje.setWindowTitle("Agregar detalles de cotizaion")
+                # mensaje.setText("Detalles de cotizacion registrado.")
+                # mensaje.exec_()
                 
                 
                 
                 # Limpia los TexBox
-                self.txtDescuento.setText("")
                 self.txtCantidad.setText("")
                 self.txtCantidad.setFocus()
         except Exception as e:
@@ -341,6 +401,7 @@ class VentanaCotizaciones(QMainWindow):
         super().showEvent(event)
 
         self.tbSesiones.hide()
+        self.visualizar_datos_cotizacion()
         self.actualizar_ID_cotizacion()
         self.ocultar_botones_detalle()
 
