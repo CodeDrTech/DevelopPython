@@ -142,6 +142,25 @@ class VentanaCotizaciones(QMainWindow):
         self.txtItbis.setEnabled(False)
         self.btnRegistrar.setEnabled(False)
         self.txtComentario.setEnabled(False)
+
+    def activar_botones_cotizacion(self):
+        self.txtCodigo.setEnabled(True)
+        self.cmbComprobante.setEnabled(True)
+        self.txtIdCliente.setEnabled(True)
+        self.cmbCliente.setEnabled(True)
+        self.txtSerie.setEnabled(True)
+        self.txtFecha.setEnabled(True)
+        self.txtItbis.setEnabled(True)
+        self.btnRegistrar.setEnabled(True)
+        self.txtComentario.setEnabled(True)
+
+        self.cmbCliente.clear()
+        self.txtIdCliente.setText("")
+        self.txtSerie.setText("")
+        self.txtItbis.setText("")
+        self.txtComentario.setPlainText("")
+        self.txtFecha.setDate(QDate.currentDate())
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_cotizacion(self):
@@ -245,6 +264,14 @@ class VentanaCotizaciones(QMainWindow):
                     insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
                     self.activar_botones_detalle()
                     self.desactivar_botones_cotizacion()
+
+
+                    # Limpiar componentes antes de empesar a insertar detalles
+                    self.cmbArticulo.clear()
+                    self.txtCodArticulo.setText("")
+                    self.txtCantidad.setText("")
+                    self.cmbPrecioVent.clear()
+                    self.txtDescuento.setText("")
                     self.txtCantidad.setFocus()
 
         except Exception as e:
@@ -378,13 +405,23 @@ class VentanaCotizaciones(QMainWindow):
         if query.exec_() and query.next():
             num_detalles = query.value(0)
         
-            if num_detalles == 0:
+            if num_detalles == 1:
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
                 mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
                 mensaje.exec_()
                 self.ocultar_botones_detalle()  # Llama a la función para ocultar botones
+                self.actualizar_ID_cotizacion() # Actualiza el idcotizacion por si el usuario quiere volver a insertar detalles
+                self.activar_botones_cotizacion() # Activo los botones para insertar cotizacion nueva
+
+                # Refrescar los datos de las cotizaciones y los de detalle_cotizacion
+                self.visualizar_datos_cotizacion()
+                self.visualizar_datos_detalle_cotizacion()
+
+                # Actualizar el numero de cotizacion con el nuevo numero del idcotizacion
+                id_cotizacion = self.txtCodigo.text()
+                self.txtSerie.setText(id_cotizacion)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Estas 3 funciones obtienen el id de empleado que inicio sesion.
