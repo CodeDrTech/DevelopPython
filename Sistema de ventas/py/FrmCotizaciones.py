@@ -412,21 +412,14 @@ class VentanaCotizaciones(QMainWindow):
                 mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
                 mensaje.exec_()
                 self.ocultar_botones_detalle()  # Llama a la función para ocultar botones
-<<<<<<< HEAD
                 self.actualizar_ID_cotizacion() # Actualiza el idcotizacion por si el usuario quiere volver a insertar detalles
                 self.activar_botones_cotizacion() # Activo los botones para insertar cotizacion nueva
 
                 # Refrescar los datos de las cotizaciones y los de detalle_cotizacion.
-=======
-                self.actualizar_ID_cotizacion()
-                self.activar_botones_cotizacion()
-
-                # Refrescar los datos en los QTableView
->>>>>>> a17931c3f3e254021307cbdc26520813357ac086
                 self.visualizar_datos_cotizacion()
                 self.visualizar_datos_detalle_cotizacion()
 
-                # Actualizar el numero de cotizacion con el nuevo numero del idcotizacion
+                # Actualizar el numero de cotizacion con el nuevo numero del idcotizacion.
                 id_cotizacion = self.txtCodigo.text()
                 self.txtSerie.setText(id_cotizacion)
 #------------------------------------------------------------------------------------------------------
