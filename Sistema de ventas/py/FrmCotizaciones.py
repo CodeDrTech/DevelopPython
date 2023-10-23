@@ -59,6 +59,8 @@ class VentanaCotizaciones(QMainWindow):
 
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
 
+        self.btnBuscar.clicked.connect(self.visualizar_datos_cotizacion)
+
         # Controles de fecha conectados a la funcion visualizar_datos_cotizacion para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_cotizacion)
         self.txtFechaFin.dateChanged.connect(self.visualizar_datos_cotizacion)
@@ -177,40 +179,72 @@ class VentanaCotizaciones(QMainWindow):
     def visualizar_datos_cotizacion(self):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
-        
-        if FechaInicio > FechaFinal:
-                    
-                    QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
-                                    
-                    return
+        Buscar = self.txtBuscar.text()
+
+        if not Buscar:
+            if FechaInicio > FechaFinal:
+                        
+                        QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                                        
+                        return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT\
+                                co.idcotizacion as 'ID',\
+                                UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                dc.descuento as 'DESCUENTO',\
+                                co.itbis as 'IMPUESTOS',\
+                                co.serie as 'NO. COTIZACION',\
+                                em.nombre as 'VENDEDOR',\
+                                FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                co.comentario as 'COMENTARIO'\
+                            FROM cotizacion co\
+                            INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                            INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                            INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                            WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                            GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                            dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                
+                # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+                model = QSqlTableModel()    
+                model.setQuery(query)        
+                self.tbDatos.setModel(model)
+
+                # Ajustar el tamaño de las columnas para que se ajusten al contenido
+                self.tbDatos.resizeColumnsToContents()
+                self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
         else:
-            query = QSqlQuery()
-            query.exec_(f"SELECT\
-                            co.idcotizacion as 'ID',\
-                            UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                            CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                            dc.descuento as 'DESCUENTO',\
-                            co.itbis as 'IMPUESTOS',\
-                            co.serie as 'NO. COTIZACION',\
-                            em.nombre as 'VENDEDOR',\
-                            SUM(dc.precio_venta) as 'TOTAL',\
-                            co.comentario as 'COMENTARIO'\
-                        FROM cotizacion co\
-                        INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
-                        INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
-                        INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                        WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
-                        GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos), dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
-            
-            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
-            model = QSqlTableModel()    
-            model.setQuery(query)        
-            self.tbDatos.setModel(model)
-
-            # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            self.tbDatos.resizeColumnsToContents()
-            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
+            if FechaInicio > FechaFinal:
+                        
+                        QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                                        
+                        return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT\
+                                co.idcotizacion as 'ID',\
+                                UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                dc.descuento as 'DESCUENTO',\
+                                co.itbis as 'IMPUESTOS',\
+                                co.serie as 'NO. COTIZACION',\
+                                em.nombre as 'VENDEDOR',\
+                                FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                co.comentario as 'COMENTARIO'\
+                            FROM cotizacion co\
+                            INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                            INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                            INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                            WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND CONCAT(cl.nombre, ' ', cl.apellidos) LIKE '%{Buscar}%'\
+                            GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                            dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                
+                # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+                model = QSqlTableModel()    
+                model.setQuery(query)        
+                self.tbDatos.setModel(model)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_detalle_cotizacion(self):
@@ -220,9 +254,9 @@ class VentanaCotizaciones(QMainWindow):
                         dc.idcotizacion as 'ID COTIZACION',\
                         CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
                         ar.nombre as 'ARTICULO',\
-                        dc.precio_venta as 'PRECIO',\
+                        FORMAT(dc.precio_venta, 'C', 'en-US') as 'PRECIO',\
                         dc.cantidad as 'CANTIDAD',\
-                        dc.descuento as 'DESCUENTO',\
+                        dc.descuento as 'DESCUENTO %',\
                         co.itbis as 'IMPUESTOS',\
                         co.serie as 'NO. COTIZACION',\
                         em.nombre as 'VENDEDOR'\
