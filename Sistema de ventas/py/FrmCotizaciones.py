@@ -360,7 +360,7 @@ class VentanaCotizaciones(QMainWindow):
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL ARTICULO QUE VAS A ELIMINAR.")
             
-        # Pasando como parametro el numero de fila, obtengo el id de la cotizacion
+        # Pasando como parametro el numero de fila, obtengo el id de la cotizacion.
     def obtener_datos_de_fila_detalle_cotizacion(self, num_fila):
         idcotizacion = self.txtCodigo.text()
         query = QSqlQuery()
