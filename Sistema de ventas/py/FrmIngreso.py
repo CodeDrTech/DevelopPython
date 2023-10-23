@@ -406,6 +406,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    # si se elimina el ultimo detalle_ingreso se inhabilitan los botones de insertar detalles
     def verificar_y_ocultar_botones(self):
         idingreso = self.txtCodigo.text()
         

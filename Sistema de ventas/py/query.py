@@ -1,68 +1,42 @@
-import openai  # pip install openai
-import typer  # pip install "typer[all]"
-from rich import print  # pip install rich
-from rich.table import Table
+def quitar_detalle_cotizacion(id_detalle_cotizacion):
+    try:
+        conn = conectar_db()  # Utiliza tu función de conexión a la base de datos
+        cursor = conn.cursor()
 
-"""
-Webs de interés:
-- Módulo OpenAI: https://github.com/openai/openai-python
-- Documentación API ChatGPT: https://platform.openai.com/docs/api-reference/chat
-- Typer: https://typer.tiangolo.com
-- Rich: https://rich.readthedocs.io/en/stable/
-"""
+        # Obtener el idcotizacion desde el detalle
+        cursor.execute("SELECT iddetalle_cotizacion, idcotizacion FROM detalle_cotizacion WHERE iddetalle_cotizacion = ?", (id_detalle_cotizacion,))
+        detalle = cursor.fetchone()
 
+        if detalle:
+            iddetalle_cotizacion, idcotizacion = detalle
 
-def main():
+            # Eliminar el detalle de cotizacion
+            cursor.execute("DELETE FROM detalle_cotizacion WHERE iddetalle_cotizacion = ?", (iddetalle_cotizacion,))
 
-    openai.api_key = "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"
+            # Comprobar si la cotizacion ya no tiene más detalles
+            cursor.execute("SELECT COUNT(*) FROM detalle_cotizacion WHERE idcotizacion = ?", (idcotizacion,))
+            num_detalles = cursor.fetchone()[0]
 
-    print("💬 [bold green]ChatGPT API en Python[/bold green]")
+            if num_detalles == 0:
 
-    table = Table("Comando", "Descripción")
-    table.add_row("exit", "Salir de la aplicación")
-    table.add_row("new", "Crear una nueva conversación")
+                # Agregar un detalle de cotización genérico
+                cursor.execute("INSERT INTO detalle_cotizacion (idcotizacion, idarticulo, cantidad) VALUES (?, 1, 0)", (idcotizacion,))
 
-    print(table)
+                # Actualizar el comentario en la cotización
+                cursor.execute("UPDATE cotizacion SET comentario = 'COTIZACION ANULADA' WHERE idcotizacion = ?", (idcotizacion,))
 
-    # Contexto del asistente
-    context = {"role": "system",
-               "content": "Eres un asistente muy útil."}
-    messages = [context]
+            conn.commit()
+        else:
+            mensaje_error = QMessageBox()
+            mensaje_error.setWindowTitle("Error")
+            mensaje_error.setText("Detalle de cotizacion no encontrado.")
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.exec()
 
-    while True:
-
-        content = __prompt()
-
-        if content == "new":
-            print("🆕 Nueva conversación creada")
-            messages = [context]
-            content = __prompt()
-
-        messages.append({"role": "user", "content": content})
-
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", messages=messages)
-
-        response_content = response.choices[0].message.content
-
-        messages.append({"role": "assistant", "content": response_content})
-
-        print(f"[bold green]> [/bold green] [green]{response_content}[/green]")
-
-
-def __prompt() -> str:
-    prompt = typer.prompt("\n¿Sobre qué quieres hablar? ")
-
-    if prompt == "exit":
-        exit = typer.confirm("✋ ¿Estás seguro?")
-        if exit:
-            print("👋 ¡Hasta luego!")
-            raise typer.Abort()
-
-        return __prompt()
-
-    return prompt
-
-
-if __name__ == "__main__":
-    typer.run(main)
+        conn.close()
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al anular el ingreso: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()

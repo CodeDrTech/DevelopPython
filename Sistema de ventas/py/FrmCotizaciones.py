@@ -4,10 +4,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion, quitar_detalle_cotizacion
 
 class VentanaCotizaciones(QMainWindow):
     ventana_abierta = False     
@@ -41,16 +41,24 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
         self.txtIdCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
-        self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
-        
+        self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo        
         self.cmbCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
-        self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
-        
+        self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo        
         self.cmbArticulo.currentIndexChanged.connect(self.cargar_precios_venta)
         self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto) 
 
         self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion) 
-        self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
+        self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion) 
+
+        self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
+
+
+        # Evita que se inserte letras en los campos donde solo lleva numeros 0.0
+        double_validator = QDoubleValidator()
+        self.txtDescuento.setValidator(double_validator)
+        self.cmbPrecioVent.setValidator(double_validator)
+        self.txtCantidad.setValidator(double_validator)        
+        self.txtItbis.setValidator(double_validator)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -133,6 +141,7 @@ class VentanaCotizaciones(QMainWindow):
         self.txtFecha.setEnabled(False)
         self.txtItbis.setEnabled(False)
         self.btnRegistrar.setEnabled(False)
+        self.txtComentario.setEnabled(False)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_cotizacion(self):
@@ -144,12 +153,13 @@ class VentanaCotizaciones(QMainWindow):
                         co.itbis as 'IMPUESTOS',\
                         co.serie as 'NO. COTIZACION',\
                         em.nombre as 'VENDEDOR',\
-                        SUM(dc.precio_venta) as 'TOTAL'\
+                        SUM(dc.precio_venta) as 'TOTAL',\
+                        co.comentario as 'COMENTARIO'\
                     FROM cotizacion co\
                     INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
                     INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
                     INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                    GROUP BY co.idcotizacion, CONCAT(cl.nombre, ' ', cl.apellidos), dc.descuento, co.itbis, co.serie, em.nombre;")
+                    GROUP BY co.idcotizacion, CONCAT(cl.nombre, ' ', cl.apellidos), dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
         
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
         model = QSqlTableModel()    
@@ -163,7 +173,7 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_detalle_cotizacion(self):
-        cotizacion = self.txtCodigo.text()
+        idcotizacion = self.txtCodigo.text()
         query = QSqlQuery()
         query.exec_(f"SELECT dc.iddetalle_cotizacion as 'ID DETALLE',\
                         dc.idcotizacion as 'ID COTIZACION',\
@@ -180,7 +190,7 @@ class VentanaCotizaciones(QMainWindow):
                     INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
                     INNER JOIN articulo ar ON dc.idarticulo = ar.idarticulo\
                     INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                    WHERE dc.idcotizacion = {cotizacion};")
+                    WHERE dc.idcotizacion = {idcotizacion};")
         
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
         model = QSqlTableModel()    
@@ -209,6 +219,7 @@ class VentanaCotizaciones(QMainWindow):
             tipo_comprobante = self.cmbComprobante.currentText()            
             num_comprobante = self.txtSerie.text()
             itbis = self.txtItbis.text()
+            comentario = self.txtComentario.toPlainText().upper()
 
             if not itbis:                
                 itbis = 0
@@ -231,7 +242,7 @@ class VentanaCotizaciones(QMainWindow):
             
                 # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso.
                 if confirmacion == QMessageBox.Yes:
-                    insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis)
+                    insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
                     self.activar_botones_detalle()
                     self.desactivar_botones_cotizacion()
                     self.txtCantidad.setFocus()
@@ -290,6 +301,90 @@ class VentanaCotizaciones(QMainWindow):
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def quitar_datos_detalle_cotizacion(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbDatos2.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
+            index = indexes[0]
+            row = index.row()
+            
+            self.obtener_datos_de_fila_detalle_cotizacion(row)
+            id_detalle_cotizacion = self.bd_id_detalle_cotizacion
+            
+            
+            
+            # Preguntar si el usuario está seguro de inhabilitar el ingreso de la fila seleccionada
+            confirmacion = QMessageBox.question(self, "ELIMINAR?", "¿QUIERE ELIMINAR ESTE ARTICULO DE LA LISTA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", elimina el detalle
+            if confirmacion == QMessageBox.Yes:
+                quitar_detalle_cotizacion(id_detalle_cotizacion)
+                QMessageBox.warning(self, "ELIMINADO", "ARTICULO ELIMINADO.")
+                self.visualizar_datos_detalle_cotizacion()
+                self.visualizar_datos_cotizacion()
+                self.verificar_y_ocultar_botones()
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL ARTICULO QUE VAS A ELIMINAR.")
+            
+        # Pasando como parametro el numero de fila, obtengo el id de la cotizacion
+    def obtener_datos_de_fila_detalle_cotizacion(self, num_fila):
+        idcotizacion = self.txtCodigo.text()
+        query = QSqlQuery()
+        query.exec_(f"SELECT dc.iddetalle_cotizacion as 'ID DETALLE',\
+                        dc.idcotizacion as 'ID COTIZACION',\
+                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                        ar.nombre as 'ARTICULO',\
+                        dc.precio_venta as 'PRECIO',\
+                        dc.cantidad as 'CANTIDAD',\
+                        dc.descuento as 'DESCUENTO',\
+                        co.itbis as 'IMPUESTOS',\
+                        co.serie as 'NO. COTIZACION',\
+                        em.nombre as 'VENDEDOR'\
+                    FROM cotizacion co\
+                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                    INNER JOIN articulo ar ON dc.idarticulo = ar.idarticulo\
+                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                    WHERE dc.idcotizacion = {idcotizacion};")
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.tbDatos2.setModel(model)
+        
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbDatos2.model()
+        if modelo is not None and 0 <= num_fila < modelo.rowCount():
+            
+            # Obtener los datos de la fila seleccionada
+            columna_id = modelo.index(num_fila, 0).data()
+            
+            self.bd_id_detalle_cotizacion = columna_id
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # si se elimina el ultimo detalle_cotizacion se inhabilitan los botones de insertar detalles
+    def verificar_y_ocultar_botones(self):
+        idcotizacion = self.txtCodigo.text()
+        
+        query = QSqlQuery()
+        query.prepare("SELECT COUNT(*) FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
+        query.bindValue(":idcotizacion", idcotizacion)
+        
+        if query.exec_() and query.next():
+            num_detalles = query.value(0)
+        
+            if num_detalles == 0:
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
+                mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
+                mensaje.exec_()
+                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Estas 3 funciones obtienen el id de empleado que inicio sesion.
