@@ -236,12 +236,12 @@ QPushButton:pressed {
         <string>Buscar</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnAnular">
+      <widget class="QPushButton" name="btnConvertir">
        <property name="geometry">
         <rect>
          <x>330</x>
          <y>20</y>
-         <width>85</width>
+         <width>88</width>
          <height>37</height>
         </rect>
        </property>
@@ -269,13 +269,13 @@ QPushButton:pressed {
 }</string>
        </property>
        <property name="text">
-        <string>Anular</string>
+        <string>convertir</string>
        </property>
       </widget>
       <widget class="QPushButton" name="btnImprimir">
        <property name="geometry">
         <rect>
-         <x>425</x>
+         <x>430</x>
          <y>20</y>
          <width>85</width>
          <height>37</height>
@@ -1436,9 +1436,9 @@ QLabel {
        <widget class="QLabel" name="label_26">
         <property name="geometry">
          <rect>
-          <x>660</x>
+          <x>650</x>
           <y>150</y>
-          <width>16</width>
+          <width>21</width>
           <height>21</height>
          </rect>
         </property>
@@ -1455,7 +1455,7 @@ QLabel {
 </string>
         </property>
         <property name="text">
-         <string>$</string>
+         <string>%</string>
         </property>
        </widget>
       </widget>
