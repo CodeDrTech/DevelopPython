@@ -21,7 +21,14 @@ class VentanaCotizaciones(QMainWindow):
         self.setWindowTitle('.:. Mantenimiento de Cotizaciones .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------   
+        # Establece las fechas en los txtFechas que estan en el formulario
+        self.txtFecha.setDate(QDate.currentDate())
+        self.txtFechaInicio.setDate(QDate.currentDate())
+        self.txtFechaFin.setDate(QDate.currentDate())
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------           
         # Crear un efecto de sombra        
         tabWidget_shadow = QGraphicsDropShadowEffect()
         tabWidget_shadow.setBlurRadius(20)
@@ -51,6 +58,10 @@ class VentanaCotizaciones(QMainWindow):
         self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion) 
 
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
+
+        # Controles de fecha conectados a la funcion visualizar_datos_cotizacion para buscar datos entre fechas seleccionadas.
+        self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_cotizacion)
+        self.txtFechaFin.dateChanged.connect(self.visualizar_datos_cotizacion)
 
 
         # Evita que se inserte letras en los campos donde solo lleva numeros 0.0
@@ -164,30 +175,41 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_cotizacion(self):
-        query = QSqlQuery()
-        query.exec_(f"SELECT\
-                        co.idcotizacion as 'ID',\
-                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                        dc.descuento as 'DESCUENTO',\
-                        co.itbis as 'IMPUESTOS',\
-                        co.serie as 'NO. COTIZACION',\
-                        em.nombre as 'VENDEDOR',\
-                        SUM(dc.precio_venta) as 'TOTAL',\
-                        co.comentario as 'COMENTARIO'\
-                    FROM cotizacion co\
-                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
-                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
-                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                    GROUP BY co.idcotizacion, CONCAT(cl.nombre, ' ', cl.apellidos), dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
         
-        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
-        model = QSqlTableModel()    
-        model.setQuery(query)        
-        self.tbDatos.setModel(model)
+        if FechaInicio > FechaFinal:
+                    
+                    QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                                    
+                    return
+        else:
+            query = QSqlQuery()
+            query.exec_(f"SELECT\
+                            co.idcotizacion as 'ID',\
+                            UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                            CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                            dc.descuento as 'DESCUENTO',\
+                            co.itbis as 'IMPUESTOS',\
+                            co.serie as 'NO. COTIZACION',\
+                            em.nombre as 'VENDEDOR',\
+                            SUM(dc.precio_venta) as 'TOTAL',\
+                            co.comentario as 'COMENTARIO'\
+                        FROM cotizacion co\
+                        INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                        INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                        INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                        WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                        GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos), dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+            
+            # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+            model = QSqlTableModel()    
+            model.setQuery(query)        
+            self.tbDatos.setModel(model)
 
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbDatos.resizeColumnsToContents()
-        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -537,9 +559,7 @@ class VentanaCotizaciones(QMainWindow):
         self.actualizar_ID_cotizacion()
         self.ocultar_botones_detalle()
 
-        self.txtFecha.setDate(QDate.currentDate())
-        self.txtFechaInicio.setDate(QDate.currentDate())
-        self.txtFechaFin.setDate(QDate.currentDate())
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
     GUI = VentanaCotizaciones()
