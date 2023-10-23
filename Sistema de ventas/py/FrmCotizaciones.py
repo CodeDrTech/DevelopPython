@@ -411,9 +411,9 @@ class VentanaCotizaciones(QMainWindow):
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
                 mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
                 mensaje.exec_()
-                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones
+                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones.
                 self.actualizar_ID_cotizacion() # Actualiza el idcotizacion por si el usuario quiere volver a insertar detalles
-                self.activar_botones_cotizacion() # Activo los botones para insertar cotizacion nueva
+                self.activar_botones_cotizacion() # Activo los botones para insertar cotizacion nueva.
 
                 # Refrescar los datos de las cotizaciones y los de detalle_cotizacion.
                 self.visualizar_datos_cotizacion()
