@@ -26,4 +26,4 @@ BEGIN
 END
 
 
-EXEC ConvertirCotizacionAFactura @idcotizacion = 1; -- Reemplaza 1 con el ID de la cotizacion que deseas convertir
+--EXEC ConvertirCotizacionAFactura @idcotizacion = 1; -- Reemplaza 1 con el ID de la cotizacion que deseas convertir
