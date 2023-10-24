@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, obtener_codigo_venta, generar_nuevo_codigo_venta
 
 class VentanaVentas(QMainWindow):
     ventana_abierta = False     
@@ -104,7 +105,17 @@ class VentanaVentas(QMainWindow):
         self.cmbArticulo.addItem(str(nombre_articulo))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
-
+    # Coloca el id de cotizacion en su txt actulizado para el proximo registro
+    def actualizar_ID_venta(self):
+        ultimo_codigo = obtener_ultimo_codigo("venta","idventa")
+        nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
+        self.txtCodigo.setText(nuevo_codigo)
+        
+    # Coloca el id de cotizacion en su txt actulizado para el proximo registro
+    def actualizar_num_venta(self):
+        ultimo_codigo = obtener_codigo_venta("venta")
+        nuevo_codigo = generar_nuevo_codigo_venta("VENT", ultimo_codigo)
+        self.txtSerie.setText(nuevo_codigo)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
@@ -114,8 +125,9 @@ class VentanaVentas(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
+        self.actualizar_num_venta()
+        self.actualizar_ID_venta()
         
-                
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())

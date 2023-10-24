@@ -832,6 +832,9 @@ QLineEdit::placeholder {
     font-weight: bold;
 }</string>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLabel" name="label_14">
        <property name="geometry">
