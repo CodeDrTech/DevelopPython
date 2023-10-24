@@ -1,42 +1,60 @@
-def quitar_detalle_cotizacion(id_detalle_cotizacion):
-    try:
-        conn = conectar_db()  # Utiliza tu función de conexión a la base de datos
-        cursor = conn.cursor()
+import pyodbc
 
-        # Obtener el idcotizacion desde el detalle
-        cursor.execute("SELECT iddetalle_cotizacion, idcotizacion FROM detalle_cotizacion WHERE iddetalle_cotizacion = ?", (id_detalle_cotizacion,))
-        detalle = cursor.fetchone()
+# Configura la conexión a la base de datos
+server = 'tu_servidor_sql'
+database = 'tu_base_de_datos'
+username = 'tu_usuario'
+password = 'tu_contraseña'
 
-        if detalle:
-            iddetalle_cotizacion, idcotizacion = detalle
+# Realiza la conexión a la base de datos
+conn = pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}')
 
-            # Eliminar el detalle de cotizacion
-            cursor.execute("DELETE FROM detalle_cotizacion WHERE iddetalle_cotizacion = ?", (iddetalle_cotizacion,))
+# Crea un cursor para ejecutar consultas SQL
+cursor = conn.cursor()
 
-            # Comprobar si la cotizacion ya no tiene más detalles
-            cursor.execute("SELECT COUNT(*) FROM detalle_cotizacion WHERE idcotizacion = ?", (idcotizacion,))
-            num_detalles = cursor.fetchone()[0]
+try:
+    # Obtiene el último número de serie de ventas si existe
+    cursor.execute('SELECT MAX(CAST(RIGHT(serie, LEN(serie) - 4) AS INT)) FROM venta')
+    last_serie_number = cursor.fetchone()[0]
 
-            if num_detalles == 0:
+    # Establece el próximo número de serie
+    if last_serie_number is not None:
+        next_serie_number = last_serie_number + 1
+    else:
+        next_serie_number = 1
 
-                # Agregar un detalle de cotización genérico
-                cursor.execute("INSERT INTO detalle_cotizacion (idcotizacion, idarticulo, cantidad) VALUES (?, 1, 0)", (idcotizacion,))
+    nueva_serie = f'VENT{next_serie_number:05}'
 
-                # Actualizar el comentario en la cotización
-                cursor.execute("UPDATE cotizacion SET comentario = 'COTIZACION ANULADA' WHERE idcotizacion = ?", (idcotizacion,))
+    # Supongamos que ya tienes una cotización con un ID específico
+    id_cotizacion = 1
 
-            conn.commit()
-        else:
-            mensaje_error = QMessageBox()
-            mensaje_error.setWindowTitle("Error")
-            mensaje_error.setText("Detalle de cotizacion no encontrado.")
-            mensaje_error.setIcon(QMessageBox.Critical)
-            mensaje_error.exec()
+    # Obtiene los detalles de la cotización
+    cursor.execute(f'SELECT * FROM detalle_cotizacion WHERE idcotizacion = {id_cotizacion}')
+    detalles_cotizacion = cursor.fetchall()
 
-        conn.close()
-    except Exception as e:
-        mensaje_error = QMessageBox()
-        mensaje_error.setWindowTitle("Error")
-        mensaje_error.setText(f"Error al anular el ingreso: {str(e)}")
-        mensaje_error.setIcon(QMessageBox.Critical)
-        mensaje_error.exec()
+    # Inserta una nueva venta con el tipo_comprobante y serie actualizados
+    cursor.execute(f'INSERT INTO venta (idcliente, idempleado, fecha, tipo_comprobante, serie, itbis) '
+                   f'SELECT idcliente, idempleado, fecha, "FACTURA", "{nueva_serie}", itbis '
+                   f'FROM cotizacion WHERE idcotizacion = {id_cotizacion}')
+    conn.commit()
+
+    # Obtiene el ID de la venta recién insertada
+    cursor.execute('SELECT SCOPE_IDENTITY()')
+    id_venta = cursor.fetchone()[0]
+
+    # Inserta los detalles de la venta
+    for detalle in detalles_cotizacion:
+        cursor.execute(f'INSERT INTO detalle_venta (idventa, idarticulo, cantidad, precio_venta, descuento) '
+                       f'VALUES ({id_venta}, {detalle.idarticulo}, {detalle.cantidad}, {detalle.precio_venta}, {detalle.descuento})')
+    conn.commit()
+
+    print(f'Cotización con ID {id_cotizacion} ha sido convertida en venta con ID {id_venta}')
+    print(f'Serie de venta: {nueva_serie}')
+
+except Exception as e:
+    print(f'Ocurrió un error: {e}')
+
+finally:
+    # Cierra el cursor y la conexión a la base de datos
+    cursor.close()
+    conn.close()

@@ -9,7 +9,7 @@ from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo,\
     insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion,\
-    quitar_detalle_cotizacion, obtener_codigo_cotizacion, generar_nuevo_codigo_cotizacion
+    quitar_detalle_cotizacion, obtener_codigo_cotizacion, generar_nuevo_codigo_cotizacion, convertir_cot_a_factura
 
 class VentanaCotizaciones(QMainWindow):
     ventana_abierta = False     
@@ -62,6 +62,8 @@ class VentanaCotizaciones(QMainWindow):
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
 
         self.btnBuscar.clicked.connect(self.visualizar_datos_cotizacion)
+        
+        self.btnConvertir.clicked.connect(self.convertir_cotizacion)
 
         # Controles de fecha conectados a la funcion visualizar_datos_cotizacion para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_cotizacion)
@@ -181,6 +183,71 @@ class VentanaCotizaciones(QMainWindow):
         self.txtItbis.setText("")
         self.txtComentario.setPlainText("")
         self.txtFecha.setDate(QDate.currentDate())
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def convertir_cotizacion(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbDatos.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
+            index = indexes[0]
+            row = index.row()
+            
+            self.obtener_id_fila_cotizacion(row)
+            id_cotizacion = self.bd_id_cotizacion
+            
+            
+            
+            # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+            confirmacion = QMessageBox.question(self, "CONVERITR?", "¿QUIERE CONVERTIR ESTA COTIZACION A FACTURA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", elimina el detalle
+            if confirmacion == QMessageBox.Yes:
+                convertir_cot_a_factura(id_cotizacion)
+                QMessageBox.warning(self, "FACTURADO", "COTIZACION CONVERTIDA A FACTURA.")
+                
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
+            
+        # Pasando como parametro el numero de fila, obtengo el id de la cotizacion.
+    def obtener_id_fila_cotizacion(self, num_fila):
+        query = QSqlQuery()
+        query.exec_(f"SELECT\
+                                co.idcotizacion as 'ID',\
+                                UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                dc.descuento as 'DESCUENTO',\
+                                co.itbis as 'IMPUESTOS',\
+                                co.serie as 'NO. COTIZACION',\
+                                em.nombre as 'VENDEDOR',\
+                                FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                co.comentario as 'COMENTARIO'\
+                            FROM cotizacion co\
+                            INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                            INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                            INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                            GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                            dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.tbDatos.setModel(model)
+        
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbDatos.model()
+        if modelo is not None and 0 <= num_fila < modelo.rowCount():
+            
+            # Obtener los datos de la fila seleccionada
+            columna_id = modelo.index(num_fila, 0).data()
+            
+            self.bd_id_cotizacion = columna_id
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------

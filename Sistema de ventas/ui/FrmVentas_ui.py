@@ -445,9 +445,6 @@ class Ui_MainWindow(object):
 "}")
         self.cmbComprobante = QComboBox(self.groupBox)
         self.cmbComprobante.addItem("")
-        self.cmbComprobante.addItem("")
-        self.cmbComprobante.addItem("")
-        self.cmbComprobante.addItem("")
         self.cmbComprobante.setObjectName(u"cmbComprobante")
         self.cmbComprobante.setGeometry(QRect(135, 110, 120, 35))
         self.cmbComprobante.setStyleSheet(u"/* Estilos para QComboBox */\n"
@@ -1053,10 +1050,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Comprobante", None))
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Cliente", None))
-        self.cmbComprobante.setItemText(0, QCoreApplication.translate("MainWindow", u"TICKET", None))
-        self.cmbComprobante.setItemText(1, QCoreApplication.translate("MainWindow", u"BOLETA", None))
-        self.cmbComprobante.setItemText(2, QCoreApplication.translate("MainWindow", u"FACTURA", None))
-        self.cmbComprobante.setItemText(3, QCoreApplication.translate("MainWindow", u"GUI REMISION", None))
+        self.cmbComprobante.setItemText(0, QCoreApplication.translate("MainWindow", u"FACTURA", None))
 
 #if QT_CONFIG(tooltip)
         self.cmbCliente.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Doble click para buscar clientes</p></body></html>", None))

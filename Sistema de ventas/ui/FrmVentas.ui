@@ -735,22 +735,7 @@ QComboBox::placeholder {
        </property>
        <item>
         <property name="text">
-         <string>TICKET</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>BOLETA</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>FACTURA</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>GUI REMISION</string>
         </property>
        </item>
       </widget>
