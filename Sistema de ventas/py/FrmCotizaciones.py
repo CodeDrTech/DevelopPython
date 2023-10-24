@@ -7,7 +7,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion, quitar_detalle_cotizacion
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo,\
+    insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion,\
+    quitar_detalle_cotizacion, obtener_codigo_cotizacion, generar_nuevo_codigo_cotizacion
 
 class VentanaCotizaciones(QMainWindow):
     ventana_abierta = False     
@@ -132,7 +134,12 @@ class VentanaCotizaciones(QMainWindow):
         ultimo_codigo = obtener_ultimo_codigo("cotizacion","idcotizacion")
         nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
         self.txtCodigo.setText(nuevo_codigo)
-        self.txtSerie.setText(nuevo_codigo)   
+        
+    # Coloca el id de cotizacion en su txt actulizado para el proximo registro
+    def actualizar_num_cotizacion(self):
+        ultimo_codigo = obtener_codigo_cotizacion("cotizacion")
+        nuevo_codigo = generar_nuevo_codigo_cotizacion("COT", ultimo_codigo)
+        self.txtSerie.setText(nuevo_codigo)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -471,14 +478,11 @@ class VentanaCotizaciones(QMainWindow):
                 self.ocultar_botones_detalle()  # Llama a la función para ocultar botones.
                 self.actualizar_ID_cotizacion() # Actualiza el idcotizacion por si el usuario quiere volver a insertar detalles
                 self.activar_botones_cotizacion() # Activo los botones para insertar cotizacion nueva.
-
+                self.actualizar_num_cotizacion() # Actualiza el codigo de cotizacion por si el usuario quiere volver a insertar detalles
+                
                 # Refrescar los datos de las cotizaciones y los de detalle_cotizacion.
                 self.visualizar_datos_cotizacion()
                 self.visualizar_datos_detalle_cotizacion()
-
-                # Actualizar el numero de cotizacion con el nuevo numero del idcotizacion.
-                id_cotizacion = self.txtCodigo.text()
-                self.txtSerie.setText(id_cotizacion)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Estas 3 funciones obtienen el id de empleado que inicio sesion.
@@ -592,6 +596,7 @@ class VentanaCotizaciones(QMainWindow):
         self.tbSesiones.hide()
         self.visualizar_datos_cotizacion()
         self.actualizar_ID_cotizacion()
+        self.actualizar_num_cotizacion()
         self.ocultar_botones_detalle()
 
         

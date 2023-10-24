@@ -550,6 +550,7 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
+        self.txtSerie.setReadOnly(True)
         self.label_14 = QLabel(self.groupBox)
         self.label_14.setObjectName(u"label_14")
         self.label_14.setGeometry(QRect(610, 70, 51, 21))

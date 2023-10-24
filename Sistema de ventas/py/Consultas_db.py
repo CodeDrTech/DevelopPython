@@ -24,6 +24,24 @@ def generar_nuevo_codigo_articulo(prefijo, ultimo_codigo):
     return nuevo_codigo_formateado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+# Generar el codigo de las cotizaciones de manera automatica 
+def obtener_codigo_cotizacion(tabla):
+    conn = conectar_db()
+    cursor = conn.execute(f"SELECT MAX(serie) FROM {tabla}")
+    ultimo_codigo = cursor.fetchone()[0]
+    conn.close()
+    return ultimo_codigo
+
+def generar_nuevo_codigo_cotizacion(prefijo, ultimo_codigo):
+    if ultimo_codigo is None:
+        nuevo_codigo = 0
+    else:
+        nuevo_codigo = int(ultimo_codigo.replace(prefijo, '')) + 1
+
+    nuevo_codigo_formateado = f"{prefijo}{str(nuevo_codigo).zfill(5)}"
+    return nuevo_codigo_formateado
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 # Funciones genericas para mostrar los codigos siguientes al momento de registrar en la base de dato 
 def obtener_ultimo_codigo(tabla, codigo):
     conn = conectar_db()
