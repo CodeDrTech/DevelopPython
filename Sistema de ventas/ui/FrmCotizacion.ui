@@ -241,7 +241,7 @@ QPushButton:pressed {
         <rect>
          <x>330</x>
          <y>20</y>
-         <width>88</width>
+         <width>91</width>
          <height>37</height>
         </rect>
        </property>
@@ -269,7 +269,7 @@ QPushButton:pressed {
 }</string>
        </property>
        <property name="text">
-        <string>convertir</string>
+        <string>Convertir</string>
        </property>
       </widget>
       <widget class="QPushButton" name="btnImprimir">

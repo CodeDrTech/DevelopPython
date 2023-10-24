@@ -32,7 +32,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.txtFecha = QDateTimeEdit(self.centralwidget)
         self.txtFecha.setObjectName(u"txtFecha")
-        self.txtFecha.setGeometry(QRect(420, 20, 121, 25))
+        self.txtFecha.setGeometry(QRect(400, 20, 136, 24))
         self.txtFecha.setReadOnly(True)
         self.txtFecha.setCalendarPopup(True)
         self.label = QLabel(self.centralwidget)

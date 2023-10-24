@@ -65,7 +65,8 @@ class VentanaCotizaciones(QMainWindow):
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_cotizacion)
         self.txtFechaFin.dateChanged.connect(self.visualizar_datos_cotizacion)
 
-
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
         # Evita que se inserte letras en los campos donde solo lleva numeros 0.0
         double_validator = QDoubleValidator()
         self.txtDescuento.setValidator(double_validator)

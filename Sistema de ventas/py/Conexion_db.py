@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 
-# Funcion que lee la ruta a la base de datos establecida en el archivo configuracion.txt
+# Leer el archivo .txt con la cadena de cionexion.
 def ruta_database():
-    ruta_configuracion = "Sistema de ventas/txt/configuracion2.txt"
+    ruta_configuracion = "Sistema de ventas/txt/configuracion.txt"
     
     with open(ruta_configuracion, "r") as f:
          cadena_conexion = f.read().strip()
@@ -14,7 +14,7 @@ def ruta_database():
     return cadena_conexion
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Funcion usada para insertar datos a la base de datos.
+# Conexion con el servidor SQL Server
 def conectar_db():
     cadena_conexion = ruta_database()
     
