@@ -392,8 +392,8 @@ class VentanaCotizaciones(QMainWindow):
             
                 # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso.
                 if confirmacion == QMessageBox.Yes:
-                    #insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
-                    insertar_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
+                    insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
+                    #insertar_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
                     self.activar_botones_detalle()
                     self.desactivar_botones_cotizacion()
 
@@ -436,8 +436,8 @@ class VentanaCotizaciones(QMainWindow):
             
             
             else:
-                #insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)
-                insertar_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)      
+                insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)
+                #insertar_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)      
 
                 self.visualizar_datos_cotizacion()
                 self.visualizar_datos_detalle_cotizacion()
