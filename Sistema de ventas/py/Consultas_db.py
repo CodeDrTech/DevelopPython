@@ -216,6 +216,60 @@ def insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, nu
 def insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento):
     insertar_dato_generico('detalle_cotizacion', ['idcotizacion', 'idarticulo', 'cantidad', 'precio_venta', 'descuento'], 
                                                     [idoctizacion, idarticulo, catidad, precio_venta, descuento])
+
+
+# Función para insertar una cotización
+def insertar_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, serie, itbis, comentario):
+    conn = conectar_db()
+    
+    try:
+        cursor = conn.cursor()
+
+        idcotizacion = None
+        cursor.execute("{CALL InsertarCotizacion(?, ?, ?, ?, ?, ?, ?, ?)}",
+                       idcliente, idempleado, fecha, tipo_comprobante, serie, itbis, comentario, idcotizacion)
+        
+        cursor.execute("SELECT ? AS idcotizacion", idcotizacion)
+        idcotizacion = cursor.fetchone().idcotizacion
+        cursor.close()
+        conn.commit()
+
+        return idcotizacion
+
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al insertar cotización: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
+        return None
+    finally:
+        conn.close()
+
+# Función para insertar un detalle de cotización
+def insertar_detalle_cotizacion(idcotizacion, idarticulo, cantidad, precio_venta, descuento):
+    conn = conectar_db()
+    
+    
+    try:
+        cursor = conn.cursor()
+        
+        
+
+        cursor.execute("{CALL InsertarDetalleCotizacion(?, ?, ?, ?, ?)}",
+                       idcotizacion, idarticulo, cantidad, precio_venta, descuento)
+
+        conn.commit()
+
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al insertar detalle de cotización: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
+    finally:
+        conn.close()
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 def anular_ingreso(id_ingreso):
@@ -291,48 +345,7 @@ def quitar_detalle_ingreso(id_detalle_ingreso):
         mensaje_error.exec()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-#def quitar_detalle_cotizacion(id_detalle_cotizacion):
-    try:
-        conn = conectar_db()  # Utiliza tu función de conexión a la base de datos
-        cursor = conn.cursor()
 
-        # Obtener el idcotizacion desde el detalle
-        cursor.execute("SELECT iddetalle_cotizacion, idcotizacion FROM detalle_cotizacion WHERE iddetalle_cotizacion = ?", (id_detalle_cotizacion,))
-        detalle = cursor.fetchone()
-
-        if detalle:
-            iddetalle_cotizacion, idcotizacion = detalle
-
-            # Eliminar el detalle de cotizacion
-            cursor.execute("DELETE FROM detalle_cotizacion WHERE iddetalle_cotizacion = ?", (iddetalle_cotizacion,))
-
-            # Comprobar si la cotizacion ya no tiene más detalles
-            cursor.execute("SELECT COUNT(*) FROM detalle_cotizacion WHERE idcotizacion = ?", (idcotizacion,))
-            num_detalles = cursor.fetchone()[0]
-
-            if num_detalles == 0:
-                # Agregar un detalle de cotización genérico
-                cursor.execute("INSERT INTO detalle_cotizacion (idcotizacion, idarticulo, cantidad, precio_venta, descuento) VALUES (?, 1, 0, 0, 0)", (idcotizacion,))
-
-                # Actualizar el comentario en la cotización
-                cursor.execute("UPDATE cotizacion SET comentario = 'COTIZACION ANULADA' WHERE idcotizacion = ?", (idcotizacion,))
-
-            conn.commit()
-        else:
-            mensaje_error = QMessageBox()
-            mensaje_error.setWindowTitle("Error")
-            mensaje_error.setText("Detalle de cotizacion no encontrado.")
-            mensaje_error.setIcon(QMessageBox.Critical)
-            mensaje_error.exec()
-
-        conn.close()
-    except Exception as e:
-        mensaje_error = QMessageBox()
-        mensaje_error.setWindowTitle("Error")
-        mensaje_error.setText(f"Error al anular el ingreso: {str(e)}")
-        mensaje_error.setIcon(QMessageBox.Critical)
-        mensaje_error.exec()
-        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 def convertir_cot_a_factura(id_cotizacion):
@@ -358,7 +371,8 @@ def convertir_cot_a_factura(id_cotizacion):
     finally:
         # Cierra la conexión a la base de datos
         conn.close()
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 def quitar_detalle_cotizacion(id_detalle_cotizacion):
     conn = conectar_db()
     
@@ -376,7 +390,7 @@ def quitar_detalle_cotizacion(id_detalle_cotizacion):
         # Mensaje de error
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
-        mensaje_error.setText(f"Fallo la convercion a factura {str(e)}")
+        mensaje_error.setText(f"Fallo en la eliminacion de los detalles {str(e)}")
         mensaje_error.setIcon(QMessageBox.Critical)
         mensaje_error.exec()
     finally:
