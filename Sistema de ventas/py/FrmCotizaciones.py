@@ -501,7 +501,7 @@ class VentanaCotizaciones(QMainWindow):
                         ar.nombre as 'ARTICULO',\
                         dc.precio_venta as 'PRECIO',\
                         dc.cantidad as 'CANTIDAD',\
-                        dc.descuento as 'DESCUENTO',\
+                        dc.descuento as 'DESCUENTO %',\
                         co.itbis as 'IMPUESTOS',\
                         co.serie as 'NO. COTIZACION',\
                         em.nombre as 'VENDEDOR'\
@@ -530,13 +530,13 @@ class VentanaCotizaciones(QMainWindow):
         idcotizacion = self.txtCodigo.text()
         
         query = QSqlQuery()
-        query.prepare("SELECT COUNT(*) FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
+        query.prepare(f"SELECT COUNT(*) FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
         query.bindValue(":idcotizacion", idcotizacion)
         
         if query.exec_() and query.next():
             num_detalles = query.value(0)
         
-            if num_detalles == 1:
+            if num_detalles == 0:
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")

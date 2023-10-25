@@ -42,6 +42,24 @@ def generar_nuevo_codigo_cotizacion(prefijo, ultimo_codigo):
     return nuevo_codigo_formateado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+# Función para obtener el ID de Categoria a partir del nombre
+def obtener_id_categoria_por_nombre(nombre_categoria):
+    conn = conectar_db()
+    cursor = conn.execute("SELECT idcategoria FROM Categoria WHERE nombre = ?", (nombre_categoria,))
+    resultado = cursor.fetchone()
+    conn.close()
+    return resultado[0] if resultado else None
+
+# Función para obtener el ID de presentacion a partir del nombre
+def obtener_id_presentacion_por_nombre(nombre_presentacion):
+    conn = conectar_db()
+    cursor = conn.execute("SELECT idpresentacion FROM presentacion WHERE nombre = ?", (nombre_presentacion,))
+    resultado = cursor.fetchone()
+    conn.close()
+    return resultado[0] if resultado else None
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
 # Generar el codigo de las ventas de manera automatica 
 def obtener_codigo_venta(tabla):
     conn = conectar_db()
@@ -155,23 +173,7 @@ def insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria,
         mensaje_error.setText(f"Error al insertar artículo: {str(e)}")
         mensaje_error.exec_()
 
-# Función para obtener el ID de Categoria a partir del nombre
-def obtener_id_categoria_por_nombre(nombre_categoria):
-    conn = conectar_db()
-    cursor = conn.execute("SELECT idcategoria FROM Categoria WHERE nombre = ?", (nombre_categoria,))
-    resultado = cursor.fetchone()
-    conn.close()
-    return resultado[0] if resultado else None
-
-# Función para obtener el ID de presentacion a partir del nombre
-def obtener_id_presentacion_por_nombre(nombre_presentacion):
-    conn = conectar_db()
-    cursor = conn.execute("SELECT idpresentacion FROM presentacion WHERE nombre = ?", (nombre_presentacion,))
-    resultado = cursor.fetchone()
-    conn.close()
-    return resultado[0] if resultado else None
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------  
+  
 def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado):
     insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'],
                                                      [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
@@ -289,7 +291,7 @@ def quitar_detalle_ingreso(id_detalle_ingreso):
         mensaje_error.exec()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-def quitar_detalle_cotizacion(id_detalle_cotizacion):
+#def quitar_detalle_cotizacion(id_detalle_cotizacion):
     try:
         conn = conectar_db()  # Utiliza tu función de conexión a la base de datos
         cursor = conn.cursor()
@@ -357,52 +359,26 @@ def convertir_cot_a_factura(id_cotizacion):
         # Cierra la conexión a la base de datos
         conn.close()
         
-        
-# def convertir_cot_a_factura(id_cotizacion):
-#     conn = conectar_db()
-#     cursor = conn.cursor()
-#     try:
-#         # Obtiene el último número de serie de ventas si existe
-#         cursor.execute('SELECT MAX(CAST(RIGHT(serie, LEN(serie) - 4) AS INT)) FROM venta')
-#         last_serie_number = cursor.fetchone()[0]
-# 
-#         # Establece el próximo número de serie
-#         if last_serie_number is not None:
-#             next_serie_number = last_serie_number + 1
-#         else:
-#             next_serie_number = 1
-# 
-#         nueva_serie = f'VENT{next_serie_number:05}'
-# 
-#         # Obtiene los detalles de la cotización
-#         cursor.execute(f'SELECT * FROM detalle_cotizacion WHERE idcotizacion = {id_cotizacion}')
-#         detalles_cotizacion = cursor.fetchall()
-# 
-#         # Inserta una nueva venta con el tipo_comprobante y serie actualizados
-#         cursor.execute(f'INSERT INTO venta (idcliente, idempleado, fecha, tipo_comprobante, serie, itbis) '
-#                f'SELECT idcliente, idempleado, fecha, ?, ?, itbis '  # Utiliza ? como marcador de posición
-#                f'FROM cotizacion WHERE idcotizacion = {id_cotizacion}', 'FACTURA', nueva_serie)
-#         conn.commit()
-# 
-#         # Obtiene el ID de la venta recién insertada
-#         cursor.execute('SELECT SCOPE_IDENTITY()')
-#         id_venta = cursor.fetchone()[0]
-# 
-#         
-#         # Inserta los detalles de la venta
-#         for detalle in detalles_cotizacion:
-#             cursor.execute(f'INSERT INTO detalle_venta (idventa, idarticulo, cantidad, precio_venta, descuento) '
-#                    f'VALUES (?, ?, ?, ?, ?)', (id_venta, detalle.idarticulo, detalle.cantidad, detalle.precio_venta, detalle.descuento))
-#             conn.commit()
-#         
-#     except Exception as e:
-#         # Mensaje de error
-#         mensaje_error = QMessageBox()
-#         mensaje_error.setWindowTitle("Error")
-#         mensaje_error.setText(f"Fallo la convercion a factura {str(e)}")
-#         mensaje_error.setIcon(QMessageBox.Critical)
-#         mensaje_error.exec()
-#     finally:
-#         # Cierra el cursor y la conexión a la base de datos
-#         cursor.close()
-#         conn.close()
+def quitar_detalle_cotizacion(id_detalle_cotizacion):
+    conn = conectar_db()
+    
+    try:
+        # Crea un cursor para ejecutar el procedimiento almacenado
+        cursor = conn.cursor()
+
+        # Ejecuta el procedimiento almacenado
+        cursor.execute("EXEC EliminarDetalleCotizacion @id_detalle_cotizacion=?", id_detalle_cotizacion)
+        conn.commit()
+
+        # Cierra el cursor
+        cursor.close()
+    except Exception as e:
+        # Mensaje de error
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Fallo la convercion a factura {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
+    finally:
+        # Cierra la conexión a la base de datos
+        conn.close()
