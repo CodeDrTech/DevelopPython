@@ -1,14 +1,4 @@
-USE [Ventas]
-GO
-
-/****** Object:  StoredProcedure [dbo].[ConvertirCotizacionAFactura]    Script Date: 10/26/2023 1:44:43 PM *****/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE PROCEDURE [dbo].[ConvertirCotizacionAFactura]
+CREATE PROCEDURE ConvertirCotizacionAFactura
     @idcotizacion INT
 AS
 BEGIN
@@ -37,6 +27,13 @@ BEGIN
     FROM cotizacion
     WHERE idcotizacion = @idcotizacion;
 
+    -- Actualizar el campo "disponible" en la tabla "stock" restando la cantidad de la tabla "detalle_cotizacion"
+    UPDATE s
+    SET s.disponible = s.disponible - dc.cantidad
+    FROM stock s
+    JOIN detalle_cotizacion dc ON s.idarticulo = dc.idarticulo
+    WHERE dc.idcotizacion = @idcotizacion;
+
     -- Insertar una nueva venta con el tipo_comprobante y serie actualizados
     INSERT INTO venta (idcliente, idempleado, fecha, tipo_comprobante, serie, itbis, comentario)
     SELECT idcliente, idempleado, GETDATE(), 'FACTURA', @nueva_serie, itbis, @comentario_venta
@@ -52,6 +49,3 @@ BEGIN
     FROM detalle_cotizacion
     WHERE idcotizacion = @idcotizacion;
 END;
-GO
-
-

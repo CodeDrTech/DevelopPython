@@ -186,9 +186,6 @@ class VentanaCotizaciones(QMainWindow):
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
     def convertir_cotizacion(self):
         # Obtener el índice de la fila seleccionada
         indexes = self.tbDatos.selectedIndexes()
@@ -202,22 +199,61 @@ class VentanaCotizaciones(QMainWindow):
             self.obtener_id_fila_cotizacion(row)
             id_cotizacion = self.bd_id_cotizacion
             
-            
+            if not self.verificar_cantidad_cotizacion_stock():
+                QMessageBox.warning(self, "ERROR", "La cantidad en la cotización supera la cantidad en stock.")
+                return
             
             # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
             confirmacion = QMessageBox.question(self, "CONVERITR?", "¿QUIERE CONVERTIR ESTA COTIZACION A FACTURA?",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
             
-            # Si el usuario hace clic en el botón "Sí", elimina el detalle
+            # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en factura
             if confirmacion == QMessageBox.Yes:
                 convertir_cot_a_factura(id_cotizacion)
                 QMessageBox.warning(self, "FACTURADO", "COTIZACION CONVERTIDA A FACTURA.")
                 
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
-            
-        # Pasando como parametro el numero de fila, obtengo el id de la cotizacion.
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def verificar_cantidad_cotizacion_stock(self):
+        id_cotizacion = self.bd_id_cotizacion
+        query = QSqlQuery()
+        query.exec_(f"SELECT idarticulo, sum(cantidad) FROM detalle_cotizacion WHERE idcotizacion = {id_cotizacion} GROUP BY idarticulo")
+        
+        cantidades_cotizacion = {}
+        
+        while query.next():
+            id_articulo = query.value(0)
+            cantidades = query.value(1)
+            cantidades_cotizacion[id_articulo] = cantidades
+        
+        # Realiza una consulta para obtener las cantidades de stock
+        cantidades_stock = {}
+        query.exec_("SELECT idarticulo, disponible FROM stock")
+        
+        while query.next():
+            id_articulo = query.value(0)
+            disponible = query.value(1)
+            cantidades_stock[id_articulo] = disponible
+
+        # Realiza la comparación de cantidades
+        for id_articulo, cantidad_cotizacion in cantidades_cotizacion.items():
+            if id_articulo in cantidades_stock:
+                cantidad_stock = cantidades_stock[id_articulo]
+                if cantidad_cotizacion > cantidad_stock:
+                    # No hay suficiente stock para convertir la cotización
+                    return False
+
+        # Si todas las comparaciones son exitosas, se puede convertir la cotización
+        return True
+
+
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------           
+    # Pasando como parametro el numero de fila, obtengo el id de la cotizacion.
     def obtener_id_fila_cotizacion(self, num_fila):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
@@ -255,10 +291,12 @@ class VentanaCotizaciones(QMainWindow):
                 modelo = self.tbDatos.model()
                 if modelo is not None and 0 <= num_fila < modelo.rowCount():
                     
-                    # Obtener los datos de la fila seleccionada
+                    # Obtener los datos de las columnas de la fila seleccionada
                     columna_id = modelo.index(num_fila, 0).data()
                     
+                    
                     self.bd_id_cotizacion = columna_id
+
         else:
             if FechaInicio > FechaFinal:
                 QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
@@ -293,7 +331,9 @@ class VentanaCotizaciones(QMainWindow):
                     # Obtener los datos de la fila seleccionada
                     columna_id = modelo.index(num_fila, 0).data()
                     
+                    
                     self.bd_id_cotizacion = columna_id
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_cotizacion(self):
@@ -486,13 +526,6 @@ class VentanaCotizaciones(QMainWindow):
 
                 self.visualizar_datos_cotizacion()
                 self.visualizar_datos_detalle_cotizacion()
-
-                
-                # mensaje = QMessageBox()
-                # mensaje.setIcon(QMessageBox.Critical)
-                # mensaje.setWindowTitle("Agregar detalles de cotizaion")
-                # mensaje.setText("Detalles de cotizacion registrado.")
-                # mensaje.exec_()
                 
                 
                 
@@ -583,7 +616,7 @@ class VentanaCotizaciones(QMainWindow):
         if query.exec_() and query.next():
             num_detalles = query.value(0)
         
-            if num_detalles == 1:
+            if num_detalles == 0:
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")

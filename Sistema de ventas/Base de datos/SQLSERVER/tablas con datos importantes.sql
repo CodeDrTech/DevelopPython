@@ -2,15 +2,15 @@ USE [Ventas]
 GO
 
 INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'HM', N'HERRAMIENTAS MANUALES')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'HE', N'HERRAMIENTAS ELÉCTRICAS')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'FC', N'FERRETERÍA PARA LA CONSTRUCCIÓN')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'SF', N'SUMINISTROS PARA FONTANERÍA')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'SE', N'SUMINISTROS ELÉCTRICOS')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'HE', N'HERRAMIENTAS ELï¿½CTRICAS')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'FC', N'FERRETERï¿½A PARA LA CONSTRUCCIï¿½N')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'SF', N'SUMINISTROS PARA FONTANERï¿½A')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'SE', N'SUMINISTROS ELï¿½CTRICOS')
 INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'PYC', N'PINTURA Y ACABADOS')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'SYP', N'SEGURIDAD Y PROTECCIÓN')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'JYE', N'JARDINERÍA Y EXTERIOR')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'AYO', N'ALMACENAMIENTO Y ORGANIZACIÓN')
-INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'DDI', N'DECORACIÓN Y DISEÑO DE INTERIORES')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'SYP', N'SEGURIDAD Y PROTECCIï¿½N')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'JYE', N'JARDINERï¿½A Y EXTERIOR')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'AYO', N'ALMACENAMIENTO Y ORGANIZACIï¿½N')
+INSERT [dbo].[Categoria] ([nombre], [descripcion]) VALUES (N'DDI', N'DECORACIï¿½N Y DISEï¿½O DE INTERIORES')
 GO
 
 
@@ -28,18 +28,18 @@ INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategor
 INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00002', N'CLAVOS TITAN', N'CLAVOS DE ACERO DE UNA PULGADA', NULL, 3, 5)
 INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00003', N'CLAVO TITAN', N'CLAVOS DE ACERO DE DOS PULGADAS', NULL, 3, 5)
 INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00004', N'Martillo de carpintero', N'Martillo de carpintero de 16 oz con mango de madera resistente.', NULL, 2, 3)
-INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00005', N'Juego de destornilladores de precisión', N'Juego de 6 destornilladores de precisión con puntas intercambiables para trabajos delicados.', NULL, 2, 3)
-INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00006', N'Llave ajustable de 10"', N'Llave ajustable de 10" con mecanismo de trinquete para un ajuste rápido y preciso.', NULL, 2, 3)
+INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00005', N'Juego de destornilladores de precisiï¿½n', N'Juego de 6 destornilladores de precisiï¿½n con puntas intercambiables para trabajos delicados.', NULL, 2, 3)
+INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00006', N'Llave ajustable de 10"', N'Llave ajustable de 10" con mecanismo de trinquete para un ajuste rï¿½pido y preciso.', NULL, 2, 3)
 INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00007', N'Sierra de mano plegable', N'Sierra de mano plegable con hoja dentada de acero para cortes limpios en madera y metal.', NULL, 2, 3)
-INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00008', N'Alicate de punta larga', N'Alicate de punta larga de 6" para trabajos de agarre y torsión en espacios estrechos.', NULL, 2, 3)
-INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00009', N'Taladro percutor de 18V', N'Taladro percutor inalámbrico de 18V con velocidad variable y función de percusión para perforaciones precisas.', NULL, 3, 3)
-INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00010', N'Sierra circular de 7-1/4"', N'Sierra circular de 7-1/4" con guía láser y ajuste de profundidad para cortes precisos en madera y otros materiales.', NULL, 3, 3)
+INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00008', N'Alicate de punta larga', N'Alicate de punta larga de 6" para trabajos de agarre y torsiï¿½n en espacios estrechos.', NULL, 2, 3)
+INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00009', N'Taladro percutor de 18V', N'Taladro percutor inalï¿½mbrico de 18V con velocidad variable y funciï¿½n de percusiï¿½n para perforaciones precisas.', NULL, 3, 3)
+INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00010', N'Sierra circular de 7-1/4"', N'Sierra circular de 7-1/4" con guï¿½a lï¿½ser y ajuste de profundidad para cortes precisos en madera y otros materiales.', NULL, 3, 3)
 INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00011', N'Pulidora orbital de 6"', N'Pulidora orbital de 6" con velocidad variable y almohadillas de pulido para darle brillo a superficies.', NULL, 3, 3)
-INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00012', N'Lijadora orbital aleatoria', N'Lijadora orbital aleatoria de 5" con recolección de polvo y sistema de fijación de lijas.', NULL, 3, 3)
+INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00012', N'Lijadora orbital aleatoria', N'Lijadora orbital aleatoria de 5" con recolecciï¿½n de polvo y sistema de fijaciï¿½n de lijas.', NULL, 3, 3)
 INSERT [dbo].[articulo] ([codigo], [nombre], [descripcion], [imagen], [idcategoria], [idpresentacion]) VALUES (N'ART00013', N'Pistola de calor de 1500W', N'Pistola de calor de 1500W con ajuste de temperatura y flujo de aire para trabajos de secado y encogimiento.', NULL, 3, 3)
 GO
 
-
+INSERT [dbo].[cliente] ([nombre], [apellidos], [sexo], [fecha_nacimiento], [tipo_documento], [num_documento], [direccion], [telefono], [email]) VALUES (N'CLIENTE', N'GENERICO', N'M', CAST(N'1900-01-01' AS Date), N'CEDULA', N'00000000000', N'CALLE #77', N'8091234567', NULL)
 INSERT [dbo].[cliente] ([nombre], [apellidos], [sexo], [fecha_nacimiento], [tipo_documento], [num_documento], [direccion], [telefono], [email]) VALUES (N'JUAN JOSE', N'HERNANDEZ', N'M', CAST(N'1995-04-12' AS Date), N'CEDULA', N'09300765463', N'CALLE LA ESPERANZA #77', N'8096553425', NULL)
 INSERT [dbo].[cliente] ([nombre], [apellidos], [sexo], [fecha_nacimiento], [tipo_documento], [num_documento], [direccion], [telefono], [email]) VALUES (N'MERCEDES', N'CAMILO', N'F', CAST(N'1990-01-10' AS Date), N'RNC', N'130762562', N'AVENIDA PRINCIPAL', N'8293647312', N'mercedes@hotmail.com')
 GO

@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QGroupBox,
     QHeaderView, QLabel, QLineEdit, QMainWindow,
     QPushButton, QSizePolicy, QStatusBar, QTabWidget,
-    QTableView, QWidget)
+    QTableView, QTextEdit, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -337,7 +337,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_3 = QLabel(self.groupBox)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(20, 70, 61, 21))
+        self.label_3.setGeometry(QRect(20, 30, 61, 21))
         self.label_3.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -373,7 +373,7 @@ class Ui_MainWindow(object):
 "}")
         self.txtCodigo = QLineEdit(self.groupBox)
         self.txtCodigo.setObjectName(u"txtCodigo")
-        self.txtCodigo.setGeometry(QRect(135, 60, 120, 35))
+        self.txtCodigo.setGeometry(QRect(135, 20, 120, 35))
         self.txtCodigo.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
@@ -398,7 +398,7 @@ class Ui_MainWindow(object):
         self.txtCodigo.setReadOnly(True)
         self.label_6 = QLabel(self.groupBox)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setGeometry(QRect(20, 120, 111, 21))
+        self.label_6.setGeometry(QRect(20, 70, 111, 21))
         self.label_6.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -446,7 +446,7 @@ class Ui_MainWindow(object):
         self.cmbComprobante = QComboBox(self.groupBox)
         self.cmbComprobante.addItem("")
         self.cmbComprobante.setObjectName(u"cmbComprobante")
-        self.cmbComprobante.setGeometry(QRect(135, 110, 120, 35))
+        self.cmbComprobante.setGeometry(QRect(135, 60, 120, 35))
         self.cmbComprobante.setStyleSheet(u"/* Estilos para QComboBox */\n"
 "QComboBox {\n"
 "    background-color: #96bfab;\n"
@@ -496,7 +496,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_13 = QLabel(self.groupBox)
         self.label_13.setObjectName(u"label_13")
-        self.label_13.setGeometry(QRect(285, 120, 67, 21))
+        self.label_13.setGeometry(QRect(390, 120, 71, 21))
         self.label_13.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -508,7 +508,7 @@ class Ui_MainWindow(object):
 "}")
         self.txtSerie = QLineEdit(self.groupBox)
         self.txtSerie.setObjectName(u"txtSerie")
-        self.txtSerie.setGeometry(QRect(355, 110, 120, 35))
+        self.txtSerie.setGeometry(QRect(475, 110, 120, 35))
         self.txtSerie.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
@@ -1015,7 +1015,43 @@ class Ui_MainWindow(object):
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
 "}")
+        self.label_25 = QLabel(self.groupBox)
+        self.label_25.setObjectName(u"label_25")
+        self.label_25.setGeometry(QRect(20, 120, 91, 21))
+        self.label_25.setStyleSheet(u"QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}\n"
+"")
+        self.txtComentario = QTextEdit(self.groupBox)
+        self.txtComentario.setObjectName(u"txtComentario")
+        self.txtComentario.setGeometry(QRect(135, 110, 221, 35))
+        self.txtComentario.setStyleSheet(u"QTextEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QTextEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QTextEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}")
         self.tabWidget.addTab(self.tab_2, "")
+        self.tbSesiones = QTableView(self.centralwidget)
+        self.tbSesiones.setObjectName(u"tbSesiones")
+        self.tbSesiones.setGeometry(QRect(870, 10, 51, 31))
+        self.tbSesiones.setStyleSheet(u"")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -1033,7 +1069,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Ventas", None))
 #if QT_CONFIG(tooltip)
-        self.tabWidget.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Mantenimiento de los ingresos a almacen</p></body></html>", None))
+        self.tabWidget.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.groupBox_3.setTitle("")
         self.btnImprimir.setText(QCoreApplication.translate("MainWindow", u"Imprimir", None))
@@ -1056,7 +1092,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.cmbCliente.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Doble click para buscar clientes</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.label_13.setText(QCoreApplication.translate("MainWindow", u"Numero ", None))
+        self.label_13.setText(QCoreApplication.translate("MainWindow", u"Numero", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Fecha", None))
         self.groupBox_2.setTitle("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"Fecha venc.", None))
@@ -1077,6 +1113,10 @@ class Ui_MainWindow(object):
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Itbis", None))
         self.txtItbis.setText("")
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
+        self.label_25.setText(QCoreApplication.translate("MainWindow", u"comentario", None))
+#if QT_CONFIG(tooltip)
+        self.txtComentario.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-weight:700;\">Una descripcion de la categoria</span></p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Mantenimiento", None))
     # retranslateUi
 
