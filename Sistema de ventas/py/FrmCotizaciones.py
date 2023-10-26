@@ -217,22 +217,29 @@ class VentanaCotizaciones(QMainWindow):
             QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    
+
     def verificar_cantidad_cotizacion_stock(self):
         id_cotizacion = self.bd_id_cotizacion
         query = QSqlQuery()
-        query.exec_(f"SELECT idarticulo, sum(cantidad) FROM detalle_cotizacion WHERE idcotizacion = {id_cotizacion} GROUP BY idarticulo")
-        
+        query.exec_(f"SELECT dc.idarticulo, SUM(dc.cantidad) AS cantidad, a.nombre AS nombre_articulo \
+                    FROM detalle_cotizacion dc \
+                    INNER JOIN articulo a ON dc.idarticulo = a.idarticulo \
+                    WHERE dc.idcotizacion = {id_cotizacion} GROUP BY dc.idarticulo, a.nombre")
+
         cantidades_cotizacion = {}
-        
+        nombres_articulos_excedentes = []
+
         while query.next():
             id_articulo = query.value(0)
-            cantidades = query.value(1)
-            cantidades_cotizacion[id_articulo] = cantidades
-        
+            cantidad = query.value(1)
+            nombre_articulo = query.value(2)
+            cantidades_cotizacion[id_articulo] = cantidad
+
         # Realiza una consulta para obtener las cantidades de stock
         cantidades_stock = {}
         query.exec_("SELECT idarticulo, disponible FROM stock")
-        
+
         while query.next():
             id_articulo = query.value(0)
             disponible = query.value(1)
@@ -243,11 +250,24 @@ class VentanaCotizaciones(QMainWindow):
             if id_articulo in cantidades_stock:
                 cantidad_stock = cantidades_stock[id_articulo]
                 if cantidad_cotizacion > cantidad_stock:
-                    # No hay suficiente stock para convertir la cotización
-                    return False
+                    # Agrega el nombre del artículo a la lista de nombres de artículos excedentes
+                    nombres_articulos_excedentes.append(nombre_articulo)
 
-        # Si todas las comparaciones son exitosas, se puede convertir la cotización
-        return True
+        if nombres_articulos_excedentes:
+            # Al menos un artículo excede la cantidad en stock
+            mensaje = f"Los siguientes artículos exceden la cantidad disponible:\n\n"
+            mensaje += "\n".join(nombres_articulos_excedentes)
+            
+            mensaje_info = QMessageBox()
+            mensaje_info.setIcon(QMessageBox.Information)
+            mensaje_info.setWindowTitle("Artículos Excedentes")
+            mensaje_info.setText(mensaje)
+            mensaje_info.exec_()
+            return False
+        else:
+            # Si todas las comparaciones son exitosas, se puede convertir la cotización
+            return True
+
 
 
 
