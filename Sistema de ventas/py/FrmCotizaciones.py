@@ -219,36 +219,81 @@ class VentanaCotizaciones(QMainWindow):
             
         # Pasando como parametro el numero de fila, obtengo el id de la cotizacion.
     def obtener_id_fila_cotizacion(self, num_fila):
-        query = QSqlQuery()
-        query.exec_(f"SELECT\
-                                co.idcotizacion as 'ID',\
-                                UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                                dc.descuento as 'DESCUENTO %',\
-                                co.itbis as 'IMPUESTOS %',\
-                                co.serie as 'NO. COTIZACION',\
-                                em.nombre as 'VENDEDOR',\
-                                FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
-                                co.comentario as 'COMENTARIO'\
-                            FROM cotizacion co\
-                            INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
-                            INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
-                            INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                            GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                            dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
-        model = QSqlTableModel()    
-        model.setQuery(query)
-        self.tbDatos.setModel(model)
-        
-        # Obtener el modelo de datos del QTableView
-        modelo = self.tbDatos.model()
-        if modelo is not None and 0 <= num_fila < modelo.rowCount():
-            
-            # Obtener los datos de la fila seleccionada
-            columna_id = modelo.index(num_fila, 0).data()
-            
-            self.bd_id_cotizacion = columna_id
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
+        Buscar = self.txtBuscar.text()
 
+        if not Buscar:
+            if FechaInicio > FechaFinal:
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                                        
+                return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT\
+                                        co.idcotizacion as 'ID',\
+                                        UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                        dc.descuento as 'DESCUENTO %',\
+                                        co.itbis as 'IMPUESTOS %',\
+                                        co.serie as 'NO. COTIZACION',\
+                                        em.nombre as 'VENDEDOR',\
+                                        FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                        co.comentario as 'COMENTARIO'\
+                                    FROM cotizacion co\
+                                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                                    WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                                    GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                                    dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                model = QSqlTableModel()    
+                model.setQuery(query)
+                self.tbDatos.setModel(model)
+                
+                # Obtener el modelo de datos del QTableView
+                modelo = self.tbDatos.model()
+                if modelo is not None and 0 <= num_fila < modelo.rowCount():
+                    
+                    # Obtener los datos de la fila seleccionada
+                    columna_id = modelo.index(num_fila, 0).data()
+                    
+                    self.bd_id_cotizacion = columna_id
+        else:
+            if FechaInicio > FechaFinal:
+                QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT\
+                                        co.idcotizacion as 'ID',\
+                                        UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                        dc.descuento as 'DESCUENTO %',\
+                                        co.itbis as 'IMPUESTOS %',\
+                                        co.serie as 'NO. COTIZACION',\
+                                        em.nombre as 'VENDEDOR',\
+                                        FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                        co.comentario as 'COMENTARIO'\
+                                    FROM cotizacion co\
+                                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                                    WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND CONCAT(cl.nombre, ' ', cl.apellidos) LIKE '%{Buscar}%'\
+                                    GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                                    dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                model = QSqlTableModel()    
+                model.setQuery(query)
+                self.tbDatos.setModel(model)
+                
+                # Obtener el modelo de datos del QTableView
+                modelo = self.tbDatos.model()
+                if modelo is not None and 0 <= num_fila < modelo.rowCount():
+                    
+                    # Obtener los datos de la fila seleccionada
+                    columna_id = modelo.index(num_fila, 0).data()
+                    
+                    self.bd_id_cotizacion = columna_id
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_cotizacion(self):
