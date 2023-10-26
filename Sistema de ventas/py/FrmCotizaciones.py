@@ -224,8 +224,8 @@ class VentanaCotizaciones(QMainWindow):
                                 co.idcotizacion as 'ID',\
                                 UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
                                 CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                                dc.descuento as 'DESCUENTO',\
-                                co.itbis as 'IMPUESTOS',\
+                                dc.descuento as 'DESCUENTO %',\
+                                co.itbis as 'IMPUESTOS %',\
                                 co.serie as 'NO. COTIZACION',\
                                 em.nombre as 'VENDEDOR',\
                                 FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
@@ -268,8 +268,8 @@ class VentanaCotizaciones(QMainWindow):
                                 co.idcotizacion as 'ID',\
                                 UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
                                 CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                                dc.descuento as 'DESCUENTO',\
-                                co.itbis as 'IMPUESTOS',\
+                                dc.descuento as 'DESCUENTO %',\
+                                co.itbis as 'IMPUESTOS %',\
                                 co.serie as 'NO. COTIZACION',\
                                 em.nombre as 'VENDEDOR',\
                                 FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
@@ -302,8 +302,8 @@ class VentanaCotizaciones(QMainWindow):
                                 co.idcotizacion as 'ID',\
                                 UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
                                 CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                                dc.descuento as 'DESCUENTO',\
-                                co.itbis as 'IMPUESTOS',\
+                                dc.descuento as 'DESCUENTO %',\
+                                co.itbis as 'IMPUESTOS %',\
                                 co.serie as 'NO. COTIZACION',\
                                 em.nombre as 'VENDEDOR',\
                                 FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
@@ -332,7 +332,7 @@ class VentanaCotizaciones(QMainWindow):
                         FORMAT(dc.precio_venta, 'C', 'en-US') as 'PRECIO',\
                         dc.cantidad as 'CANTIDAD',\
                         dc.descuento as 'DESCUENTO %',\
-                        co.itbis as 'IMPUESTOS',\
+                        co.itbis as 'IMPUESTOS %',\
                         co.serie as 'NO. COTIZACION',\
                         em.nombre as 'VENDEDOR'\
                     FROM cotizacion co\
@@ -501,10 +501,10 @@ class VentanaCotizaciones(QMainWindow):
                         dc.idcotizacion as 'ID COTIZACION',\
                         CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
                         ar.nombre as 'ARTICULO',\
-                        dc.precio_venta as 'PRECIO',\
+                        FORMAT(dc.precio_venta, 'C', 'en-US') as 'PRECIO',\
                         dc.cantidad as 'CANTIDAD',\
                         dc.descuento as 'DESCUENTO %',\
-                        co.itbis as 'IMPUESTOS',\
+                        co.itbis as 'IMPUESTOS %',\
                         co.serie as 'NO. COTIZACION',\
                         em.nombre as 'VENDEDOR'\
                     FROM cotizacion co\
@@ -538,7 +538,7 @@ class VentanaCotizaciones(QMainWindow):
         if query.exec_() and query.next():
             num_detalles = query.value(0)
         
-            if num_detalles == 0:
+            if num_detalles == 1:
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")

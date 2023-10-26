@@ -381,7 +381,7 @@ def quitar_detalle_cotizacion(id_detalle_cotizacion):
         cursor = conn.cursor()
 
         # Ejecuta el procedimiento almacenado
-        cursor.execute("EXEC EliminarDetalleCotizacion @id_detalle_cotizacion=?", id_detalle_cotizacion)
+        cursor.execute("EXEC AnularDetalleCotizacion @iddetalle_cotizacion=?", id_detalle_cotizacion)
         conn.commit()
 
         # Cierra el cursor
