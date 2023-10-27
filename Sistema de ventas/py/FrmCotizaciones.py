@@ -265,11 +265,6 @@ class VentanaCotizaciones(QMainWindow):
         else:
             # Si todas las comparaciones son exitosas, se puede convertir la cotización
             return True
-
-
-
-
-
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------           
     # Pasando como parametro el numero de fila, obtengo el id de la cotizacion.
