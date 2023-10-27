@@ -9,7 +9,7 @@ from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo,\
     insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion,\
-    quitar_detalle_cotizacion, obtener_codigo_cotizacion, generar_nuevo_codigo_cotizacion, convertir_cot_a_factura, insertar_cotizacion, insertar_detalle_cotizacion
+    quitar_detalle_cotizacion, obtener_codigo_cotizacion, generar_nuevo_codigo_cotizacion, convertir_cot_a_factura
 
 class VentanaCotizaciones(QMainWindow):
     ventana_abierta = False     
@@ -22,7 +22,7 @@ class VentanaCotizaciones(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Cotizaciones .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------   
         # Establece las fechas en los txtFechas que estan en el formulario
@@ -491,8 +491,9 @@ class VentanaCotizaciones(QMainWindow):
             
                 # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso.
                 if confirmacion == QMessageBox.Yes:
+                    
                     insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
-                    #insertar_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
+                    
                     self.activar_botones_detalle()
                     self.desactivar_botones_cotizacion()
 
@@ -536,7 +537,6 @@ class VentanaCotizaciones(QMainWindow):
             
             else:
                 insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)
-                #insertar_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento)      
 
                 self.visualizar_datos_cotizacion()
                 self.visualizar_datos_detalle_cotizacion()

@@ -1,13 +1,13 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QAbstractItemView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QAbstractItemView, QWidget
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, obtener_codigo_venta, generar_nuevo_codigo_venta
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, obtener_codigo_venta, generar_nuevo_codigo_venta, insertar_nueva_venta, insertar_nuevo_detalle_venta
 
 class VentanaVentas(QMainWindow):
     ventana_abierta = False     
@@ -20,7 +20,7 @@ class VentanaVentas(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Ventas .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
         self.txtFecha.setDate(QDate.currentDate())
@@ -56,6 +56,9 @@ class VentanaVentas(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
+        self.btnRegistrar.clicked.connect(self.insertar_datos_venta)
+        self.btnAgregar.clicked.connect(self.insertar_detalle_venta)
+        
         self.txtIdCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
         self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
         
@@ -67,6 +70,28 @@ class VentanaVentas(QMainWindow):
         # Controles de fecha conectados a la funcion visualizar_datos_venta para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_venta)
         self.txtFechaFin.dateChanged.connect(self.visualizar_datos_venta)
+        
+        self.cmbArticulo.currentIndexChanged.connect(self.cargar_precios_venta)
+        self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto)
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+        # Evita que se inserte letras en los campos donde solo lleva numeros 0.0
+        double_validator = QDoubleValidator()
+        self.txtDescuento.setValidator(double_validator)
+        self.cmbPrecioVent.setValidator(double_validator)
+        self.txtCantidad.setValidator(double_validator)        
+        self.txtItbis.setValidator(double_validator)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
+    # Oculta los bototnes de los detalles para obligar al usuario a que coloque la venta antes que los detalles
+    def ocultar_botones_detalle(self):
+        for widget in self.groupBox_2.findChildren(QWidget):
+            widget.setVisible(False)
+
+    def activar_botones_detalle(self):
+        for widget in self.groupBox_2.findChildren(QWidget):
+            widget.setVisible(True)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -128,6 +153,77 @@ class VentanaVentas(QMainWindow):
         ultimo_codigo = obtener_codigo_venta("venta")
         nuevo_codigo = generar_nuevo_codigo_venta("VENT", ultimo_codigo)
         self.txtSerie.setText(nuevo_codigo)
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+    # Cargar los precios de venta de los articulos en cmbPrecioVent
+    def cargar_precios_venta(self):
+        idarticulo = self.txtCodArticulo.text()
+        
+        query = QSqlQuery()
+        query.prepare(f"SELECT top 1 precio_venta, precio_venta1, precio_venta2 from detalle_ingreso where idarticulo\
+                      = {idarticulo} ORDER BY iddetalle_ingreso DESC")
+        query.bindValue(":idarticulo", int(idarticulo))
+        
+        
+        
+        if query.exec_():
+            self.cmbPrecioVent.clear()
+            while query.next():
+                precio = query.value(0)
+                precio1 = query.value(1)
+                precio2 = query.value(2)
+                self.cmbPrecioVent.addItem(str(precio))
+                self.cmbPrecioVent.addItem(str(precio1))
+                self.cmbPrecioVent.addItem(str(precio2))
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------         
+    # Actualiza el stock disponible del articulo seleccionado
+    def actualizar_existencia_producto(self):
+        idarticulo = self.txtCodArticulo.text()
+        model = QSqlTableModel()
+        model.setTable('stock')
+        model.setFilter(f"idarticulo='{idarticulo}'")
+        model.select()
+
+        stock_disponible = ""
+        if model.rowCount() > 0:
+            stock_disponible = model.data(model.index(0, 2))
+
+            self.txtStock.setText(str(stock_disponible)) 
+        else:
+            self.txtStock.setText("0")
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def desactivar_botones_venta(self):
+        self.txtCodigo.setEnabled(False)
+        self.cmbComprobante.setEnabled(False)
+        self.txtIdCliente.setEnabled(False)
+        self.cmbCliente.setEnabled(False)
+        self.txtSerie.setEnabled(False)
+        self.txtFecha.setEnabled(False)
+        self.txtItbis.setEnabled(False)
+        self.btnRegistrar.setEnabled(False)
+        self.txtComentario.setEnabled(False)
+
+    def activar_botones_venta(self):
+        self.txtCodigo.setEnabled(True)
+        self.cmbComprobante.setEnabled(True)
+        self.txtIdCliente.setEnabled(True)
+        self.cmbCliente.setEnabled(True)
+        self.txtSerie.setEnabled(True)
+        self.txtFecha.setEnabled(True)
+        self.txtItbis.setEnabled(True)
+        self.btnRegistrar.setEnabled(True)
+        self.txtComentario.setEnabled(True)
+
+        self.cmbCliente.clear()
+        self.txtIdCliente.setText("")
+        self.txtSerie.setText("")
+        self.txtItbis.setText("")
+        self.txtComentario.setPlainText("")
+        self.txtFecha.setDate(QDate.currentDate())
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualizar_datos_venta(self):
@@ -197,6 +293,36 @@ class VentanaVentas(QMainWindow):
                 self.tbDatos.setModel(model)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    def visualizar_datos_detalle_venta(self):
+        idventa = self.txtCodigo.text()
+        query = QSqlQuery()
+        query.exec_(f"SELECT dv.iddetalle_venta as 'ID DETALLE',\
+                        dv.idventa as 'ID COTIZACION',\
+                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                        ar.nombre as 'ARTICULO',\
+                        FORMAT(dv.precio_venta, 'C', 'en-US') as 'PRECIO',\
+                        dv.cantidad as 'CANTIDAD',\
+                        dv.descuento as 'DESCUENTO %',\
+                        ve.itbis as 'IMPUESTOS %',\
+                        ve.serie as 'NO. VENTA',\
+                        em.nombre as 'VENDEDOR'\
+                    FROM venta ve\
+                    INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
+                    INNER JOIN detalle_venta dv ON ve.idventa = dv.idventa\
+                    INNER JOIN articulo ar ON dv.idarticulo = ar.idarticulo\
+                    INNER JOIN empleado em ON ve.idempleado = em.idempleado\
+                    WHERE dv.idventa = {idventa};")
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
+        self.tbDatos2.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos2.resizeColumnsToContents()
+        self.tbDatos2.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     # Estas 3 funciones obtienen el id de empleado que inicio sesion.
     # Este id de empleado se usa para saber quien ingreso dato a la base de datos
     
@@ -258,15 +384,124 @@ class VentanaVentas(QMainWindow):
         # Si no se encuentra el idsesion, devuelve -1.
         return -1
 #------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def insertar_datos_venta(self):
+        try:
+            # llamada de funciones que obtienen el id del ultimo usuario que inicio sesion.
+            # Ese dato es usado para saber quien esta registrando datos de ingreso/ventas etc.
+            id_ultima_sesion = self.ultima_sesion()
+            fila = self.obtener_id_sesion(id_ultima_sesion)
+            self.obtener_datos_de_fila(fila)
+            id_empleado = self.valor_columna_1
+
+
+            #Almacena en las variables los valores insertados en los controles inputs txt y cmb.
+            idempleado = id_empleado
+            idcliente = self.txtIdCliente.text()
+            fecha = self.txtFecha.date().toString("yyyy-MM-dd")
+            tipo_comprobante = self.cmbComprobante.currentText()            
+            num_comprobante = self.txtSerie.text()
+            itbis = self.txtItbis.text()
+            comentario = self.txtComentario.toPlainText().upper()
+
+            if not itbis:                
+                itbis = 0
+            if not num_comprobante:
+                num_comprobante = 0
+            
+            if not all([idempleado, idcliente, idempleado, fecha, tipo_comprobante]):
+        
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Hay un error en los datos")
+                mensaje.setText("Por favor, complete todos los campos correctamente.")
+                mensaje.exec_()
+                
+                
+            else:           
+
+                # Preguntar si el usuario está seguro de empezar a insertar los datos.
+                confirmacion = QMessageBox.question(self, "INSERTAR LOS DETALLES", "¿ESTAS SEGURO QUE DESEA CONTINUAR?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+                # Si el usuario hace clic en el botón "Sí", se activa detalle_ingreso.
+                if confirmacion == QMessageBox.Yes:
+                    
+                    insertar_nueva_venta(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario)
+                    
+                    self.activar_botones_detalle()
+                    self.desactivar_botones_venta()
+
+
+                    # Limpiar componentes antes de empesar a insertar detalles
+                    self.cmbArticulo.clear()
+                    self.txtCodArticulo.setText("")
+                    self.txtCantidad.setText("")
+                    self.cmbPrecioVent.clear()
+                    self.txtDescuento.setText("")
+                    self.txtCantidad.setFocus()
+
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error en venta: {str(e)}")
+            mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def insertar_detalle_venta(self):
+        try:
+            idoctizacion = self.txtCodigo.text()
+            idarticulo = self.txtCodArticulo.text()
+            catidad = int(self.txtCantidad.text())
+            precio_venta = self.cmbPrecioVent.currentText()
+            descuento = self.txtDescuento.text()
+
+            if not descuento:                
+                descuento = 0
+
+            if not all([idoctizacion, idarticulo, catidad, precio_venta]):
+    
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("Hay un error en los datos")
+                mensaje.setText("Por favor, complete todos los campos correctamente.")
+                mensaje.exec_()
+            
+            
+            else:
+                
+                insertar_nuevo_detalle_venta(idoctizacion, idarticulo, catidad, precio_venta, descuento)
+
+                self.visualizar_datos_venta()
+                self.visualizar_datos_detalle_venta()
+                self.actualizar_existencia_producto()
+                
+                
+                
+                # Limpia los TexBox
+                self.txtCantidad.setText("")
+                self.txtCantidad.setFocus()
+        except Exception as e:
+            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText(f"Se produjo un error en detalle: {str(e)}")
+            mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
-        VentanaVentas.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
+        VentanaVentas.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False.
         event.accept()
         
     def showEvent(self, event):
         super().showEvent(event)
         
         self.tbSesiones.hide()
+        self.ocultar_botones_detalle()
         self.visualizar_datos_venta()
         self.actualizar_num_venta()
         self.actualizar_ID_venta()

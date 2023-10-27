@@ -125,7 +125,8 @@ def insertar_nueva_presentacion(nombre, descripcion):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
 def insertar_nuevo_empleados(nombre, apellidos, sexo, fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password):
-    insertar_dato_generico('empleado', ['nombre', 'apellidos', 'sexo', 'fecha_nac', 'num_documento', 'direccion', 'telefono', 'email', 'acceso', 'usuario', 'password'], [nombre, apellidos, sexo , fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password])
+    insertar_dato_generico('empleado', ['nombre', 'apellidos', 'sexo', 'fecha_nac', 'num_documento', 'direccion', 'telefono', 'email',
+        'acceso', 'usuario', 'password'], [nombre, apellidos, sexo , fechanac, numdocumento, direccion, telefono, email, acceso, usuario, password])
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
 def insertar_nueva_categoria(nombre, descripcion):
@@ -133,16 +134,19 @@ def insertar_nueva_categoria(nombre, descripcion):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------      
 def insertar_nuevo_proveedor(razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url):
-    insertar_dato_generico('proveedor', ['razon_social', 'sector_comercial', 'tipo_documento', 'num_documento', 'direccion', 'telefono', 'email', 'url'], [razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url])
+    insertar_dato_generico('proveedor', ['razon_social', 'sector_comercial', 'tipo_documento', 'num_documento',
+        'direccion', 'telefono', 'email', 'url'], [razon_soc, sector_com, tipo_doc, numdocumento, direccion, telefono, email, url])
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------  
 def insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email):
-    insertar_dato_generico('cliente', ['nombre', 'apellidos', 'sexo', 'fecha_nacimiento', 'tipo_documento', 'num_documento', 'direccion', 'telefono', 'email'], [nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email])
+    insertar_dato_generico('cliente', ['nombre', 'apellidos', 'sexo', 'fecha_nacimiento', 'tipo_documento', 'num_documento',
+        'direccion', 'telefono', 'email'], [nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email])
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
 def insertar_datos_sesion(idempleado, nombre, apellidos, usuario, rol, fechaHora):
-    insertar_dato_generico('sesiones', ['idempleado', 'nombre', 'apellidos', 'usuario', 'rol', 'fecha'], [idempleado, nombre, apellidos, usuario, rol, fechaHora])
+    insertar_dato_generico('sesiones', ['idempleado', 'nombre', 'apellidos', 'usuario', 'rol', 'fecha'],
+                           [idempleado, nombre, apellidos, usuario, rol, fechaHora])
 
 
 
@@ -218,53 +222,41 @@ def insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_
                                                     [idoctizacion, idarticulo, catidad, precio_venta, descuento])
 
 
-# Función para insertar una cotización
-def insertar_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, serie, itbis, comentario):
-    conn = conectar_db()
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
+def insertar_nueva_venta(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario):
+    insertar_dato_generico('venta', ['idcliente', 'idempleado', 'fecha', 'tipo_comprobante', 'serie', 'itbis', 'comentario'], 
+                                                    [idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario])
     
+def insertar_nuevo_detalle_venta(idoctizacion, idarticulo, cantidad, precio_venta, descuento):
+    conn = conectar_db()
+
     try:
-        cursor = conn.cursor()
+        # Verificar la cantidad disponible en la tabla stock
+        cursor = conn.execute("SELECT disponible FROM stock WHERE idarticulo = ?", (idarticulo,))
+        existing_stock = cursor.fetchone()
 
-        idcotizacion = None
-        cursor.execute("{CALL InsertarCotizacion(?, ?, ?, ?, ?, ?, ?, ?)}",
-                       idcliente, idempleado, fecha, tipo_comprobante, serie, itbis, comentario, idcotizacion)
-        
-        cursor.execute("SELECT ? AS idcotizacion", idcotizacion)
-        idcotizacion = cursor.fetchone().idcotizacion
-        cursor.close()
-        conn.commit()
-
-        return idcotizacion
-
+        if existing_stock and existing_stock[0] >= cantidad:
+            # Si hay suficiente stock, insertar el nuevo detalle de venta
+            insertar_dato_generico('detalle_venta', ['idventa', 'idarticulo', 'cantidad', 'precio_venta', 'descuento'], 
+                                                    [idoctizacion, idarticulo, cantidad, precio_venta, descuento])
+            # Actualizar la cantidad disponible en la tabla stock
+            nueva_cantidad = existing_stock[0] - cantidad
+            conn.execute("UPDATE stock SET disponible = ? WHERE idarticulo = ?", (nueva_cantidad, idarticulo))
+            conn.commit()
+        else:
+            # Si no hay suficiente stock, mostrar un mensaje de error
+            mensaje_error = QMessageBox()
+            mensaje_error.setWindowTitle("Error")
+            mensaje_error.setText("No hay suficiente stock para realizar la venta.")
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.exec()
     except Exception as e:
+        # Mensaje de error
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
-        mensaje_error.setText(f"Error al insertar cotización: {str(e)}")
-        mensaje_error.setIcon(QMessageBox.Critical)
-        mensaje_error.exec()
-        return None
-    finally:
-        conn.close()
-
-# Función para insertar un detalle de cotización
-def insertar_detalle_cotizacion(idcotizacion, idarticulo, cantidad, precio_venta, descuento):
-    conn = conectar_db()
-    
-    
-    try:
-        cursor = conn.cursor()
-        
-        
-
-        cursor.execute("{CALL InsertarDetalleCotizacion(?, ?, ?, ?, ?)}",
-                       idcotizacion, idarticulo, cantidad, precio_venta, descuento)
-
-        conn.commit()
-
-    except Exception as e:
-        mensaje_error = QMessageBox()
-        mensaje_error.setWindowTitle("Error")
-        mensaje_error.setText(f"Error al insertar detalle de cotización: {str(e)}")
+        mensaje_error.setText(f"Error al insertar nuevo detalle de venta: {str(e)}")
         mensaje_error.setIcon(QMessageBox.Critical)
         mensaje_error.exec()
     finally:
