@@ -60,7 +60,7 @@ def obtener_id_presentacion_por_nombre(nombre_presentacion):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
-# Generar el codigo de las ventas de manera automatica 
+# Generar el codigo de las ventas de manera automatica
 def obtener_codigo_venta(tabla):
     conn = conectar_db()
     cursor = conn.execute(f"SELECT MAX(serie) FROM {tabla}")
