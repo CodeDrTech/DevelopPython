@@ -25,7 +25,7 @@ class VentanaPrincipal(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Sistema de Ventas .:.')
         #self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
     
     def etiqueta_usuario(self, rol, usuario):
