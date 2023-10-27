@@ -105,7 +105,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_2 = QLabel(self.groupBox_3)
         self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(25, 30, 73, 27))
+        self.label_2.setGeometry(QRect(20, 30, 101, 21))
         self.label_2.setFont(font)
         self.label_2.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
@@ -119,7 +119,7 @@ class Ui_MainWindow(object):
 "")
         self.txtBuscar = QLineEdit(self.groupBox_3)
         self.txtBuscar.setObjectName(u"txtBuscar")
-        self.txtBuscar.setGeometry(QRect(100, 20, 120, 35))
+        self.txtBuscar.setGeometry(QRect(130, 20, 120, 35))
         self.txtBuscar.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnBuscar = QPushButton(self.groupBox_3)
         self.btnBuscar.setObjectName(u"btnBuscar")
-        self.btnBuscar.setGeometry(QRect(235, 20, 85, 37))
+        self.btnBuscar.setGeometry(QRect(265, 20, 85, 37))
         self.btnBuscar.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
@@ -167,7 +167,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnConvertir = QPushButton(self.groupBox_3)
         self.btnConvertir.setObjectName(u"btnConvertir")
-        self.btnConvertir.setGeometry(QRect(330, 20, 91, 37))
+        self.btnConvertir.setGeometry(QRect(360, 20, 91, 37))
         self.btnConvertir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
@@ -191,7 +191,7 @@ class Ui_MainWindow(object):
 "}")
         self.btnImprimir = QPushButton(self.groupBox_3)
         self.btnImprimir.setObjectName(u"btnImprimir")
-        self.btnImprimir.setGeometry(QRect(430, 20, 85, 37))
+        self.btnImprimir.setGeometry(QRect(460, 20, 85, 37))
         self.btnImprimir.setStyleSheet(u"QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
@@ -1093,7 +1093,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.groupBox_3.setTitle("")
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Buscar COT.", None))
         self.btnBuscar.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
         self.btnConvertir.setText(QCoreApplication.translate("MainWindow", u"Convertir", None))
         self.btnImprimir.setText(QCoreApplication.translate("MainWindow", u"Imprimir", None))

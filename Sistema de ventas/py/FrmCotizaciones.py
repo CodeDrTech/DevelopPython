@@ -411,7 +411,7 @@ class VentanaCotizaciones(QMainWindow):
                             INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
                             INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
                             INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                            WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND CONCAT(cl.nombre, ' ', cl.apellidos) LIKE '%{Buscar}%'\
+                            WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND co.serie LIKE '%{Buscar}%'\
                             GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
                             dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
                 

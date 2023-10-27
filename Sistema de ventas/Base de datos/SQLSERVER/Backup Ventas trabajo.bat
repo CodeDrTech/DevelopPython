@@ -1,1 +1,0 @@
-sqlcmd -S LAPTOPTECNOLOGI -d Ventas -U Sa -P Ye.891916 -Q "BACKUP DATABASE Ventas TO DISK='C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\Backup\Ventas.bak'" && copy /Y "C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\Backup\Ventas.bak" "C:\Users\acer\OneDrive\Documentos\GitHub\DevelopPython\Sistema de ventas\Base de datos\SQLSERVER\"

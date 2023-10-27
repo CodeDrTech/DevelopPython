@@ -139,10 +139,10 @@ QGroupBox:title {
       <widget class="QLabel" name="label_2">
        <property name="geometry">
         <rect>
-         <x>25</x>
+         <x>20</x>
          <y>30</y>
-         <width>73</width>
-         <height>27</height>
+         <width>101</width>
+         <height>21</height>
         </rect>
        </property>
        <property name="font">
@@ -164,13 +164,13 @@ QLabel {
 </string>
        </property>
        <property name="text">
-        <string>Nombre</string>
+        <string>Buscar COT.</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="txtBuscar">
        <property name="geometry">
         <rect>
-         <x>100</x>
+         <x>130</x>
          <y>20</y>
          <width>120</width>
          <height>35</height>
@@ -203,7 +203,7 @@ QLineEdit::placeholder {
       <widget class="QPushButton" name="btnBuscar">
        <property name="geometry">
         <rect>
-         <x>235</x>
+         <x>265</x>
          <y>20</y>
          <width>85</width>
          <height>37</height>
@@ -239,7 +239,7 @@ QPushButton:pressed {
       <widget class="QPushButton" name="btnConvertir">
        <property name="geometry">
         <rect>
-         <x>330</x>
+         <x>360</x>
          <y>20</y>
          <width>91</width>
          <height>37</height>
@@ -275,7 +275,7 @@ QPushButton:pressed {
       <widget class="QPushButton" name="btnImprimir">
        <property name="geometry">
         <rect>
-         <x>430</x>
+         <x>460</x>
          <y>20</y>
          <width>85</width>
          <height>37</height>
