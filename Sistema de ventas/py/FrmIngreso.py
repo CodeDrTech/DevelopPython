@@ -303,8 +303,10 @@ class VentanaIngresoAlmacen(QMainWindow):
             
             if not itbis:                
                 itbis = 0
-            
-            if not all([idempleado, idproveedor, idempleado, fecha, tipo_comprobante, num_comprobante]):
+            if not num_comprobante:
+                num_comprobante = 0
+                
+            if not all([idempleado, idproveedor, idempleado, fecha, tipo_comprobante]):
         
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
@@ -465,11 +467,7 @@ class VentanaIngresoAlmacen(QMainWindow):
             else:
                 insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2)      
 
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Critical)
-                mensaje.setWindowTitle("Agregar detalles de ingreso")
-                mensaje.setText("Detalles de ingreso registrado.")
-                mensaje.exec_()
+                
                 
                 self.visualiza_datos_detalles()
                 self.buscar_ingresos()
