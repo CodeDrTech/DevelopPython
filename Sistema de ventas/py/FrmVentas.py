@@ -522,6 +522,7 @@ class VentanaVentas(QMainWindow):
                 QMessageBox.warning(self, "ELIMINADO", "ARTICULO ELIMINADO.")
                 self.visualizar_datos_detalle_venta()
                 self.visualizar_datos_venta()
+                self.actualizar_existencia_producto()
                 self.verificar_y_ocultar_botones()
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA EL ARTICULO QUE VAS A ELIMINAR.")
@@ -557,6 +558,33 @@ class VentanaVentas(QMainWindow):
             # Obtener los datos de la fila seleccionada
             columna_id = modelo.index(num_fila, 0).data()
             self.bd_id_detalle_venta = columna_id
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # si se elimina el ultimo detalle_venta se inhabilitan los botones de insertar detalles
+    def verificar_y_ocultar_botones(self):
+        idventa = self.txtCodigo.text()
+        
+        query = QSqlQuery()
+        query.prepare(f"SELECT COUNT(*) FROM detalle_venta WHERE idventa = :idventa")
+        query.bindValue(":idventa", idventa)
+        
+        if query.exec_() and query.next():
+            num_detalles = query.value(0)
+        
+            if num_detalles == 0:
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Critical)
+                mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
+                mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
+                mensaje.exec_()
+                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones.
+                self.actualizar_ID_venta() # Actualiza el idventa por si el usuario quiere volver a insertar detalles
+                self.activar_botones_venta() # Activo los botones para insertar nueva venta.
+                self.actualizar_num_venta() # Actualiza el codigo de venta por si el usuario quiere volver a insertar detalles
+                
+                # Refrescar los datos de las ventas y los de detalle_venta.
+                self.visualizar_datos_venta()
+                self.visualizar_datos_detalle_venta()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
