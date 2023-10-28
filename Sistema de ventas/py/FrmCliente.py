@@ -17,7 +17,7 @@ class VentanaCliente(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Clientes .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
         # Botones del formulario y sus funciones
         self.btnGuardar.clicked.connect(self.insertar_datos)

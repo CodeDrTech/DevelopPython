@@ -19,7 +19,7 @@ class VentanaPresentacion(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Presentaciones .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/png/folder.png'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
         # Crear un efecto de sombra        
         tabWidget_shadow = QGraphicsDropShadowEffect()

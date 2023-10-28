@@ -12,6 +12,7 @@ from FrmCliente import VentanaCliente
 from FrmIngreso import VentanaIngresoAlmacen
 from FrmVentas import VentanaVentas
 from FrmCotizaciones import VentanaCotizaciones
+from Consultas_db import backup_database
 
 class VentanaPrincipal(QMainWindow):      
     def __init__(self,):
@@ -49,7 +50,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
             self.actionCotizacion.triggered.connect(self.abrirFrmCotizaciones)
             #self.menuConsultas
-            #self.nemuHerramientas       
+            self.actionBack_up.triggered.connect(self.database_backup)       
             #self.actionCategorias.setEnabled(False)
             
     def vendedor(self):
@@ -85,6 +86,10 @@ class VentanaPrincipal(QMainWindow):
             #self.nemuHerramientas
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    def database_backup(self):
+        backup_database()
+        
+        
     def abrirFrmCotizaciones(self):
         
         if not VentanaCotizaciones.ventana_abierta:           

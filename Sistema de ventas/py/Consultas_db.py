@@ -405,3 +405,21 @@ def revertir_detalle_venta(iddetalle_venta):
         mensaje_error.exec()
     finally:
         conn.close()
+        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------        
+def backup_database():
+    conn = conectar_db()
+    conn.autocommit = True  # Deshabilita el modo de transacción automática
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("EXEC dbo.BackupDatabaseDefaultPath")
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al realizar el respaldo de la base de datos: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
+    finally:
+        conn.close()
