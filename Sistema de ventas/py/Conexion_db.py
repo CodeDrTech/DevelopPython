@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 # Leer el archivo .txt con la cadena de cionexion.
 def ruta_database():
-    ruta_configuracion = "Sistema de ventas/txt/configuracion.txt"
+    ruta_configuracion = "Sistema de ventas/txt/configuracion2.txt"
     
     with open(ruta_configuracion, "r") as f:
          cadena_conexion = f.read().strip()
