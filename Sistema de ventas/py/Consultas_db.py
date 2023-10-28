@@ -388,3 +388,20 @@ def quitar_detalle_cotizacion(id_detalle_cotizacion):
     finally:
         # Cierra la conexión a la base de datos
         conn.close()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+def revertir_detalle_venta(iddetalle_venta):
+    conn = conectar_db()
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("EXEC RevertirDetalleVenta @iddetalle_venta=?", iddetalle_venta)
+        conn.commit()
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al revertir detalle de venta: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
+    finally:
+        conn.close()

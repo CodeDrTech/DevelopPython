@@ -7,7 +7,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
-from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, obtener_codigo_venta, generar_nuevo_codigo_venta, insertar_nueva_venta, insertar_nuevo_detalle_venta
+from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, obtener_codigo_venta,\
+                            generar_nuevo_codigo_venta, insertar_nueva_venta, insertar_nuevo_detalle_venta, revertir_detalle_venta
 
 class VentanaVentas(QMainWindow):
     ventana_abierta = False     
@@ -58,6 +59,8 @@ class VentanaVentas(QMainWindow):
         # Botones del formulario y sus funciones
         self.btnRegistrar.clicked.connect(self.insertar_datos_venta)
         self.btnAgregar.clicked.connect(self.insertar_detalle_venta)
+        
+        self.btnQuitar.clicked.connect(self.quitar_datos_detalle_venta)
         
         self.txtIdCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente
         self.txtCodArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
@@ -491,6 +494,69 @@ class VentanaVentas(QMainWindow):
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error en detalle: {str(e)}")
             mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def quitar_datos_detalle_venta(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbDatos2.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_venta
+            index = indexes[0]
+            row = index.row()
+            
+            self.obtener_datos_de_fila_detalle_venta(row)
+            id_detalle_venta = self.bd_id_detalle_venta
+            
+            
+            
+            # Preguntar si el usuario está seguro de eliminar el detalle de la venta seleccionada
+            confirmacion = QMessageBox.question(self, "ELIMINAR?", "¿QUIERE ELIMINAR ESTE ARTICULO DE LA LISTA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", elimina el detalle
+            if confirmacion == QMessageBox.Yes:
+                revertir_detalle_venta(id_detalle_venta)
+                QMessageBox.warning(self, "ELIMINADO", "ARTICULO ELIMINADO.")
+                self.visualizar_datos_detalle_venta()
+                self.visualizar_datos_venta()
+                self.verificar_y_ocultar_botones()
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA EL ARTICULO QUE VAS A ELIMINAR.")
+            
+        # Pasando como parametro el numero de fila, obtengo el id de la venta.
+    def obtener_datos_de_fila_detalle_venta(self, num_fila):
+        idventa = self.txtCodigo.text()
+        query = QSqlQuery()
+        query.exec_(f"SELECT dv.iddetalle_venta as 'ID DETALLE',\
+                        dv.idventa as 'ID VENTA',\
+                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                        ar.nombre as 'ARTICULO',\
+                        FORMAT(dv.precio_venta, 'C', 'en-US') as 'PRECIO',\
+                        dv.cantidad as 'CANTIDAD',\
+                        dv.descuento as 'DESCUENTO %',\
+                        ve.itbis as 'IMPUESTOS %',\
+                        ve.serie as 'NO. VENTA',\
+                        em.nombre as 'VENDEDOR'\
+                    FROM venta ve\
+                    INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
+                    INNER JOIN detalle_venta dV ON ve.idventa = dv.idventa\
+                    INNER JOIN articulo ar ON dv.idarticulo = ar.idarticulo\
+                    INNER JOIN empleado em ON ve.idempleado = em.idempleado\
+                    WHERE dv.idventa = {idventa};")
+        model = QSqlTableModel()    
+        model.setQuery(query)
+        self.tbDatos2.setModel(model)
+        
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbDatos2.model()
+        if modelo is not None and 0 <= num_fila < modelo.rowCount():
+            
+            # Obtener los datos de la fila seleccionada
+            columna_id = modelo.index(num_fila, 0).data()
+            self.bd_id_detalle_venta = columna_id
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):
