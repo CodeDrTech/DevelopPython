@@ -554,42 +554,6 @@ QPushButton:pressed {
         <string>Editar</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnSalir">
-       <property name="geometry">
-        <rect>
-         <x>370</x>
-         <y>350</y>
-         <width>86</width>
-         <height>37</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #c0dacb, stop: 1 #96bfab);
-    color: #ffffff;
-    border: 1px solid #1e362d;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #689f84, stop: 1 #96bfaa);
-    border: 1px solid #96bfaa;
-}
-
-QPushButton:pressed {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #2a5242, stop: 1 #32624d);
-    border: 1px solid #32624d;
-}</string>
-       </property>
-       <property name="text">
-        <string>Salir</string>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="txtCodigo">
        <property name="geometry">
         <rect>
