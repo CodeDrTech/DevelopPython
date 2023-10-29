@@ -8,7 +8,7 @@ from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, obtener_codigo_venta,\
-                            generar_nuevo_codigo_venta, insertar_nueva_venta, insertar_nuevo_detalle_venta, revertir_detalle_venta
+                            generar_nuevo_codigo_venta, insertar_nueva_venta, insertar_nuevo_detalle_venta, revertir_detalle_venta, revertir_venta
 
 class VentanaVentas(QMainWindow):
     ventana_abierta = False     
@@ -69,6 +69,8 @@ class VentanaVentas(QMainWindow):
         self.cmbArticulo.mouseDoubleClickEvent = self.abrirFrmBuscarArticulo
         
         self.btnBuscar.clicked.connect(self.visualizar_datos_venta)
+
+        self.btnAnular.clicked.connect(self.devolucion_de_venta)
 
         # Controles de fecha conectados a la funcion visualizar_datos_venta para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_venta)
@@ -494,6 +496,113 @@ class VentanaVentas(QMainWindow):
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error en detalle: {str(e)}")
             mensaje.exec_()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def devolucion_de_venta(self):
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbDatos.selectedIndexes()
+        
+        if indexes:
+            
+            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_venta
+            index = indexes[0]
+            row = index.row()
+            
+            self.obtener_id_venta(row)
+            id_venta = self.bd_id_venta
+
+
+            # Preguntar si el usuario está seguro de crear una devolucion de la venta seleccionada
+            confirmacion = QMessageBox.question(self, "DEVOLUCION?", "¿QUIERE HACER UNA DEVOLUCION DE ESTA FACTURA?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+            
+            # Si el usuario hace clic en el botón "Sí", elimina el detalle
+            if confirmacion == QMessageBox.Yes:
+                revertir_venta(id_venta)
+                QMessageBox.warning(self, "DEVOLUCION SATISFACTORIA", "FACTURA ANULADA.")
+                self.visualizar_datos_venta()
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA LA VENTA QUE LLEVA DEVOLUCION.")
+
+    # Pasando como parametro el numero de fila, obtengo el id de la venta.            
+    def obtener_id_venta(self, num_fila):
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
+        Buscar = self.txtBuscar.text()
+
+        if not Buscar:
+            if FechaInicio > FechaFinal:                        
+                        QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                        return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT\
+                                ve.idventa as 'ID',\
+                                UPPER(FORMAT(ve.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                dv.descuento as 'DESCUENTO %',\
+                                ve.itbis as 'IMPUESTOS %',\
+                                ve.serie as 'NO. VENTA',\
+                                em.nombre as 'VENDEDOR',\
+                                FORMAT(SUM(dv.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                ve.comentario as 'COMENTARIO'\
+                            FROM venta ve\
+                            INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
+                            INNER JOIN detalle_venta dv ON ve.idventa = dv.idventa\
+                            INNER JOIN empleado em ON ve.idempleado = em.idempleado\
+                            WHERE ve.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                            GROUP BY ve.idventa, ve.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                            dv.descuento, ve.itbis, ve.serie, em.nombre, ve.comentario;")
+                
+                # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+                model = QSqlTableModel()    
+                model.setQuery(query)        
+                self.tbDatos.setModel(model)
+
+                # Obtener el modelo de datos del QTableView
+                modelo = self.tbDatos.model()
+                if modelo is not None and 0 <= num_fila < modelo.rowCount():
+            
+                    # Obtener los datos de la fila seleccionada
+                    columna_id = modelo.index(num_fila, 0).data()
+                    self.bd_id_venta = columna_id
+        else:
+            if FechaInicio > FechaFinal:                        
+                        QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
+                        return
+            else:
+                query = QSqlQuery()
+                query.exec_(f"SELECT\
+                                ve.idventa as 'ID',\
+                                UPPER(FORMAT(ve.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                dv.descuento as 'DESCUENTO %',\
+                                ve.itbis as 'IMPUESTOS %',\
+                                ve.serie as 'NO. VENTA',\
+                                em.nombre as 'VENDEDOR',\
+                                FORMAT(SUM(dv.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                ve.comentario as 'COMENTARIO'\
+                            FROM venta ve\
+                            INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
+                            INNER JOIN detalle_venta dv ON ve.idventa = dv.idventa\
+                            INNER JOIN empleado em ON ve.idempleado = em.idempleado\
+                            WHERE ve.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND CONCAT(cl.nombre, ' ', cl.apellidos) LIKE '%{Buscar}%'\
+                            GROUP BY ve.idventa, ve.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                            dv.descuento, ve.itbis, ve.serie, em.nombre, ve.comentario;")
+                
+                # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+                model = QSqlTableModel()    
+                model.setQuery(query)        
+                self.tbDatos.setModel(model)
+
+                # Obtener el modelo de datos del QTableView
+                modelo = self.tbDatos.model()
+                if modelo is not None and 0 <= num_fila < modelo.rowCount():
+            
+                    # Obtener los datos de la fila seleccionada
+                    columna_id = modelo.index(num_fila, 0).data()
+                    self.bd_id_venta = columna_id
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def quitar_datos_detalle_venta(self):

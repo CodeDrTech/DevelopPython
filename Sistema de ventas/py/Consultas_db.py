@@ -423,3 +423,21 @@ def backup_database():
         mensaje_error.exec()
     finally:
         conn.close()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------   
+# Revertir venta 
+def revertir_venta(idventa):
+    conn = conectar_db()
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("EXEC RevertirVenta @idventa=?", idventa)
+        conn.commit()
+    except Exception as e:
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al revertir venta: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
+    finally:
+        conn.close()
