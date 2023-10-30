@@ -58,7 +58,7 @@ class VentanaCotizaciones(QMainWindow):
         self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto) 
 
         self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion)
- 
+
         self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
 
@@ -209,7 +209,7 @@ class VentanaCotizaciones(QMainWindow):
     def convertir_cotizacion(self):
         
         if self.se_llamo_activar_botones:
-            QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZCION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
+            QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZACION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
             
         else:
             # Obtener el índice de la fila seleccionada

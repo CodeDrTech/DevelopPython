@@ -12,6 +12,7 @@ from FrmCliente import VentanaCliente
 from FrmIngreso import VentanaIngresoAlmacen
 from FrmVentas import VentanaVentas
 from FrmCotizaciones import VentanaCotizaciones
+from FrmStock import VentanaStock
 from Consultas_db import backup_database
 
 class VentanaPrincipal(QMainWindow):      
@@ -49,9 +50,9 @@ class VentanaPrincipal(QMainWindow):
             self.actionVentas.triggered.connect(self.abrirFrmVentas)
             self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
             self.actionCotizacion.triggered.connect(self.abrirFrmCotizaciones)
-            #self.menuConsultas
+            self.actionStock_de_articulos.triggered.connect(self.abrirFrmStock)
             self.actionBack_up.triggered.connect(self.database_backup)       
-            #self.actionCategorias.setEnabled(False)
+            
             
     def vendedor(self):
             self.actionSalir.triggered.connect(self.fn_Salir)
@@ -68,7 +69,7 @@ class VentanaPrincipal(QMainWindow):
             #self.menuConsultas
             #self.nemuHerramientas
                     
-            #self.actionCategorias.setEnabled(False)
+            
             
     def almacen(self):
             self.actionSalir.triggered.connect(self.fn_Salir)
@@ -82,6 +83,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionCotizacion.setEnabled(False)
             self.actionIngresos.triggered.connect(self.abrirFrmIngresos)
             self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
+            self.actionStock_de_articulos.triggered.connect(self.abrirFrmStock)
             #self.menuConsultas
             #self.nemuHerramientas
 #------------------------------------------------------------------------------------------------------
@@ -89,7 +91,27 @@ class VentanaPrincipal(QMainWindow):
     def database_backup(self):
         backup_database()
         
+
+    def abrirFrmStock(self):
         
+        if not VentanaStock.ventana_abierta:           
+            frmCotizaciones = VentanaStock()
+            VentanaStock.ventana_abierta = True
+            subWindow = QMdiSubWindow()
+            subWindow.setWidget(frmCotizaciones)
+            subWindow.setAttribute(Qt.WA_DeleteOnClose)  # type: ignore
+            subWindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint) # type: ignore
+            self.mdiArea.addSubWindow(subWindow)
+            subWindow.show()
+            
+        else:
+            #mensaje al usuario
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Ventana duplicada")
+            mensaje.setText("La ventana ya esta abierta.")
+            mensaje.exec_()
+
     def abrirFrmCotizaciones(self):
         
         if not VentanaCotizaciones.ventana_abierta:           
