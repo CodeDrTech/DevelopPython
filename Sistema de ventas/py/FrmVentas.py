@@ -13,6 +13,7 @@ from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, obtener_co
 class VentanaVentas(QMainWindow):
     ventana_abierta = False     
     def __init__(self):
+        self.se_llamo_activar_botones = False
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmVentas.ui',self)
 #------------------------------------------------------------------------------------------------------
@@ -90,13 +91,30 @@ class VentanaVentas(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     # Oculta los bototnes de los detalles para obligar al usuario a que coloque la venta antes que los detalles
+    
+    # Oculta los botones cuando la ventana de venta carga
     def ocultar_botones_detalle(self):
-        for widget in self.groupBox_2.findChildren(QWidget):
-            widget.setVisible(False)
+        if not self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(False)
+            self.se_llamo_activar_botones = False
+        return self.se_llamo_activar_botones
 
+    # Activa los botones cuando se inserta la cotizacion en el boton 'Registrar'.
     def activar_botones_detalle(self):
-        for widget in self.groupBox_2.findChildren(QWidget):
-            widget.setVisible(True)
+        if not self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(True)
+            self.se_llamo_activar_botones = True
+        return self.se_llamo_activar_botones
+            
+    # Oculta los botones cuando se eliminan todos los detalles de la venta y esta queda sin articulos.
+    def ocultar_botones_detalle_al_revertir_venta(self):
+        if self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(False)
+            self.se_llamo_activar_botones = False
+        return self.se_llamo_activar_botones 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -499,31 +517,35 @@ class VentanaVentas(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def devolucion_de_venta(self):
-        # Obtener el índice de la fila seleccionada
-        indexes = self.tbDatos.selectedIndexes()
+        if self.se_llamo_activar_botones:
+            QMessageBox.warning(self, "ERROR", "TIENE UNA VENTA ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
         
-        if indexes:
-            
-            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_venta
-            index = indexes[0]
-            row = index.row()
-            
-            self.obtener_id_venta(row)
-            id_venta = self.bd_id_venta
-
-
-            # Preguntar si el usuario está seguro de crear una devolucion de la venta seleccionada
-            confirmacion = QMessageBox.question(self, "DEVOLUCION?", "¿QUIERE HACER UNA DEVOLUCION DE ESTA FACTURA?",
-                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-            
-            
-            # Si el usuario hace clic en el botón "Sí", elimina el detalle
-            if confirmacion == QMessageBox.Yes:
-                if revertir_venta(id_venta):
-                    QMessageBox.warning(self, "DEVOLUCION SATISFACTORIA", "FACTURA ANULADA.")
-                    self.visualizar_datos_venta()
         else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA LA VENTA QUE LLEVA DEVOLUCION.")
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+            
+            if indexes:
+                
+                # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_venta
+                index = indexes[0]
+                row = index.row()
+                
+                self.obtener_id_venta(row)
+                id_venta = self.bd_id_venta
+
+
+                # Preguntar si el usuario está seguro de crear una devolucion de la venta seleccionada
+                confirmacion = QMessageBox.question(self, "DEVOLUCION?", "¿QUIERE HACER UNA DEVOLUCION DE ESTA FACTURA?",
+                                                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                
+                
+                # Si el usuario hace clic en el botón "Sí", elimina el detalle
+                if confirmacion == QMessageBox.Yes:
+                    if revertir_venta(id_venta):
+                        QMessageBox.warning(self, "DEVOLUCION SATISFACTORIA", "FACTURA ANULADA.")
+                        self.visualizar_datos_venta()
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA VENTA QUE LLEVA DEVOLUCION.")
 
     # Pasando como parametro el numero de fila, obtengo el id de la venta.            
     def obtener_id_venta(self, num_fila):
@@ -686,7 +708,7 @@ class VentanaVentas(QMainWindow):
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
                 mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
                 mensaje.exec_()
-                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones.
+                self.ocultar_botones_detalle_al_revertir_venta()  # Llama a la función para ocultar botones.
                 self.actualizar_ID_venta() # Actualiza el idventa por si el usuario quiere volver a insertar detalles
                 self.activar_botones_venta() # Activo los botones para insertar nueva venta.
                 self.actualizar_num_venta() # Actualiza el codigo de venta por si el usuario quiere volver a insertar detalles

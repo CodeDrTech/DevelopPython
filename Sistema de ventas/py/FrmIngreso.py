@@ -10,6 +10,7 @@ from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo, insertar_n
 class VentanaIngresoAlmacen(QMainWindow):
     ventana_abierta = False     
     def __init__(self):
+        self.se_llamo_activar_botones = False
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmIngreso.ui',self)
 #------------------------------------------------------------------------------------------------------
@@ -140,44 +141,48 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def inhabilita_ingreso(self):
-        # Obtener el índice de la fila seleccionada
-        indexes = self.tbIngreso.selectedIndexes()
+        if self.se_llamo_activar_botones:
+            QMessageBox.warning(self, "ERROR", "TIENE UN INGRESO ABIERTO, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
         
-        estado = self.cmbEstado.currentText()
-        try:
-            if indexes:
-                
-                # Obtener el numero (int) de la fila al seleccionar una celda de la tabla
-                index = indexes[0]
-                row = index.row()
-                
-                self.obtener_datos_de_fila_ingresos(row)
-                idingreso = self.valor_columna_id
-                
-                # Si el ComboBox Estado esta inactivo avisa al usuario con este mensaje
-                if estado == "Inactivo":
-                    QMessageBox.warning(self, "ERROR", "ESTE INGRESO YA ESTA INACTIVO.")
-                    return
-                
-                # Preguntar si el usuario está seguro de inhabilitar el ingreso de la fila seleccionada
-                confirmacion = QMessageBox.question(self, "INHABILITAR?", "¿ESTAS SEGURO QUE QUIERE INHABILITAR ESTE INGRESO?",
-                                                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-                
-                
-                # Si el usuario hace clic en el botón "Sí", inhabilita el ingreso
-                if confirmacion == QMessageBox.Yes:
-                    anular_ingreso(idingreso)
-                    QMessageBox.warning(self, "INHABILITADO", "INGRESO INHABILITADO.")
-                    self.buscar_ingresos()
-            else:
-                QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
-        except Exception as e:
-            # Mensaje de error
-            mensaje_error = QMessageBox()
-            mensaje_error.setWindowTitle("Ingreso sin articulos")
-            mensaje_error.setText(f"No puedes desactivar un ingreso que no tiene articulos")
-            mensaje_error.setIcon(QMessageBox.Critical)
-            mensaje_error.exec()
+        else:
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbIngreso.selectedIndexes()
+            
+            estado = self.cmbEstado.currentText()
+            try:
+                if indexes:
+                    
+                    # Obtener el numero (int) de la fila al seleccionar una celda de la tabla
+                    index = indexes[0]
+                    row = index.row()
+                    
+                    self.obtener_datos_de_fila_ingresos(row)
+                    idingreso = self.valor_columna_id
+                    
+                    # Si el ComboBox Estado esta inactivo avisa al usuario con este mensaje
+                    if estado == "Inactivo":
+                        QMessageBox.warning(self, "ERROR", "ESTE INGRESO YA ESTA INACTIVO.")
+                        return
+                    
+                    # Preguntar si el usuario está seguro de inhabilitar el ingreso de la fila seleccionada
+                    confirmacion = QMessageBox.question(self, "INHABILITAR?", "¿ESTAS SEGURO QUE QUIERE INHABILITAR ESTE INGRESO?",
+                                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    
+                    
+                    # Si el usuario hace clic en el botón "Sí", inhabilita el ingreso
+                    if confirmacion == QMessageBox.Yes:
+                        anular_ingreso(idingreso)
+                        QMessageBox.warning(self, "INHABILITADO", "INGRESO INHABILITADO.")
+                        self.buscar_ingresos()
+                else:
+                    QMessageBox.warning(self, "ERROR", "SELECCIONA EL INGRESO QUE VAS A INHABILITAR.")
+            except Exception as e:
+                # Mensaje de error
+                mensaje_error = QMessageBox()
+                mensaje_error.setWindowTitle("Ingreso sin articulos")
+                mensaje_error.setText(f"No puedes desactivar un ingreso que no tiene articulos")
+                mensaje_error.setIcon(QMessageBox.Critical)
+                mensaje_error.exec()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
         # Pasando como parametro el numero de fila, obtengo el id del ingreso
@@ -426,7 +431,9 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
                 mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
                 mensaje.exec_()
-                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones
+                self.actualizar_ID_ingreso()
+                self.ocultar_botones_detalle_al_anular_ingreso()  # Llama a la función para ocultar botones
+                self.activar_botones_detalle() # Vuelve a activar los botones para que el usuario haga un nuevo ingreso
 
 
 
@@ -705,13 +712,30 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     # Oculta los bototnes de los detalles para obligar al usuario a que coloque el ingreso antes que los detalles
+    
+    # Oculta los botones cuando la ventana de ingreso carga
     def ocultar_botones_detalle(self):
-        for widget in self.groupBox_2.findChildren(QWidget):
-            widget.setVisible(False)
+        if not self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(False)
+            self.se_llamo_activar_botones = False
+        return self.se_llamo_activar_botones
 
+    # Activa los botones cuando se inserta el ingreso en el boton 'Registrar'.
     def activar_botones_detalle(self):
-        for widget in self.groupBox_2.findChildren(QWidget):
-            widget.setVisible(True)
+        if not self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(True)
+            self.se_llamo_activar_botones = True
+        return self.se_llamo_activar_botones
+            
+    # Oculta los botones cuando se eliminan todos los detalles de la venta y esta queda sin articulos.
+    def ocultar_botones_detalle_al_anular_ingreso(self):
+        if self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(False)
+            self.se_llamo_activar_botones = False
+        return self.se_llamo_activar_botones 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     
