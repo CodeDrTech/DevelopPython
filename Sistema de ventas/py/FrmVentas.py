@@ -58,8 +58,8 @@ class VentanaVentas(QMainWindow):
 #------------------------------------------------------------------------------------------------------
         # Botones del formulario y sus funciones
         self.btnRegistrar.clicked.connect(self.insertar_datos_venta)
-        self.btnAgregar.clicked.connect(self.insertar_detalle_venta)
         
+        self.btnAgregar.clicked.connect(self.insertar_detalle_venta)        
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_venta)
         
         self.txtIdCliente.mouseDoubleClickEvent = self.abrirFrmBuscarCliente

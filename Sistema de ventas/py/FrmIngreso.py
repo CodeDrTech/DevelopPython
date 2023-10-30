@@ -31,6 +31,7 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
         # Botones del formulario y sus funciones
         self.btnRegistrar.clicked.connect(self.insertar_datos_ingreso)
+        
         self.btnAgregar.clicked.connect(self.insertar_datos_detalle)
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle)        
         self.btnBuscar.clicked.connect(self.buscar_ingresos)

@@ -14,6 +14,7 @@ from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo,\
 class VentanaCotizaciones(QMainWindow):
     ventana_abierta = False     
     def __init__(self):
+        self.se_llamo_activar_botones = False
         super().__init__()        
         uic.loadUi('Sistema de ventas/ui/FrmCotizacion.ui',self)
 #------------------------------------------------------------------------------------------------------
@@ -56,9 +57,9 @@ class VentanaCotizaciones(QMainWindow):
         self.cmbArticulo.currentIndexChanged.connect(self.cargar_precios_venta)
         self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto) 
 
-        self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion) 
-        self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion) 
-
+        self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion)
+ 
+        self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
 
         self.btnBuscar.clicked.connect(self.visualizar_datos_cotizacion)
@@ -146,13 +147,30 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     # Oculta los bototnes de los detalles para obligar al usuario a que coloque la cotizacion antes que los detalles
+    
+    # Oculta los botones cuando la ventana de cotizacion carga
     def ocultar_botones_detalle(self):
-        for widget in self.groupBox_2.findChildren(QWidget):
-            widget.setVisible(False)
-
+        if not self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(False)
+            self.se_llamo_activar_botones = False
+        return self.se_llamo_activar_botones
+    
+    # Activa los botones cuando se inserta la cotizacion en el boton 'Registrar'.
     def activar_botones_detalle(self):
-        for widget in self.groupBox_2.findChildren(QWidget):
-            widget.setVisible(True)
+        if not self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(True)
+            self.se_llamo_activar_botones = True
+        return self.se_llamo_activar_botones
+    
+    # Oculta los botones cuando se eliminan todos los detalles de la cotizacion y esta queda anulada.
+    def ocultar_botones_detalle_al_anular_cotizacion(self):
+        if self.se_llamo_activar_botones:
+            for widget in self.groupBox_2.findChildren(QWidget):
+                widget.setVisible(False)
+            self.se_llamo_activar_botones = False
+        return self.se_llamo_activar_botones       
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def desactivar_botones_cotizacion(self):
@@ -183,38 +201,45 @@ class VentanaCotizaciones(QMainWindow):
         self.txtItbis.setText("")
         self.txtComentario.setPlainText("")
         self.txtFecha.setDate(QDate.currentDate())
+        
+    
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def convertir_cotizacion(self):
-        # Obtener el índice de la fila seleccionada
-        indexes = self.tbDatos.selectedIndexes()
         
-        if indexes:
+        if self.se_llamo_activar_botones:
+            QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZCION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
             
-            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
-            index = indexes[0]
-            row = index.row()
-            
-            self.obtener_id_fila_cotizacion(row)
-            id_cotizacion = self.bd_id_cotizacion
-            
-            if not self.verificar_cantidad_cotizacion_stock():
-                #QMessageBox.warning(self, "ERROR", "La cantidad en la cotización supera la cantidad en stock.")
-                return
-            
-            # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
-            confirmacion = QMessageBox.question(self, "CONVERITR?", "¿QUIERE CONVERTIR ESTA COTIZACION A FACTURA?",
-                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-            
-            
-            # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en factura
-            if confirmacion == QMessageBox.Yes:
-                convertir_cot_a_factura(id_cotizacion)
-                QMessageBox.warning(self, "FACTURADO", "COTIZACION CONVERTIDA A FACTURA.")
-                
         else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+            
+            if indexes:
+                
+                # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
+                index = indexes[0]
+                row = index.row()
+                
+                self.obtener_id_fila_cotizacion(row)
+                id_cotizacion = self.bd_id_cotizacion
+                
+                if not self.verificar_cantidad_cotizacion_stock():
+                    #QMessageBox.warning(self, "ERROR", "La cantidad en la cotización supera la cantidad en stock.")
+                    return
+                
+                # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+                confirmacion = QMessageBox.question(self, "CONVERITR?", "¿QUIERE CONVERTIR ESTA COTIZACION A FACTURA?",
+                                                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                
+                
+                # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en factura
+                if confirmacion == QMessageBox.Yes:
+                    convertir_cot_a_factura(id_cotizacion)
+                    QMessageBox.warning(self, "FACTURADO", "COTIZACION CONVERTIDA A FACTURA.")
+                    
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -630,13 +655,13 @@ class VentanaCotizaciones(QMainWindow):
         if query.exec_() and query.next():
             num_detalles = query.value(0)
         
-            if num_detalles == 0:
+            if num_detalles == 1:
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
                 mensaje.setText("INGRESO DE ARTICULOS FINALIZADO, SE BLOQUEARAN LAS FUNICONES.")
                 mensaje.exec_()
-                self.ocultar_botones_detalle()  # Llama a la función para ocultar botones.
+                self.ocultar_botones_detalle_al_anular_cotizacion()  # Llama a la función para ocultar botones.
                 self.actualizar_ID_cotizacion() # Actualiza el idcotizacion por si el usuario quiere volver a insertar detalles
                 self.activar_botones_cotizacion() # Activo los botones para insertar cotizacion nueva.
                 self.actualizar_num_cotizacion() # Actualiza el codigo de cotizacion por si el usuario quiere volver a insertar detalles
