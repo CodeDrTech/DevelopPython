@@ -519,9 +519,9 @@ class VentanaVentas(QMainWindow):
             
             # Si el usuario hace clic en el botón "Sí", elimina el detalle
             if confirmacion == QMessageBox.Yes:
-                revertir_venta(id_venta)
-                QMessageBox.warning(self, "DEVOLUCION SATISFACTORIA", "FACTURA ANULADA.")
-                self.visualizar_datos_venta()
+                if revertir_venta(id_venta):
+                    QMessageBox.warning(self, "DEVOLUCION SATISFACTORIA", "FACTURA ANULADA.")
+                    self.visualizar_datos_venta()
         else:
             QMessageBox.warning(self, "ERROR", "SELECCIONA LA VENTA QUE LLEVA DEVOLUCION.")
 

@@ -373,30 +373,6 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnSalir = QPushButton(self.groupBox)
-        self.btnSalir.setObjectName(u"btnSalir")
-        self.btnSalir.setGeometry(QRect(370, 350, 86, 37))
-        self.btnSalir.setStyleSheet(u"QPushButton {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
-"    color: #ffffff;\n"
-"    border: 1px solid #1e362d;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 4px;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #689f84, stop: 1 #96bfaa);\n"
-"    border: 1px solid #96bfaa;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
-"    border: 1px solid #32624d;\n"
-"}")
         self.txtCodigo = QLineEdit(self.groupBox)
         self.txtCodigo.setObjectName(u"txtCodigo")
         self.txtCodigo.setGeometry(QRect(150, 20, 105, 35))
@@ -745,7 +721,6 @@ class Ui_MainWindow(object):
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Direccion", None))
         self.btnGuardar.setText(QCoreApplication.translate("MainWindow", u"Guardar", None))
         self.btnEditar.setText(QCoreApplication.translate("MainWindow", u"Editar", None))
-        self.btnSalir.setText(QCoreApplication.translate("MainWindow", u"Salir", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Apeliddos", None))
         self.cmbTipoDocumento.setItemText(0, QCoreApplication.translate("MainWindow", u"RNC", None))
         self.cmbTipoDocumento.setItemText(1, QCoreApplication.translate("MainWindow", u"CEDULA", None))

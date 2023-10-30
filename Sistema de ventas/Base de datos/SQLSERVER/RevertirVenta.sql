@@ -2,9 +2,9 @@ CREATE PROCEDURE RevertirVenta
     @idventa INT
 AS
 BEGIN
-    -- Cambiar el comentario de la venta a "DEVOLUCIÓN DE VENTA"
+    -- Cambiar el comentario de la venta a "DEVOLUCIï¿½N DE VENTA"
     UPDATE venta
-    SET comentario = 'DEVOLUCIÓN DE VENTA'
+    SET comentario = 'DEVOLUCION DE VENTA'
     WHERE idventa = @idventa;
 
     -- Recuperar los detalles de la venta
@@ -18,7 +18,7 @@ BEGIN
 
     WHILE @@FETCH_STATUS = 0
     BEGIN
-        -- Para cada artículo vendido, incrementar la cantidad disponible en la tabla de stock
+        -- Para cada articulo vendido, incrementar la cantidad disponible en la tabla de stock
         UPDATE stock
         SET disponible = disponible + @cantidad
         WHERE idarticulo = @idarticulo;

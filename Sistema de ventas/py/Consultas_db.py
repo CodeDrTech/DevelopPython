@@ -425,19 +425,37 @@ def backup_database():
         conn.close()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------   
-# Revertir venta 
+# Revertir, primero verifica si la venta ya ha sido revertira 
 def revertir_venta(idventa):
     conn = conectar_db()
+    revertido_exitos = False  # Variable indicadora para saber si se ejecuto el sp RevertirVenta
 
     try:
         cursor = conn.cursor()
-        cursor.execute("EXEC RevertirVenta @idventa=?", idventa)
-        conn.commit()
+
+        # Obtener el comentario de la venta
+        cursor.execute("SELECT comentario FROM venta WHERE idventa = ?", (idventa,))
+        comentario = cursor.fetchone()[0]
+
+        # Verificar si el comentario es "DEVOLUCION DE VENTA"
+        if comentario == "DEVOLUCION DE VENTA":
+            mensaje_error = QMessageBox()
+            mensaje_error.setWindowTitle("Error")
+            mensaje_error.setText("No se puede revertir una venta que ya ha sido devuelta.")
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.exec_()
+            
+        else:
+            cursor.execute("EXEC RevertirVenta @idventa=?", idventa)
+            conn.commit()
+            revertido_exitos = True  # Marcar como exitoso
+
     except Exception as e:
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
         mensaje_error.setText(f"Error al revertir venta: {str(e)}")
         mensaje_error.setIcon(QMessageBox.Critical)
-        mensaje_error.exec()
+        mensaje_error.exec_()
     finally:
         conn.close()
+    return revertido_exitos  # Retorna True si la reversión fue exitosa
