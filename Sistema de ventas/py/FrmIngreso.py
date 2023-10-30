@@ -433,7 +433,7 @@ class VentanaIngresoAlmacen(QMainWindow):
                 mensaje.exec_()
                 self.actualizar_ID_ingreso()
                 self.ocultar_botones_detalle_al_anular_ingreso()  # Llama a la función para ocultar botones
-                self.activar_botones_detalle() # Vuelve a activar los botones para que el usuario haga un nuevo ingreso
+                self.activar_botones_ingreso() # Vuelve a activar los botones para que el usuario haga un nuevo ingreso
 
 
 
