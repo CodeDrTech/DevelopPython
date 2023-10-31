@@ -51,7 +51,8 @@ class VentanaPrincipal(QMainWindow):
             self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
             self.actionCotizacion.triggered.connect(self.abrirFrmCotizaciones)
             self.actionStock_de_articulos.triggered.connect(self.abrirFrmStock)
-            self.actionBack_up.triggered.connect(self.database_backup)       
+            
+            #self.actionBack_up.triggered.connect(self.database_backup)       
             
             
     def vendedor(self):
@@ -66,7 +67,7 @@ class VentanaPrincipal(QMainWindow):
             self.actionIngresos.setEnabled(False)
             self.actionCambiar_de_usuario.triggered.connect(self.cerrar_sesion)
             self.actionCotizacion.triggered.connect(self.abrirFrmCotizaciones)
-            #self.menuConsultas
+            self.actionStock_de_articulos.triggered.connect(self.abrirFrmStock)
             #self.nemuHerramientas
                     
             

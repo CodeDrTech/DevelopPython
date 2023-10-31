@@ -36,6 +36,36 @@ class VentanaStock(QMainWindow):
         groupBox_2shadow.setBlurRadius(20)
         groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox_2.setGraphicsEffect(groupBox_2shadow)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
+    def visualiza_datos(self):
+        # Consulta SELECT * FROM Productos
+        query = QSqlQuery()
+        query.exec_(f"  SELECT ar.codigo AS 'CODIGO',\
+                            ar.nombre AS 'NOMBRE',\
+                            ISNULL(st.disponible, 0) AS 'CANTIDAD DISPONIBLE',\
+                            ar.descripcion AS 'DESCRIPCION',\
+                            ca.descripcion AS 'CATEGORIA',\
+                            pe.descripcion AS 'UNIDAD DE MEDIDA'\
+                        FROM articulo ar\
+                        INNER JOIN Categoria ca ON ca.idcategoria = ar.idcategoria\
+                        INNER JOIN presentacion pe ON pe.idpresentacion = ar.idpresentacion\
+                        LEFT JOIN stock st ON st.idarticulo = ar.idarticulo;")
+
+        # Crear un modelo de tabla SQL, ejecutar el query y establecer el modelo en la tabla
+        model = QSqlTableModel()
+        model.setQuery(query)
+
+        # Configura el modelo para permitir la edición
+        #model.setEditStrategy(QSqlTableModel.OnFieldChange) # type: ignore
+
+        # Establece el modelo en la tabla
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()
+        # Permitir la edición en las celdas
+        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------              
@@ -46,7 +76,7 @@ class VentanaStock(QMainWindow):
 #------------------------------------------------------------------------------------------------------          
     def showEvent(self, event):
         super().showEvent(event)
-
+        self.visualiza_datos()
 
 
 
