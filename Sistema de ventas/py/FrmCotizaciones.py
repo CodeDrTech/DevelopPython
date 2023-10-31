@@ -1,4 +1,5 @@
 import sys
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView
 from PyQt5 import QtGui
@@ -7,6 +8,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
+
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo,\
     insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion,\
     quitar_detalle_cotizacion, obtener_codigo_cotizacion, generar_nuevo_codigo_cotizacion, convertir_cot_a_factura
