@@ -19,6 +19,13 @@ class VentanaStock(QMainWindow):
         self.setWindowTitle('.:. Mantenimiento de Stocks .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        
+        # Establecer el texto de referencia a la caja de texto buscar
+        self.txtBuscar.setPlaceholderText('Buscar')
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.mousePressEvent = self.borrarTexto
+        
+        self.btnBuscar.clicked.connect(self.buscar_datos)
 
 
         # Crear un efecto de sombra        
@@ -26,11 +33,6 @@ class VentanaStock(QMainWindow):
         tabWidget_shadow.setBlurRadius(20)
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.tabWidget.setGraphicsEffect(tabWidget_shadow)
-            
-        #groupBox_shadow = QGraphicsDropShadowEffect()
-        #groupBox_shadow.setBlurRadius(20)
-        #groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
-        #self.groupBox.setGraphicsEffect(groupBox_shadow)
 
         groupBox_2shadow = QGraphicsDropShadowEffect()
         groupBox_2shadow.setBlurRadius(20)
@@ -41,7 +43,7 @@ class VentanaStock(QMainWindow):
     def visualiza_datos(self):
         # Consulta SELECT * FROM Productos
         query = QSqlQuery()
-        query.exec_(f"  SELECT ar.codigo AS 'CODIGO',\
+        query.exec_(f"SELECT ar.codigo AS 'CODIGO',\
                             ar.nombre AS 'NOMBRE',\
                             ISNULL(st.disponible, 0) AS 'CANTIDAD DISPONIBLE',\
                             ar.descripcion AS 'DESCRIPCION',\
@@ -66,6 +68,91 @@ class VentanaStock(QMainWindow):
         self.tbDatos.resizeColumnsToContents()
         # Permitir la edición en las celdas
         self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------  
+    def buscar_datos(self):
+        buscar = self.txtBuscar.text()
+        
+        if self.cmbBuscar.currentText() == "Nombre":    
+                query = QSqlQuery()
+                query.exec_(f"SELECT ar.codigo AS 'CODIGO',\
+                                    ar.nombre AS 'NOMBRE',\
+                                    ISNULL(st.disponible, 0) AS 'CANTIDAD DISPONIBLE',\
+                                    ar.descripcion AS 'DESCRIPCION',\
+                                    ca.descripcion AS 'CATEGORIA',\
+                                    pe.descripcion AS 'UNIDAD DE MEDIDA'\
+                                FROM articulo ar\
+                                INNER JOIN Categoria ca ON ca.idcategoria = ar.idcategoria\
+                                INNER JOIN presentacion pe ON pe.idpresentacion = ar.idpresentacion\
+                                LEFT JOIN stock st ON st.idarticulo = ar.idarticulo\
+                                WHERE ar.nombre like '%{buscar}%';")
+
+                # Crear un modelo de tabla SQL, ejecutar el query y establecer el modelo en la tabla
+                model = QSqlTableModel()
+                model.setQuery(query)
+
+                # Establece el modelo en la tabla
+                self.tbDatos.setModel(model)
+
+                # Ajustar el tamaño de las columnas para que se ajusten al contenido
+                self.tbDatos.resizeColumnsToContents()
+                # Permitir la edición en las celdas
+                self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        elif self.cmbBuscar.currentText() == "Codigo":    
+                query = QSqlQuery()
+                query.exec_(f"SELECT ar.codigo AS 'CODIGO',\
+                                    ar.nombre AS 'NOMBRE',\
+                                    ISNULL(st.disponible, 0) AS 'CANTIDAD DISPONIBLE',\
+                                    ar.descripcion AS 'DESCRIPCION',\
+                                    ca.descripcion AS 'CATEGORIA',\
+                                    pe.descripcion AS 'UNIDAD DE MEDIDA'\
+                                FROM articulo ar\
+                                INNER JOIN Categoria ca ON ca.idcategoria = ar.idcategoria\
+                                INNER JOIN presentacion pe ON pe.idpresentacion = ar.idpresentacion\
+                                LEFT JOIN stock st ON st.idarticulo = ar.idarticulo\
+                                WHERE ar.codigo like '%{buscar}%';")
+
+                # Crear un modelo de tabla SQL, ejecutar el query y establecer el modelo en la tabla
+                model = QSqlTableModel()
+                model.setQuery(query)
+
+                # Establece el modelo en la tabla
+                self.tbDatos.setModel(model)
+
+                # Ajustar el tamaño de las columnas para que se ajusten al contenido
+                self.tbDatos.resizeColumnsToContents()
+                # Permitir la edición en las celdas
+                self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        else:    
+            query = QSqlQuery()
+            query.exec_(f"SELECT ar.codigo AS 'CODIGO',\
+                                    ar.nombre AS 'NOMBRE',\
+                                    ISNULL(st.disponible, 0) AS 'CANTIDAD DISPONIBLE',\
+                                    ar.descripcion AS 'DESCRIPCION',\
+                                    ca.descripcion AS 'CATEGORIA',\
+                                    pe.descripcion AS 'UNIDAD DE MEDIDA'\
+                                FROM articulo ar\
+                                INNER JOIN Categoria ca ON ca.idcategoria = ar.idcategoria\
+                                INNER JOIN presentacion pe ON pe.idpresentacion = ar.idpresentacion\
+                                LEFT JOIN stock st ON st.idarticulo = ar.idarticulo\
+                                WHERE ca.descripcion like '%{buscar}%';")
+
+            # Crear un modelo de tabla SQL, ejecutar el query y establecer el modelo en la tabla
+            model = QSqlTableModel()
+            model.setQuery(query)
+
+            # Establece el modelo en la tabla
+            self.tbDatos.setModel(model)
+
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+            # Permitir la edición en las celdas
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------              

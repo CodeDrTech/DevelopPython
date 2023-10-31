@@ -368,7 +368,7 @@ QLineEdit::placeholder {
         <string/>
        </property>
        <property name="placeholderText">
-        <string extracomment="d"/>
+        <string/>
        </property>
       </widget>
      </widget>

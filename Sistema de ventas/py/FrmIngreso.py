@@ -750,12 +750,12 @@ class VentanaIngresoAlmacen(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------                
     def closeEvent(self, event):        
-        # Preguntar si el usuario está seguro de insertar los detalle_ingreso
+        # Preguntar si el usuario está seguro de cerrar la ventana
         confirmacion = QMessageBox.question(self, "¿ESTAS SEGURO QUE DESEA SALIR?", "Cotinue solo ha terminado de insertar todos los ariculos",
                                              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             
                                                                 
-        # Si el usuario hace clic en el botón "Sí", inserta los detalle_ingreso
+        # Si el usuario hace clic en el botón "Sí", cierra la ventana
         if confirmacion == QMessageBox.No:
             event.ignore()
         else:

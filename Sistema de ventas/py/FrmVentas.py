@@ -718,10 +718,20 @@ class VentanaVentas(QMainWindow):
                 self.visualizar_datos_detalle_venta()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
-    def closeEvent(self, event):
-        VentanaVentas.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False.
-        event.accept()
-        
+    def closeEvent(self, event):        
+        # Preguntar si el usuario está seguro de cerrar la ventana
+        confirmacion = QMessageBox.question(self, "¿ESTAS SEGURO QUE DESEA SALIR?", "Cotinue solo ha terminado de insertar todos los ariculos",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            
+                                                                
+        # Si el usuario hace clic en el botón "Sí", cierra la ventana
+        if confirmacion == QMessageBox.No:
+            event.ignore()
+        else:
+            VentanaVentas.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
+            event.accept()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def showEvent(self, event):
         super().showEvent(event)
         
