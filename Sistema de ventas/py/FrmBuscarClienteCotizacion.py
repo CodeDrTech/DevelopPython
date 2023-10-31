@@ -38,8 +38,10 @@ class VentanaBuscarClienteCotizacion(QMainWindow):
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox.setGraphicsEffect(tabWidget_shadow)
         
-        
-        
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
         
@@ -130,7 +132,14 @@ class VentanaBuscarClienteCotizacion(QMainWindow):
     def closeEvent(self, event):
         VentanaBuscarClienteCotizacion.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def showEvent(self, event):
         super().showEvent(event)
         

@@ -17,7 +17,7 @@ class VentanaLogin(QMainWindow):
         uic.loadUi('Sistema de ventas/ui/FrmLogin.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
-        # Configuraiones de la ventana principal.
+        # Main window configurations.
         self.setWindowTitle('.:. Acceso al sistema de ventas .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))

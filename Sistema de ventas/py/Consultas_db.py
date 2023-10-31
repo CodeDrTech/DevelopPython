@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QStyledItemDelegate
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
-from Conexion_db import conectar_db
+from Conexion_db import connect_to_db
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
     
@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QMessageBox
 #------------------------------------------------------------------------------------------------------
 # Finciones para obtener y generar el codigo de los articulos de manera automatica 
 def obtener_codigo_articulo(tabla):
-    conn = conectar_db()
+    conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX(Codigo) FROM {tabla}")
     ultimo_codigo = cursor.fetchone()[0]
     conn.close()
@@ -26,7 +26,7 @@ def generar_nuevo_codigo_articulo(prefijo, ultimo_codigo):
 #------------------------------------------------------------------------------------------------------
 # Generar el codigo de las cotizaciones de manera automatica 
 def obtener_codigo_cotizacion(tabla):
-    conn = conectar_db()
+    conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX(serie) FROM {tabla}")
     ultimo_codigo = cursor.fetchone()[0]
     conn.close()
@@ -44,7 +44,7 @@ def generar_nuevo_codigo_cotizacion(prefijo, ultimo_codigo):
 #------------------------------------------------------------------------------------------------------
 # Función para obtener el ID de Categoria a partir del nombre
 def obtener_id_categoria_por_nombre(nombre_categoria):
-    conn = conectar_db()
+    conn = connect_to_db()
     cursor = conn.execute("SELECT idcategoria FROM Categoria WHERE nombre = ?", (nombre_categoria,))
     resultado = cursor.fetchone()
     conn.close()
@@ -52,7 +52,7 @@ def obtener_id_categoria_por_nombre(nombre_categoria):
 
 # Función para obtener el ID de presentacion a partir del nombre
 def obtener_id_presentacion_por_nombre(nombre_presentacion):
-    conn = conectar_db()
+    conn = connect_to_db()
     cursor = conn.execute("SELECT idpresentacion FROM presentacion WHERE nombre = ?", (nombre_presentacion,))
     resultado = cursor.fetchone()
     conn.close()
@@ -62,7 +62,7 @@ def obtener_id_presentacion_por_nombre(nombre_presentacion):
 
 # Generar el codigo de las ventas de manera automatica
 def obtener_codigo_venta(tabla):
-    conn = conectar_db()
+    conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX(serie) FROM {tabla}")
     ultimo_codigo = cursor.fetchone()[0]
     conn.close()
@@ -80,7 +80,7 @@ def generar_nuevo_codigo_venta(prefijo, ultimo_codigo):
 #------------------------------------------------------------------------------------------------------
 # Funciones genericas para mostrar los codigos siguientes al momento de registrar en la base de dato 
 def obtener_ultimo_codigo(tabla, codigo):
-    conn = conectar_db()
+    conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX({codigo}) FROM {tabla}")
     ultimo_codigo = cursor.fetchone()[0]
     conn.close()
@@ -100,7 +100,7 @@ def generar_nuevo_codigo(ultimo_codigo):
 # Funcion generica para insertar datos en la base en alguno de los formularios 
 def insertar_dato_generico(tabla, columnas, valores):
     # Conectar a la base de datos
-    conn = conectar_db()
+    conn = connect_to_db()
 
     try:
         cursor = conn.cursor()
@@ -184,7 +184,7 @@ def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num
     
 
 def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2):
-    conn = conectar_db()
+    conn = connect_to_db()
 
     try:
         insertar_dato_generico('detalle_ingreso', ['idingreso', 'idarticulo', 'precio_compra', 'precio_venta', 'cantidad', 'fecha_produccion', 'fecha_vencimiento', 'precio_venta1', 'precio_venta2'],
@@ -230,7 +230,7 @@ def insertar_nueva_venta(idcliente, idempleado, fecha, tipo_comprobante, num_com
                                                     [idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario])
     
 def insertar_nuevo_detalle_venta(idoctizacion, idarticulo, cantidad, precio_venta, descuento):
-    conn = conectar_db()
+    conn = connect_to_db()
 
     try:
         # Verificar la cantidad disponible en la tabla stock
@@ -267,7 +267,7 @@ def insertar_nuevo_detalle_venta(idoctizacion, idarticulo, cantidad, precio_vent
 def anular_ingreso(id_ingreso):
     try:
         # Obtener la cantidad ingresada para el ingreso específico
-        conn = conectar_db()
+        conn = connect_to_db()
         cursor = conn.cursor()
         cursor.execute("SELECT idarticulo, SUM(cantidad) FROM detalle_ingreso WHERE idingreso = ? GROUP BY idarticulo", (id_ingreso,))
         rows = cursor.fetchall()
@@ -296,7 +296,7 @@ def anular_ingreso(id_ingreso):
 #------------------------------------------------------------------------------------------------------
 def quitar_detalle_ingreso(id_detalle_ingreso):
     try:
-        conn = conectar_db()  # Utiliza tu función de conexión a la base de datos
+        conn = connect_to_db()  # Utiliza tu función de conexión a la base de datos
         cursor = conn.cursor()
 
         # Obtener el idarticulo y la cantidad ingresada
@@ -341,7 +341,7 @@ def quitar_detalle_ingreso(id_detalle_ingreso):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 def convertir_cot_a_factura(id_cotizacion):
-    conn = conectar_db()
+    conn = connect_to_db()
     
     try:
         # Crea un cursor para ejecutar el procedimiento almacenado
@@ -366,7 +366,7 @@ def convertir_cot_a_factura(id_cotizacion):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 def quitar_detalle_cotizacion(id_detalle_cotizacion):
-    conn = conectar_db()
+    conn = connect_to_db()
     
     try:
         # Crea un cursor para ejecutar el procedimiento almacenado
@@ -391,7 +391,7 @@ def quitar_detalle_cotizacion(id_detalle_cotizacion):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 def revertir_detalle_venta(iddetalle_venta):
-    conn = conectar_db()
+    conn = connect_to_db()
 
     try:
         cursor = conn.cursor()
@@ -409,7 +409,7 @@ def revertir_detalle_venta(iddetalle_venta):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
 def backup_database():
-    conn = conectar_db()
+    conn = connect_to_db()
     conn.autocommit = True  # Deshabilita el modo de transacción automática
 
     try:
@@ -427,7 +427,7 @@ def backup_database():
 #------------------------------------------------------------------------------------------------------   
 # Revertir, primero verifica si la venta ya ha sido revertira 
 def revertir_venta(idventa):
-    conn = conectar_db()
+    conn = connect_to_db()
     revertido_exitos = False  # Variable indicadora para saber si se ejecuto el sp RevertirVenta
 
     try:

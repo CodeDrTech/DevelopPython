@@ -36,6 +36,11 @@ class VentanaBuscarArticuloCotizacion(QMainWindow):
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox.setGraphicsEffect(tabWidget_shadow)
         
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto
+        
         
         
 #------------------------------------------------------------------------------------------------------
@@ -159,6 +164,14 @@ class VentanaBuscarArticuloCotizacion(QMainWindow):
         # Si el usuario hace clic en el botón "Sí", se cierra la ventana
         if confirmacion == QMessageBox.Yes:
             self.close()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def showEvent(self, event):
         super().showEvent(event)
         #self.actualizar_codigo_categoria()

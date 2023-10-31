@@ -4,36 +4,35 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 
-# Leer el archivo .txt con la cadena de cionexion.
-def ruta_database():
-    ruta_configuracion = "Sistema de ventas/txt/configuracion.txt"
+# Read the configuration file connection_string.txt, which contains the database connection string.
+def read_database_config():
+    config_path = "Sistema de ventas/txt/connection_string.txt"
     
-    with open(ruta_configuracion, "r") as f:
-         cadena_conexion = f.read().strip()
+    with open(config_path, "r") as file:
+        connection_string = file.read().strip()
     
-    return cadena_conexion
+    return connection_string
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Conexion con el servidor SQL Server
-def conectar_db():
-    cadena_conexion = ruta_database()
+# Connect to the SQL Server
+def connect_to_db():
+    connection_string = read_database_config()
     
     try:
-        
-        conn = pyodbc.connect(cadena_conexion)        
+        conn = pyodbc.connect(connection_string)        
         return conn
     except Exception as e:
-        mensaje = QMessageBox()
-        mensaje.setIcon(QMessageBox.Critical)
-        mensaje.setWindowTitle("Error")
-        mensaje.setText(f"Se produjo un error: {str(e)}")
-        mensaje.exec_()
+        message = QMessageBox()
+        message.setIcon(QMessageBox.Critical)
+        message.setWindowTitle("Error")
+        message.setText(f"An error occurred: {str(e)}")
+        message.exec_()
         return None
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
 
-        
-# Conexion a la base de datos mediante driver usado por PYQT para QODBC.
-cadena_conexion = ruta_database()
+# --------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
+
+# Connect to the database using the driver used by PyQt for QODBC.
+connection_string = read_database_config()
 db = QSqlDatabase.addDatabase("QODBC")
-db.setDatabaseName(cadena_conexion)#"DRIVER={SQL Server Native Client 11.0};SERVER=LAPTOPTECNOLOGI;DATABASE=Ventas;UID=sa;PWD=Ye.891916;")
+db.setDatabaseName(connection_string)
