@@ -69,6 +69,11 @@ class VentanaCotizaciones(QMainWindow):
         # Controles de fecha conectados a la funcion visualizar_datos_cotizacion para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_cotizacion)
         self.txtFechaFin.dateChanged.connect(self.visualizar_datos_cotizacion)
+        
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto 
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -784,7 +789,14 @@ class VentanaCotizaciones(QMainWindow):
         else:
             VentanaCotizaciones.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
             event.accept()
-        
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
     def showEvent(self, event):
         super().showEvent(event)
 

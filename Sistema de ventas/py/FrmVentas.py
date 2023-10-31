@@ -80,6 +80,11 @@ class VentanaVentas(QMainWindow):
         self.cmbArticulo.currentIndexChanged.connect(self.cargar_precios_venta)
         self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto)
         
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto 
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Evita que se inserte letras en los campos donde solo lleva numeros 0.0
@@ -730,6 +735,12 @@ class VentanaVentas(QMainWindow):
         else:
             VentanaVentas.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
             event.accept()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def showEvent(self, event):

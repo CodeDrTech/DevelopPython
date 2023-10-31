@@ -43,7 +43,12 @@ class VentanaIngresoAlmacen(QMainWindow):
         self.txtFechaFin.dateChanged.connect(self.buscar_ingresos)
         
         # Control combobox conectado a la funcion buscar_ingresos
-        self.cmbEstado.currentIndexChanged.connect(self.buscar_ingresos)        
+        self.cmbEstado.currentIndexChanged.connect(self.buscar_ingresos)
+        
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto        
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
@@ -761,6 +766,12 @@ class VentanaIngresoAlmacen(QMainWindow):
         else:
             VentanaIngresoAlmacen.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
             event.accept()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def showEvent(self, event):
