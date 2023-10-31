@@ -21,8 +21,8 @@ class VentanaStock(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
         # Establecer el texto de referencia a la caja de texto buscar
-        self.txtBuscar.setPlaceholderText('Buscar')
         # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
         self.txtBuscar.mousePressEvent = self.borrarTexto
         
         self.btnBuscar.clicked.connect(self.buscar_datos)
@@ -150,6 +150,7 @@ class VentanaStock(QMainWindow):
             self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
     def borrarTexto(self, event):
         # Borrar el texto cuando se hace clic
         self.txtBuscar.clear()
