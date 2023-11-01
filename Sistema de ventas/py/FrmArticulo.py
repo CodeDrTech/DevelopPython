@@ -49,6 +49,11 @@ class VentanaArticulo(QMainWindow):
         groupBox_2shadow.setBlurRadius(20)
         groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox_2.setGraphicsEffect(groupBox_2shadow)
+
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -310,7 +315,15 @@ class VentanaArticulo(QMainWindow):
         self.txtCodVenta.setText(nuevo_codigo)
         
         self.cargar_presentacion()
-        self.cargar_categoria()      
+        self.cargar_categoria() 
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------     
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)       

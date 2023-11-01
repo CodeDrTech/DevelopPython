@@ -73,6 +73,8 @@ class VentanaIngresoAlmacen(QMainWindow):
         groupBox_3shadow.setBlurRadius(20)
         groupBox_3shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox_3.setGraphicsEffect(groupBox_3shadow)
+
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
         # Abre formulario para buscar articulos y/o proveedores e insertarlos en el formulario ingreso.

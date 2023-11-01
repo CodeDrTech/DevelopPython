@@ -36,6 +36,13 @@ class VentanaPresentacion(QMainWindow):
         groupBox_2shadow.setBlurRadius(20)
         groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox_2.setGraphicsEffect(groupBox_2shadow)
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         self.btnGuardar.clicked.connect(self.insertar_datos)
@@ -163,6 +170,14 @@ class VentanaPresentacion(QMainWindow):
     def closeEvent(self, event):
         VentanaPresentacion.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
         
     def showEvent(self, event):
         super().showEvent(event)

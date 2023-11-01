@@ -41,6 +41,12 @@ class VentanaCliente(QMainWindow):
         groupBox_shadow.setBlurRadius(20)
         groupBox_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox_2.setGraphicsEffect(groupBox_shadow)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+        # Establecer el texto de referencia a la caja de texto buscar
+        # Conectar el evento de clic para borrar el texto
+        self.txtBuscar.setPlaceholderText('Buscar')        
+        self.txtBuscar.mousePressEvent = self.borrarTexto
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------ 
@@ -201,6 +207,12 @@ class VentanaCliente(QMainWindow):
     def closeEvent(self, event):
         VentanaCliente.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Elimina el textp de referencia que tiene la casilla buscar
+    def borrarTexto(self, event):
+        # Borrar el texto cuando se hace clic
+        self.txtBuscar.clear()
         
     def fn_Salir(self):
         # Preguntar si el usuario está seguro de cerrar la ventana
