@@ -1,5 +1,10 @@
 import sys
 
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView
 from PyQt5 import QtGui
@@ -60,6 +65,8 @@ class VentanaCotizaciones(QMainWindow):
         self.cmbArticulo.currentIndexChanged.connect(self.actualizar_existencia_producto) 
 
         self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion)
+        
+        self.btnImprimir.clicked.connect(self.imprimir_pdf)
 
         self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
@@ -247,6 +254,52 @@ class VentanaCotizaciones(QMainWindow):
                     
             else:
                 QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
+ #------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------               
+    def imprimir_pdf(self):
+        # Datos de la factura (puedes obtenerlos de tu base de datos SQL)
+        cliente = "Cliente Ejemplo"
+        cotfecha = "Fecha de cotizacion"
+        fecha = "Fecha actual"
+        productos = [("Producto 1", 2, 10.00, 20.00),
+                    ("Producto 2", 1, 15.00, 15.00),
+                    ("Producto 3", 3, 5.00, 15.00)]
+
+        # Crear un documento PDF
+        doc = SimpleDocTemplate("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
+
+        # Contenido de la factura
+        content = []
+
+        # Estilo para los párrafos
+        styles = getSampleStyleSheet()
+        style = styles["Normal"]
+
+        # Agregar encabezado
+        content.append(Paragraph("Cotizacion:", style))
+        content.append(Paragraph(f"Cliente: {cliente}", style))
+        content.append(Paragraph(f"Fecha de cotizacion: {cotfecha}", style))
+        content.append(Paragraph(f"Fecha: {fecha}", style))
+        content.append(Paragraph("", style))
+
+        # Crear una tabla para los productos
+        data = [["Descripción", "Cantidad", "Precio Unitario", "Total"]]
+        for producto in productos:
+            data.append(producto)
+
+        table = Table(data)
+        table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+
+        content.append(table)
+
+        # Generar el documento PDF
+        doc.build(content)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -313,22 +366,23 @@ class VentanaCotizaciones(QMainWindow):
             else:
                 query = QSqlQuery()
                 query.exec_(f"SELECT\
-                                        co.idcotizacion as 'ID',\
-                                        UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                                        dc.descuento as 'DESCUENTO %',\
-                                        co.itbis as 'IMPUESTOS %',\
-                                        co.serie as 'NO. COTIZACION',\
-                                        em.nombre as 'VENDEDOR',\
-                                        FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
-                                        co.comentario as 'COMENTARIO'\
-                                    FROM cotizacion co\
-                                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
-                                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
-                                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                                    WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
-                                    GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                                    dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                                    co.idcotizacion as 'ID',\
+                                    UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                    CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                    dc.descuento as 'DESCUENTO %',\
+                                    co.itbis as 'IMPUESTOS %',\
+                                    co.serie as 'NO. COTIZACION',\
+                                    em.nombre as 'VENDEDOR',\
+                                    FORMAT(SUM(dc.cantidad * dc.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                    FORMAT(SUM((dc.cantidad * dc.precio_venta * (1 - (dc.descuento / 100))) * (1 + (co.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
+                                    co.comentario as 'COMENTARIO'\
+                                FROM cotizacion co\
+                                INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                                INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                                INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                                WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                                GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                                dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
                 model = QSqlTableModel()    
                 model.setQuery(query)
                 self.tbDatos.setModel(model)
@@ -350,22 +404,23 @@ class VentanaCotizaciones(QMainWindow):
             else:
                 query = QSqlQuery()
                 query.exec_(f"SELECT\
-                                        co.idcotizacion as 'ID',\
-                                        UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                                        CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                                        dc.descuento as 'DESCUENTO %',\
-                                        co.itbis as 'IMPUESTOS %',\
-                                        co.serie as 'NO. COTIZACION',\
-                                        em.nombre as 'VENDEDOR',\
-                                        FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
-                                        co.comentario as 'COMENTARIO'\
-                                    FROM cotizacion co\
-                                    INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
-                                    INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
-                                    INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                                    WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND CONCAT(cl.nombre, ' ', cl.apellidos) LIKE '%{Buscar}%'\
-                                    GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                                    dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                                co.idcotizacion as 'ID',\
+                                UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                dc.descuento as 'DESCUENTO %',\
+                                co.itbis as 'IMPUESTOS %',\
+                                co.serie as 'NO. COTIZACION',\
+                                em.nombre as 'VENDEDOR',\
+                                FORMAT(SUM(dc.cantidad * dc.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                FORMAT(SUM((dc.cantidad * dc.precio_venta * (1 - (dc.descuento / 100))) * (1 + (co.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
+                                co.comentario as 'COMENTARIO'\
+                            FROM cotizacion co\
+                            INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                            INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                            INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                            WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND co.serie LIKE '%{Buscar}%'\
+                            GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                            dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
                 model = QSqlTableModel()    
                 model.setQuery(query)
                 self.tbDatos.setModel(model)
@@ -396,22 +451,23 @@ class VentanaCotizaciones(QMainWindow):
             else:
                 query = QSqlQuery()
                 query.exec_(f"SELECT\
-                                co.idcotizacion as 'ID',\
-                                UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
-                                CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
-                                dc.descuento as 'DESCUENTO %',\
-                                co.itbis as 'IMPUESTOS %',\
-                                co.serie as 'NO. COTIZACION',\
-                                em.nombre as 'VENDEDOR',\
-                                FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
-                                co.comentario as 'COMENTARIO'\
-                            FROM cotizacion co\
-                            INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
-                            INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
-                            INNER JOIN empleado em ON co.idempleado = em.idempleado\
-                            WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
-                            GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                            dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                                    co.idcotizacion as 'ID',\
+                                    UPPER(FORMAT(co.fecha, 'dd MMMM yyyy', 'es-ES')) AS 'FECHA',\
+                                    CONCAT(cl.nombre, ' ', cl.apellidos) as 'CLIENTE',\
+                                    dc.descuento as 'DESCUENTO %',\
+                                    co.itbis as 'IMPUESTOS %',\
+                                    co.serie as 'NO. COTIZACION',\
+                                    em.nombre as 'VENDEDOR',\
+                                    FORMAT(SUM(dc.cantidad * dc.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                    FORMAT(SUM((dc.cantidad * dc.precio_venta * (1 - (dc.descuento / 100))) * (1 + (co.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
+                                    co.comentario as 'COMENTARIO'\
+                                FROM cotizacion co\
+                                INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
+                                INNER JOIN detalle_cotizacion dc ON co.idcotizacion = dc.idcotizacion\
+                                INNER JOIN empleado em ON co.idempleado = em.idempleado\
+                                WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
+                                GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
+                                dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
                 
                 # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
                 model = QSqlTableModel()    
@@ -437,7 +493,8 @@ class VentanaCotizaciones(QMainWindow):
                                 co.itbis as 'IMPUESTOS %',\
                                 co.serie as 'NO. COTIZACION',\
                                 em.nombre as 'VENDEDOR',\
-                                FORMAT(SUM(dc.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                FORMAT(SUM(dc.cantidad * dc.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                FORMAT(SUM((dc.cantidad * dc.precio_venta * (1 - (dc.descuento / 100))) * (1 + (co.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 co.comentario as 'COMENTARIO'\
                             FROM cotizacion co\
                             INNER JOIN cliente cl ON co.idcliente = cl.idcliente\
@@ -662,7 +719,7 @@ class VentanaCotizaciones(QMainWindow):
         if query.exec_() and query.next():
             num_detalles = query.value(0)
         
-            if num_detalles == 1:
+            if num_detalles == 0:
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
