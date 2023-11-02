@@ -1,7 +1,7 @@
 import sys
 
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 
@@ -12,7 +12,7 @@ from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
 from PyQt5.QtSql import QSqlTableModel
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, QLocale
 
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo,\
     insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion,\
@@ -37,6 +37,10 @@ class VentanaCotizaciones(QMainWindow):
         self.txtFecha.setDate(QDate.currentDate())
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())
+        
+        # Establecer la configuración regional en español
+        spanish_locale = QLocale(QLocale.Spanish)
+        QLocale.setDefault(spanish_locale)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------           
         # Crear un efecto de sombra        
@@ -257,49 +261,94 @@ class VentanaCotizaciones(QMainWindow):
  #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------               
     def imprimir_pdf(self):
-        # Datos de la factura (puedes obtenerlos de tu base de datos SQL)
-        cliente = "Cliente Ejemplo"
-        cotfecha = "Fecha de cotizacion"
-        fecha = "Fecha actual"
-        productos = [("Producto 1", 2, 10.00, 20.00),
-                    ("Producto 2", 1, 15.00, 15.00),
-                    ("Producto 3", 3, 5.00, 15.00)]
+        # Obtener el índice de la fila seleccionada
+        indexes = self.tbDatos.selectedIndexes()
+            
+        if indexes:
+                
+            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
+            index = indexes[0]
+            row = index.row()
+                
+            self.obtener_id_fila_cotizacion(row)
+            cot_num = self.bd_serie
+            cot_fehca = self.bd_fecha
+            cot_cliente = self.bd_cliente
+            cot_sub_total = self.bd_sub_total
+            cot_total = self.bd_total
+            cot_impuesto = self.bd_impuesto
+                
+            
+                
+            # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+            confirmacion = QMessageBox.question(self, "GENERAR PDF?", "¿QUIERE CONVERTIR ESTA COTIZACION A PDF?",
+                                                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                
+                
+            # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en factura
+            if confirmacion == QMessageBox.Yes:
+                
+                # Crear un documento PDF
+                doc = SimpleDocTemplate("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
 
-        # Crear un documento PDF
-        doc = SimpleDocTemplate("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
+                # Contenido de la factura
+                content = []
 
-        # Contenido de la factura
-        content = []
+                # Estilo para los párrafos
+                styles = getSampleStyleSheet()
+                style = styles["Normal"]
 
-        # Estilo para los párrafos
-        styles = getSampleStyleSheet()
-        style = styles["Normal"]
+                # Agregar encabezado con la fecha y el número de cotización
+                content.append(Paragraph(f"Cotización No.: {cot_num}", style))
+                content.append(Paragraph(f"Fecha de Cotización: {cot_fehca}", style))
+                content.append(Spacer(1, 12))  # Espacio en blanco
 
-        # Agregar encabezado
-        content.append(Paragraph("Cotizacion:", style))
-        content.append(Paragraph(f"Cliente: {cliente}", style))
-        content.append(Paragraph(f"Fecha de cotizacion: {cotfecha}", style))
-        content.append(Paragraph(f"Fecha: {fecha}", style))
-        content.append(Paragraph("", style))
+                # Agregar información del cliente
+                content.append(Paragraph(f"Cliente: {cot_cliente}", style))
+                content.append(Paragraph(f"Dirección: {cot_cliente}", style))
+                content.append(Paragraph(f"NIF: {cot_cliente}", style))
+                content.append(Spacer(1, 12))  # Espacio en blanco
 
-        # Crear una tabla para los productos
-        data = [["Descripción", "Cantidad", "Precio Unitario", "Total"]]
-        for producto in productos:
-            data.append(producto)
+                # Agregar información de la factura
+                content.append(Paragraph(f"Número de factura: {cot_num}", style))
+                content.append(Paragraph(f"Fecha: {cot_fehca}", style))
+                content.append(Spacer(1, 12))  # Espacio en blanco
 
-        table = Table(data)
-        table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+                # Agregar detalles de los productos
+                productos = [(f"producto_nombre", "producto_cantidad", "producto_precio")]
 
-        content.append(table)
+                data = [["Producto", "Cantidad", "Precio"]]
+                for producto in productos:
+                    data.append(producto)
 
-        # Generar el documento PDF
-        doc.build(content)
+                table = Table(data)
+                table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                                        ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+
+                content.append(table)
+
+                # Agregar totales
+                content.append(Paragraph(f"Subtotal: {cot_sub_total}", style))
+                content.append(Paragraph(f"IVA: {cot_impuesto}", style))
+                content.append(Paragraph(f"Total: {cot_total}", style))
+
+                # Generar el documento PDF
+                doc.build(content)
+
+
+                QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
+                    
+        else:
+            QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA GENERAR EL PDF.")
+        
+        
+        
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -393,9 +442,21 @@ class VentanaCotizaciones(QMainWindow):
                     
                     # Obtener los datos de las columnas de la fila seleccionada
                     columna_id = modelo.index(num_fila, 0).data()
+                    columna_fehca = modelo.index(num_fila, 1).data()
+                    columna_cliente = modelo.index(num_fila, 2).data()
+                    columna_impuesto = modelo.index(num_fila, 4).data()
+                    columna_sub_total = modelo.index(num_fila, 7).data()
+                    columna_total = modelo.index(num_fila, 8).data()
+                    columna_serie = modelo.index(num_fila, 5).data()
                     
                     
                     self.bd_id_cotizacion = columna_id
+                    self.bd_fecha = columna_fehca
+                    self.bd_cliente = columna_cliente
+                    self.bd_serie = columna_serie
+                    self.bd_sub_total = columna_sub_total
+                    self.bd_total = columna_total
+                    self.bd_impuesto = columna_impuesto
 
         else:
             if FechaInicio > FechaFinal:
