@@ -309,7 +309,29 @@ class VentanaCotizaciones(QMainWindow):
 
 
                 # Aquí deberías agregar el código para imprimir los datos de los artículos
-                # ...
+                # Cabecera de los datos de los artículos
+                c.setFont("Helvetica-Bold", 12)
+                c.drawString(50, 630, "ID")
+                c.drawString(70, 630, "NUMERO")
+                c.drawString(140, 630, "ARTICULO")
+                c.drawString(310, 630, "VENTA POR")
+                c.drawString(390, 630, "PRECIO")
+                c.drawString(460, 630, "CANT.")                
+                c.drawString(505, 630, "TOTAL")
+
+                # Datos de los artículos
+                detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
+                y = 610
+                for detalle in detalles:
+                    c.setFont("Helvetica", 12)
+                    c.drawString(50, y, str(detalle['idarticulo']))
+                    c.drawString(70, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                    c.drawString(140, y, self.obtener_nombre_articulo(detalle['idarticulo']))
+                    c.drawString(310, y, "$" + str(detalle['cantidad'] * detalle['precio_venta']))
+                    c.drawString(390, y, "$" + str(detalle['precio_venta']))
+                    c.drawString(460, y, str(detalle['cantidad']))                    
+                    c.drawString(505, y, "$" + str(detalle['cantidad'] * detalle['precio_venta']))
+                    y -= 20
 
                 # Totales, subtotales, impuestos, etc.
                 c.setFont("Helvetica-Bold", 16)
@@ -328,7 +350,59 @@ class VentanaCotizaciones(QMainWindow):
         
         
         
-        
+    def obtener_detalles_cotizacion(self, id_cotizacion):
+        query = QSqlQuery()
+        query.prepare("SELECT * FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
+        query.bindValue(":idcotizacion", id_cotizacion)
+        query.exec_()
+
+        detalles = []
+        while query.next():
+            detalles.append({
+                'idarticulo': query.value('idarticulo'),
+                'codigo': query.value('codigo'),
+                'cantidad': query.value('cantidad'),
+                'precio_venta': query.value('precio_venta'),
+                'descuento': query.value('descuento')
+            })
+
+        return detalles
+    
+    def obtener_nombre_articulo(self, id_articulo):
+        query = QSqlQuery()
+        query.prepare("SELECT nombre FROM articulo WHERE idarticulo = :idarticulo")
+        query.bindValue(":idarticulo", id_articulo)
+        query.exec_()
+
+        if query.next():
+            return query.value('nombre')
+
+        return ""
+    
+    def obtener_presentacion_articulo(self, codigo_articulo):
+        query = QSqlQuery()
+        query.prepare("DECLARE @idpresentacion INT "
+                    "SELECT @idpresentacion = idpresentacion FROM articulo WHERE codigo = :codigo "
+                    "SELECT descripcion FROM presentacion WHERE idpresentacion = @idpresentacion")
+        query.bindValue(":codigo", codigo_articulo)
+        query.exec_()
+
+        if query.next():
+            return query.value('descripcion')
+
+        return ""
+
+    
+    def obtener_codigo_articulo(self, id_articulo):
+        query = QSqlQuery()
+        query.prepare("SELECT codigo FROM articulo WHERE idarticulo = :idarticulo")
+        query.bindValue(":idarticulo", id_articulo)
+        query.exec_()
+
+        if query.next():
+            return query.value('codigo')
+
+        return ""
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
