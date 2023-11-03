@@ -1,6 +1,7 @@
 import sys
 
 from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
@@ -258,87 +259,66 @@ class VentanaCotizaciones(QMainWindow):
                     
             else:
                 QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
- #------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------               
     def imprimir_pdf(self):
         # Obtener el índice de la fila seleccionada
         indexes = self.tbDatos.selectedIndexes()
-            
+        fecha = QDate.currentDate()
+        fecha_formato = fecha.toString("dd-MMMM-yyyy")
         if indexes:
                 
             # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
             index = indexes[0]
             row = index.row()
                 
-            self.obtener_id_fila_cotizacion(row)
-            cot_num = self.bd_serie
-            cot_fehca = self.bd_fecha
-            cot_cliente = self.bd_cliente
-            cot_sub_total = self.bd_sub_total
-            cot_total = self.bd_total
-            cot_impuesto = self.bd_impuesto
-                
+            self.obtener_id_fila_cotizacion(row)               
             
-                
+            
             # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
             confirmacion = QMessageBox.question(self, "GENERAR PDF?", "¿QUIERE CONVERTIR ESTA COTIZACION A PDF?",
                                                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                 
                 
-            # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en factura
+            # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
             if confirmacion == QMessageBox.Yes:
                 
-                # Crear un documento PDF
-                doc = SimpleDocTemplate("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
+                c = canvas.Canvas("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
 
-                # Contenido de la factura
-                content = []
+                # Datos de la empresa
+                c.setFont("Helvetica-Bold", 16)
+                c.drawString(50,750,"Ferreteria Costa Azul")
+                c.setFont("Helvetica", 12)
+                c.drawString(50,730,"Ave. Ind. km 12 1/2 # 23.")
+                c.drawString(50,710,"809-534-2323")
 
-                # Estilo para los párrafos
-                styles = getSampleStyleSheet()
-                style = styles["Normal"]
+                # No. Cotización y fecha
+                c.setFont("Helvetica-Bold", 16)
+                c.drawString(380,680,"Cotización: " + str(self.bd_serie))
+                c.setFont("Helvetica", 12)
+                c.drawString(380,660,f"{self.bd_fecha}")
 
-                # Agregar encabezado con la fecha y el número de cotización
-                content.append(Paragraph(f"Cotización No.: {cot_num}", style))
-                content.append(Paragraph(f"Fecha de Cotización: {cot_fehca}", style))
-                content.append(Spacer(1, 12))  # Espacio en blanco
+                # Datos del cliente
+                c.setFont("Helvetica-Bold", 16)
+                c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
+                c.setFont("Helvetica", 12)
+                c.drawString(50,660,"Fecha: " + str(fecha_formato))
+                
+                # Dibujar una línea debajo de los datos del cliente
+                c.line(50, 650, 550, 650)
 
-                # Agregar información del cliente
-                content.append(Paragraph(f"Cliente: {cot_cliente}", style))
-                content.append(Paragraph(f"Dirección: {cot_cliente}", style))
-                content.append(Paragraph(f"NIF: {cot_cliente}", style))
-                content.append(Spacer(1, 12))  # Espacio en blanco
 
-                # Agregar información de la factura
-                content.append(Paragraph(f"Número de factura: {cot_num}", style))
-                content.append(Paragraph(f"Fecha: {cot_fehca}", style))
-                content.append(Spacer(1, 12))  # Espacio en blanco
+                # Aquí deberías agregar el código para imprimir los datos de los artículos
+                # ...
 
-                # Agregar detalles de los productos
-                productos = [(f"producto_nombre", "producto_cantidad", "producto_precio")]
+                # Totales, subtotales, impuestos, etc.
+                c.setFont("Helvetica-Bold", 16)
+                c.drawString(50,100,"Subtotal: " + str(self.bd_sub_total))
+                c.drawString(50,80,"Impuestos: " + str(int(self.bd_impuesto)) + "%")
+                c.drawString(50,60,"Descuento: " + str(int(self.bd_descuento)) + "%")
+                c.drawString(50,40,"Total: " + str(self.bd_total))
 
-                data = [["Producto", "Cantidad", "Precio"]]
-                for producto in productos:
-                    data.append(producto)
-
-                table = Table(data)
-                table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                                        ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
-
-                content.append(table)
-
-                # Agregar totales
-                content.append(Paragraph(f"Subtotal: {cot_sub_total}", style))
-                content.append(Paragraph(f"IVA: {cot_impuesto}", style))
-                content.append(Paragraph(f"Total: {cot_total}", style))
-
-                # Generar el documento PDF
-                doc.build(content)
+                c.save()
 
 
                 QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
@@ -444,6 +424,7 @@ class VentanaCotizaciones(QMainWindow):
                     columna_id = modelo.index(num_fila, 0).data()
                     columna_fehca = modelo.index(num_fila, 1).data()
                     columna_cliente = modelo.index(num_fila, 2).data()
+                    columna_descuento = modelo.index(num_fila, 3).data()
                     columna_impuesto = modelo.index(num_fila, 4).data()
                     columna_sub_total = modelo.index(num_fila, 7).data()
                     columna_total = modelo.index(num_fila, 8).data()
@@ -457,6 +438,7 @@ class VentanaCotizaciones(QMainWindow):
                     self.bd_sub_total = columna_sub_total
                     self.bd_total = columna_total
                     self.bd_impuesto = columna_impuesto
+                    self.bd_descuento = columna_descuento
 
         else:
             if FechaInicio > FechaFinal:
