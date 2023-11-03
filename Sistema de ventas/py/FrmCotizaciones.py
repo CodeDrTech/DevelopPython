@@ -5,6 +5,8 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.lib.colors import black
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView
@@ -286,22 +288,43 @@ class VentanaCotizaciones(QMainWindow):
                 c = canvas.Canvas("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
 
                 # Datos de la empresa
-                c.setFont("Helvetica-Bold", 16)
-                c.drawString(50,750,"Ferreteria Costa Azul")
-                c.setFont("Helvetica", 12)
-                c.drawString(50,730,"Ave. Ind. km 12 1/2 # 23.")
-                c.drawString(50,710,"809-534-2323")
+                data = [
+                    ["Ferreteria Costa Azul"],
+                    ["Ave. Ind. km 12 1/2 # 23."],
+                    ["809-534-2323"]
+                ]
+
+                table = Table(data)
+
+                # Establecer el estilo de la tabla para datos de la empresa
+                style = TableStyle([
+                    ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
+                    ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+
+                    ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                    ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
+                    ('FONTSIZE', (0,0), (-1,-1), 12),
+
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+                    ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
+                    ('GRID', (0,0), (-1,-1), 1, colors.black)
+                ])
+                table.setStyle(style)
+
+                # Agregar la tabla de datos de la empresa al canvas
+                table.wrapOn(c, 50, 750)
+                table.drawOn(c, 50, 700)
 
                 # No. Cotización y fecha
-                c.setFont("Helvetica-Bold", 16)
+                c.setFont("Helvetica-Bold", 15)
                 c.drawString(380,680,"Cotización: " + str(self.bd_serie))
-                c.setFont("Helvetica", 12)
-                c.drawString(380,660,f"{self.bd_fecha}")
+                c.setFont("Helvetica", 10)
+                c.drawString(380,660,"Fecha Cot.: " + f"{self.bd_fecha}")
 
                 # Datos del cliente
-                c.setFont("Helvetica-Bold", 16)
+                c.setFont("Helvetica-Bold", 15)
                 c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
-                c.setFont("Helvetica", 12)
+                c.setFont("Helvetica", 10)
                 c.drawString(50,660,"Fecha: " + str(fecha_formato))
                 
                 # Dibujar una línea debajo de los datos del cliente
@@ -336,7 +359,7 @@ class VentanaCotizaciones(QMainWindow):
                 # Totales, subtotales, impuestos, etc.
                 c.setFont("Helvetica-Bold", 16)
                 c.drawString(50,100,"Subtotal: " + str(self.bd_sub_total))
-                c.drawString(50,80,"Impuestos: " + str(int(self.bd_impuesto)) + "%")
+                c.drawString(50,80,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
                 c.drawString(50,60,"Descuento: " + str(int(self.bd_descuento)) + "%")
                 c.drawString(50,40,"Total: " + str(self.bd_total))
 
