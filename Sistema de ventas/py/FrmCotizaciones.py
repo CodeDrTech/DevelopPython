@@ -319,7 +319,7 @@ class VentanaCotizaciones(QMainWindow):
                 c.drawString(460, 630, "CANT.")                
                 c.drawString(505, 630, "TOTAL")
 
-                # Datos de los artículos
+                # Datos de los artículos.
                 detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
                 y = 610
                 for detalle in detalles:
