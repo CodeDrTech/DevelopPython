@@ -327,7 +327,7 @@ class VentanaCotizaciones(QMainWindow):
                     c.drawString(50, y, str(detalle['idarticulo']))
                     c.drawString(70, y, self.obtener_codigo_articulo(detalle['idarticulo']))
                     c.drawString(140, y, self.obtener_nombre_articulo(detalle['idarticulo']))
-                    c.drawString(310, y, "$" + str(detalle['cantidad'] * detalle['precio_venta']))
+                    c.drawString(310, y, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
                     c.drawString(390, y, "$" + str(detalle['precio_venta']))
                     c.drawString(460, y, str(detalle['cantidad']))                    
                     c.drawString(505, y, "$" + str(detalle['cantidad'] * detalle['precio_venta']))
