@@ -383,7 +383,7 @@ class VentanaCotizaciones(QMainWindow):
         while query.next():
             detalles.append({
                 'idarticulo': query.value('idarticulo'),
-                'codigo': query.value('codigo'),
+                #'codigo': query.value('codigo'),
                 'cantidad': query.value('cantidad'),
                 'precio_venta': query.value('precio_venta'),
                 'descuento': query.value('descuento')
