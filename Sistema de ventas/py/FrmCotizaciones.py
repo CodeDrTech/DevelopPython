@@ -363,6 +363,10 @@ class VentanaCotizaciones(QMainWindow):
                 c.drawString(50,60,"Descuento: " + str(int(self.bd_descuento)) + "%")
                 c.drawString(50,40,"Total: " + str(self.bd_total))
 
+                # Comentario de la cootizacion al pie de la hoja
+                c.setFont("Helvetica", 10)
+                c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
+
                 c.save()
 
 
@@ -372,7 +376,7 @@ class VentanaCotizaciones(QMainWindow):
             QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA GENERAR EL PDF.")
         
         
-        
+    # Obtiene datos importante de la tabla detalle_cotizacion para imprimirlos en el pdf de la cotizacion    
     def obtener_detalles_cotizacion(self, id_cotizacion):
         query = QSqlQuery()
         query.prepare("SELECT * FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
@@ -383,7 +387,7 @@ class VentanaCotizaciones(QMainWindow):
         while query.next():
             detalles.append({
                 'idarticulo': query.value('idarticulo'),
-                #'codigo': query.value('codigo'),
+                #'comentario': query.value('comentario'),
                 'cantidad': query.value('cantidad'),
                 'precio_venta': query.value('precio_venta'),
                 'descuento': query.value('descuento')
@@ -391,6 +395,8 @@ class VentanaCotizaciones(QMainWindow):
 
         return detalles
     
+    # Obtiene el nombre del articulo mediante el idarticulo insertado en la tabla detalle_cotizacion
+    # para imprimirlo en el pdf de la cotizacion.
     def obtener_nombre_articulo(self, id_articulo):
         query = QSqlQuery()
         query.prepare("SELECT nombre FROM articulo WHERE idarticulo = :idarticulo")
@@ -402,6 +408,8 @@ class VentanaCotizaciones(QMainWindow):
 
         return ""
     
+    # Obtiene la descripcion de la tabla presentacion mediante el codigo del articulo (no idarticulo) que esta en la tabla cotizacion
+    # primero obtengo el codigo del articulo mediante la funcion obtener_codigo_articulo() para luego sacar la presentacion del mismo.
     def obtener_presentacion_articulo(self, codigo_articulo):
         query = QSqlQuery()
         query.prepare("DECLARE @idpresentacion INT "
@@ -415,7 +423,8 @@ class VentanaCotizaciones(QMainWindow):
 
         return ""
 
-    
+    # obtener el codigo del articulo (no idarticulo) para imprimirlo en los de talle del articulos del pdf
+    # y tambien se usa este codigo para obtener la descripcion de la presentacion para imprimirla en el pdf. 
     def obtener_codigo_articulo(self, id_articulo):
         query = QSqlQuery()
         query.prepare("SELECT codigo FROM articulo WHERE idarticulo = :idarticulo")
@@ -428,7 +437,8 @@ class VentanaCotizaciones(QMainWindow):
         return ""
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-
+    # Verifica que antes de convertir la cotizacion en factura (venta) que  haya stock disponoble de cada uno de los articulos a cotizar
+    # Si en la cotizacion a convertir hay uno o varios articulos sin stock le manda un aviso al usuario mostrando dichos articulos.
     def verificar_cantidad_cotizacion_stock(self):
         id_cotizacion = self.bd_id_cotizacion
         query = QSqlQuery()
@@ -478,7 +488,9 @@ class VentanaCotizaciones(QMainWindow):
             return True
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------           
-    # Pasando como parametro el numero de fila, obtengo el id de la cotizacion.
+    # Pasando como parametro el numero de fila el cual obtengo al seleccionar en el QTableView obtengo datos que necesito
+    # estos datos son usado con varios propositos como la impresion de informacion al crear un pdf por ejemplo.
+    # los SELECT usados aqui son los mismo que muestran informacion al crear las cotizaciones, son los datos mas relevantes.
     def obtener_id_fila_cotizacion(self, num_fila):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
@@ -523,9 +535,10 @@ class VentanaCotizaciones(QMainWindow):
                     columna_cliente = modelo.index(num_fila, 2).data()
                     columna_descuento = modelo.index(num_fila, 3).data()
                     columna_impuesto = modelo.index(num_fila, 4).data()
+                    columna_serie = modelo.index(num_fila, 5).data()
                     columna_sub_total = modelo.index(num_fila, 7).data()
                     columna_total = modelo.index(num_fila, 8).data()
-                    columna_serie = modelo.index(num_fila, 5).data()
+                    columna_comentario = modelo.index(num_fila, 9).data()
                     
                     
                     self.bd_id_cotizacion = columna_id
@@ -536,6 +549,7 @@ class VentanaCotizaciones(QMainWindow):
                     self.bd_total = columna_total
                     self.bd_impuesto = columna_impuesto
                     self.bd_descuento = columna_descuento
+                    self.bd_comentario = columna_comentario
 
         else:
             if FechaInicio > FechaFinal:
