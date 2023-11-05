@@ -264,124 +264,129 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------               
     def imprimir_pdf(self):
-        # Obtener el índice de la fila seleccionada
-        indexes = self.tbDatos.selectedIndexes()
-        fecha = QDate.currentDate()
-        fecha_formato = fecha.toString("dd-MMMM-yyyy")
-        if indexes:
-                
-            # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
-            index = indexes[0]
-            row = index.row()
-                
-            self.obtener_id_fila_cotizacion(row)               
+        # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
+        if self.se_llamo_activar_botones:
+            QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZACION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
             
-            
-            # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
-            confirmacion = QMessageBox.question(self, "GENERAR PDF?", "¿QUIERE CONVERTIR ESTA COTIZACION A PDF?",
-                                                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-                
-                
-            # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
-            if confirmacion == QMessageBox.Yes:
-                
-                c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
-
-                # Agregar el logo de la empresa
-                c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
-
-                # Datos de la empresa
-                data = [
-                    ["Ferremar"],
-                    ["Ave. Ind. km 12 1/2 # 23."],
-                    ["809-534-2323"]
-                ]
-
-                table = Table(data)
-
-                # Establecer el estilo de la tabla para datos de la empresa
-                style = TableStyle([
-                    ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
-                    ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
-
-                    ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                    ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
-                    ('FONTSIZE', (0,0), (-1,-1), 12),
-
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 10),
-                    ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
-                    ('GRID', (0,0), (-1,-1), 1, colors.black)
-                ])
-                table.setStyle(style)
-
-                # Agregar la tabla de datos de la empresa al canvas
-                table.wrapOn(c, 50, 750)
-                table.drawOn(c, 50, 700)
-
-                # No. Cotización y fecha
-                c.setFont("Helvetica-Bold", 15)
-                c.drawString(390,680,"Cotización: " + str(self.bd_serie))
-                c.setFont("Helvetica", 10)
-                c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
-
-                # Datos del cliente
-                c.setFont("Helvetica-Bold", 15)
-                c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
-                c.setFont("Helvetica", 10)
-                c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
-                
-                # Dibujar una línea debajo de los datos de la empresa y logo.
-                c.line(50, 695, 550, 695)
-
-                # Dibujar una línea debajo de los datos del cliente
-                c.line(50, 650, 550, 650)
-
-
-                # Aquí deberías agregar el código para imprimir los datos de los artículos
-                # Cabecera de los datos de los artículos
-                c.setFont("Helvetica-Bold", 12)
-                #c.drawString(50, 630, "ID")
-                c.drawString(50, 630, "CODIGO")
-                c.drawString(120, 630, "CANT.") 
-                c.drawString(170, 630, "ARTICULO")                 
-                c.drawString(340, 630, "PRECIO")
-                c.drawString(410, 630, "VENTA POR")
-                c.drawString(495, 630, "TOTAL")
-
-                # Datos de los artículos.
-                detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
-                y = 610
-                for detalle in detalles:
-                    c.setFont("Helvetica", 12)
-                    #c.drawString(50, y, str(detalle['idarticulo']))
-                    c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
-                    c.drawString(120, y, str(detalle['cantidad'])) 
-                    c.drawString(170, y, self.obtener_nombre_articulo(detalle['idarticulo']))
-                    c.drawString(340, y, "$" + "{:,.2f}".format(detalle['precio_venta']))
-                    c.drawString(410, y, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
-                    c.drawString(495, y, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
-                    y -= 20
-
-                # Totales, subtotales, impuestos, etc.
-                c.setFont("Helvetica-Bold", 16)
-                c.drawString(50,100,"Subtotal: " + str(self.bd_sub_total))
-                c.drawString(50,80,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
-                c.drawString(50,60,"Descuento: " + str(int(self.bd_descuento)) + "%")
-                c.drawString(50,40,"Total: " + str(self.bd_total))
-
-                # Comentario de la cootizacion al pie de la hoja
-                c.setFont("Helvetica", 10)
-                c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
-
-                c.save()
-
-
-                QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
-                    
         else:
-            QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA GENERAR EL PDF.")
-        
-        
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+            fecha = QDate.currentDate()
+            fecha_formato = fecha.toString("dd-MMMM-yyyy")
+            if indexes:
+                    
+                # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
+                index = indexes[0]
+                row = index.row()
+                    
+                self.obtener_id_fila_cotizacion(row)               
+                
+                
+                # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+                confirmacion = QMessageBox.question(self, "GENERAR PDF?", "¿QUIERE CONVERTIR ESTA COTIZACION A PDF?",
+                                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    
+                    
+                # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
+                if confirmacion == QMessageBox.Yes:
+                    
+                    c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
+
+                    # Agregar el logo de la empresa
+                    c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
+
+                    # Datos de la empresa
+                    data = [
+                        ["Ferremar"],
+                        ["Ave. Ind. km 12 1/2 # 23."],
+                        ["809-534-2323"]
+                    ]
+
+                    table = Table(data)
+
+                    # Establecer el estilo de la tabla para datos de la empresa
+                    style = TableStyle([
+                        ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
+                        ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+
+                        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                        ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
+                        ('FONTSIZE', (0,0), (-1,-1), 12),
+
+                        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+                        ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
+                        ('GRID', (0,0), (-1,-1), 1, colors.black)
+                    ])
+                    table.setStyle(style)
+
+                    # Agregar la tabla de datos de la empresa al canvas
+                    table.wrapOn(c, 50, 750)
+                    table.drawOn(c, 50, 700)
+
+                    # No. Cotización y fecha
+                    c.setFont("Helvetica-Bold", 15)
+                    c.drawString(390,680,"Cotización: " + str(self.bd_serie))
+                    c.setFont("Helvetica", 10)
+                    c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
+
+                    # Datos del cliente
+                    c.setFont("Helvetica-Bold", 15)
+                    c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
+                    c.setFont("Helvetica", 10)
+                    c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
+                    
+                    # Dibujar una línea debajo de los datos de la empresa y logo.
+                    c.line(50, 695, 550, 695)
+
+                    # Dibujar una línea debajo de los datos del cliente
+                    c.line(50, 650, 550, 650)
+
+
+                    # Aquí deberías agregar el código para imprimir los datos de los artículos
+                    # Cabecera de los datos de los artículos
+                    c.setFont("Helvetica-Bold", 12)
+                    #c.drawString(50, 630, "ID")
+                    c.drawString(50, 630, "CODIGO")
+                    c.drawString(120, 630, "CANT.") 
+                    c.drawString(170, 630, "ARTICULO")                 
+                    c.drawString(340, 630, "PRECIO")
+                    c.drawString(410, 630, "VENTA POR")
+                    c.drawString(495, 630, "TOTAL")
+
+                    # Datos de los artículos.
+                    detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
+                    y = 610
+                    for detalle in detalles:
+                        c.setFont("Helvetica", 12)
+                        #c.drawString(50, y, str(detalle['idarticulo']))
+                        c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                        c.drawString(120, y, str(detalle['cantidad'])) 
+                        c.drawString(170, y, self.obtener_nombre_articulo(detalle['idarticulo']))
+                        c.drawString(340, y, "$" + "{:,.2f}".format(detalle['precio_venta']))
+                        c.drawString(410, y, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
+                        c.drawString(495, y, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
+                        y -= 20
+
+                    # Totales, subtotales, impuestos, etc.
+                    c.setFont("Helvetica-Bold", 16)
+                    c.drawString(50,100,"Subtotal: " + str(self.bd_sub_total))
+                    c.drawString(50,80,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                    c.drawString(50,60,"Descuento: " + str(int(self.bd_descuento)) + "%")
+                    c.drawString(50,40,"Total: " + str(self.bd_total))
+
+                    # Comentario de la cootizacion al pie de la hoja
+                    c.setFont("Helvetica", 10)
+                    c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
+
+                    c.save()
+
+
+                    QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
+                        
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA GENERAR EL PDF.")
+            
+            
     # Obtiene datos importante de la tabla detalle_cotizacion para imprimirlos en el pdf de la cotizacion    
     def obtener_detalles_cotizacion(self, id_cotizacion):
         query = QSqlQuery()
@@ -392,15 +397,15 @@ class VentanaCotizaciones(QMainWindow):
         detalles = []
         while query.next():
             detalles.append({
-                'idarticulo': query.value('idarticulo'),
-                #'comentario': query.value('comentario'),
-                'cantidad': query.value('cantidad'),
-                'precio_venta': query.value('precio_venta'),
-                'descuento': query.value('descuento')
-            })
+                    'idarticulo': query.value('idarticulo'),
+                    #'comentario': query.value('comentario'),
+                    'cantidad': query.value('cantidad'),
+                    'precio_venta': query.value('precio_venta'),
+                    'descuento': query.value('descuento')
+                })
 
         return detalles
-    
+        
     # Obtiene el nombre del articulo mediante el idarticulo insertado en la tabla detalle_cotizacion
     # para imprimirlo en el pdf de la cotizacion.
     def obtener_nombre_articulo(self, id_articulo):
@@ -413,14 +418,14 @@ class VentanaCotizaciones(QMainWindow):
             return query.value('nombre')
 
         return ""
-    
+        
     # Obtiene la descripcion de la tabla presentacion mediante el codigo del articulo (no idarticulo) que esta en la tabla cotizacion
     # primero obtengo el codigo del articulo mediante la funcion obtener_codigo_articulo() para luego sacar la presentacion del mismo.
     def obtener_presentacion_articulo(self, codigo_articulo):
         query = QSqlQuery()
         query.prepare("DECLARE @idpresentacion INT "
-                    "SELECT @idpresentacion = idpresentacion FROM articulo WHERE codigo = :codigo "
-                    "SELECT descripcion FROM presentacion WHERE idpresentacion = @idpresentacion")
+                        "SELECT @idpresentacion = idpresentacion FROM articulo WHERE codigo = :codigo "
+                        "SELECT descripcion FROM presentacion WHERE idpresentacion = @idpresentacion")
         query.bindValue(":codigo", codigo_articulo)
         query.exec_()
 
@@ -873,13 +878,13 @@ class VentanaCotizaciones(QMainWindow):
         idcotizacion = self.txtCodigo.text()
         
         query = QSqlQuery()
-        query.prepare(f"SELECT COUNT(*) FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
+        query.prepare(f"SELECT comentario from cotizacion where idcotizacion = :idcotizacion")
         query.bindValue(":idcotizacion", idcotizacion)
         
         if query.exec_() and query.next():
-            num_detalles = query.value(0)
+            comentario = query.value(0)
         
-            if num_detalles == 0:
+            if comentario == "COTIZACION ANULADA":
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("SE ELIMINARON TODOS LOS ARTICULOS")
