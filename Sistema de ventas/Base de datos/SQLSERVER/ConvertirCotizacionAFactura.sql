@@ -7,22 +7,22 @@ BEGIN
     DECLARE @idventa INT;
     DECLARE @comentario_venta NVARCHAR(MAX);
 
-    -- Obtener la última serie de ventas
+    -- Obtener la ï¿½ltima serie de ventas
     SELECT TOP 1 @nueva_serie = serie
     FROM venta
     ORDER BY idventa DESC;
 
-    -- Establecer el próximo número de serie
+    -- Establecer el prï¿½ximo nï¿½mero de serie
     IF @nueva_serie IS NOT NULL
     BEGIN
-        SET @nueva_serie = 'VENT' + RIGHT('00000' + CAST(CAST(RIGHT(@nueva_serie, LEN(@nueva_serie) - 4) AS INT) + 1 AS NVARCHAR), 5);
+        SET @nueva_serie = 'FACT' + RIGHT('00000' + CAST(CAST(RIGHT(@nueva_serie, LEN(@nueva_serie) - 4) AS INT) + 1 AS NVARCHAR), 5);
     END
     ELSE
     BEGIN
-        SET @nueva_serie = 'VENT00001';
+        SET @nueva_serie = 'FACT00001';
     END;
 
-    -- Obtener la serie de la cotización que se convierte en venta
+    -- Obtener la serie de la cotizaciï¿½n que se convierte en venta
     SELECT @comentario_venta = 'COTIZACION NO. ' + serie
     FROM cotizacion
     WHERE idcotizacion = @idcotizacion;
@@ -40,7 +40,7 @@ BEGIN
     FROM cotizacion
     WHERE idcotizacion = @idcotizacion;
 
-    -- Obtener el ID de la venta recién insertada
+    -- Obtener el ID de la venta reciï¿½n insertada
     SET @idventa = SCOPE_IDENTITY();
 
     -- Insertar los detalles de la venta

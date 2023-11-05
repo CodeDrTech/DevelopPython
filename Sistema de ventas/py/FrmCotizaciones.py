@@ -285,7 +285,7 @@ class VentanaCotizaciones(QMainWindow):
             # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
             if confirmacion == QMessageBox.Yes:
                 
-                c = canvas.Canvas("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
+                c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
 
                 # Agregar el logo de la empresa
                 c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
@@ -308,7 +308,7 @@ class VentanaCotizaciones(QMainWindow):
                     ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
                     ('FONTSIZE', (0,0), (-1,-1), 12),
 
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 10),
                     ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
                     ('GRID', (0,0), (-1,-1), 1, colors.black)
                 ])

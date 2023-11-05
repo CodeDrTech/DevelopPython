@@ -179,7 +179,7 @@ class VentanaVentas(QMainWindow):
     # Coloca el id de venta en su txt actulizado para el proximo registro
     def actualizar_num_venta(self):
         ultimo_codigo = obtener_codigo_venta("venta")
-        nuevo_codigo = generar_nuevo_codigo_venta("VENT", ultimo_codigo)
+        nuevo_codigo = generar_nuevo_codigo_venta("FACT", ultimo_codigo)
         self.txtSerie.setText(nuevo_codigo)
         
 #------------------------------------------------------------------------------------------------------
