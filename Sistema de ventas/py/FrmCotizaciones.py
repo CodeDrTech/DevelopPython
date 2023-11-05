@@ -41,7 +41,7 @@ class VentanaCotizaciones(QMainWindow):
         self.txtFechaInicio.setDate(QDate.currentDate())
         self.txtFechaFin.setDate(QDate.currentDate())
         
-        # Establecer la configuración regional en español
+        # Establecer la configuración regional en español.
         spanish_locale = QLocale(QLocale.Spanish)
         QLocale.setDefault(spanish_locale)
 #------------------------------------------------------------------------------------------------------
