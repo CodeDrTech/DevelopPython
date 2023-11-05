@@ -328,7 +328,7 @@ class VentanaCotizaciones(QMainWindow):
                 c.setFont("Helvetica-Bold", 15)
                 c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
                 c.setFont("Helvetica", 10)
-                c.drawString(50,660,"Fecha: " + str(fecha_formato))
+                c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
                 
                 # Dibujar una línea debajo de los datos de la empresa y logo.
                 c.line(50, 695, 550, 695)
