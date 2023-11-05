@@ -287,9 +287,12 @@ class VentanaCotizaciones(QMainWindow):
                 
                 c = canvas.Canvas("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
 
+                # Agregar el logo de la empresa
+                c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
+
                 # Datos de la empresa
                 data = [
-                    ["Ferreteria Costa Azul"],
+                    ["Ferremar"],
                     ["Ave. Ind. km 12 1/2 # 23."],
                     ["809-534-2323"]
                 ]
@@ -317,9 +320,9 @@ class VentanaCotizaciones(QMainWindow):
 
                 # No. Cotización y fecha
                 c.setFont("Helvetica-Bold", 15)
-                c.drawString(380,680,"Cotización: " + str(self.bd_serie))
+                c.drawString(390,680,"Cotización: " + str(self.bd_serie))
                 c.setFont("Helvetica", 10)
-                c.drawString(380,660,"Fecha Cot.: " + f"{self.bd_fecha}")
+                c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
 
                 # Datos del cliente
                 c.setFont("Helvetica-Bold", 15)
@@ -327,6 +330,9 @@ class VentanaCotizaciones(QMainWindow):
                 c.setFont("Helvetica", 10)
                 c.drawString(50,660,"Fecha: " + str(fecha_formato))
                 
+                # Dibujar una línea debajo de los datos de la empresa y logo.
+                c.line(50, 695, 550, 695)
+
                 # Dibujar una línea debajo de los datos del cliente
                 c.line(50, 650, 550, 650)
 
@@ -334,26 +340,26 @@ class VentanaCotizaciones(QMainWindow):
                 # Aquí deberías agregar el código para imprimir los datos de los artículos
                 # Cabecera de los datos de los artículos
                 c.setFont("Helvetica-Bold", 12)
-                c.drawString(50, 630, "ID")
-                c.drawString(70, 630, "NUMERO")
-                c.drawString(140, 630, "ARTICULO")
-                c.drawString(310, 630, "VENTA POR")
-                c.drawString(390, 630, "PRECIO")
-                c.drawString(460, 630, "CANT.")                
-                c.drawString(505, 630, "TOTAL")
+                #c.drawString(50, 630, "ID")
+                c.drawString(50, 630, "CODIGO")
+                c.drawString(120, 630, "CANT.") 
+                c.drawString(170, 630, "ARTICULO")                 
+                c.drawString(340, 630, "PRECIO")
+                c.drawString(410, 630, "VENTA POR")
+                c.drawString(495, 630, "TOTAL")
 
                 # Datos de los artículos.
                 detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
                 y = 610
                 for detalle in detalles:
                     c.setFont("Helvetica", 12)
-                    c.drawString(50, y, str(detalle['idarticulo']))
-                    c.drawString(70, y, self.obtener_codigo_articulo(detalle['idarticulo']))
-                    c.drawString(140, y, self.obtener_nombre_articulo(detalle['idarticulo']))
-                    c.drawString(310, y, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
-                    c.drawString(390, y, "$" + str(detalle['precio_venta']))
-                    c.drawString(460, y, str(detalle['cantidad']))                    
-                    c.drawString(505, y, "$" + str(detalle['cantidad'] * detalle['precio_venta']))
+                    #c.drawString(50, y, str(detalle['idarticulo']))
+                    c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                    c.drawString(120, y, str(detalle['cantidad'])) 
+                    c.drawString(170, y, self.obtener_nombre_articulo(detalle['idarticulo']))
+                    c.drawString(340, y, "$" + "{:,.2f}".format(detalle['precio_venta']))
+                    c.drawString(410, y, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
+                    c.drawString(495, y, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
                     y -= 20
 
                 # Totales, subtotales, impuestos, etc.

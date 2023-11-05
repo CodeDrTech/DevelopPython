@@ -1,27 +1,14 @@
+from PyQt5.QtCore import QUrl
 import sys
-from PyQt5 import QtWidgets, uic
+from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtQml import QQmlApplicationEngine
 
-# Cargamos la ventana diseñada
-qtCreatorFile = 'Screen01.ui'
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+app = QGuiApplication(sys.argv)
 
-# Creamos la clase de la aplicación
-class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self):
-        QtWidgets.QMainWindow.__init__(self)
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self)
-        self.button.clicked.connect(self.saludar)
+engine = QQmlApplicationEngine()
+engine.load(QUrl('Screen01.ui.qml'))
 
-    def saludar(self):
-        # Obtenemos el nombre del usuario
-        nombre = self.lineEdit.text()
+if not engine.rootObjects():
+    sys.exit(-1)
 
-        # Mostramos un mensaje de bienvenida
-        self.label.setText("Hola, " + nombre)
-
-# Creamos la aplicación
-app = QtWidgets.QApplication(sys.argv)
-window = MyApp()
-window.show()
-app.exec_()
+sys.exit(app.exec_())
