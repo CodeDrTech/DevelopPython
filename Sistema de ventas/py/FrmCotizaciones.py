@@ -340,9 +340,7 @@ class VentanaCotizaciones(QMainWindow):
 
                     # Dibujar una línea debajo de los datos del cliente
                     c.line(50, 650, 550, 650)
-
-
-                    # Aquí deberías agregar el código para imprimir los datos de los artículos
+                    
                     # Cabecera de los datos de los artículos
                     c.setFont("Helvetica-Bold", 12)
                     #c.drawString(50, 630, "ID")
@@ -357,7 +355,7 @@ class VentanaCotizaciones(QMainWindow):
                     detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
                     y = 610
                     for detalle in detalles:
-                        c.setFont("Helvetica", 12)
+                        c.setFont("Helvetica", 10)
                         #c.drawString(50, y, str(detalle['idarticulo']))
                         c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
                         c.drawString(120, y, str(detalle['cantidad'])) 
@@ -366,6 +364,11 @@ class VentanaCotizaciones(QMainWindow):
                         c.drawString(410, y, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
                         c.drawString(495, y, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
                         y -= 20
+
+                        # Si los articulos llegan a la línea 40, se crea una nueva página
+                        if y <= 40:
+                            c.showPage()
+                            y = 700  # Restablecemos la posición "y" para la nueva página
 
                     # Totales, subtotales, impuestos, etc.
                     c.setFont("Helvetica-Bold", 16)
