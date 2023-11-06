@@ -1,4 +1,18 @@
 import sys
+import os
+import textwrap
+
+import win32api
+import win32print
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.lib.colors import black
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QAbstractItemView, QWidget
 from PyQt5 import QtGui
@@ -72,6 +86,8 @@ class VentanaVentas(QMainWindow):
         self.btnBuscar.clicked.connect(self.visualizar_datos_venta)
 
         self.btnAnular.clicked.connect(self.devolucion_de_venta)
+
+        self.btnImprimir.clicked.connect(self.imprimir_pdf)
 
         # Controles de fecha conectados a la funcion visualizar_datos_venta para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_venta)
@@ -273,7 +289,8 @@ class VentanaVentas(QMainWindow):
                                 ve.itbis as 'IMPUESTOS %',\
                                 ve.serie as 'NO. VENTA',\
                                 em.nombre as 'VENDEDOR',\
-                                FORMAT(SUM(dv.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                FORMAT(SUM(dv.cantidad * dv.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                FORMAT(SUM((dv.cantidad * dv.precio_venta * (1 - (dv.descuento / 100))) * (1 + (ve.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 ve.comentario as 'COMENTARIO'\
                             FROM venta ve\
                             INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
@@ -305,7 +322,8 @@ class VentanaVentas(QMainWindow):
                                 ve.itbis as 'IMPUESTOS %',\
                                 ve.serie as 'NO. VENTA',\
                                 em.nombre as 'VENDEDOR',\
-                                FORMAT(SUM(dv.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                FORMAT(SUM(dv.cantidad * dv.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                FORMAT(SUM((dv.cantidad * dv.precio_venta * (1 - (dv.descuento / 100))) * (1 + (ve.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 ve.comentario as 'COMENTARIO'\
                             FROM venta ve\
                             INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
@@ -349,6 +367,241 @@ class VentanaVentas(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos2.resizeColumnsToContents()
         self.tbDatos2.setEditTriggers(QAbstractItemView.NoEditTriggers)
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------               
+    def imprimir_pdf(self):
+        # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
+        if self.se_llamo_activar_botones:
+            QMessageBox.warning(self, "ERROR", "TIENE UNA VENTA ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
+            
+        else:
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+            
+            # Obtiene la fecha actual para usar en el pdf
+            fecha = QDate.currentDate()
+            fecha_formato = fecha.toString("dd-MMMM-yyyy")
+
+            if indexes:
+                    
+                # Obtener el numero (int) de la fila al seleccionar una celda de la tabla ventas
+                index = indexes[0]
+                row = index.row()
+                
+                # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
+                # que seran usados para la creacion del pdf.
+                self.obtener_id_venta(row)               
+                
+                
+                # Preguntar si el usuario está seguro de convertir la factura seleccionada
+                confirmacion = QMessageBox.question(self, "GENERAR PDF?", "¿QUIERE CONVERTIR ESTA FACTURA A PDF?",
+                                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    
+                    
+                # Si el usuario hace clic en el botón "Sí", convierte la factura en pdf
+                if confirmacion == QMessageBox.Yes:
+                    
+                    c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
+
+                    # Agregar el logo de la empresa
+                    c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
+
+                    # Datos de la empresa
+                    data = [
+                        ["Ferremar"],
+                        ["Ave. Ind. km 12 1/2 # 23."],
+                        ["809-534-2323"]
+                    ]
+
+                    table = Table(data)
+
+                    # Establecer el estilo de la tabla para datos de la empresa
+                    style = TableStyle([
+                        ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
+                        ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+
+                        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                        ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
+                        ('FONTSIZE', (0,0), (-1,-1), 12),
+
+                        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+                        ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
+                        ('GRID', (0,0), (-1,-1), 1, colors.black)
+                    ])
+                    table.setStyle(style)
+
+                    # Agregar la tabla de datos de la empresa al canvas
+                    table.wrapOn(c, 50, 750)
+                    table.drawOn(c, 50, 700)
+
+                    # No. Cotización y fecha
+                    c.setFont("Helvetica-Bold", 15)
+                    c.drawString(390,680,"Cotización: " + str(self.bd_serie))
+                    c.setFont("Helvetica", 10)
+                    c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
+
+                    # Datos del cliente
+                    c.setFont("Helvetica-Bold", 15)
+                    c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
+                    c.setFont("Helvetica", 10)
+                    c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
+                    
+                    # Dibujar una línea debajo de los datos de la empresa y logo.
+                    c.line(50, 695, 550, 695)
+
+                    # Dibujar una línea debajo de los datos del cliente
+                    c.line(50, 650, 550, 650)
+                    
+                    # Cabecera de los datos de los artículos
+                    c.setFont("Helvetica-Bold", 12)
+                    #c.drawString(50, 630, "ID")
+                    c.drawString(50, 630, "CODIGO")
+                    c.drawString(120, 630, "CANT.") 
+                    c.drawString(170, 630, "ARTICULO")                 
+                    c.drawString(340, 630, "PRECIO")
+                    c.drawString(410, 630, "VENTA POR")
+                    c.drawString(495, 630, "TOTAL")
+
+                    # Datos de los artículos.
+                    detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
+                    y = 610
+                    for detalle in detalles:
+                        c.setFont("Helvetica", 10)
+                        #c.drawString(50, y, str(detalle['idarticulo']))
+                        c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                        c.drawString(120, y, str(detalle['cantidad']))
+
+                        # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
+                        # esta posicion la uso para que si el nombre del articulo tiene varias lineas
+                        # las demas columnas queden alineadas con la primera linea del nombre de articulo.
+                        alinear_columnas = y
+
+                        # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
+                        nombre_articulo = self.obtener_nombre_articulo(detalle['idarticulo']) # obtengo el nombre del articulo en la variable nombre_articulo
+                        lineas_nombre_articulo = textwrap.wrap(nombre_articulo, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+
+                        # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
+                        for linea in lineas_nombre_articulo:
+                            c.drawString(170, y, linea)
+                            y -= 20
+                            
+                        c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
+                        c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
+                        c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
+                        y -= 20
+
+                        # Si los articulos llegan a la línea 40, se crea una nueva página
+                        # para seguir imprimiendo en ella
+                        if y <= 40:
+                            c.showPage()
+                            y = 700  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+
+                    # Totales, subtotales, impuestos, etc.
+                    c.setFont("Helvetica-Bold", 16)
+                    c.drawString(50,120,"Subtotal: " + str(self.bd_sub_total))
+                    c.drawString(50,100,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                    c.drawString(50,80,"Descuento: " + str(int(self.bd_descuento)) + "%")
+                    c.drawString(50,60,"Total: " + str(self.bd_total))
+
+                    # Nombre del empleado que crea la cotizacion
+                    c.setFont("Helvetica", 10)
+                    c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+
+                    # Comentario de la cotizacion al pie de la hoja
+                    c.setFont("Helvetica", 10)
+                    c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
+
+                    c.save()
+
+                    # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
+                    pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
+
+                    # Abrir el cuadro de diálogo de impresión de Windows, open abre el pdf pero print deberia
+                    # poder imprimir por impresora el archivo
+                    win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+
+
+                    QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
+                        
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA GENERAR EL PDF.")
+            
+            
+    # Obtiene datos importante de la tabla detalle_cotizacion para imprimirlos en el pdf de la cotizacion    
+    def obtener_detalles_cotizacion(self, id_cotizacion):
+        query = QSqlQuery()
+        query.prepare("SELECT * FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
+        query.bindValue(":idcotizacion", id_cotizacion)
+        query.exec_()
+
+        detalles = []
+        while query.next():
+            detalles.append({
+                    'idarticulo': query.value('idarticulo'),
+                    #'comentario': query.value('comentario'),
+                    'cantidad': query.value('cantidad'),
+                    'precio_venta': query.value('precio_venta'),
+                    'descuento': query.value('descuento')
+                })
+
+        return detalles
+        
+    # Obtiene el nombre del articulo mediante el idarticulo insertado en la tabla detalle_cotizacion
+    # para imprimirlo en el pdf de la cotizacion.
+    def obtener_nombre_articulo(self, id_articulo):
+        query = QSqlQuery()
+        query.prepare("SELECT nombre FROM articulo WHERE idarticulo = :idarticulo")
+        query.bindValue(":idarticulo", id_articulo)
+        query.exec_()
+
+        if query.next():
+            return query.value('nombre')
+
+        return ""
+        
+    # Obtiene la descripcion de la tabla presentacion mediante el codigo del articulo (no idarticulo) que esta en la tabla cotizacion
+    # primero obtengo el codigo del articulo mediante la funcion obtener_codigo_articulo() para luego sacar la presentacion del mismo.
+    def obtener_presentacion_articulo(self, codigo_articulo):
+        query = QSqlQuery()
+        query.prepare("DECLARE @idpresentacion INT "
+                        "SELECT @idpresentacion = idpresentacion FROM articulo WHERE codigo = :codigo "
+                        "SELECT descripcion FROM presentacion WHERE idpresentacion = @idpresentacion")
+        query.bindValue(":codigo", codigo_articulo)
+        query.exec_()
+
+        if query.next():
+            return query.value('descripcion')
+
+        return ""
+
+    # obtener el codigo del articulo (no idarticulo) para imprimirlo en los de talle del articulos del pdf
+    # y tambien se usa este codigo para obtener la descripcion de la presentacion para imprimirla en el pdf. 
+    def obtener_codigo_articulo(self, id_articulo):
+        query = QSqlQuery()
+        query.prepare("SELECT codigo FROM articulo WHERE idarticulo = :idarticulo")
+        query.bindValue(":idarticulo", id_articulo)
+        query.exec_()
+
+        if query.next():
+            return query.value('codigo')
+
+        return ""
+    
+    # obtiene el nombre y apellido del empleado que creo la cotizacion mediante el
+    # idcotizacion sabemos el idempleado que luego utilizamos para tener el nombre completo
+    def obtener_nombre_empleado(self, id_cotizacion):
+        query = QSqlQuery()
+        query.prepare("SELECT CONCAT(e.nombre, ' ', e.apellidos) "
+                      "FROM empleado e "
+                      "INNER JOIN cotizacion c ON e.idempleado = c.idempleado "
+                      "WHERE c.idcotizacion = :idcotizacion")
+        query.bindValue(":idcotizacion", id_cotizacion)
+        query.exec_()
+
+        if query.next():
+            return query.value(0)
+
+        return ""
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Estas 3 funciones obtienen el id de empleado que inicio sesion.
@@ -551,8 +804,11 @@ class VentanaVentas(QMainWindow):
                         self.visualizar_datos_venta()
             else:
                 QMessageBox.warning(self, "ERROR", "SELECCIONA LA VENTA QUE LLEVA DEVOLUCION.")
-
-    # Pasando como parametro el numero de fila, obtengo el id de la venta.            
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    # Pasando como parametro el numero de fila el cual obtengo al seleccionar un celda en el QTableView obtengo datos que necesito
+    # estos datos son usado con varios propositos como la impresion de informacion al crear un pdf por ejemplo.
+    # los SELECT usados aqui son los mismo que muestran informacion al crear las ventas, son los datos mas relevantes.            
     def obtener_id_venta(self, num_fila):
         FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
         FechaFinal = self.txtFechaFin.date().toString("yyyy-MM-dd")
@@ -572,7 +828,8 @@ class VentanaVentas(QMainWindow):
                                 ve.itbis as 'IMPUESTOS %',\
                                 ve.serie as 'NO. VENTA',\
                                 em.nombre as 'VENDEDOR',\
-                                FORMAT(SUM(dv.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                FORMAT(SUM(dv.cantidad * dv.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                FORMAT(SUM((dv.cantidad * dv.precio_venta * (1 - (dv.descuento / 100))) * (1 + (ve.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 ve.comentario as 'COMENTARIO'\
                             FROM venta ve\
                             INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
@@ -591,9 +848,27 @@ class VentanaVentas(QMainWindow):
                 modelo = self.tbDatos.model()
                 if modelo is not None and 0 <= num_fila < modelo.rowCount():
             
-                    # Obtener los datos de la fila seleccionada
+                    # Obtener los datos de las columnas de la fila seleccionada
                     columna_id = modelo.index(num_fila, 0).data()
+                    columna_fehca = modelo.index(num_fila, 1).data()
+                    columna_cliente = modelo.index(num_fila, 2).data()
+                    columna_descuento = modelo.index(num_fila, 3).data()
+                    columna_impuesto = modelo.index(num_fila, 4).data()
+                    columna_serie = modelo.index(num_fila, 5).data()
+                    columna_sub_total = modelo.index(num_fila, 7).data()
+                    columna_total = modelo.index(num_fila, 8).data()
+                    columna_comentario = modelo.index(num_fila, 9).data()
+                    
+                    
                     self.bd_id_venta = columna_id
+                    self.bd_fecha = columna_fehca
+                    self.bd_cliente = columna_cliente
+                    self.bd_serie = columna_serie
+                    self.bd_sub_total = columna_sub_total
+                    self.bd_total = columna_total
+                    self.bd_impuesto = columna_impuesto
+                    self.bd_descuento = columna_descuento
+                    self.bd_comentario = columna_comentario
         else:
             if FechaInicio > FechaFinal:                        
                         QMessageBox.warning(self, "ERROR ENTRE FECHAS", "LA PRIMERA FECHA NO PUEDE SER MAYOR A LA SEGUNDA.")
@@ -608,7 +883,8 @@ class VentanaVentas(QMainWindow):
                                 ve.itbis as 'IMPUESTOS %',\
                                 ve.serie as 'NO. VENTA',\
                                 em.nombre as 'VENDEDOR',\
-                                FORMAT(SUM(dv.precio_venta), 'C', 'en-US') as 'TOTAL',\
+                                FORMAT(SUM(dv.cantidad * dv.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
+                                FORMAT(SUM((dv.cantidad * dv.precio_venta * (1 - (dv.descuento / 100))) * (1 + (ve.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 ve.comentario as 'COMENTARIO'\
                             FROM venta ve\
                             INNER JOIN cliente cl ON ve.idcliente = cl.idcliente\
@@ -627,9 +903,27 @@ class VentanaVentas(QMainWindow):
                 modelo = self.tbDatos.model()
                 if modelo is not None and 0 <= num_fila < modelo.rowCount():
             
-                    # Obtener los datos de la fila seleccionada
+                    # Obtener los datos de las columnas de la fila seleccionada
                     columna_id = modelo.index(num_fila, 0).data()
+                    columna_fehca = modelo.index(num_fila, 1).data()
+                    columna_cliente = modelo.index(num_fila, 2).data()
+                    columna_descuento = modelo.index(num_fila, 3).data()
+                    columna_impuesto = modelo.index(num_fila, 4).data()
+                    columna_serie = modelo.index(num_fila, 5).data()
+                    columna_sub_total = modelo.index(num_fila, 7).data()
+                    columna_total = modelo.index(num_fila, 8).data()
+                    columna_comentario = modelo.index(num_fila, 9).data()
+                    
+                    
                     self.bd_id_venta = columna_id
+                    self.bd_fecha = columna_fehca
+                    self.bd_cliente = columna_cliente
+                    self.bd_serie = columna_serie
+                    self.bd_sub_total = columna_sub_total
+                    self.bd_total = columna_total
+                    self.bd_impuesto = columna_impuesto
+                    self.bd_descuento = columna_descuento
+                    self.bd_comentario = columna_comentario
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def quitar_datos_detalle_venta(self):

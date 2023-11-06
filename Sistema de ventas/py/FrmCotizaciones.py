@@ -1,5 +1,9 @@
 import sys
+import os
 import textwrap
+
+import win32api
+import win32print
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -272,8 +276,11 @@ class VentanaCotizaciones(QMainWindow):
         else:
             # Obtener el índice de la fila seleccionada
             indexes = self.tbDatos.selectedIndexes()
+
+            # Obtiene la fecha actual para usar en el pdf
             fecha = QDate.currentDate()
             fecha_formato = fecha.toString("dd-MMMM-yyyy")
+            
             if indexes:
                     
                 # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
@@ -282,7 +289,7 @@ class VentanaCotizaciones(QMainWindow):
                 
                 # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
                 # que seran usados para la creacion del pdf.
-                self.obtener_id_fila_cotizacion(row)               
+                self.obtener_id_fila_cotizacion(row) 
                 
                 
                 # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
@@ -293,7 +300,7 @@ class VentanaCotizaciones(QMainWindow):
                 # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
                 if confirmacion == QMessageBox.Yes:
                     
-                    c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
+                    c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
 
                     # Agregar el logo de la empresa
                     c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
@@ -390,16 +397,27 @@ class VentanaCotizaciones(QMainWindow):
 
                     # Totales, subtotales, impuestos, etc.
                     c.setFont("Helvetica-Bold", 16)
-                    c.drawString(50,100,"Subtotal: " + str(self.bd_sub_total))
-                    c.drawString(50,80,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
-                    c.drawString(50,60,"Descuento: " + str(int(self.bd_descuento)) + "%")
-                    c.drawString(50,40,"Total: " + str(self.bd_total))
+                    c.drawString(50,120,"Subtotal: " + str(self.bd_sub_total))
+                    c.drawString(50,100,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                    c.drawString(50,80,"Descuento: " + str(int(self.bd_descuento)) + "%")
+                    c.drawString(50,60,"Total: " + str(self.bd_total))
 
-                    # Comentario de la cootizacion al pie de la hoja
+                    # Nombre del empleado que crea la cotizacion
+                    c.setFont("Helvetica", 10)
+                    c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+
+                    # Comentario de la cotizacion al pie de la hoja
                     c.setFont("Helvetica", 10)
                     c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
 
                     c.save()
+
+                    # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
+                    pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
+
+                    # Abrir el cuadro de diálogo de impresión de Windows, open abre el pdf pero print deberia
+                    # poder imprimir por impresora el archivo
+                    win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
 
 
                     QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
@@ -467,6 +485,22 @@ class VentanaCotizaciones(QMainWindow):
             return query.value('codigo')
 
         return ""
+    
+    # obtiene el nombre y apellido del empleado que creo la cotizacion mediante el
+    # idcotizacion sabemos el idempleado que luego utilizamos para tener el nombre completo
+    def obtener_nombre_empleado(self, id_cotizacion):
+        query = QSqlQuery()
+        query.prepare("SELECT CONCAT(e.nombre, ' ', e.apellidos) "
+                      "FROM empleado e "
+                      "INNER JOIN cotizacion c ON e.idempleado = c.idempleado "
+                      "WHERE c.idcotizacion = :idcotizacion")
+        query.bindValue(":idcotizacion", id_cotizacion)
+        query.exec_()
+
+        if query.next():
+            return query.value(0)
+
+        return ""
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Verifica que antes de convertir la cotizacion en factura (venta) que  haya stock disponoble de cada uno de los articulos a cotizar
@@ -520,7 +554,7 @@ class VentanaCotizaciones(QMainWindow):
             return True
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------           
-    # Pasando como parametro el numero de fila el cual obtengo al seleccionar en el QTableView obtengo datos que necesito
+    # Pasando como parametro el numero de fila el cual obtengo al seleccionar una celda en el QTableView obtengo datos que necesito
     # estos datos son usado con varios propositos como la impresion de informacion al crear un pdf por ejemplo.
     # los SELECT usados aqui son los mismo que muestran informacion al crear las cotizaciones, son los datos mas relevantes.
     def obtener_id_fila_cotizacion(self, num_fila):
@@ -615,11 +649,27 @@ class VentanaCotizaciones(QMainWindow):
                 modelo = self.tbDatos.model()
                 if modelo is not None and 0 <= num_fila < modelo.rowCount():
                     
-                    # Obtener los datos de la fila seleccionada
+                    # Obtener los datos de las columnas de la fila seleccionada
                     columna_id = modelo.index(num_fila, 0).data()
+                    columna_fehca = modelo.index(num_fila, 1).data()
+                    columna_cliente = modelo.index(num_fila, 2).data()
+                    columna_descuento = modelo.index(num_fila, 3).data()
+                    columna_impuesto = modelo.index(num_fila, 4).data()
+                    columna_serie = modelo.index(num_fila, 5).data()
+                    columna_sub_total = modelo.index(num_fila, 7).data()
+                    columna_total = modelo.index(num_fila, 8).data()
+                    columna_comentario = modelo.index(num_fila, 9).data()
                     
                     
                     self.bd_id_cotizacion = columna_id
+                    self.bd_fecha = columna_fehca
+                    self.bd_cliente = columna_cliente
+                    self.bd_serie = columna_serie
+                    self.bd_sub_total = columna_sub_total
+                    self.bd_total = columna_total
+                    self.bd_impuesto = columna_impuesto
+                    self.bd_descuento = columna_descuento
+                    self.bd_comentario = columna_comentario
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
