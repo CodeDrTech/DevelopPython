@@ -1,4 +1,5 @@
 import sys
+import textwrap
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -278,7 +279,9 @@ class VentanaCotizaciones(QMainWindow):
                 # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
                 index = indexes[0]
                 row = index.row()
-                    
+                
+                # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
+                # que seran usados para la creacion del pdf.
                 self.obtener_id_fila_cotizacion(row)               
                 
                 
@@ -358,17 +361,32 @@ class VentanaCotizaciones(QMainWindow):
                         c.setFont("Helvetica", 10)
                         #c.drawString(50, y, str(detalle['idarticulo']))
                         c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
-                        c.drawString(120, y, str(detalle['cantidad'])) 
-                        c.drawString(170, y, self.obtener_nombre_articulo(detalle['idarticulo']))
-                        c.drawString(340, y, "$" + "{:,.2f}".format(detalle['precio_venta']))
-                        c.drawString(410, y, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
-                        c.drawString(495, y, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
+                        c.drawString(120, y, str(detalle['cantidad']))
+
+                        # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
+                        # esta posicion la uso para que si el nombre del articulo tiene varias lineas
+                        # las demas columnas queden alineadas con la primera linea del nombre de articulo.
+                        alinear_columnas = y
+
+                        # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
+                        nombre_articulo = self.obtener_nombre_articulo(detalle['idarticulo']) # obtengo el nombre del articulo en la variable nombre_articulo
+                        lineas_nombre_articulo = textwrap.wrap(nombre_articulo, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+
+                        # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
+                        for linea in lineas_nombre_articulo:
+                            c.drawString(170, y, linea)
+                            y -= 20
+                            
+                        c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
+                        c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
+                        c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
                         y -= 20
 
                         # Si los articulos llegan a la línea 40, se crea una nueva página
+                        # para seguir imprimiendo en ella
                         if y <= 40:
                             c.showPage()
-                            y = 700  # Restablecemos la posición "y" para la nueva página
+                            y = 700  # Posición inicial en "y" (up/down) de la nueva pagina creada.
 
                     # Totales, subtotales, impuestos, etc.
                     c.setFont("Helvetica-Bold", 16)
