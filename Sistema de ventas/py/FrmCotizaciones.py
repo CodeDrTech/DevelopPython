@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 import textwrap
 
 import win32api
@@ -294,148 +295,177 @@ class VentanaCotizaciones(QMainWindow):
             fecha_formato = fecha.toString("dd-MMMM-yyyy")
             
             if indexes:
+                try:    
+                    # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
+                    index = indexes[0]
+                    row = index.row()
                     
-                # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
-                index = indexes[0]
-                row = index.row()
-                
-                # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
-                # que seran usados para la creacion del pdf.
-                self.obtener_id_fila_cotizacion(row) 
-                
-                
-                # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
-                confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
-                                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
+                    # que seran usados para la creacion del pdf.
+                    self.obtener_id_fila_cotizacion(row) 
                     
                     
-                # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
-                if confirmacion == QMessageBox.Yes:
-                    
-                    c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
+                    # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+                    confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
+                                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                        
+                        
+                    # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
+                    if confirmacion == QMessageBox.Yes:
+                        
+                        c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
 
-                    # Agregar el logo de la empresa
-                    c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
+                        # Agregar el logo de la empresa
+                        c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
 
-                    # Datos de la empresa
-                    data = [
-                        ["Ferremar"],
-                        ["Ave. Ind. km 12 1/2 # 23."],
-                        ["809-534-2323"]
-                    ]
+                        # Datos de la empresa
+                        data = [
+                            ["Ferremar"],
+                            ["Ave. Ind. km 12 1/2 # 23."],
+                            ["809-534-2323"]
+                        ]
 
-                    table = Table(data)
+                        table = Table(data)
 
-                    # Establecer el estilo de la tabla para datos de la empresa
-                    style = TableStyle([
-                        ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
-                        ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+                        # Establecer el estilo de la tabla para datos de la empresa
+                        style = TableStyle([
+                            ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
+                            ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
 
-                        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                        ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
-                        ('FONTSIZE', (0,0), (-1,-1), 12),
+                            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                            ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
+                            ('FONTSIZE', (0,0), (-1,-1), 12),
 
-                        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
-                        ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
-                        ('GRID', (0,0), (-1,-1), 1, colors.black)
-                    ])
-                    table.setStyle(style)
+                            ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+                            ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
+                            ('GRID', (0,0), (-1,-1), 1, colors.black)
+                        ])
+                        table.setStyle(style)
 
-                    # Agregar la tabla de datos de la empresa al canvas
-                    table.wrapOn(c, 50, 750)
-                    table.drawOn(c, 50, 700)
+                        # Agregar la tabla de datos de la empresa al canvas
+                        table.wrapOn(c, 50, 750)
+                        table.drawOn(c, 50, 700)
 
-                    # No. Cotización y fecha
-                    c.setFont("Helvetica-Bold", 15)
-                    c.drawString(390,680,"Cotización: " + str(self.bd_serie))
-                    c.setFont("Helvetica", 10)
-                    c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
-
-                    # Datos del cliente
-                    c.setFont("Helvetica-Bold", 15)
-                    c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
-                    c.setFont("Helvetica", 10)
-                    c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
-                    
-                    # Dibujar una línea debajo de los datos de la empresa y logo.
-                    c.line(50, 695, 550, 695)
-
-                    # Dibujar una línea debajo de los datos del cliente
-                    c.line(50, 650, 550, 650)
-                    
-                    # Cabecera de los datos de los artículos
-                    c.setFont("Helvetica-Bold", 12)
-                    #c.drawString(50, 630, "ID")
-                    c.drawString(50, 630, "CODIGO")
-                    c.drawString(120, 630, "CANT.") 
-                    c.drawString(170, 630, "ARTICULO")                 
-                    c.drawString(340, 630, "PRECIO")
-                    c.drawString(410, 630, "VENTA POR")
-                    c.drawString(495, 630, "TOTAL")
-
-                    # Datos de los artículos.
-                    detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
-                    y = 610
-                    for detalle in detalles:
+                        # No. Cotización y fecha
+                        c.setFont("Helvetica-Bold", 15)
+                        c.drawString(390,680,"Cotización: " + str(self.bd_serie))
                         c.setFont("Helvetica", 10)
-                        #c.drawString(50, y, str(detalle['idarticulo']))
-                        c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
-                        c.drawString(120, y, str(detalle['cantidad']))
+                        c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
 
-                        # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
-                        # esta posicion la uso para que si el nombre del articulo tiene varias lineas
-                        # las demas columnas queden alineadas con la primera linea del nombre de articulo.
-                        alinear_columnas = y
+                        # Datos del cliente
+                        c.setFont("Helvetica-Bold", 15)
+                        c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
+                        c.setFont("Helvetica", 10)
+                        c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
+                        
+                        # Dibujar una línea debajo de los datos de la empresa y logo.
+                        c.line(50, 695, 550, 695)
 
-                        # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
-                        nombre_articulo = self.obtener_nombre_articulo(detalle['idarticulo']) # obtengo el nombre del articulo en la variable nombre_articulo
-                        lineas_nombre_articulo = textwrap.wrap(nombre_articulo, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+                        # Dibujar una línea debajo de los datos del cliente
+                        c.line(50, 650, 550, 650)
+                        
+                        # Cabecera de los datos de los artículos
+                        c.setFont("Helvetica-Bold", 12)
+                        #c.drawString(50, 630, "ID")
+                        c.drawString(50, 630, "CODIGO")
+                        c.drawString(120, 630, "CANT.") 
+                        c.drawString(170, 630, "ARTICULO")                 
+                        c.drawString(340, 630, "PRECIO")
+                        c.drawString(410, 630, "VENTA POR")
+                        c.drawString(495, 630, "TOTAL")
 
-                        # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
-                        for linea in lineas_nombre_articulo:
-                            c.drawString(170, y, linea)
+                        # Datos de los artículos.
+                        detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
+                        y = 610
+                        for detalle in detalles:
+                            c.setFont("Helvetica", 10)
+                            #c.drawString(50, y, str(detalle['idarticulo']))
+                            c.drawString(50, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                            c.drawString(120, y, str(detalle['cantidad']))
+
+                            # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
+                            # esta posicion la uso para que si el nombre del articulo tiene varias lineas
+                            # las demas columnas queden alineadas con la primera linea del nombre de articulo.
+                            alinear_columnas = y
+
+                            # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
+                            nombre_articulo = self.obtener_nombre_articulo(detalle['idarticulo']) # obtengo el nombre del articulo en la variable nombre_articulo
+                            lineas_nombre_articulo = textwrap.wrap(nombre_articulo, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+
+                            # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
+                            for linea in lineas_nombre_articulo:
+                                c.drawString(170, y, linea)
+                                y -= 20
+                                
+                            c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
+                            c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
+                            c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
                             y -= 20
+
+                            # Si los articulos llegan a la línea 40, se crea una nueva página
+                            # para seguir imprimiendo en ella
+                            if y <= 40:
+                                c.showPage()
+                                y = 700  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+
+                        # Totales, subtotales, impuestos, etc.
+                        c.setFont("Helvetica-Bold", 16)
+                        c.drawString(50,120,"Subtotal: " + str(self.bd_sub_total))
+                        c.drawString(50,100,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                        c.drawString(50,80,"Descuento: " + str(int(self.bd_descuento)) + "%")
+                        c.drawString(50,60,"Total: " + str(self.bd_total))
+
+                        # Nombre del empleado que crea la cotizacion
+                        c.setFont("Helvetica", 10)
+                        c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+
+                        # Comentario de la cotizacion al pie de la hoja
+                        c.setFont("Helvetica", 10)
+                        c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
+
+                        c.save()
+
+                        # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
+                        pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
+
+                        # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
+                        # imprime el archivo por la impresora predeterminada.
+                        if opcion == "open":
+                            win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                        else:
+                            win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
                             
-                        c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
-                        c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
-                        c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
-                        y -= 20
+                            # Esperar un poco para que el archivo PDF se cargue en la impresora
+                            time.sleep(5)
 
-                        # Si los articulos llegan a la línea 40, se crea una nueva página
-                        # para seguir imprimiendo en ella
-                        if y <= 40:
-                            c.showPage()
-                            y = 700  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+                            # Intentar eliminar el archivo PDF
+                            max_intentos = 60  # Número máximo de intentos
+                            intentos = 0
 
-                    # Totales, subtotales, impuestos, etc.
-                    c.setFont("Helvetica-Bold", 16)
-                    c.drawString(50,120,"Subtotal: " + str(self.bd_sub_total))
-                    c.drawString(50,100,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
-                    c.drawString(50,80,"Descuento: " + str(int(self.bd_descuento)) + "%")
-                    c.drawString(50,60,"Total: " + str(self.bd_total))
+                            while intentos < max_intentos:
+                                try:
+                                    os.remove(pdf_file_name)
+                                    break  # Si el archivo se eliminó con éxito, salir del bucle
+                                except PermissionError:
+                                    time.sleep(1)  # Si el archivo aún está en uso, esperar un poco y volver a intentarlo
+                                    intentos += 1
 
-                    # Nombre del empleado que crea la cotizacion
-                    c.setFont("Helvetica", 10)
-                    c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+                            if intentos == max_intentos:
+                                msg = QMessageBox()
+                                msg.setIcon(QMessageBox.Critical)
+                                msg.setText("Error")
+                                msg.setInformativeText("No se pudo eliminar el archivo después de 3 intentos.")
+                                msg.setWindowTitle("Error")
+                                msg.exec_()
 
-                    # Comentario de la cotizacion al pie de la hoja
-                    c.setFont("Helvetica", 10)
-                    c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
-
-                    c.save()
-
-                    # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
-                    pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
-
-                    # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
-                    # imprime el archivo por la impresora predeterminada.
-                    if opcion == "open":
-                        win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
-                    else:
-                        win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
-
-                    QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
-
+                        QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
+                except Exception as e:
+                    # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
+                    mensaje_error = QMessageBox()
+                    mensaje_error.setIcon(QMessageBox.Critical)
+                    mensaje_error.setWindowTitle("Llamar al administrador")
+                    mensaje_error.setText(f"Error al intentar imprimir: {str(e)}")
+                    mensaje_error.exec_()
             else:
                 QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA CONTINUAR.")
 
