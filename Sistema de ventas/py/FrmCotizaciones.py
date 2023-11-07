@@ -14,11 +14,12 @@ from reportlab.lib.units import inch
 from reportlab.lib.colors import black
 
 from PyQt5 import uic
+from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator, QPainter
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate, QLocale
 
@@ -78,7 +79,9 @@ class VentanaCotizaciones(QMainWindow):
 
         self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion)
         
-        self.btnImprimir.clicked.connect(self.imprimir_pdf)
+        
+        self.btnImprimir.clicked.connect(self.imprime_hoja)
+        self.btnPdf.clicked.connect(self.imprime_pdf)
 
         self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
@@ -268,7 +271,16 @@ class VentanaCotizaciones(QMainWindow):
                 QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------               
-    def imprimir_pdf(self):
+    # Funciones llamadas por los botones imprimir y pdf, para asignar la opcion a cada boton
+    # segun decida el usuario.
+    def imprime_pdf(self):
+        opcion = "open"
+        self.imprimir_pdf(opcion)
+    def imprime_hoja(self):
+        opcion = "print"
+        self.imprimir_pdf(opcion)
+        
+    def imprimir_pdf(self, opcion):
         # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
         if self.se_llamo_activar_botones:
             QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZACION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
@@ -293,7 +305,7 @@ class VentanaCotizaciones(QMainWindow):
                 
                 
                 # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
-                confirmacion = QMessageBox.question(self, "GENERAR PDF?", "¿QUIERE CONVERTIR ESTA COTIZACION A PDF?",
+                confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
                                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                     
                     
@@ -415,17 +427,19 @@ class VentanaCotizaciones(QMainWindow):
                     # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
                     pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
 
-                    # Abrir el cuadro de diálogo de impresión de Windows, open abre el pdf pero print deberia
-                    # poder imprimir por impresora el archivo
-                    win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                    # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
+                    # imprime el archivo por la impresora predeterminada.
+                    if opcion == "open":
+                        win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                    else:
+                        win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
 
+                    QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
 
-                    QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
-                        
             else:
-                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA GENERAR EL PDF.")
-            
-            
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA CONTINUAR.")
+
+
     # Obtiene datos importante de la tabla detalle_cotizacion para imprimirlos en el pdf de la cotizacion    
     def obtener_detalles_cotizacion(self, id_cotizacion):
         query = QSqlQuery()
@@ -444,7 +458,7 @@ class VentanaCotizaciones(QMainWindow):
                 })
 
         return detalles
-        
+
     # Obtiene el nombre del articulo mediante el idarticulo insertado en la tabla detalle_cotizacion
     # para imprimirlo en el pdf de la cotizacion.
     def obtener_nombre_articulo(self, id_articulo):
@@ -501,6 +515,9 @@ class VentanaCotizaciones(QMainWindow):
             return query.value(0)
 
         return ""
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Verifica que antes de convertir la cotizacion en factura (venta) que  haya stock disponoble de cada uno de los articulos a cotizar

@@ -313,6 +313,30 @@ class Ui_MainWindow(object):
 "    color: #ffffff;\n"
 "    outline: none;\n"
 "}")
+        self.btnPdf = QPushButton(self.groupBox_3)
+        self.btnPdf.setObjectName(u"btnPdf")
+        self.btnPdf.setGeometry(QRect(520, 20, 85, 37))
+        self.btnPdf.setStyleSheet(u"QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
+"    color: #ffffff;\n"
+"    border: 1px solid #1e362d;\n"
+"    padding: 8px 16px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #689f84, stop: 1 #96bfaa);\n"
+"    border: 1px solid #96bfaa;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
+"    border: 1px solid #32624d;\n"
+"}")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
@@ -1043,6 +1067,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"Fecha Fin", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Fecha Inicio", None))
+        self.btnPdf.setText(QCoreApplication.translate("MainWindow", u"Pdf", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Listado", None))
         self.groupBox.setTitle("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))

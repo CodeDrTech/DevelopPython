@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 import textwrap
 
 import win32api
@@ -87,7 +88,8 @@ class VentanaVentas(QMainWindow):
 
         self.btnAnular.clicked.connect(self.devolucion_de_venta)
 
-        self.btnImprimir.clicked.connect(self.imprimir_pdf)
+        self.btnImprimir.clicked.connect(self.imprime_hoja)
+        self.btnPdf.clicked.connect(self.imprime_pdf)
 
         # Controles de fecha conectados a la funcion visualizar_datos_venta para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_venta)
@@ -369,7 +371,16 @@ class VentanaVentas(QMainWindow):
         self.tbDatos2.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------               
-    def imprimir_pdf(self):
+    # Funciones llamadas por los botones imprimir y pdf, para asignar la opcion a cada boton
+    # segun decida el usuario.
+    def imprime_pdf(self):
+        opcion = "open"
+        self.imprimir_pdf(opcion)
+    def imprime_hoja(self):
+        opcion = "print"
+        self.imprimir_pdf(opcion)
+        
+    def imprimir_pdf(self, opcion):
         # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
         if self.se_llamo_activar_botones:
             QMessageBox.warning(self, "ERROR", "TIENE UNA VENTA ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
@@ -394,7 +405,7 @@ class VentanaVentas(QMainWindow):
                 
                 
                 # Preguntar si el usuario está seguro de convertir la factura seleccionada
-                confirmacion = QMessageBox.question(self, "GENERAR PDF?", "¿QUIERE CONVERTIR ESTA FACTURA A PDF?",
+                confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
                                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                     
                     
@@ -518,13 +529,38 @@ class VentanaVentas(QMainWindow):
 
                     # Abrir el cuadro de diálogo de impresión de Windows, open abre el pdf pero print deberia
                     # poder imprimir por impresora el archivo
-                    win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
-
-
-                    QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA FACTURA.")
+                    if opcion == "open":
+                        win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                    else:
+                        win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
                         
+                        # Esperar un poco para que el archivo PDF se cargue en la impresora
+                        time.sleep(5)
+
+                        # Intentar eliminar el archivo PDF
+                        max_intentos = 60  # Número máximo de intentos
+                        intentos = 0
+
+                        while intentos < max_intentos:
+                            try:
+                                os.remove(pdf_file_name)
+                                break  # Si el archivo se eliminó con éxito, salir del bucle
+                            except PermissionError:
+                                time.sleep(1)  # Si el archivo aún está en uso, esperar un poco y volver a intentarlo
+                                intentos += 1
+
+                        if intentos == max_intentos:
+                            msg = QMessageBox()
+                            msg.setIcon(QMessageBox.Critical)
+                            msg.setText("Error")
+                            msg.setInformativeText("No se pudo eliminar el archivo después de 3 intentos.")
+                            msg.setWindowTitle("Error")
+                            msg.exec_()
+
+                    QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
+                    
             else:
-                QMessageBox.warning(self, "ERROR", "SELECCIONA LA FACTURA PARA GENERAR EL PDF.")
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA FACTURA PARA CONTINUAR.")
             
             
     # Obtiene datos importante de la tabla detalle_venta para imprimirlos en el pdf de la venta    
