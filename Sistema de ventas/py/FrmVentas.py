@@ -179,9 +179,9 @@ class VentanaVentas(QMainWindow):
         self.cmbCliente.clear()
         self.cmbCliente.addItem(str(nombre_apellidos))
         
-    def traer_articulo(self, id_articulo, nombre_articulo):
+    def traer_articulo(self, id_venta, nombre_articulo):
         
-        self.txtCodArticulo.setText(str(id_articulo))
+        self.txtCodArticulo.setText(str(id_venta))
         self.cmbArticulo.clear()
         self.cmbArticulo.addItem(str(nombre_articulo))
 #------------------------------------------------------------------------------------------------------
@@ -401,7 +401,7 @@ class VentanaVentas(QMainWindow):
                 # Si el usuario hace clic en el botón "Sí", convierte la factura en pdf
                 if confirmacion == QMessageBox.Yes:
                     
-                    c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
+                    c = canvas.Canvas(f"Sistema de ventas/pdf/Facturas/Factura {self.bd_serie}.pdf", pagesize=letter)
 
                     # Agregar el logo de la empresa
                     c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
@@ -436,9 +436,9 @@ class VentanaVentas(QMainWindow):
 
                     # No. Cotización y fecha
                     c.setFont("Helvetica-Bold", 15)
-                    c.drawString(390,680,"Cotización: " + str(self.bd_serie))
+                    c.drawString(390,680,"Factura: " + str(self.bd_serie))
                     c.setFont("Helvetica", 10)
-                    c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
+                    c.drawString(390,660,"Fecha Fac.: " + f"{self.bd_fecha}")
 
                     # Datos del cliente
                     c.setFont("Helvetica-Bold", 15)
@@ -463,7 +463,7 @@ class VentanaVentas(QMainWindow):
                     c.drawString(495, 630, "TOTAL")
 
                     # Datos de los artículos.
-                    detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
+                    detalles = self.obtener_detalles_venta(self.bd_id_venta)
                     y = 610
                     for detalle in detalles:
                         c.setFont("Helvetica", 10)
@@ -505,7 +505,7 @@ class VentanaVentas(QMainWindow):
 
                     # Nombre del empleado que crea la cotizacion
                     c.setFont("Helvetica", 10)
-                    c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+                    c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_venta)).lower())
 
                     # Comentario de la cotizacion al pie de la hoja
                     c.setFont("Helvetica", 10)
@@ -514,24 +514,24 @@ class VentanaVentas(QMainWindow):
                     c.save()
 
                     # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
-                    pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
+                    pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Facturas/Factura {self.bd_serie}.pdf")
 
                     # Abrir el cuadro de diálogo de impresión de Windows, open abre el pdf pero print deberia
                     # poder imprimir por impresora el archivo
                     win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
 
 
-                    QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA COTIZACIÓN.")
+                    QMessageBox.warning(self, "GENERADO", "SE HA GENERADO UN PDF DE ESTA FACTURA.")
                         
             else:
-                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA GENERAR EL PDF.")
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA FACTURA PARA GENERAR EL PDF.")
             
             
-    # Obtiene datos importante de la tabla detalle_cotizacion para imprimirlos en el pdf de la cotizacion    
-    def obtener_detalles_cotizacion(self, id_cotizacion):
+    # Obtiene datos importante de la tabla detalle_venta para imprimirlos en el pdf de la venta    
+    def obtener_detalles_venta(self, id_venta):
         query = QSqlQuery()
-        query.prepare("SELECT * FROM detalle_cotizacion WHERE idcotizacion = :idcotizacion")
-        query.bindValue(":idcotizacion", id_cotizacion)
+        query.prepare("SELECT * FROM detalle_venta WHERE idventa = :idventa")
+        query.bindValue(":idventa", id_venta)
         query.exec_()
 
         detalles = []
@@ -546,8 +546,8 @@ class VentanaVentas(QMainWindow):
 
         return detalles
         
-    # Obtiene el nombre del articulo mediante el idarticulo insertado en la tabla detalle_cotizacion
-    # para imprimirlo en el pdf de la cotizacion.
+    # Obtiene el nombre del articulo mediante el idarticulo insertado en la tabla detalle_venta
+    # para imprimirlo en el pdf de la factura.
     def obtener_nombre_articulo(self, id_articulo):
         query = QSqlQuery()
         query.prepare("SELECT nombre FROM articulo WHERE idarticulo = :idarticulo")
@@ -559,7 +559,7 @@ class VentanaVentas(QMainWindow):
 
         return ""
         
-    # Obtiene la descripcion de la tabla presentacion mediante el codigo del articulo (no idarticulo) que esta en la tabla cotizacion
+    # Obtiene la descripcion de la tabla presentacion mediante el codigo del articulo (no idarticulo) que esta en la tabla venta
     # primero obtengo el codigo del articulo mediante la funcion obtener_codigo_articulo() para luego sacar la presentacion del mismo.
     def obtener_presentacion_articulo(self, codigo_articulo):
         query = QSqlQuery()
@@ -588,14 +588,14 @@ class VentanaVentas(QMainWindow):
         return ""
     
     # obtiene el nombre y apellido del empleado que creo la cotizacion mediante el
-    # idcotizacion sabemos el idempleado que luego utilizamos para tener el nombre completo
-    def obtener_nombre_empleado(self, id_cotizacion):
+    # idventa sabemos el idempleado que luego utilizamos para tener el nombre completo
+    def obtener_nombre_empleado(self, id_venta):
         query = QSqlQuery()
         query.prepare("SELECT CONCAT(e.nombre, ' ', e.apellidos) "
                       "FROM empleado e "
-                      "INNER JOIN cotizacion c ON e.idempleado = c.idempleado "
-                      "WHERE c.idcotizacion = :idcotizacion")
-        query.bindValue(":idcotizacion", id_cotizacion)
+                      "INNER JOIN venta v ON e.idempleado = v.idempleado "
+                      "WHERE v.idventa = :idventa")
+        query.bindValue(":idventa", id_venta)
         query.exec_()
 
         if query.next():
