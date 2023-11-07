@@ -1,19 +1,17 @@
-from PyQt5.QtWidgets import QStyledItemDelegate
-from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from Conexion_db import connect_to_db
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Finciones para obtener y generar el codigo de los articulos de manera automatica 
+# Recibe el nombre de la tabla como parametro para buscar el ultimo codigo de articulo generado.
 def obtener_codigo_articulo(tabla):
     conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX(Codigo) FROM {tabla}")
     ultimo_codigo = cursor.fetchone()[0]
     conn.close()
     return ultimo_codigo
-
+# Recibe como parametro el ultimo codigo de articulo de la funcion obtener_codigo_articulo y el 
+# prefijo que va antes de los numero para generar el proximo codigo a usar. 
 def generar_nuevo_codigo_articulo(prefijo, ultimo_codigo):
     if ultimo_codigo is None:
         nuevo_codigo = 0
@@ -24,14 +22,15 @@ def generar_nuevo_codigo_articulo(prefijo, ultimo_codigo):
     return nuevo_codigo_formateado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Generar el codigo de las cotizaciones de manera automatica 
+# Recibe la tabla como parametro para buscar el ultimo codigo de cotizacion, Ejem. (COT00000)
 def obtener_codigo_cotizacion(tabla):
     conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX(serie) FROM {tabla}")
     ultimo_codigo = cursor.fetchone()[0]
     conn.close()
     return ultimo_codigo
-
+# Recibe el prefijo y ultimo codigo de la funcion obtener_codigo_cotizacion para generar el proximo
+# codigo en secuencia de 1 en 1 Ejem. (COT00001) donde COT es el prefijo y 00001 la secuencia
 def generar_nuevo_codigo_cotizacion(prefijo, ultimo_codigo):
     if ultimo_codigo is None:
         nuevo_codigo = 0
@@ -42,7 +41,8 @@ def generar_nuevo_codigo_cotizacion(prefijo, ultimo_codigo):
     return nuevo_codigo_formateado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Función para obtener el ID de Categoria a partir del nombre
+### Estos datos seran usados para ser insertados en la bd a la hora de insertar un nuevo articulo ###
+# Obtiene el id de la categoria mediante el nombre pasado como parametro ejemp. (HM (Herramientas manuales) = id 1)
 def obtener_id_categoria_por_nombre(nombre_categoria):
     conn = connect_to_db()
     cursor = conn.execute("SELECT idcategoria FROM Categoria WHERE nombre = ?", (nombre_categoria,))
@@ -50,7 +50,7 @@ def obtener_id_categoria_por_nombre(nombre_categoria):
     conn.close()
     return resultado[0] if resultado else None
 
-# Función para obtener el ID de presentacion a partir del nombre
+# Obtiene el id de la presentacion mediante el nombre de pasado como parametro ejemp. (UDN (unidad) = id 1)
 def obtener_id_presentacion_por_nombre(nombre_presentacion):
     conn = connect_to_db()
     cursor = conn.execute("SELECT idpresentacion FROM presentacion WHERE nombre = ?", (nombre_presentacion,))
@@ -60,7 +60,7 @@ def obtener_id_presentacion_por_nombre(nombre_presentacion):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
-# Generar el codigo de las ventas de manera automatica
+# Recibe la tabla como parametro para buscar el ultimo codigo de la factura, Ejem. (FACT00000)
 def obtener_codigo_venta(tabla):
     conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX(serie) FROM {tabla}")
@@ -68,6 +68,8 @@ def obtener_codigo_venta(tabla):
     conn.close()
     return ultimo_codigo
 
+# Recibe el prefijo y ultimo codigo de la funcion obtener_codigo_venta para generar el proximo
+# codigo en secuencia de 1 en 1 Ejem. (FACT00001) donde FACT es el prefijo y 00001 la secuencia
 def generar_nuevo_codigo_venta(prefijo, ultimo_codigo):
     if ultimo_codigo is None:
         nuevo_codigo = 0
@@ -78,7 +80,8 @@ def generar_nuevo_codigo_venta(prefijo, ultimo_codigo):
     return nuevo_codigo_formateado
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Funciones genericas para mostrar los codigos siguientes al momento de registrar en la base de dato 
+# Obtiene la tabla y el codigo para generar un codigo nuevo, se usa para los id principales.
+# basado en el u;ti id principal anterior
 def obtener_ultimo_codigo(tabla, codigo):
     conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX({codigo}) FROM {tabla}")
@@ -97,7 +100,8 @@ def generar_nuevo_codigo(ultimo_codigo):
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Funcion generica para insertar datos en la base en alguno de los formularios 
+# Recibe como parametro tabla, columnas y valores para hacer insert a la base de datos
+# por agunas de las funciones de tipo INSERT INTO (TABLA).
 def insertar_dato_generico(tabla, columnas, valores):
     # Conectar a la base de datos
     conn = connect_to_db()
@@ -119,7 +123,8 @@ def insertar_dato_generico(tabla, columnas, valores):
         conn.close()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
-# Funciones para intercambiar datos de los formularios a la base de datos
+# Obtienen los parametro de los formularios para ahcer los INSERT INTO  a la base de datos 
+# utilizando la funcion de insertar generica.
 def insertar_nueva_presentacion(nombre, descripcion):
     insertar_dato_generico('presentacion', ['nombre', 'descripcion'], [nombre, descripcion])
 #------------------------------------------------------------------------------------------------------
@@ -143,25 +148,23 @@ def insertar_nuevo_cliente(nombre, apellidos, sexo, fechanac, tipo_doc, numdocum
         'direccion', 'telefono', 'email'], [nombre, apellidos, sexo, fechanac, tipo_doc, numdocumento, direccion, telefono, email])
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-
 def insertar_datos_sesion(idempleado, nombre, apellidos, usuario, rol, fechaHora):
     insertar_dato_generico('sesiones', ['idempleado', 'nombre', 'apellidos', 'usuario', 'rol', 'fecha'],
-                           [idempleado, nombre, apellidos, usuario, rol, fechaHora])
-
-
-
+                                                [idempleado, nombre, apellidos, usuario, rol, fechaHora])
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------    
 def insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria, presentacion):
     try:
-        # Obtener los IDs de Categoria y presentacion a partir de los nombres
+        # Obtener los IDs primarios de Categoria y presentacion a partir de los nombres-------------------Me quede en esta linead---------
         id_categoria = obtener_id_categoria_por_nombre(categoria)
         id_presentacion = obtener_id_presentacion_por_nombre(presentacion)
 
         # Verificar si se encontraron los IDs de Categoria y presentacion
         if id_categoria is not None and id_presentacion is not None:
             # Llamar a la función genérica para insertar el artículo en la base de datos
-            insertar_dato_generico('articulo', ['codigo', 'nombre', 'descripcion', 'imagen', 'idcategoria', 'idpresentacion'], [codigoventa, nombre, descripcion, imagen, id_categoria, id_presentacion])
+            insertar_dato_generico('articulo', ['codigo', 'nombre', 'descripcion', 'imagen',
+                'idcategoria', 'idpresentacion'], [codigoventa, nombre, descripcion, imagen,
+                                                            id_categoria, id_presentacion])
         else:
             # Manejar el caso en el que no se encontraron los IDs mostrando un mensaje de error
             mensaje_error = QMessageBox()
