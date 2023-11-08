@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import locale
 import textwrap
 
 import win32api
@@ -15,8 +16,8 @@ from reportlab.lib.units import inch
 from reportlab.lib.colors import black
 
 from PyQt5 import uic
-from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
-from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView
+from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView, QDialog
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
@@ -81,7 +82,7 @@ class VentanaCotizaciones(QMainWindow):
         self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion)
         
         
-        self.btnImprimir.clicked.connect(self.imprime_hoja)
+        self.btnImprimir.clicked.connect(self.impresora)
         self.btnPdf.clicked.connect(self.imprime_pdf)
 
         self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
@@ -547,7 +548,84 @@ class VentanaCotizaciones(QMainWindow):
         return ""
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    
+    def impresora(self):      
+        # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
+        if self.se_llamo_activar_botones:
+            QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZACION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
+            
+        else:
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+
+            # Obtiene la fecha actual para usar en el pdf
+            fecha = QDate.currentDate()
+            fecha_formato = fecha.toString("dd-MMMM-yyyy")
+            
+            # Configurar la localización para que use la convención de separación de miles adecuada
+            locale.setlocale(locale.LC_ALL, '')
+            conv = locale.localeconv()
+            
+            if indexes:
+                try:
+                    # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_cotizacion
+                    index = indexes[0]
+                    row = index.row()
+                    
+                    # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
+                    # que seran usados para la creacion del pdf.
+                    self.obtener_id_fila_cotizacion(row) 
+                    
+                    
+                    # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+                    confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
+                                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                        
+                        
+                    # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
+                    if confirmacion == QMessageBox.Yes:        
+                        # Crear objeto QPrinter y configurar opciones de impresión
+                        printer = QPrinter(QPrinter.HighResolution)
+                        printer.setPageSize(QPrinter.A4)
+                        printer.setOutputFormat(QPrinter.NativeFormat)
+                        
+                        # Muestra el diálogo de impresión y obtén las configuraciones de usuario
+                        dialog = QPrintDialog(printer, self)
+                        if dialog.exec_() == QDialog.Accepted:
+                            
+                            # Crea un objeto QPainter y establece el objeto QPrinter como el dispositivo de pintura
+                            painter = QPainter()
+                            painter.begin(printer)
+                            
+                            
+                            # Dibujar los datos de la cotización
+                            #painter.setFont("Helvetica-Bold", 16)
+                            painter.drawText(50, 120, "Subtotal: " + str(self.bd_sub_total))
+                            painter.drawText(50, 100, "Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                            painter.drawText(50, 80, "Descuento: " + str(int(self.bd_descuento)) + "%")
+                            painter.drawText(50, 600, "Total: " + str(self.bd_total))
+
+                            # Dibujar el nombre del empleado
+                            painter.drawText(50, 40, "Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+
+                            # Dibujar el comentario de la cotización
+                            painter.drawText(50, 20, "Comentario: " + "**" + str(self.bd_comentario).lower() + "**")
+
+                            # Dibujar una línea separadora
+                            painter.drawLine(50, 650, 550, 650)
+                            
+                            # Finaliza la pintura y cierra el objeto QPainter
+                            painter.end()
+            
+                    QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
+                except Exception as e:
+                    # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
+                    mensaje_error = QMessageBox()
+                    mensaje_error.setIcon(QMessageBox.Critical)
+                    mensaje_error.setWindowTitle("Llamar al administrador")
+                    mensaje_error.setText(f"Error al intentar imprimir: {str(e)}")
+                    mensaje_error.exec_()
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA CONTINUAR.")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Verifica que antes de convertir la cotizacion en factura (venta) que  haya stock disponoble de cada uno de los articulos a cotizar

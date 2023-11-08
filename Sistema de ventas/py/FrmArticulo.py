@@ -1,13 +1,16 @@
 import sys
+import io
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
-import io
-from PIL import Image
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
+
+from PIL import Image
+
 from Consultas_db import insertar_nuevo_articulo, obtener_codigo_articulo, generar_nuevo_codigo_articulo, obtener_ultimo_codigo, generar_nuevo_codigo
 
 class VentanaArticulo(QMainWindow):
