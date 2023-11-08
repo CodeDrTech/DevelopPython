@@ -155,7 +155,7 @@ def insertar_datos_sesion(idempleado, nombre, apellidos, usuario, rol, fechaHora
 #------------------------------------------------------------------------------------------------------    
 def insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria, presentacion):
     try:
-        # Obtener los IDs primarios de Categoria y presentacion a partir de los nombres-------------------Me quede en esta linead---------
+        # Obtener los IDs primarios de Categoria y presentacion a partir de los nombres
         id_categoria = obtener_id_categoria_por_nombre(categoria)
         id_presentacion = obtener_id_presentacion_por_nombre(presentacion)
 
@@ -180,13 +180,16 @@ def insertar_nuevo_articulo(codigoventa, nombre, descripcion, imagen, categoria,
         mensaje_error.setText(f"Error al insertar artículo: {str(e)}")
         mensaje_error.exec_()
 
-  
+# insertar un nuevo ingreso (compra) a la base de datos, este no lleva ningun proceso complejo
+# ya que solo se inserta antes que los detalles de ingreso.
 def insertar_nuevo_ingreso(idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado):
     insertar_dato_generico('ingreso', ['idempleado', 'idproveedor', 'fecha', 'tipo_comprobante', 'num_comprobante', 'itbis', 'estado'],
-                                                     [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
+                                                    [idempleado, idproveedor, fecha, tipo_comprobante, num_comprobante, itbis, estado])
     
-
-def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad, fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2):
+# Luego de insertar el idingrso y demas datos se procede a insertar los detalles, cmo lo son los articulos
+# que conlleva dicho ingreso.
+def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_venta, cantidad,
+                                fecha_produccion, fecha_vencimiento, precio_venta1, precio_venta2):
     conn = connect_to_db()
 
     try:
@@ -196,16 +199,16 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
         existing_stock = cursor.fetchone()
 
         if existing_stock:
-            # Si el producto existe en Stock, actualizamos la cantidad disponible
+            # Si el producto existe en Stock, actualizamos la cantidad disponible con la nueva.
             nueva_cantidad = existing_stock[0] + cantidad
             conn.execute("UPDATE stock SET disponible = ? WHERE idarticulo = ?", (nueva_cantidad, idarticulo))
         else:
-            # Si el producto no existe en Stock, lo agregamos con la cantidad proporcionada
+            # Si el producto no existe en la tabla stock, lo agregamos como nuevo con la cantidad proporcionada.
             insertar_dato_generico('stock', ['idarticulo', 'disponible'], [idarticulo, cantidad])
     
         conn.commit()  # Confirmar los cambios en la base de datos
     except Exception as e:
-        # Mensaje de error
+        # Mensaje de error en caso que surja uno.
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
         mensaje_error.setText(f"Error al insertar nuevo detalle de ingreso {str(e)}")
@@ -214,7 +217,8 @@ def insertar_nuevo_detalle_ingreso(idingreso, idarticulo, precio_compra, precio_
     finally:
         conn.close()
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------  
+#------------------------------------------------------------------------------------------------------
+# Creacion de cotizaciones, estos no llevan casos complejo ya que no afectan stock de articulo. 
 def insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario):
     insertar_dato_generico('cotizacion', ['idcliente', 'idempleado', 'fecha', 'tipo_comprobante', 'serie', 'itbis', 'comentario'], 
                                                     [idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario])
@@ -223,15 +227,15 @@ def insertar_nueva_cotizacion(idcliente, idempleado, fecha, tipo_comprobante, nu
 def insertar_nuevo_detalle_cotizacion(idoctizacion, idarticulo, catidad, precio_venta, descuento):
     insertar_dato_generico('detalle_cotizacion', ['idcotizacion', 'idarticulo', 'cantidad', 'precio_venta', 'descuento'], 
                                                     [idoctizacion, idarticulo, catidad, precio_venta, descuento])
-
-
-
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------  
+#------------------------------------------------------------------------------------------------------
+# insertar un nueva venta (factura) a la base de datos, este no lleva ningun proceso complejo
+# ya que solo se inserta antes que los detalles de venta.  
 def insertar_nueva_venta(idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario):
     insertar_dato_generico('venta', ['idcliente', 'idempleado', 'fecha', 'tipo_comprobante', 'serie', 'itbis', 'comentario'], 
                                                     [idcliente, idempleado, fecha, tipo_comprobante, num_comprobante, itbis, comentario])
-    
+# Luego de insertar el idventa y demas datos se procede a insertar los detalles, como lo son los articulos
+# que conlleva dicha venta.
 def insertar_nuevo_detalle_venta(idoctizacion, idarticulo, cantidad, precio_venta, descuento):
     conn = connect_to_db()
 
@@ -256,7 +260,7 @@ def insertar_nuevo_detalle_venta(idoctizacion, idarticulo, cantidad, precio_vent
             mensaje_error.setIcon(QMessageBox.Critical)
             mensaje_error.exec()
     except Exception as e:
-        # Mensaje de error
+        # Mensaje de error en caso que surja.
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
         mensaje_error.setText(f"Error al insertar nuevo detalle de venta: {str(e)}")
@@ -275,11 +279,13 @@ def anular_ingreso(id_ingreso):
         cursor.execute("SELECT idarticulo, SUM(cantidad) FROM detalle_ingreso WHERE idingreso = ? GROUP BY idarticulo", (id_ingreso,))
         rows = cursor.fetchall()
         
+        # itera en los articulo buscando la cantidad disponible para cada uno
         for row in rows:
             idarticulo, cantidad_ingresada = row
             cursor.execute("SELECT disponible FROM stock WHERE idarticulo = ?", (idarticulo,))
             existing_stock = cursor.fetchone()
             
+            # al encontrar stock disponible actualiza la cantidad antes ingresada restandola.
             if existing_stock:
                 nueva_cantidad = existing_stock[0] - cantidad_ingresada
                 cursor.execute("UPDATE stock SET disponible = ? WHERE idarticulo = ?", (nueva_cantidad, idarticulo))
@@ -290,6 +296,7 @@ def anular_ingreso(id_ingreso):
         conn.commit()
         conn.close()
     except Exception as e:
+        # Mensaje de eeror en caso que surja alguno
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")
         mensaje_error.setText(f"Error al anular el ingreso: {str(e)}")
