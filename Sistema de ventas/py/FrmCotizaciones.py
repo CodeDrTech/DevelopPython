@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator, QPainter
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator, QPainter, QFont
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate, QLocale
 
@@ -559,11 +559,7 @@ class VentanaCotizaciones(QMainWindow):
 
             # Obtiene la fecha actual para usar en el pdf
             fecha = QDate.currentDate()
-            fecha_formato = fecha.toString("dd-MMMM-yyyy")
-            
-            # Configurar la localización para que use la convención de separación de miles adecuada
-            locale.setlocale(locale.LC_ALL, '')
-            conv = locale.localeconv()
+            fecha_formato = fecha.toString("dd-MMMM-yyyy")           
             
             if indexes:
                 try:
@@ -596,26 +592,55 @@ class VentanaCotizaciones(QMainWindow):
                             painter = QPainter()
                             painter.begin(printer)
                             
+                            # Fuente para los titulos principales
+                            titulos = QFont()
+                            titulos.setPointSize(14)
+                            titulos.setBold(True)                            
+                            
+                            
+                            # Fuente para los contenido debajo de los titulos
+                            contenido = QFont()
+                            contenido.setPointSize(11)                            
+                            
+                            
+                            # Cabecera de los datos de los artículos
+                            painter.setFont(titulos)
+                            painter.drawText(300, 1300, "CODIGO")
+                            painter.drawText(1000, 1300, "CANT.") 
+                            painter.drawText(1500, 1300, "ARTICULO")                 
+                            painter.drawText(2700, 1300, "PRECIO")
+                            painter.drawText(3400, 1300, "VENTA POR")
+                            painter.drawText(4200, 1300, "TOTAL")
+                            
+                            # Datos de los artículos.
+                            detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
+                            y = 1300
+                            for detalle in detalles:
+                                painter.setFont(contenido)
+                                #c.drawString(50, y, str(detalle['idarticulo']))
+                                painter.drawText(300, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                                painter.drawText(1000, y, str(detalle['cantidad']))
                             
                             # Dibujar los datos de la cotización
-                            #painter.setFont("Helvetica-Bold", 16)
-                            painter.drawText(50, 120, "Subtotal: " + str(self.bd_sub_total))
-                            painter.drawText(50, 100, "Impuesto: " + str(int(self.bd_impuesto)) + "%")
-                            painter.drawText(50, 80, "Descuento: " + str(int(self.bd_descuento)) + "%")
-                            painter.drawText(50, 600, "Total: " + str(self.bd_total))
+                            painter.setFont(titulos)
+                            painter.drawText(300, 5300, "Subtotal: " + str(self.bd_sub_total))
+                            painter.drawText(300, 5500, "Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                            painter.drawText(300, 5700, "Descuento: " + str(int(self.bd_descuento)) + "%")
+                            painter.drawText(300, 5900, "Total: " + str(self.bd_total))
 
-                            # Dibujar el nombre del empleado
-                            painter.drawText(50, 40, "Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
-
-                            # Dibujar el comentario de la cotización
-                            painter.drawText(50, 20, "Comentario: " + "**" + str(self.bd_comentario).lower() + "**")
-
-                            # Dibujar una línea separadora
-                            painter.drawLine(50, 650, 550, 650)
                             
+                            # Dibujar el nombre del empleado
+                            painter.setFont(contenido)
+                            painter.drawText(300, 6100, "Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+                            # Dibujar el comentario de la cotización
+                            painter.drawText(300, 6200, "Comentario: " + "**" + str(self.bd_comentario).lower() + "**")
+
+                            # Dibujar una línea debajo de los datos del cliente
+                            painter.drawLine(300, 1100, 4700, 1100)
+
                             # Finaliza la pintura y cierra el objeto QPainter
                             painter.end()
-            
+
                     QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
                 except Exception as e:
                     # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
