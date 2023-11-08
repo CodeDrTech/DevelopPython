@@ -618,8 +618,8 @@ class VentanaCotizaciones(QMainWindow):
                             for detalle in detalles:
                                 painter.setFont(contenido)
                                 #c.drawString(50, y, str(detalle['idarticulo']))
-                                painter.drawText(300, y, self.obtener_codigo_articulo(detalle['idarticulo']))
-                                painter.drawText(1000, y, str(detalle['cantidad']))
+                                painter.drawText(1000, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                                painter.drawText(1500, y, str(detalle['cantidad']))
                             
                             # Dibujar los datos de la cotización
                             painter.setFont(titulos)
