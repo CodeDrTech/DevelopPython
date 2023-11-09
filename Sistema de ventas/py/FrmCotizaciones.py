@@ -82,8 +82,8 @@ class VentanaCotizaciones(QMainWindow):
         self.btnRegistrar.clicked.connect(self.insertar_datos_cotiacion)
         
         
-        self.btnImprimir.clicked.connect(self.impresora)
-        self.btnPdf.clicked.connect(self.imprime_pdf)
+        self.btnImprimir.clicked.connect(self.imprimir_impresora)
+        self.btnPdf.clicked.connect(self.imprimir_pdf)
 
         self.btnAgregar.clicked.connect(self.insertar_detalle_cotizacion)
         self.btnQuitar.clicked.connect(self.quitar_datos_detalle_cotizacion)
@@ -272,17 +272,8 @@ class VentanaCotizaciones(QMainWindow):
             else:
                 QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION A CONVERTIR.")
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------               
-    # Funciones llamadas por los botones imprimir y pdf, para asignar la opcion a cada boton
-    # segun decida el usuario.
-    def imprime_pdf(self):
-        opcion = "open"
-        self.imprimir_pdf(opcion)
-    def imprime_hoja(self):
-        opcion = "print"
-        self.imprimir_pdf(opcion)
-        
-    def imprimir_pdf(self, opcion):
+#------------------------------------------------------------------------------------------------------        
+    def imprimir_pdf(self):
         # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
         if self.se_llamo_activar_botones:
             QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZACION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
@@ -396,18 +387,18 @@ class VentanaCotizaciones(QMainWindow):
                             # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
                             for linea in lineas_nombre_articulo:
                                 c.drawString(170, y, linea)
-                                y -= 20
+                                y -= 15
                                 
                             c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
                             c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
                             c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
-                            y -= 20
+                            y -= 15
 
                             # Si los articulos llegan a la línea 40, se crea una nueva página
                             # para seguir imprimiendo en ella
-                            if y <= 40:
+                            if y <= 30:
                                 c.showPage()
-                                y = 700  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+                                y = 750  # Posición inicial en "y" (up/down) de la nueva pagina creada.
 
                         # Totales, subtotales, impuestos, etc.
                         c.setFont("Helvetica-Bold", 16)
@@ -418,11 +409,11 @@ class VentanaCotizaciones(QMainWindow):
 
                         # Nombre del empleado que crea la cotizacion
                         c.setFont("Helvetica", 10)
-                        c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+                        c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).title())
 
                         # Comentario de la cotizacion al pie de la hoja
                         c.setFont("Helvetica", 10)
-                        c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
+                        c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).capitalize() + "**") 
 
                         c.save()
 
@@ -431,33 +422,10 @@ class VentanaCotizaciones(QMainWindow):
 
                         # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
                         # imprime el archivo por la impresora predeterminada.
-                        if opcion == "open":
-                            win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
-                        else:
-                            win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
-                            
-                            # Esperar un poco para que el archivo PDF se cargue en la impresora
-                            time.sleep(5)
-
-                            # Intentar eliminar el archivo PDF
-                            max_intentos = 60  # Número máximo de intentos
-                            intentos = 0
-
-                            while intentos < max_intentos:
-                                try:
-                                    os.remove(pdf_file_name)
-                                    break  # Si el archivo se eliminó con éxito, salir del bucle
-                                except PermissionError:
-                                    time.sleep(1)  # Si el archivo aún está en uso, esperar un poco y volver a intentarlo
-                                    intentos += 1
-
-                            if intentos == max_intentos:
-                                msg = QMessageBox()
-                                msg.setIcon(QMessageBox.Critical)
-                                msg.setText("Error")
-                                msg.setInformativeText("No se pudo eliminar el archivo después de 3 intentos.")
-                                msg.setWindowTitle("Error")
-                                msg.exec_()
+                        
+                        win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                        
+                        #win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
 
                         QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
                 except Exception as e:
@@ -548,8 +516,8 @@ class VentanaCotizaciones(QMainWindow):
         return ""
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    def impresora(self):      
-        # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
+    def imprimir_impresora(self):      
+        # Verifica si se ha terminado de ingresar los articulos para proceder a imprimir.
         if self.se_llamo_activar_botones:
             QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZACION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
             
@@ -557,7 +525,7 @@ class VentanaCotizaciones(QMainWindow):
             # Obtener el índice de la fila seleccionada
             indexes = self.tbDatos.selectedIndexes()
 
-            # Obtiene la fecha actual para usar en el pdf
+            # Obtiene la fecha actual para imprimirlas
             fecha = QDate.currentDate()
             fecha_formato = fecha.toString("dd-MMMM-yyyy")           
             
@@ -568,7 +536,7 @@ class VentanaCotizaciones(QMainWindow):
                     row = index.row()
                     
                     # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
-                    # que seran usados para la creacion del pdf.
+                    # que seran usados al imprimir.
                     self.obtener_id_fila_cotizacion(row) 
                     
                     
@@ -577,14 +545,15 @@ class VentanaCotizaciones(QMainWindow):
                                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                         
                         
-                    # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
-                    if confirmacion == QMessageBox.Yes:        
+                    # Si el usuario hace clic en el botón "Sí", imprime la cotizacion
+                    if confirmacion == QMessageBox.Yes:
+                                
                         # Crear objeto QPrinter y configurar opciones de impresión
                         printer = QPrinter(QPrinter.HighResolution)
                         printer.setPageSize(QPrinter.A4)
                         printer.setOutputFormat(QPrinter.NativeFormat)
                         
-                        # Muestra el diálogo de impresión y obtén las configuraciones de usuario
+                        # Muestra el diálogo de impresión y obtiene las configuraciones de usuario
                         dialog = QPrintDialog(printer, self)
                         if dialog.exec_() == QDialog.Accepted:
                             
@@ -593,13 +562,21 @@ class VentanaCotizaciones(QMainWindow):
                             painter.begin(printer)
 
                             # Fuente para los titulos principales
-                            titulos = QFont()
-                            titulos.setPointSize(14)
-                            titulos.setBold(True)                           
+                            fuente_titulos = QFont()
+                            fuente_titulos.setPointSize(13)
+                            fuente_titulos.setBold(True)                           
                             
                             # Fuente para los contenido debajo de los titulos
-                            contenido = QFont()
-                            contenido.setPointSize(11)
+                            fuente_articulos = QFont()
+                            fuente_articulos.setPointSize(11)
+                            
+                            # Fuente para el comentario y empleado
+                            fuente_empl_coment = QFont()
+                            fuente_empl_coment.setPointSize(10)
+                            
+                            # Fuente para las fechas de cabecera
+                            fuente_fechas = QFont()
+                            fuente_fechas.setPointSize(11)
 
                             # Datos de la empresa
                             data = [
@@ -610,7 +587,7 @@ class VentanaCotizaciones(QMainWindow):
 
                             # Dibuja los datos de la empresa
                             for i, row in enumerate(data):
-                                painter.setFont(titulos)
+                                painter.setFont(fuente_titulos)
                                 painter.drawText(300, 300 + i * 250, row[0])
 
                             # Carga la imagen del logo
@@ -620,42 +597,43 @@ class VentanaCotizaciones(QMainWindow):
                             logo_image = logo_image.scaled(1500, 750)
 
                             # Dibuja y posiciona el logo en la página
-                            painter.drawImage(3100, 200, logo_image)
-                            
-                                                        
+                            painter.drawImage(3175, 200, logo_image)
                             
                             
                             # Cabecera de los datos de los artículos
-                            painter.setFont(titulos)
-                            painter.drawText(300, 1300, "CODIGO")
-                            painter.drawText(1000, 1300, "CANT.") 
-                            painter.drawText(1500, 1300, "ARTICULO")                 
-                            painter.drawText(2700, 1300, "PRECIO")
-                            painter.drawText(3400, 1300, "VENTA POR")
-                            painter.drawText(4200, 1300, "TOTAL")
+                            painter.setFont(fuente_titulos)
+                            painter.drawText(300, 1500, "CODIGO")
+                            painter.drawText(900, 1500, "CANT.") 
+                            painter.drawText(1300, 1500, "ARTICULO")                 
+                            painter.drawText(2700, 1500, "PRECIO")
+                            painter.drawText(3400, 1500, "VENTA POR")
+                            painter.drawText(4200, 1500, "TOTAL")
                             
-                            # Dibujar una línea debajo de los datos del cliente
+                            # Dibujar una línea debajo de los datos de la empresa.
                             painter.drawLine(300, 1000, 4700, 1000)
+                            
+                            # Dibujar una línea debajo de los datos del cliente y num cotizacion.
+                            painter.drawLine(300, 1350, 4700, 1350)
 
                             # Datos del cliente
-                            painter.setFont(titulos)
+                            painter.setFont(fuente_titulos)
                             painter.drawText(300,1150,"Cliente: " + str(self.bd_cliente))
-                            painter.setFont(contenido)
-                            painter.drawText(300,1250,"Fecha de impresion: " + str(fecha_formato))
+                            painter.setFont(fuente_fechas)
+                            painter.drawText(300,1300,"Fecha de impresion: " + str(fecha_formato))
 
                             # No. Cotización y fecha
-                            painter.setFont(titulos)
+                            painter.setFont(fuente_titulos)
                             painter.drawText(3300,1150,"Cotización: " + str(self.bd_serie))
-                            painter.setFont(contenido)
-                            painter.drawText(3300,1250,"Fecha Cot.: " + f"{self.bd_fecha}")
+                            painter.setFont(fuente_fechas)
+                            painter.drawText(3300,1300,"Fecha Cot.: " + f"{self.bd_fecha}")
 
                             # Datos de los artículos.
                             detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
-                            y = 1500
+                            y = 1700
                             for detalle in detalles:
-                                painter.setFont(contenido)
+                                painter.setFont(fuente_articulos)
                                 painter.drawText(300, y, self.obtener_codigo_articulo(detalle['idarticulo']))
-                                painter.drawText(1000, y, str(detalle['cantidad']))
+                                painter.drawText(900, y, str(detalle['cantidad']))
                                 
 
                                 # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
@@ -669,7 +647,7 @@ class VentanaCotizaciones(QMainWindow):
 
                                 # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
                                 for linea in lineas_nombre_articulo:
-                                    painter.drawText(1500, y, linea)
+                                    painter.drawText(1300, y, linea)
                                     y += 100
                                     
                                 painter.drawText(2700, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
@@ -681,30 +659,28 @@ class VentanaCotizaciones(QMainWindow):
                                 # para seguir imprimiendo en ella
                                 if y >= 6100:
                                     printer.newPage()
-                                    y = 1600  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+                                    y = 400  # Posición inicial en "y" (up/down) de la nueva pagina creada.
                                     
                                     
 
                             # Dibujar los datos de la cotización
-                            painter.setFont(titulos)
-                            painter.drawText(300, 5300, "Subtotal: " + str(self.bd_sub_total))
-                            painter.drawText(300, 5500, "Impuesto: " + str(int(self.bd_impuesto)) + "%")
-                            painter.drawText(300, 5700, "Descuento: " + str(int(self.bd_descuento)) + "%")
-                            painter.drawText(300, 5900, "Total: " + str(self.bd_total))
+                            painter.setFont(fuente_titulos)
+                            painter.drawText(300, 5650, "Subtotal: " + str(self.bd_sub_total))
+                            painter.drawText(300, 5800, "Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                            painter.drawText(300, 5950, "Descuento: " + str(int(self.bd_descuento)) + "%")
+                            painter.drawText(300, 6100, "Total: " + str(self.bd_total))
 
                             
                             # Dibujar el nombre del empleado
-                            painter.setFont(contenido)
-                            painter.drawText(300, 6100, "Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).lower())
+                            painter.setFont(fuente_empl_coment)
+                            painter.drawText(300, 6250, "Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).title())
                             # Dibujar el comentario de la cotización
-                            painter.drawText(300, 6200, "Comentario: " + "**" + str(self.bd_comentario).lower() + "**")
-
-                            
+                            painter.drawText(300, 6400, "Comentario: " + "**" + str(self.bd_comentario).capitalize() + "**")                           
 
                             # Finaliza la pintura y cierra el objeto QPainter
                             painter.end()
 
-                    QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
+                        QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
                 except Exception as e:
                     # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
                     mensaje_error = QMessageBox()

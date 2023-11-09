@@ -15,10 +15,11 @@ from reportlab.lib.units import inch
 from reportlab.lib.colors import black
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QAbstractItemView, QWidget
+from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QAbstractItemView, QWidget, QDialog
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator, QPainter, QFont, QImage
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate
@@ -88,8 +89,8 @@ class VentanaVentas(QMainWindow):
 
         self.btnAnular.clicked.connect(self.devolucion_de_venta)
 
-        self.btnImprimir.clicked.connect(self.imprime_hoja)
-        self.btnPdf.clicked.connect(self.imprime_pdf)
+        self.btnImprimir.clicked.connect(self.imprimir_impresora)
+        self.btnPdf.clicked.connect(self.imprimir_pdf)
 
         # Controles de fecha conectados a la funcion visualizar_datos_venta para buscar datos entre fechas seleccionadas.
         self.txtFechaInicio.dateChanged.connect(self.visualizar_datos_venta)
@@ -370,17 +371,8 @@ class VentanaVentas(QMainWindow):
         self.tbDatos2.resizeColumnsToContents()
         self.tbDatos2.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------               
-    # Funciones llamadas por los botones imprimir y pdf, para asignar la opcion a cada boton
-    # segun decida el usuario.
-    def imprime_pdf(self):
-        opcion = "open"
-        self.imprimir_pdf(opcion)
-    def imprime_hoja(self):
-        opcion = "print"
-        self.imprimir_pdf(opcion)
-        
-    def imprimir_pdf(self, opcion):
+#------------------------------------------------------------------------------------------------------        
+    def imprimir_pdf(self):
         # Verifica si se ha terminado de ingresar los articulos para proceder a crear el pdf
         if self.se_llamo_activar_botones:
             QMessageBox.warning(self, "ERROR", "TIENE UNA VENTA ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
@@ -494,18 +486,18 @@ class VentanaVentas(QMainWindow):
                             # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
                             for linea in lineas_nombre_articulo:
                                 c.drawString(170, y, linea)
-                                y -= 20
+                                y -= 15
                                 
                             c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
                             c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
                             c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
-                            y -= 20
+                            y -= 15
 
                             # Si los articulos llegan a la línea 40, se crea una nueva página
                             # para seguir imprimiendo en ella
-                            if y <= 40:
+                            if y <= 30:
                                 c.showPage()
-                                y = 700  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+                                y = 750  # Posición inicial en "y" (up/down) de la nueva pagina creada.
 
                         # Totales, subtotales, impuestos, etc.
                         c.setFont("Helvetica-Bold", 16)
@@ -516,11 +508,11 @@ class VentanaVentas(QMainWindow):
 
                         # Nombre del empleado que crea la cotizacion
                         c.setFont("Helvetica", 10)
-                        c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_venta)).lower())
+                        c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_venta)).title())
 
                         # Comentario de la cotizacion al pie de la hoja
                         c.setFont("Helvetica", 10)
-                        c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).lower() + "**") 
+                        c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).capitalize() + "**") 
 
                         c.save()
 
@@ -529,33 +521,9 @@ class VentanaVentas(QMainWindow):
 
                         # Abrir el cuadro de diálogo de impresión de Windows, open abre el pdf pero print deberia
                         # poder imprimir por impresora el archivo
-                        if opcion == "open":
-                            win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
-                        else:
-                            win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
-                            
-                            # Esperar un poco para que el archivo PDF se cargue en la impresora
-                            time.sleep(5)
-
-                            # Intentar eliminar el archivo PDF
-                            max_intentos = 60  # Número máximo de intentos
-                            intentos = 0
-
-                            while intentos < max_intentos:
-                                try:
-                                    os.remove(pdf_file_name)
-                                    break  # Si el archivo se eliminó con éxito, salir del bucle
-                                except PermissionError:
-                                    time.sleep(1)  # Si el archivo aún está en uso, esperar un poco y volver a intentarlo
-                                    intentos += 1
-
-                            if intentos == max_intentos:
-                                msg = QMessageBox()
-                                msg.setIcon(QMessageBox.Critical)
-                                msg.setText("Error")
-                                msg.setInformativeText("No se pudo eliminar el archivo después de 3 intentos.")
-                                msg.setWindowTitle("Error")
-                                msg.exec_()
+                        
+                        win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                        #win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
 
                         QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
                 except Exception as e:
@@ -634,9 +602,9 @@ class VentanaVentas(QMainWindow):
     def obtener_nombre_empleado(self, id_venta):
         query = QSqlQuery()
         query.prepare("SELECT CONCAT(e.nombre, ' ', e.apellidos) "
-                      "FROM empleado e "
-                      "INNER JOIN venta v ON e.idempleado = v.idempleado "
-                      "WHERE v.idventa = :idventa")
+                    "FROM empleado e "
+                    "INNER JOIN venta v ON e.idempleado = v.idempleado "
+                    "WHERE v.idventa = :idventa")
         query.bindValue(":idventa", id_venta)
         query.exec_()
 
@@ -644,6 +612,182 @@ class VentanaVentas(QMainWindow):
             return query.value(0)
 
         return ""
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+    def imprimir_impresora(self):      
+        # Verifica si se ha terminado de ingresar los articulos para proceder a imprimir
+        if self.se_llamo_activar_botones:
+            QMessageBox.warning(self, "ERROR", "TIENE UNA FACTURA ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
+            
+        else:
+            # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+
+            # Obtiene la fecha actual para imprimirlas
+            fecha = QDate.currentDate()
+            fecha_formato = fecha.toString("dd-MMMM-yyyy")           
+            
+            if indexes:
+                try:
+                    # Obtener el numero (int) de la fila al seleccionar una celda de la tabla detalle_venta
+                    index = indexes[0]
+                    row = index.row()
+                    
+                    # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
+                    # que seran usados al imprimir.
+                    self.obtener_id_venta(row) 
+                    
+                    
+                    # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+                    confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
+                                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                        
+                        
+                    # Si el usuario hace clic en el botón "Sí", imprime la factura
+                    if confirmacion == QMessageBox.Yes:
+                                
+                        # Crear objeto QPrinter y configurar opciones de impresión
+                        printer = QPrinter(QPrinter.HighResolution)
+                        printer.setPageSize(QPrinter.A4)
+                        printer.setOutputFormat(QPrinter.NativeFormat)
+                        
+                        # Muestra el diálogo de impresión y obtiene las configuraciones de usuario
+                        dialog = QPrintDialog(printer, self)
+                        if dialog.exec_() == QDialog.Accepted:
+                            
+                            # Crea un objeto QPainter y establece el objeto QPrinter como el dispositivo de pintura
+                            painter = QPainter()
+                            painter.begin(printer)
+
+                            # Fuente para los titulos principales
+                            fuente_titulos = QFont()
+                            fuente_titulos.setPointSize(13)
+                            fuente_titulos.setBold(True)                           
+                            
+                            # Fuente para los contenido debajo de los titulos
+                            fuente_articulos = QFont()
+                            fuente_articulos.setPointSize(11)
+                            
+                            # Fuente para el comentario y empleado
+                            fuente_empl_coment = QFont()
+                            fuente_empl_coment.setPointSize(10)
+                            
+                            # Fuente para las fechas de cabecera
+                            fuente_fechas = QFont()
+                            fuente_fechas.setPointSize(11)
+
+                            # Datos de la empresa
+                            data = [
+                                ["Ferremar"],
+                                ["Ave. Ind. km 12 1/2 # 23."],
+                                ["809-534-2323"]
+                            ]
+
+                            # Dibuja los datos de la empresa
+                            for i, row in enumerate(data):
+                                painter.setFont(fuente_titulos)
+                                painter.drawText(300, 300 + i * 250, row[0])
+
+                            # Carga la imagen del logo
+                            logo_image = QImage("Sistema de ventas/imagenes/Logo.jpg")
+
+                            # Redimensiona el tamaño de la imagen del logo al deseado
+                            logo_image = logo_image.scaled(1500, 750)
+
+                            # Dibuja y posiciona el logo en la página
+                            painter.drawImage(3175, 200, logo_image)
+                            
+                            
+                            # Cabecera de los datos de los artículos
+                            painter.setFont(fuente_titulos)
+                            painter.drawText(300, 1500, "CODIGO")
+                            painter.drawText(900, 1500, "CANT.") 
+                            painter.drawText(1300, 1500, "ARTICULO")                 
+                            painter.drawText(2700, 1500, "PRECIO")
+                            painter.drawText(3400, 1500, "VENTA POR")
+                            painter.drawText(4200, 1500, "TOTAL")
+                            
+                            # Dibujar una línea debajo de los datos de la empresa.
+                            painter.drawLine(300, 1000, 4700, 1000)
+                            
+                            # Dibujar una línea debajo de los datos del cliente y num de factura.
+                            painter.drawLine(300, 1350, 4700, 1350)
+
+                            # Datos del cliente
+                            painter.setFont(fuente_titulos)
+                            painter.drawText(300,1150,"Cliente: " + str(self.bd_cliente))
+                            painter.setFont(fuente_fechas)
+                            painter.drawText(300,1300,"Fecha de impresion: " + str(fecha_formato))
+
+                            # No. factura y fecha
+                            painter.setFont(fuente_titulos)
+                            painter.drawText(3300,1150,"Factura: " + str(self.bd_serie))
+                            painter.setFont(fuente_fechas)
+                            painter.drawText(3300,1300,"Fecha Fact.: " + f"{self.bd_fecha}")
+
+                            # Datos de los artículos.
+                            detalles = self.obtener_detalles_venta(self.bd_id_venta)
+                            y = 1700
+                            for detalle in detalles:
+                                painter.setFont(fuente_articulos)
+                                painter.drawText(300, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                                painter.drawText(900, y, str(detalle['cantidad']))
+                                
+
+                                # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
+                                # esta posicion la uso para que si el nombre del articulo tiene varias lineas
+                                # las demas columnas queden alineadas con la primera linea del nombre de articulo.
+                                alinear_columnas = y
+
+                                # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
+                                nombre_articulo = self.obtener_nombre_articulo(detalle['idarticulo']) # obtengo el nombre del articulo en la variable nombre_articulo
+                                lineas_nombre_articulo = textwrap.wrap(nombre_articulo, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+
+                                # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
+                                for linea in lineas_nombre_articulo:
+                                    painter.drawText(1300, y, linea)
+                                    y += 100
+                                    
+                                painter.drawText(2700, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
+                                painter.drawText(3400, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
+                                painter.drawText(4200, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
+                                y += 100
+                                
+                                # Si los articulos llegan a la línea 6100, se crea una nueva página
+                                # para seguir imprimiendo en ella
+                                if y >= 6100:
+                                    printer.newPage()
+                                    y = 400  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+                                    
+                                    
+
+                            # Dibujar los datos de la factura
+                            painter.setFont(fuente_titulos)
+                            painter.drawText(300, 5650, "Subtotal: " + str(self.bd_sub_total))
+                            painter.drawText(300, 5800, "Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                            painter.drawText(300, 5950, "Descuento: " + str(int(self.bd_descuento)) + "%")
+                            painter.drawText(300, 6100, "Total: " + str(self.bd_total))
+
+                            
+                            # Dibujar el nombre del empleado
+                            painter.setFont(fuente_empl_coment)
+                            painter.drawText(300, 6250, "Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_venta)).title())
+                            # Dibujar el comentario de la factura
+                            painter.drawText(300, 6400, "Comentario: " + "**" + str(self.bd_comentario).capitalize() + "**")                           
+
+                            # Finaliza la pintura y cierra el objeto QPainter
+                            painter.end()
+
+                        QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
+                except Exception as e:
+                    # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
+                    mensaje_error = QMessageBox()
+                    mensaje_error.setIcon(QMessageBox.Critical)
+                    mensaje_error.setWindowTitle("Llamar al administrador")
+                    mensaje_error.setText(f"Error al intentar imprimir: {str(e)}")
+                    mensaje_error.exec_()
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA FACTURA PARA CONTINUAR.")
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Estas 3 funciones obtienen el id de empleado que inicio sesion.
