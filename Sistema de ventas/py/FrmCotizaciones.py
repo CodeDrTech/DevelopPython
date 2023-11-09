@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator, QPainter, QFont
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator, QPainter, QFont, QImage
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDate, QLocale
 
@@ -591,16 +591,38 @@ class VentanaCotizaciones(QMainWindow):
                             # Crea un objeto QPainter y establece el objeto QPrinter como el dispositivo de pintura
                             painter = QPainter()
                             painter.begin(printer)
-                            
+
                             # Fuente para los titulos principales
                             titulos = QFont()
                             titulos.setPointSize(14)
-                            titulos.setBold(True)                            
-                            
+                            titulos.setBold(True)                           
                             
                             # Fuente para los contenido debajo de los titulos
                             contenido = QFont()
-                            contenido.setPointSize(11)                            
+                            contenido.setPointSize(11)
+
+                            # Datos de la empresa
+                            data = [
+                                ["Ferremar"],
+                                ["Ave. Ind. km 12 1/2 # 23."],
+                                ["809-534-2323"]
+                            ]
+
+                            # Dibuja los datos de la empresa
+                            for i, row in enumerate(data):
+                                painter.setFont(titulos)
+                                painter.drawText(300, 300 + i * 250, row[0])
+
+                            # Carga la imagen del logo
+                            logo_image = QImage("Sistema de ventas/imagenes/Logo.jpg")
+
+                            # Redimensiona el tamaño de la imagen del logo al deseado
+                            logo_image = logo_image.scaled(1500, 750)
+
+                            # Dibuja y posiciona el logo en la página
+                            painter.drawImage(3100, 200, logo_image)
+                            
+                                                        
                             
                             
                             # Cabecera de los datos de los artículos
@@ -612,15 +634,57 @@ class VentanaCotizaciones(QMainWindow):
                             painter.drawText(3400, 1300, "VENTA POR")
                             painter.drawText(4200, 1300, "TOTAL")
                             
+                            # Dibujar una línea debajo de los datos del cliente
+                            painter.drawLine(300, 1000, 4700, 1000)
+
+                            # Datos del cliente
+                            painter.setFont(titulos)
+                            painter.drawText(300,1150,"Cliente: " + str(self.bd_cliente))
+                            painter.setFont(contenido)
+                            painter.drawText(300,1250,"Fecha de impresion: " + str(fecha_formato))
+
+                            # No. Cotización y fecha
+                            painter.setFont(titulos)
+                            painter.drawText(3300,1150,"Cotización: " + str(self.bd_serie))
+                            painter.setFont(contenido)
+                            painter.drawText(3300,1250,"Fecha Cot.: " + f"{self.bd_fecha}")
+
                             # Datos de los artículos.
                             detalles = self.obtener_detalles_cotizacion(self.bd_id_cotizacion)
-                            #y = 1300
+                            y = 1500
                             for detalle in detalles:
                                 painter.setFont(contenido)
-                                #c.drawString(50, y, str(detalle['idarticulo']))
-                                painter.drawText(300, 1700, self.obtener_codigo_articulo(detalle['idarticulo']))
-                                painter.drawText(1000, 1700, str(detalle['cantidad']))
-                            
+                                painter.drawText(300, y, self.obtener_codigo_articulo(detalle['idarticulo']))
+                                painter.drawText(1000, y, str(detalle['cantidad']))
+                                
+
+                                # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
+                                # esta posicion la uso para que si el nombre del articulo tiene varias lineas
+                                # las demas columnas queden alineadas con la primera linea del nombre de articulo.
+                                alinear_columnas = y
+
+                                # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
+                                nombre_articulo = self.obtener_nombre_articulo(detalle['idarticulo']) # obtengo el nombre del articulo en la variable nombre_articulo
+                                lineas_nombre_articulo = textwrap.wrap(nombre_articulo, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+
+                                # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
+                                for linea in lineas_nombre_articulo:
+                                    painter.drawText(1500, y, linea)
+                                    y += 100
+                                    
+                                painter.drawText(2700, alinear_columnas, "$" + "{:,.2f}".format(detalle['precio_venta']))
+                                painter.drawText(3400, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(detalle['idarticulo'])))
+                                painter.drawText(4200, alinear_columnas, "$" + "{:,.2f}".format(detalle['cantidad'] * detalle['precio_venta']))
+                                y += 100
+                                
+                                # Si los articulos llegan a la línea 6100, se crea una nueva página
+                                # para seguir imprimiendo en ella
+                                if y >= 6100:
+                                    printer.newPage()
+                                    y = 1600  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+                                    
+                                    
+
                             # Dibujar los datos de la cotización
                             painter.setFont(titulos)
                             painter.drawText(300, 5300, "Subtotal: " + str(self.bd_sub_total))
@@ -635,8 +699,7 @@ class VentanaCotizaciones(QMainWindow):
                             # Dibujar el comentario de la cotización
                             painter.drawText(300, 6200, "Comentario: " + "**" + str(self.bd_comentario).lower() + "**")
 
-                            # Dibujar una línea debajo de los datos del cliente
-                            painter.drawLine(300, 1100, 4700, 1100)
+                            
 
                             # Finaliza la pintura y cierra el objeto QPainter
                             painter.end()
