@@ -441,7 +441,7 @@ class VentanaVentas(QMainWindow):
                         c.setFont("Helvetica-Bold", 15)
                         c.drawString(390,680,"Factura: " + str(self.bd_serie))
                         c.setFont("Helvetica", 10)
-                        c.drawString(390,660,"Fecha Fac.: " + f"{self.bd_fecha}")
+                        c.drawString(390,660,"Fecha Fact.: " + f"{self.bd_fecha}")
 
                         # Datos del cliente
                         c.setFont("Helvetica-Bold", 15)
