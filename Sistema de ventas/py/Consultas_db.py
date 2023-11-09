@@ -451,7 +451,7 @@ def revertir_venta(idventa):
         if comentario == "DEVOLUCION DE VENTA":
             mensaje_error = QMessageBox()
             mensaje_error.setWindowTitle("Error")
-            mensaje_error.setText("No se puede revertir una venta que ya ha sido devuelta.")
+            mensaje_error.setText("Esta venta tiene una devolucion.")
             mensaje_error.setIcon(QMessageBox.Critical)
             mensaje_error.exec_()
             

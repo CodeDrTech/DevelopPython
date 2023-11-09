@@ -1262,17 +1262,23 @@ class VentanaCotizaciones(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def closeEvent(self, event):        
-        # Preguntar si el usuario está seguro de cerrar la ventana
-        confirmacion = QMessageBox.question(self, "¿ESTAS SEGURO QUE DESEA SALIR?", "Cotinue solo ha terminado de insertar todos los ariculos",
-                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        # Verifica si se ha terminado de ingresar los articulos para cerrar la ventana.
+        #if self.se_llamo_activar_botones:
+            #QMessageBox.warning(self, "ERROR", "TIENE UNA COTIZACION ABIERTA, FAVOR TERMINAR DE INGRESAR LOS ARTICULOS.")
             
-                                                                
-        # Si el usuario hace clic en el botón "Sí", cierra la ventana
-        if confirmacion == QMessageBox.No:
-            event.ignore()
-        else:
-            VentanaCotizaciones.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
-            event.accept()
+        #else:
+        
+            # Preguntar si el usuario está seguro de cerrar la ventana
+            confirmacion = QMessageBox.question(self, "¿ESTAS SEGURO QUE DESEA SALIR?", "Cotinue solo ha terminado de insertar todos los ariculos",
+                                                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                
+                                                                    
+            # Si el usuario hace clic en el botón "Sí", cierra la ventana
+            if confirmacion == QMessageBox.No:
+                event.ignore()
+            else:
+                VentanaCotizaciones.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
+                event.accept()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Elimina el textp de referencia que tiene la casilla buscar
