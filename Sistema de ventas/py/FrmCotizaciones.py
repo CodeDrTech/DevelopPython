@@ -547,7 +547,7 @@ class VentanaCotizaciones(QMainWindow):
                         
                     # Si el usuario hace clic en el botón "Sí", imprime la cotizacion
                     if confirmacion == QMessageBox.Yes:
-                                
+                        
                         # Crear objeto QPrinter y configurar opciones de impresión
                         printer = QPrinter(QPrinter.HighResolution)
                         printer.setPageSize(QPrinter.A4)
