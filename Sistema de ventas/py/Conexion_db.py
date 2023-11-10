@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 # Read the configuration file connection_string.txt, which contains the database connection string.
 def read_database_config():
-    config_path = "Sistema de ventas/txt/connection_string2.txt"
+    config_path = "Sistema de ventas/txt/connection_string.txt"
     
     with open(config_path, "r") as file:
         connection_string = file.read().strip()
