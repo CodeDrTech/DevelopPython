@@ -17,11 +17,12 @@ class VentanaLogin(QMainWindow):
         uic.loadUi('Sistema de ventas/ui/FrmLogin.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
-        # Main window configurations.
+        # Configuracion de la ventana
         self.setWindowTitle('.:. Acceso al sistema de ventas .:.')
         self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
+        # crea efecto de sombra en la fecha hora, groupBox y graphicsView.
         txtFecha_shadow = QGraphicsDropShadowEffect()
         txtFecha_shadow.setBlurRadius(20)
         txtFecha_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
@@ -37,6 +38,7 @@ class VentanaLogin(QMainWindow):
         graphicsView_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.graphicsView.setGraphicsEffect(graphicsView_shadow)
         
+        # Establece el orden en las cajas de textos al usar la tecla tab para pasar de una caja a otra.
         self.setTabOrder(self.txtUsuario, self.txtPassword)
         
 #------------------------------------------------------------------------------------------------------
@@ -47,13 +49,13 @@ class VentanaLogin(QMainWindow):
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    # Funcion para cargar una imgen en la ventana de login.
+    # Funcion para cargar una imgen en el graphicsView de la ventana de login.
     def cargar_imagen(self):
         # Crea una instancia de QGraphicsScene
         scene = QGraphicsScene()
 
         # Carga una imagen en la escena
-        pixmap = QPixmap('Sistema de ventas/imagenes/login.jpg')  # Reemplaza 'ruta_de_tu_imagen.jpg' con la ruta de tu imagen
+        pixmap = QPixmap('Sistema de ventas/imagenes/login.jpg')  # Ruta de la imagen
         scene.addPixmap(pixmap)
 
         # Establece la escala de la vista para que se ajuste automáticamente al tamaño de la ventana
@@ -74,6 +76,9 @@ class VentanaLogin(QMainWindow):
         self.tbDatos.resizeColumnsToContents()    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
+    # Obtiene el codigo de idempleado de la tabla empleado al pasarle como parametro el nombre
+    # de usuario que viene de la caja de texto de la ventana de login. Este codigo de usuario
+    # se usa para obtener datos como contrasena entre otras cosas.
     def obtener_codigo_empleado(self, usuario):
         model = QSqlTableModel()
         model.setTable('empleado')
@@ -90,19 +95,21 @@ class VentanaLogin(QMainWindow):
                 # Si se encuentra el usuario, devuelve el número de fila
                 return row
     
-        # Si no se encuentra el usuario, devuelve None
+        # Si no se encuentra el usuario, devuelve -1
         return -1
         
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
+    # Abre el formulario principal habilitando o no las funciones correspondiente al rol de usuario
+    # que ha iniciado sesion, sea admin, vendedor o almacenista.
     def abrir_FrmPrincipal_admin(self, rol, nombre_usuario):
         
         self.llamar_venana_principal = VentanaPrincipal()
         self.llamar_venana_principal.administrador()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)        
-        self.hide()
+        self.hide() # Oculto el formulario de login al iniciar la ventana principal.
         
     def abrir_FrmPrincipal_almacen(self, rol,  nombre_usuario):
         
@@ -110,7 +117,7 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.almacen()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        self.hide()
+        self.hide() # Oculto el formulario de login al iniciar la ventana principal.
         
     def abrir_FrmPrincipal_vendedor(self, rol, nombre_usuario):
         
@@ -118,42 +125,45 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.vendedor()
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
-        self.hide()
-        
-        
-    
+        self.hide() # Oculto el formulario de login al iniciar la ventana principal.
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------      
-        
+    # Al pasar el numero de fila de la tabla como parametro se obtienen los datos de los indices
+    # de esa fila.
     def obtener_datos_de_fila(self, fila_id):
         # Obtener el modelo de datos del QTableView
         modelo = self.tbDatos.model()
         if modelo is not None and 0 <= fila_id < modelo.rowCount():
             
             # Obtener los datos de la fila seleccionada
-            columna_0 = modelo.index(fila_id, 0).data()
-            columna_1 = modelo.index(fila_id, 1).data()
-            columna_2 = modelo.index(fila_id, 2).data()
-            columna_9 = modelo.index(fila_id, 9).data()
-            columna_10 = modelo.index(fila_id, 10).data()
-            columna_11 = modelo.index(fila_id, 11).data()
-            
-            self.valor_columna_0 = columna_0
-            self.valor_columna_1 = columna_1
-            self.valor_columna_2 = columna_2
-            self.valor_columna_9 = columna_9
-            self.valor_columna_10 = columna_10
-            self.valor_columna_11 = columna_11
+            self.valor_columna_0 = modelo.index(fila_id, 0).data()
+            self.valor_columna_1 = modelo.index(fila_id, 1).data()
+            self.valor_columna_2 = modelo.index(fila_id, 2).data()
+            self.valor_columna_9 = modelo.index(fila_id, 9).data()
+            self.valor_columna_10 = modelo.index(fila_id, 10).data()
+            self.valor_columna_11 = modelo.index(fila_id, 11).data()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------             
+    # Evalua el usuario y la contrasena que se ingreso en la ventana login para buscarlo en la base de
+    # datos y evaluar si es correcto el usuario insertado, si el usuario es correcto se verifica si es 
+    # un usuario administrador, vendedor o de almacen.
     def validar_usuario(self):
+        # usuario y contrasena se obtienen de las cajas de texto de la ventana login.
         password = self.txtPassword.text()
         usuario = self.txtUsuario.text()
+        
+        # Se obtiene la fecha y hora actual del control para insertar en la base de datos
+        # la fehca y hora que el usuario ingreso al sistema.
         fecha_y_hora = QDateTime.currentDateTime()
         fechaHora_formateada = fecha_y_hora.toString('yyyy-MM-dd HH:mm:ss')
+        
         try:
+            # Obtengo el idempleado que tambien es el numero de fila del mismo
+            # para sacar los datos de la tabla y ser usado para el ingreso del usuario
             fila = self.obtener_codigo_empleado(usuario)
             self.obtener_datos_de_fila(fila)
+            
+            # Datos recibidos de las funciones anteriores para evaluar el usuario y su rol
             bd_usuadrio_id = self.valor_columna_0
             bd_nombre = self.valor_columna_1
             bd_apellidos = self.valor_columna_2
@@ -161,21 +171,33 @@ class VentanaLogin(QMainWindow):
             bd_usuario = self.valor_columna_10
             bd_password = self.valor_columna_11
         
-        
-            if not usuario or not password and fila == -1:
-            
+            # Si no se insertan los datos a los controles y la funcion obtener_codigo_empleado
+            # no devolvio informacion se envia un mensaje al usuario.
+            if not usuario or not password and fila == -1:            
             
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("Faltan datos importantes")
                 mensaje.setText("Por favor, complete todos los campos.")
                 mensaje.exec_()
+                
+                self.txtPassword.setText("")
+                self.txtUsuario.setText("")
+                self.txtUsuario.setFocus()
             
             else:
-                if bd_rol == "Administrador":    
+                # Evaluamos si el usuario que inicia sesion es un administrador , Vendedor o de almacen
+                # se le da el acceso al formulario correspondiente, el usuario de cada empleado es 
+                # unico e irepetible en la base de datos.
+                if bd_rol == "Administrador":
+                    
+                    # Si el usuario que se inserta en el login coincide con la contrasena que esta
+                    # en el campo password correspodiente a ese usuario se le da acceso.     
                     if usuario == bd_usuario and password == bd_password:
                         
                         self.abrir_FrmPrincipal_admin(bd_rol, bd_nombre)
+                        
+                        # Se inserta un registro en la tabla sesiones con los datos del usuario que inicio sesion.
                         self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                     else:
                         mensaje = QMessageBox()
@@ -217,17 +239,21 @@ class VentanaLogin(QMainWindow):
                         self.txtUsuario.setText("")
                         self.txtUsuario.setFocus()
         except Exception as e:
-            # Maneja la excepción aquí.
+            
+            # Mensaje de error al usuario en caso que surja uno.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
             mensaje.setWindowTitle("Error")
             mensaje.setText(f"Se produjo un error: {str(e)}")
             mensaje.exec_()
+            
+            # Limpia las cajas de textos.
             self.txtPassword.setText("")
             self.txtUsuario.setText("")
             self.txtUsuario.setFocus()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+    # insertar un registro en la base de datos del usuario que inicia sesion.
     def insertar_sesion(self, empleadoId, nombre, apellidos, usuario, rol, fechaHora):
         try:
 
@@ -236,7 +262,7 @@ class VentanaLogin(QMainWindow):
 
 
         except Exception as e:
-            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            # Mensaje de error al usuario en caso que surja uno.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
             mensaje.setWindowTitle("Error")
@@ -256,12 +282,21 @@ class VentanaLogin(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         
+        # Carga la imagen en el cuadro de imgen en la ventana del login.
         self.cargar_imagen()
         
-        self.tbDatos.hide()
-        self.visualizar_datos()        
+        # Oculta el tableView que carga los datos del empleado que
+        # van a ser usado para el inicio de sesion.
+        self.tbDatos.hide() 
+        
+        # Carga los datos de los empleados al tableView tbDatos que esta oculto. 
+        self.visualizar_datos()
+        
+        # Carga la fecha actual al control de fechas que esta en el formulario.        
         fecha_hora = QDateTime.currentDateTime()
         self.txtFecha.setDateTime(fecha_hora)
+        
+        # Establece el foco en la caja de texto usuario.
         self.txtUsuario.setFocus()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------                     

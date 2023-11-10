@@ -29,7 +29,8 @@ class VentanaPrincipal(QMainWindow):
         #self.setFixedSize(self.size())
         self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
-    
+    # Obtiene nombre s=de usuario y rol del inicio de sesion y los mustra en los label
+    # del formulario principal para identificar el usuario que esta trabajando.
     def etiqueta_usuario(self, rol, usuario):
         self.lblUsuario.setText(rol + ":")
         self.lblEmpleado.setText(usuario)
