@@ -785,26 +785,15 @@ class VentanaCotizaciones(QMainWindow):
                 if modelo is not None and 0 <= num_fila < modelo.rowCount():
                     
                     # Obtener los datos de las columnas de la fila seleccionada
-                    columna_id = modelo.index(num_fila, 0).data()
-                    columna_fehca = modelo.index(num_fila, 1).data()
-                    columna_cliente = modelo.index(num_fila, 2).data()
-                    columna_descuento = modelo.index(num_fila, 3).data()
-                    columna_impuesto = modelo.index(num_fila, 4).data()
-                    columna_serie = modelo.index(num_fila, 5).data()
-                    columna_sub_total = modelo.index(num_fila, 7).data()
-                    columna_total = modelo.index(num_fila, 8).data()
-                    columna_comentario = modelo.index(num_fila, 9).data()
-                    
-                    
-                    self.bd_id_cotizacion = columna_id
-                    self.bd_fecha = columna_fehca
-                    self.bd_cliente = columna_cliente
-                    self.bd_serie = columna_serie
-                    self.bd_sub_total = columna_sub_total
-                    self.bd_total = columna_total
-                    self.bd_impuesto = columna_impuesto
-                    self.bd_descuento = columna_descuento
-                    self.bd_comentario = columna_comentario
+                    self.bd_id_cotizacion = modelo.index(num_fila, 0).data()
+                    self.bd_fecha = modelo.index(num_fila, 1).data()
+                    self.bd_cliente = modelo.index(num_fila, 2).data()
+                    self.bd_descuento = modelo.index(num_fila, 3).data()
+                    self.bd_impuesto = modelo.index(num_fila, 4).data()
+                    self.bd_serie = modelo.index(num_fila, 5).data()
+                    self.bd_sub_total = modelo.index(num_fila, 7).data()
+                    self.bd_total = modelo.index(num_fila, 8).data()
+                    self.bd_comentario = modelo.index(num_fila, 9).data()
 
         else:
             if FechaInicio > FechaFinal:
@@ -839,26 +828,15 @@ class VentanaCotizaciones(QMainWindow):
                 if modelo is not None and 0 <= num_fila < modelo.rowCount():
                     
                     # Obtener los datos de las columnas de la fila seleccionada
-                    columna_id = modelo.index(num_fila, 0).data()
-                    columna_fehca = modelo.index(num_fila, 1).data()
-                    columna_cliente = modelo.index(num_fila, 2).data()
-                    columna_descuento = modelo.index(num_fila, 3).data()
-                    columna_impuesto = modelo.index(num_fila, 4).data()
-                    columna_serie = modelo.index(num_fila, 5).data()
-                    columna_sub_total = modelo.index(num_fila, 7).data()
-                    columna_total = modelo.index(num_fila, 8).data()
-                    columna_comentario = modelo.index(num_fila, 9).data()
-                    
-                    
-                    self.bd_id_cotizacion = columna_id
-                    self.bd_fecha = columna_fehca
-                    self.bd_cliente = columna_cliente
-                    self.bd_serie = columna_serie
-                    self.bd_sub_total = columna_sub_total
-                    self.bd_total = columna_total
-                    self.bd_impuesto = columna_impuesto
-                    self.bd_descuento = columna_descuento
-                    self.bd_comentario = columna_comentario
+                    self.bd_id_cotizacion = modelo.index(num_fila, 0).data()
+                    self.bd_fecha = modelo.index(num_fila, 1).data()
+                    self.bd_cliente = modelo.index(num_fila, 2).data()
+                    self.bd_descuento = modelo.index(num_fila, 3).data()
+                    self.bd_impuesto = modelo.index(num_fila, 4).data()
+                    self.bd_serie = modelo.index(num_fila, 5).data()
+                    self.bd_sub_total = modelo.index(num_fila, 7).data()
+                    self.bd_total = modelo.index(num_fila, 8).data()
+                    self.bd_comentario = modelo.index(num_fila, 9).data()
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
