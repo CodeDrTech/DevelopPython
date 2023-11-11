@@ -59,7 +59,7 @@ QWidget {
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -83,13 +83,13 @@ QLabel {
      <rect>
       <x>140</x>
       <y>0</y>
-      <width>121</width>
+      <width>331</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>

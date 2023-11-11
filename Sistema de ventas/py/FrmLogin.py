@@ -170,6 +170,10 @@ class VentanaLogin(QMainWindow):
             bd_rol = self.valor_columna_9
             bd_usuario = self.valor_columna_10
             bd_password = self.valor_columna_11
+            
+            # Nombre y apellidos para ser enviados al femprincipal para identificar el
+            # usuario que inicio sesion con su nombre en la pantalla arriba a la izquierda.
+            nombre_apellido = (bd_nombre + " " + bd_apellidos).title() # Obliga a que el nombre salga con la primera letra mayuscula.
         
             # Si no se insertan los datos a los controles y la funcion obtener_codigo_empleado
             # no devolvio informacion se envia un mensaje al usuario.
@@ -195,7 +199,7 @@ class VentanaLogin(QMainWindow):
                     # en el campo password correspodiente a ese usuario se le da acceso.     
                     if usuario == bd_usuario and password == bd_password:
                         
-                        self.abrir_FrmPrincipal_admin(bd_rol, bd_nombre)
+                        self.abrir_FrmPrincipal_admin(bd_rol, nombre_apellido)
                         
                         # Se inserta un registro en la tabla sesiones con los datos del usuario que inicio sesion.
                         self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
@@ -211,7 +215,7 @@ class VentanaLogin(QMainWindow):
                         
                 elif bd_rol == "Vendedor":
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_vendedor(bd_rol, bd_nombre)
+                        self.abrir_FrmPrincipal_vendedor(bd_rol, nombre_apellido)
                         self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                         
                     else:
@@ -226,7 +230,7 @@ class VentanaLogin(QMainWindow):
                         
                 else:
                     if usuario == bd_usuario and password == bd_password:
-                        self.abrir_FrmPrincipal_almacen(bd_rol, bd_nombre)
+                        self.abrir_FrmPrincipal_almacen(bd_rol, nombre_apellido)
                         self.insertar_sesion(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_usuario, bd_rol, fechaHora_formateada)
                         
                     else:

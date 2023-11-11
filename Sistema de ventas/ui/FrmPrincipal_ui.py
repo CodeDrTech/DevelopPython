@@ -84,7 +84,6 @@ class Ui_MainWindow(object):
         self.lblUsuario.setObjectName(u"lblUsuario")
         self.lblUsuario.setGeometry(QRect(10, 0, 121, 21))
         font = QFont()
-        font.setPointSize(1)
         font.setBold(True)
         self.lblUsuario.setFont(font)
         self.lblUsuario.setStyleSheet(u"QWidget {\n"
@@ -98,7 +97,7 @@ class Ui_MainWindow(object):
 "}")
         self.lblEmpleado = QLabel(self.centralwidget)
         self.lblEmpleado.setObjectName(u"lblEmpleado")
-        self.lblEmpleado.setGeometry(QRect(140, 0, 121, 21))
+        self.lblEmpleado.setGeometry(QRect(140, 0, 331, 21))
         self.lblEmpleado.setFont(font)
         self.lblEmpleado.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
