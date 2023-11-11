@@ -314,6 +314,8 @@ class VentanaEmpleado(QMainWindow):
         model.setTable("empleado")
         model.select()        
         self.tbDatos.setModel(model)
+        
+        self.btnEliminar.setEnabled(True)
 
         # Ocultar columnas para que no sean editadas
         self.tbDatos.setColumnHidden(0, True)
@@ -355,6 +357,8 @@ class VentanaEmpleado(QMainWindow):
         self.actualizar_codigo_empleado()
         model = QSqlTableModel()   
         self.visualiza_datos()
+        
+        self.btnEliminar.setEnabled(False)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     # Elimina el textp de referencia que tiene la casilla buscar

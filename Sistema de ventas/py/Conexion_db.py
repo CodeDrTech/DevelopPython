@@ -3,7 +3,7 @@ from PyQt5.QtSql import QSqlDatabase
 from PyQt5.QtWidgets import QMessageBox
 
 
-
+#---------------------------------------------Este modulo esta comentado---------------------------------------------------------
 # Read the configuration file connection_string.txt, which contains the database connection string.
 def read_database_config():
     config_path = "Sistema de ventas/txt/connection_string.txt"

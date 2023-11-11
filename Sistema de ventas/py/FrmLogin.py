@@ -8,7 +8,7 @@ from PyQt5.QtCore import QDateTime, Qt
 from FrmPrincipal import VentanaPrincipal
 from Consultas_db import insertar_datos_sesion
 
-
+#---------------------------------------------Este modulo esta comentado---------------------------------------------------------
 class VentanaLogin(QMainWindow):
     ventana_abierta = False
     

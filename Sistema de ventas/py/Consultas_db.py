@@ -1,6 +1,8 @@
 from Conexion_db import connect_to_db
 from PyQt5.QtWidgets import QMessageBox
-    
+
+#---------------------------------------------Este modulo esta comentado---------------------------------------------------------
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 # Recibe el nombre de la tabla como parametro para buscar el ultimo codigo de articulo generado.
