@@ -1,48 +1,64 @@
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
+import os
+import locale
+import openpyxl
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
-# Datos de la factura (puedes obtenerlos de tu base de datos SQL)
-cliente = "Cliente Ejemplo"
-direccion = "123 Calle Principal"
-fecha = "2023-11-02"
-productos = [("Producto 1", 2, 10.00, 20.00),
-             ("Producto 2", 1, 15.00, 15.00),
-             ("Producto 3", 3, 5.00, 15.00)]
+# Configurar la localización para el formato de moneda
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
-# Crear un documento PDF
-doc = SimpleDocTemplate("Sistema de ventas/pdf/factura.pdf", pagesize=letter)
+# Obtener la ruta completa del archivo Excel
+archivo_excel = os.path.join(os.path.dirname(__file__), 'ventas.xlsx')
+hoja_excel = 'Hoja1'
 
-# Contenido de la factura
-content = []
+# Configuración del servidor SMTP de Gmail
+correo_emisor = 'joseperez8715@gmail.com'
+contraseña_emisor = 'jgtlqydfeuosgzma'
 
-# Estilo para los párrafos
-styles = getSampleStyleSheet()
-style = styles["Normal"]
+# Leer el archivo Excel
+workbook = openpyxl.load_workbook(archivo_excel)
+sheet = workbook[hoja_excel]
 
-# Agregar encabezado
-content.append(Paragraph("Factura", style))
-content.append(Paragraph(f"Cliente: {cliente}", style))
-content.append(Paragraph(f"Dirección: {direccion}", style))
-content.append(Paragraph(f"Fecha: {fecha}", style))
-content.append(Paragraph("", style))
+# Iniciar la aplicación de PyQt
+app = QApplication([])
 
-# Crear una tabla para los productos
-data = [["Descripción", "Cantidad", "Precio Unitario", "Total"]]
-for producto in productos:
-    data.append(producto)
+# Recorrer las filas del archivo Excel
+for fila in sheet.iter_rows(min_row=2, max_row=2, min_col=1, max_col=4, values_only=True):
+    nombre_empleado = str(fila[0]).lower().title()
+    monto_venta = fila[1]
+    meta_venta = fila[2]
+    correo_destinatario = f'{nombre_empleado} <{fila[3]}>'
 
-table = Table(data)
-table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                           ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                           ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                           ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                           ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                           ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                           ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+    try:
+        # Configuración del mensaje de correo
+        asunto = 'Información reporte de venta'
 
-content.append(table)
+        cuerpo_mensaje = f'Hola {nombre_empleado},\n\nTu venta del día fue de ${"{:,.2f}".format(monto_venta)}.\n\nTu meta diaria de ${"{:,.2f}".format(meta_venta)}.\n\nAlcanzaste el {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de tu meta.'
 
-# Generar el documento PDF
-doc.build(content)
+        mensaje = MIMEMultipart()
+        mensaje['From'] = correo_emisor
+        mensaje['To'] = correo_destinatario
+        mensaje['Subject'] = asunto
+        mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
+
+        # Establecer la conexión con el servidor SMTP de Gmail
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(correo_emisor, contraseña_emisor)
+
+            # Enviar el correo
+            server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
+
+    except Exception as e:
+        # Mostrar un mensaje de error utilizando QMessageBox
+        QMessageBox.critical(None, 'Error', f'Error al enviar correo: {str(e)}')
+
+print('Correos enviados exitosamente.')
+
+# Cerrar el archivo Excel
+workbook.close()
+
+# Salir de la aplicación de PyQt
+app.exec_()

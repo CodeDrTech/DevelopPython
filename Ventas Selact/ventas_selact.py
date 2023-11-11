@@ -4,6 +4,7 @@ import openpyxl
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # Configurar la localización para el formato de moneda
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -13,55 +14,56 @@ archivo_excel = os.path.join(os.path.dirname(__file__), 'ventas.xlsx')
 hoja_excel = 'Hoja1'
 
 # Configuración del servidor SMTP de Gmail
-correo_emisor = 'joseperez8715@gmail.com'
-contraseña_emisor = 'jgtlqydfeuosgzma'
+correo_emisor = 'jperez@selactcorp.com'
+contraseña_emisor = 'qsmikukzanvbchro' # del otro correo jgtlqydfeuosgzma
+
 
 # Leer el archivo Excel
 workbook = openpyxl.load_workbook(archivo_excel)
 sheet = workbook[hoja_excel]
 
+# Iniciar la aplicación de PyQt
+app = QApplication([])
+
 # Recorrer las filas del archivo Excel
-for fila in sheet.iter_rows(min_row=2, values_only=True):  # Empezamos desde la segunda fila asumiendo que la primera fila contiene encabezados
+for fila in sheet.iter_rows(min_row=2, max_row=2, min_col=1, max_col=4, values_only=True):
     nombre_empleado = str(fila[0]).lower().title()
+    monto_venta = fila[1]
+    meta_venta = fila[2]
+    correo_destinatario = fila[3]
 
-    # Tratar de convertir el valor de fila[1] a un número flotante
-    if isinstance(fila[1], (int, float)):
-        monto_venta = float(fila[1])
-    elif isinstance(fila[1], str):
-        try:
-            monto_venta = float(fila[1].replace(',', ''))
-        except ValueError as e:
-            print(f"Error: No se puede convertir '{fila[1]}' a un número flotante. Detalles: {e}")
-            continue
-    else:
-        print(f"Error: Tipo de dato no admitido en la columna de montos.")
-        continue
+    try:
+        # Configuración del mensaje de correo
+        asunto = 'Información reporte de ventas'
 
-    # Formatear el monto de venta como una cadena con formato de moneda
-    monto_venta_str = locale.currency(monto_venta, grouping=True)
+        cuerpo_mensaje = f'Buenas tardes {nombre_empleado},\n\nTu venta del día fue de ${"{:,.2f}".format(monto_venta)}\n\nTu meta diaria de ${"{:,.2f}".format(meta_venta)}\n\nAlcanzaste el {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de tu meta.'
 
+        mensaje = MIMEMultipart()
+        mensaje['From'] = f'Notificacion <{correo_emisor}>'
+        mensaje['To'] = correo_destinatario
+        mensaje['Subject'] = asunto
+        mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
 
+        # Establecer la conexión con el servidor SMTP de Gmail
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(correo_emisor, contraseña_emisor)
 
-    correo_destinatario = fila[2]
+            # Enviar el correo
+            server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
 
-    # Configuración del mensaje de correo
-    asunto = 'Información de venta'
-    cuerpo_mensaje = f'Hola {nombre_empleado},\n\nTu venta del día es de ${monto_venta}.\n\n¡Gracias!'
-    mensaje = MIMEMultipart()
-    mensaje['From'] = correo_emisor
-    mensaje['To'] = correo_destinatario
-    mensaje['Subject'] = asunto
-    mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
+    except Exception as e:
+        # Mostrar un mensaje de error utilizando QMessageBox
+        mensaje_error = QMessageBox()
+        mensaje_error.setWindowTitle("Error")
+        mensaje_error.setText(f"Error al enviar el correo: {str(e)}")
+        mensaje_error.setIcon(QMessageBox.Critical)
+        mensaje_error.exec()
 
-    # Establecer la conexión con el servidor SMTP de Gmail
-    with smtplib.SMTP('smtp.gmail.com', 587) as server:
-        server.starttls()
-        server.login(correo_emisor, contraseña_emisor)
-
-        # Enviar el correo
-        server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
-
-print('Correos enviados exitosamente.')
+QMessageBox.warning(None, "Enviado", "Correos enviado exitosamente.")
 
 # Cerrar el archivo Excel
 workbook.close()
+
+# Salir de la aplicación de PyQt
+app.exec_()
