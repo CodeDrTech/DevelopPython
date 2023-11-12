@@ -44,26 +44,26 @@ for fila in sheet.iter_rows(min_row=2, max_row=2, min_col=1, max_col=4, values_o
 
     try:
         # Crear gráfico de barras
-        categorias = ['Venta', 'Meta']
+        categorias = ['Venta', 'Meta diaria']
         valores = [monto_venta, meta_venta]
 
         plt.bar(categorias, valores, color=['blue', 'green'])
-        plt.xlabel('Categoría')
+        plt.xlabel(f'Se logró el {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de la meta')
         plt.ylabel('Monto')
-        plt.title(f'Ventas de {nombre_empleado} hoy {fecha_formato}')
+        plt.title(f' {nombre_empleado}  {fecha_formato}')
 
         # Agregar etiquetas sobre cada barra
         for i, valor in enumerate(valores):
             plt.text(i, valor, f'${"{:,.2f}".format(valor)}', ha='center', va='bottom')
 
         # Guardar la imagen en un archivo
-        imagen_path = 'grafico_barras.png'
+        imagen_path = 'grafico.png'
         plt.savefig(imagen_path)
         plt.close()
 
         # Configuración del mensaje de correo con el enlace a la imagen
         asunto = 'Información reporte de venta'
-        cuerpo_mensaje = f'Hola {nombre_empleado},\n\nTu venta del día fue de ${"{:,.2f}".format(monto_venta)}\n\nTu meta diaria de ${"{:,.2f}".format(meta_venta)}\n\nAlcanzaste el {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de tu meta.\n\nConsulta el gráfico de barras de tu rendimiento ajunta.'''
+        cuerpo_mensaje = f'''Hola {nombre_empleado},\n\nTu venta del día fue de ${"{:,.2f}".format(monto_venta)}\n\nTu meta diaria es de ${"{:,.2f}".format(meta_venta)}\n\nLograste un {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de tu meta.\n\nConsulta el gráfico adjunto para ver tu rendimiento.'''
 
         mensaje = MIMEMultipart()
         mensaje['From'] = f'Notificacion <{correo_emisor}>'
@@ -75,11 +75,8 @@ for fila in sheet.iter_rows(min_row=2, max_row=2, min_col=1, max_col=4, values_o
 
         # Adjuntar imagen al cuerpo del correo
         with open(imagen_path, 'rb') as archivo_imagen:
-            imagen_adjunta = MIMEBase('application', 'octet-stream')
-            imagen_adjunta.set_payload(archivo_imagen.read())
-            encoders.encode_base64(imagen_adjunta)
+            imagen_adjunta = MIMEImage(archivo_imagen.read())
             imagen_adjunta.add_header('Content-Disposition', 'attachment', filename=os.path.basename(imagen_path))
-            imagen_adjunta.add_header('Content-ID', '<grafico_barras>')
             mensaje.attach(imagen_adjunta)
 
         
@@ -97,7 +94,7 @@ for fila in sheet.iter_rows(min_row=2, max_row=2, min_col=1, max_col=4, values_o
         # Mostrar un mensaje de error utilizando QMessageBox
         QMessageBox.critical(None, 'Error', f'Error al enviar correo: {str(e)}')
 
-print('Correos enviados exitosamente.')
+QMessageBox.critical(None, 'Enviados', 'Correos enviados exitosamente')
 
 # Cerrar el archivo Excel
 workbook.close()
