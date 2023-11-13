@@ -19,7 +19,7 @@ contraseña_emisor = 'qsmikukzanvbchro' # del otro correo jgtlqydfeuosgzma
 
 
 # Leer el archivo Excel
-workbook = openpyxl.load_workbook(archivo_excel)
+workbook = openpyxl.load_workbook(archivo_excel, data_only=True)
 sheet = workbook[hoja_excel]
 
 # Iniciar la aplicación de PyQt
