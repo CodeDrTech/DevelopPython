@@ -11,7 +11,7 @@ locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 # Obtener la ruta completa del archivo Excel
 archivo_excel = os.path.join(os.path.dirname(__file__), 'ventas.xlsx')
-hoja_excel = 'Hoja1'
+hoja_excel = 'Envios'
 
 # Configuración del servidor SMTP de Gmail
 correo_emisor = 'jperez@selactcorp.com'
@@ -26,39 +26,45 @@ sheet = workbook[hoja_excel]
 app = QApplication([])
 
 # Recorrer las filas del archivo Excel
-for fila in sheet.iter_rows(min_row=2, max_row=2, min_col=1, max_col=4, values_only=True):
+for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=4, values_only=True):
     nombre_empleado = str(fila[0]).lower().title()
-    monto_venta = fila[1]
+    monto_venta = fila[1] if fila[1] is not None else 0
     meta_venta = fila[2]
-    correo_destinatario = fila[3]
+    
+    
+    # Manejar casos especiales en correo_destinatario
+    correo_destinatario = f'{nombre_empleado} <{str(fila[3]) if fila[3] is not None and fila[3] != "#N/D" else "jperez@selactcorp.com"}>'
 
-    try:
-        # Configuración del mensaje de correo
-        asunto = 'Información reporte de ventas'
+    
+    # Verificar si el correo_destinatario es válido antes de intentar enviar el correo
+    if "@" in correo_destinatario:
+        try:
+            # Configuración del mensaje de correo
+            asunto = 'Información sobre reporte de ventas'
 
-        cuerpo_mensaje = f'Buenas tardes {nombre_empleado},\n\nTu venta del día fue de ${"{:,.2f}".format(monto_venta)}\n\nTu meta diaria de ${"{:,.2f}".format(meta_venta)}\n\nAlcanzaste el {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de tu meta.'
+            cuerpo_mensaje = f'Hola {nombre_empleado},\n\nTu venta del día fue de ${"{:,.2f}".format(monto_venta)}'
 
-        mensaje = MIMEMultipart()
-        mensaje['From'] = f'Notificacion <{correo_emisor}>'
-        mensaje['To'] = correo_destinatario
-        mensaje['Subject'] = asunto
-        mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
+            mensaje = MIMEMultipart()
+            mensaje['From'] = f'Notificacion de reporte <{correo_emisor}>'
+            mensaje['To'] = correo_destinatario
+            mensaje['Subject'] = asunto
+            mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
 
-        # Establecer la conexión con el servidor SMTP de Gmail
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()
-            server.login(correo_emisor, contraseña_emisor)
+            # Establecer la conexión con el servidor SMTP de Gmail
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(correo_emisor, contraseña_emisor)
 
-            # Enviar el correo
-            server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
+                # Enviar el correo
+                server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
 
-    except Exception as e:
-        # Mostrar un mensaje de error utilizando QMessageBox
-        mensaje_error = QMessageBox()
-        mensaje_error.setWindowTitle("Error")
-        mensaje_error.setText(f"Error al enviar el correo: {str(e)}")
-        mensaje_error.setIcon(QMessageBox.Critical)
-        mensaje_error.exec()
+        except Exception as e:
+            # Mostrar un mensaje de error utilizando QMessageBox
+            mensaje_error = QMessageBox()
+            mensaje_error.setWindowTitle("Error")
+            mensaje_error.setText(f"Error al enviar el correo: {str(e)}")
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.exec()
 
 QMessageBox.warning(None, "Enviado", "Correos enviado exitosamente.")
 
