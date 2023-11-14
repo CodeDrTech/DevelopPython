@@ -57,6 +57,7 @@ for fila in sheet.iter_rows(min_row=2, max_row=2, min_col=1, max_col=4, values_o
 
 print('Correos enviados exitosamente.')
 
+
 # Cerrar el archivo Excel
 workbook.close()
 

@@ -15,6 +15,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 # Configurar la localización para el formato de moneda
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
+
 # Obtener la ruta completa del archivo Excel
 archivo_excel = os.path.join(os.path.dirname(__file__), 'Pruebas.xlsx')
 hoja_excel = 'Hoja2'
