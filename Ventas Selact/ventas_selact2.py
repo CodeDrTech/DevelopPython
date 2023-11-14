@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import io
 from base64 import b64encode
 from PyQt5.QtWidgets import QApplication, QMessageBox
-
+#--------------------------------------------------- Envio de reportes con meta diaria y graficos
 # Configurar la localización para el formato de moneda
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
