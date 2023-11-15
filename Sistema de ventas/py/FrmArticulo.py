@@ -16,7 +16,7 @@ from Consultas_db import insertar_nuevo_articulo, obtener_codigo_articulo, gener
                             obtener_ultimo_codigo, generar_nuevo_codigo
 
 
-#---------------------------------------------Este modulo esta comentado---------------------------------------------------------
+#---------------------------------------------Este modulo esta comentado----------------------------------------------------------
 class VentanaArticulo(QMainWindow):
     # Con esta variable se le informa al formulario principal (MDI) 
     # que este formulario esta abierto y si es llamado no se abra otra vez..
