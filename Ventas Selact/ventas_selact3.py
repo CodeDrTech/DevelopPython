@@ -1,5 +1,4 @@
 import os
-import locale
 import openpyxl
 from PyQt5.QtCore import QDate
 import smtplib
@@ -11,9 +10,6 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-
-# Configurar la localización para el formato de moneda
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 # Obtener la ruta completa del archivo Excel
