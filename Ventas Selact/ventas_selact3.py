@@ -75,7 +75,7 @@ correo_destinatario = 'destinatario@example.com'  # Cambiar al destinatario dese
 
 # Configurar el mensaje de correo
 asunto = f'Reporte Mensual - {fecha_formato}'
-cuerpo_mensaje = f'Hola {nombre_total_general},\n\nAdjunto el reporte mensual de los vendedores.\n\n'
+cuerpo_mensaje = f'Buenas tardes {nombre_total_general},\n\nAdjunto el reporte mensual de los vendedores.\n\n'
 
 mensaje = MIMEMultipart()
 mensaje['From'] = f'Notificación de venta <{correo_emisor}>'

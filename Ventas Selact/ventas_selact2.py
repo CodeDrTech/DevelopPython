@@ -70,7 +70,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=4, values_
 
             # Configuración del mensaje de correo con el enlace a la imagen
             asunto = 'Información reporte de venta'
-            cuerpo_mensaje = f'''Hola {nombre_empleado},\n\nTu venta el día de hoy fue ${"{:,.2f}".format(monto_venta)}\n\nTu meta diaria es ${"{:,.2f}".format(meta_venta)}\n\nLograste un {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de tu meta.\n\nConsulta el gráfico adjunto para ver tu rendimiento.'''
+            cuerpo_mensaje = f'''Buenas tardes {nombre_empleado},\n\nTu venta el día de hoy fue ${"{:,.2f}".format(monto_venta)}\n\nTu meta diaria es ${"{:,.2f}".format(meta_venta)}\n\nLograste un {"{:,.2f}".format(monto_venta / meta_venta * 100)}% de tu meta.\n\nConsulta el gráfico adjunto para ver tu rendimiento.'''
 
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificación de venta <{correo_emisor}>'
