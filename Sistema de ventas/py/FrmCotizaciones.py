@@ -860,7 +860,7 @@ class VentanaCotizaciones(QMainWindow):
                                     dc.descuento as 'DESCUENTO %',\
                                     co.itbis as 'IMPUESTOS %',\
                                     co.serie as 'NO. COTIZACION',\
-                                    em.nombre as 'VENDEDOR',\
+                                    CONCAT(em.nombre, ' ', em.apellidos) as 'VENDEDOR',\
                                     FORMAT(SUM(dc.cantidad * dc.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
                                     FORMAT(SUM((dc.cantidad * dc.precio_venta * (1 - (dc.descuento / 100))) * (1 + (co.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                     co.comentario as 'COMENTARIO'\
@@ -870,7 +870,7 @@ class VentanaCotizaciones(QMainWindow):
                                 INNER JOIN empleado em ON co.idempleado = em.idempleado\
                                 WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
                                 GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                                dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                                dc.descuento, co.itbis, co.serie, CONCAT(em.nombre, ' ', em.apellidos), co.comentario;")
                 
                 # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
                 model = QSqlTableModel()    
@@ -895,7 +895,7 @@ class VentanaCotizaciones(QMainWindow):
                                 dc.descuento as 'DESCUENTO %',\
                                 co.itbis as 'IMPUESTOS %',\
                                 co.serie as 'NO. COTIZACION',\
-                                em.nombre as 'VENDEDOR',\
+                                CONCAT(em.nombre, ' ', em.apellidos) as 'VENDEDOR',\
                                 FORMAT(SUM(dc.cantidad * dc.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
                                 FORMAT(SUM((dc.cantidad * dc.precio_venta * (1 - (dc.descuento / 100))) * (1 + (co.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 co.comentario as 'COMENTARIO'\
@@ -905,7 +905,7 @@ class VentanaCotizaciones(QMainWindow):
                             INNER JOIN empleado em ON co.idempleado = em.idempleado\
                             WHERE co.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND co.serie LIKE '%{Buscar}%'\
                             GROUP BY co.idcotizacion, co.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                            dc.descuento, co.itbis, co.serie, em.nombre, co.comentario;")
+                            dc.descuento, co.itbis, co.serie, CONCAT(em.nombre, ' ', em.apellidos), co.comentario;")
                 
                 # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
                 model = QSqlTableModel()    

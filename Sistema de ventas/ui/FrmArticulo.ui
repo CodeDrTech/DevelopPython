@@ -33,7 +33,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>-1</pointsize>
+      <pointsize>1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -136,7 +136,7 @@ QGroupBox:title {
        </property>
        <property name="font">
         <font>
-         <pointsize>-1</pointsize>
+         <pointsize>1</pointsize>
          <bold>true</bold>
         </font>
        </property>
@@ -595,7 +595,7 @@ QTextEdit:focus {
 }</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="txtCodVenta">
+      <widget class="QLineEdit" name="txtCodArt">
        <property name="geometry">
         <rect>
          <x>120</x>

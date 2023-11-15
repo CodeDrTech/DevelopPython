@@ -35,6 +35,7 @@ class Ui_MainWindow(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(20, 0, 81, 21))
         font = QFont()
+        font.setPointSize(1)
         font.setBold(True)
         self.label.setFont(font)
         self.label.setStyleSheet(u"QWidget {\n"
@@ -394,10 +395,10 @@ class Ui_MainWindow(object):
 "    border: 1px solid #689f84;\n"
 "    outline: none;\n"
 "}")
-        self.txtCodVenta = QLineEdit(self.groupBox)
-        self.txtCodVenta.setObjectName(u"txtCodVenta")
-        self.txtCodVenta.setGeometry(QRect(120, 90, 120, 35))
-        self.txtCodVenta.setStyleSheet(u"QLineEdit {\n"
+        self.txtCodArt = QLineEdit(self.groupBox)
+        self.txtCodArt.setObjectName(u"txtCodArt")
+        self.txtCodArt.setGeometry(QRect(120, 90, 120, 35))
+        self.txtCodArt.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
@@ -418,7 +419,7 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
-        self.txtCodVenta.setReadOnly(True)
+        self.txtCodArt.setReadOnly(True)
         self.label_6 = QLabel(self.groupBox)
         self.label_6.setObjectName(u"label_6")
         self.label_6.setGeometry(QRect(10, 100, 101, 21))

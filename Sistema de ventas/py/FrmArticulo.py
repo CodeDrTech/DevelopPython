@@ -2,7 +2,8 @@ import sys
 import io
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QAbstractItemView,\
+                        QGraphicsScene, QGraphicsPixmapItem, QGraphicsDropShadowEffect
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog
@@ -11,9 +12,14 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
 
 from PIL import Image
 
-from Consultas_db import insertar_nuevo_articulo, obtener_codigo_articulo, generar_nuevo_codigo_articulo, obtener_ultimo_codigo, generar_nuevo_codigo
+from Consultas_db import insertar_nuevo_articulo, obtener_codigo_articulo, generar_nuevo_codigo_articulo,\
+                            obtener_ultimo_codigo, generar_nuevo_codigo
 
+
+#---------------------------------------------Este modulo esta comentado---------------------------------------------------------
 class VentanaArticulo(QMainWindow):
+    # Con esta variable se le informa al formulario principal (MDI) 
+    # que este formulario esta abierto y si es llamado no se abra otra vez..
     ventana_abierta = False
     
     def __init__(self):
@@ -37,7 +43,7 @@ class VentanaArticulo(QMainWindow):
         self.btnCargar.clicked.connect(self.cargar_imagen)
         
         
-        # Crear un efecto de sombra        
+        # Crear un efecto de sombra en el tabpage y los groupBox.       
         tabWidget_shadow = QGraphicsDropShadowEffect()
         tabWidget_shadow.setBlurRadius(20)
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
@@ -113,7 +119,9 @@ class VentanaArticulo(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbDatos.resizeColumnsToContents()    
         self.tbDatos.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        
+    
+    # Al presionar el boton editar desde el tab mantenimiento se cambia al tab
+    # de listado para y se activa a edidcion.
     def listado(self):
         self.tabWidget.setCurrentIndex(0)
 #------------------------------------------------------------------------------------------------------
@@ -122,13 +130,16 @@ class VentanaArticulo(QMainWindow):
         
         
         try:
-            codigoventa = self.txtCodVenta.text().upper()
+            # Almacena en las variables los datos insertados en los controles
+            # del formulario.
+            codigoventa = self.txtCodArt.text().upper()
             nombre = self.txtNombre.text().upper()
             descripcion = self.txtDescripcion.toPlainText().upper()
             categoria = self.cmbCategoria.currentText()
             presentacion = self.cmbPresentacion.currentText()
             
-                
+            # Evalua si alguna de las variables que almacena datos de los controles
+            # esta vacia, ya que algunas son NOT NULL para la base datos.
             if  not all([codigoventa, nombre, categoria, presentacion]):
     
                 mensaje = QMessageBox()
@@ -138,24 +149,28 @@ class VentanaArticulo(QMainWindow):
                 mensaje.exec_()
             
             
-            else:                
+            else:
+                # Si todo es correcto se envian los datos a la funcion que inserta los datos.                
                 insertar_nuevo_articulo(codigoventa, nombre, descripcion, self.imagen_cargada, categoria, presentacion)
                 
+                
+                # Se obtiene el nuevo codigo del articulo basado en el anterior +1
+                # para ser insertado en el proximo registro de articulo.
                 ultimo_codigo = obtener_codigo_articulo("articulo")
                 nuevo_codigo = generar_nuevo_codigo_articulo("ART",ultimo_codigo)
                 self.visualiza_datos()
         
-
+                # Mensaje al usuario.
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Critical)
                 mensaje.setWindowTitle("Agregar articulo")
-                mensaje.setText("articulo registrado.")
+                mensaje.setText("Articulo registrado.")
                 mensaje.exec_()
                 
                 
-                #Limpia los TexBox
+                #Limpia los TexBox, la imagen si hay y coloca el nuevo codigo en codigoVEnta.
                 self.actualizar_ID_articulo()
-                self.txtCodVenta.setText(nuevo_codigo)
+                self.txtCodArt.setText(nuevo_codigo)
                 self.txtNombre.setText("")
                 self.txtDescripcion.setPlainText("")
                 self.limpiar_imagen()
@@ -163,7 +178,7 @@ class VentanaArticulo(QMainWindow):
                 self.cmbPresentacion.setCurrentText("")
                 self.txtNombre.setFocus()
         except Exception as e:
-            # Maneja la excepción aquí, puedes mostrar un mensaje de error o hacer lo que necesites.
+            # Mensaje de error al usuario en caso que surja.
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Critical)
             mensaje.setWindowTitle("Error")
@@ -265,7 +280,8 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
     def cargar_categoria(self):    
-        # Obtiene los datos de la columna Nombre de la tabla empleados.
+        # Obtiene los datos de la columna Nombre abreviados de la tabla categoria
+        # y los inserta en el ComboBox categoria del formulario.
         model = QSqlTableModel()
         model.setTable('categoria')
         model.select()
@@ -273,7 +289,7 @@ class VentanaArticulo(QMainWindow):
         for i in range(model.rowCount()):
             column_name.append(model.data(model.index(i, 1)))
         
-        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+        # Cargar los datos de la columna Nombre de la tabla articulos en el QComboBox categoria del formulario.
         combo_model_categoria = QStandardItemModel()
         for item in column_name:
             combo_model_categoria.appendRow(QStandardItem(str(item)))
@@ -282,7 +298,8 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------          
     def cargar_presentacion(self):    
-        # Obtiene los datos de la columna Nombre de la tabla empleados.
+        # Obtiene los datos de la columna Nombre abreviados de la tabla presentacion
+        # y los inserta en el ComboBox presentacion del formulario.
         model = QSqlTableModel()
         model.setTable('presentacion')
         model.select()
@@ -290,7 +307,7 @@ class VentanaArticulo(QMainWindow):
         for i in range(model.rowCount()):
             column_name.append(model.data(model.index(i, 1)))
         
-        # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
+        # Cargar los datos de la columna Nombre de la tabla articulos en el QComboBox presentacion del formulario.
         combo_model_presentacion = QStandardItemModel()
         for item in column_name:
             combo_model_presentacion.appendRow(QStandardItem(str(item)))
@@ -298,12 +315,16 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     def actualizar_ID_articulo(self):
+        # Al cargar el formulario se insertan en el control codigo idarticulo
+        # este proviene de la tabla
         ultimo_codigo = obtener_ultimo_codigo("articulo","idarticulo")
         nuevo_codigo = generar_nuevo_codigo(ultimo_codigo)
         self.txtCodigo.setText(nuevo_codigo)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------              
     def closeEvent(self, event):
+        # Se le informa al formulario principal (MDI) que este formulario esta cerrado
+        # y si es llamado se abra.
         VentanaArticulo.ventana_abierta = False  # Cuando se cierra la ventana, se establece en False
         event.accept()
 #------------------------------------------------------------------------------------------------------
@@ -311,17 +332,20 @@ class VentanaArticulo(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         self.actualizar_ID_articulo()
-        self.visualiza_datos()
-
-        ultimo_codigo = obtener_codigo_articulo("articulo")
-        nuevo_codigo = generar_nuevo_codigo_articulo("ART",ultimo_codigo)
-        self.txtCodVenta.setText(nuevo_codigo)
-        
         self.cargar_presentacion()
         self.cargar_categoria() 
+        self.visualiza_datos()
+
+        # Al cargar el formulario se insertan en el control codigo. Barr 
+        # el codigo siguiente siguiendo una secuencia de uso para los nuevos articulos.
+        ultimo_codigo = obtener_codigo_articulo("articulo")
+        nuevo_codigo = generar_nuevo_codigo_articulo("ART",ultimo_codigo)
+        self.txtCodArt.setText(nuevo_codigo)
+        
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-    # Elimina el textp de referencia que tiene la casilla buscar
+    # Elimina el texto de referencia que tiene la casilla buscar
     def borrarTexto(self, event):
         # Borrar el texto cuando se hace clic
         self.txtBuscar.clear()

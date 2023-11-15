@@ -291,7 +291,7 @@ class VentanaVentas(QMainWindow):
                                 dv.descuento as 'DESCUENTO %',\
                                 ve.itbis as 'IMPUESTOS %',\
                                 ve.serie as 'NO. VENTA',\
-                                em.nombre as 'VENDEDOR',\
+                                CONCAT(em.nombre, ' ', em.apellidos) as 'VENDEDOR',\
                                 FORMAT(SUM(dv.cantidad * dv.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
                                 FORMAT(SUM((dv.cantidad * dv.precio_venta * (1 - (dv.descuento / 100))) * (1 + (ve.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 ve.comentario as 'COMENTARIO'\
@@ -301,7 +301,7 @@ class VentanaVentas(QMainWindow):
                             INNER JOIN empleado em ON ve.idempleado = em.idempleado\
                             WHERE ve.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}'\
                             GROUP BY ve.idventa, ve.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                            dv.descuento, ve.itbis, ve.serie, em.nombre, ve.comentario;")
+                            dv.descuento, ve.itbis, ve.serie, CONCAT(em.nombre, ' ', em.apellidos), ve.comentario;")
                 
                 # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
                 model = QSqlTableModel()    
@@ -324,7 +324,7 @@ class VentanaVentas(QMainWindow):
                                 dv.descuento as 'DESCUENTO %',\
                                 ve.itbis as 'IMPUESTOS %',\
                                 ve.serie as 'NO. VENTA',\
-                                em.nombre as 'VENDEDOR',\
+                                CONCAT(em.nombre, ' ', em.apellidos) as 'VENDEDOR',\
                                 FORMAT(SUM(dv.cantidad * dv.precio_venta), 'C', 'en-US') as 'SUB TOTAL',\
                                 FORMAT(SUM((dv.cantidad * dv.precio_venta * (1 - (dv.descuento / 100))) * (1 + (ve.itbis / 100))), 'C', 'en-US') as 'TOTAL',\
                                 ve.comentario as 'COMENTARIO'\
@@ -334,7 +334,7 @@ class VentanaVentas(QMainWindow):
                             INNER JOIN empleado em ON ve.idempleado = em.idempleado\
                             WHERE ve.fecha BETWEEN '{FechaInicio}' AND '{FechaFinal}' AND CONCAT(cl.nombre, ' ', cl.apellidos) LIKE '%{Buscar}%'\
                             GROUP BY ve.idventa, ve.fecha, CONCAT(cl.nombre, ' ', cl.apellidos),\
-                            dv.descuento, ve.itbis, ve.serie, em.nombre, ve.comentario;")
+                            dv.descuento, ve.itbis, ve.serie, CONCAT(em.nombre, ' ', em.apellidos), ve.comentario;")
                 
                 # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
                 model = QSqlTableModel()    
