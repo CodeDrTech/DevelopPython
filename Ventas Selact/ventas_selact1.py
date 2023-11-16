@@ -5,7 +5,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from PyQt5.QtWidgets import QApplication, QMessageBox
-#--------------------------------------------------------- Envio de reportes sin meta diaria
+#--------------------------------------------------------- Envio de reportes sin meta diaria.
 # Configurar la localización para el formato de moneda
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
