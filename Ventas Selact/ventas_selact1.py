@@ -33,7 +33,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=4, values_
     
     
     # Manejar casos especiales en correo_destinatario
-    correo_destinatario = f'{nombre_empleado} <{str(fila[3]) if fila[3] is not None and fila[3] != "#N/D" else "jperez@selactcorp.com"}>'
+    correo_destinatario = f'{nombre_empleado} <{str(fila[8]) if fila[8] is not None and fila[8] != "#N/D" else "jperez@selactcorp.com"}>'
 
     
     # Verificar si el correo_destinatario es válido antes de intentar enviar el correo
