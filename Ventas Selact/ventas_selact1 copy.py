@@ -10,8 +10,8 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 # Obtener la ruta completa del archivo Excel
-archivo_excel = os.path.join(os.path.dirname(__file__), 'ventas.xlsx')
-hoja_excel = 'Envios'
+archivo_excel = os.path.join(os.path.dirname(__file__), 'Pruebas.xlsx')
+hoja_excel = 'Hoja1'
 
 # Configuración del servidor SMTP de Gmail
 correo_emisor = 'jperez@selactcorp.com'
@@ -26,14 +26,17 @@ sheet = workbook[hoja_excel]
 app = QApplication([])
 
 # Recorrer las filas del archivo Excel
-for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=4, values_only=True):
+for fila in sheet.iter_rows(min_row=2, max_row=3, min_col=1, max_col=9, values_only=True):
     nombre_empleado = str(fila[0]).lower().title()
+    
     monto_venta = fila[1] if fila[1] is not None else 0
+    
+    esta_Semana = fila[7]
     
     
     
     # Manejar casos especiales en correo_destinatario
-    correo_destinatario = f'{nombre_empleado} <{str(fila[3]) if fila[3] is not None and fila[3] != "#N/D" else "jperez@selactcorp.com"}>'
+    correo_destinatario = f'{nombre_empleado} <{str(fila[8]) if fila[8] is not None and fila[8] != "#N/D" else "jperez@selactcorp.com"}>'
 
     
     # Verificar si el correo_destinatario es válido antes de intentar enviar el correo
@@ -42,7 +45,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=4, values_
             # Configuración del mensaje de correo
             asunto = 'Información sobre reporte de ventas'
 
-            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta)}'
+            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta)}\n\nEsta semana ${"{:,.2f}".format(esta_Semana)}'
 
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificacion de reporte <{correo_emisor}>'
