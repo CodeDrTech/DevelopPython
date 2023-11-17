@@ -19,11 +19,9 @@ from PyQt5 import uic
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog
 from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsDropShadowEffect, QMessageBox, QWidget, QAbstractItemView, QDialog
 from PyQt5 import QtGui
-from PyQt5.QtSql import QSqlQuery
-from PyQt5.QtCore import Qt
+from PyQt5.QtSql import QSqlQuery, QSqlTableModel
+from PyQt5.QtCore import Qt, QDate, QLocale
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QDoubleValidator, QPainter, QFont, QImage
-from PyQt5.QtSql import QSqlTableModel
-from PyQt5.QtCore import QDate, QLocale
 
 from Consultas_db import obtener_ultimo_codigo, generar_nuevo_codigo,\
     insertar_nueva_cotizacion, insertar_nuevo_detalle_cotizacion,\
