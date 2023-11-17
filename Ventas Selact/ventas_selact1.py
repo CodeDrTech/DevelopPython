@@ -63,7 +63,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
             mensaje_error.setIcon(QMessageBox.Critical)
             mensaje_error.exec()
 
-QMessageBox.warning(None, "Enviado", "Correos enviado exitosamente.")
+print("Correos enviado exitosamente.")
 
 # Cerrar el archivo Excel
 workbook.close()

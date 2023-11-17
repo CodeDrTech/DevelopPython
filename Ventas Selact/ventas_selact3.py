@@ -98,7 +98,7 @@ with smtplib.SMTP('smtp.gmail.com', 587) as server:
     server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
 
 # Mostrar mensaje informativo
-QMessageBox.information(None, 'Correo Enviado', 'El correo se envió correctamente.')
+print("Correos enviado exitosamente.")
 
 # Eliminar el archivo PDF después de enviar el correo (opcional)
 os.remove(pdf_path)

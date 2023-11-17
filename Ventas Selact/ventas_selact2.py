@@ -95,7 +95,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
             # Mostrar un mensaje de error utilizando QMessageBox
             QMessageBox.critical(None, 'Error', f'Error al enviar correo: {str(e)}')
 
-QMessageBox.critical(None, 'Enviados', 'Correos enviados exitosamente')
+print("Correos enviado exitosamente.")
 
 # Cerrar el archivo Excel
 workbook.close()
