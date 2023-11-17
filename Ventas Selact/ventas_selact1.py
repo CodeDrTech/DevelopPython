@@ -23,7 +23,7 @@ workbook = openpyxl.load_workbook(archivo_excel, data_only=True)
 sheet = workbook[hoja_excel]
 
 # Recorrer las filas del archivo Excel
-for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=9, values_only=True):
+for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_only=True):
     nombre_empleado = str(fila[0]).lower().title()
     monto_venta = fila[1] if fila[1] is not None else 0
     

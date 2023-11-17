@@ -33,7 +33,7 @@ fecha = QDate.currentDate()
 fecha_formato = fecha.toString("dd-MMMM-yyyy")
 
 # Recorrer las filas del archivo Excel
-for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=4, values_only=True):
+for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=4, values_only=True):
     nombre_empleado = str(fila[0]).lower().title()
     
     monto_venta = fila[1] if fila[1] is not None else 0
