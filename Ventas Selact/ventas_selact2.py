@@ -29,6 +29,9 @@ contraseña_emisor = 'qsmikukzanvbchro'
 workbook = openpyxl.load_workbook(archivo_excel, data_only=True)
 sheet = workbook[hoja_excel]
 
+# Iniciar la aplicación de PyQt
+app = QApplication([])
+
 fecha = QDate.currentDate()
 fecha_formato = fecha.toString("dd-MMMM-yyyy")
 
@@ -99,3 +102,6 @@ QMessageBox.critical(None, 'Enviados', 'Correos enviados exitosamente')
 
 # Cerrar el archivo Excel
 workbook.close()
+
+# Salir de la aplicación de PyQt
+app.exec_()

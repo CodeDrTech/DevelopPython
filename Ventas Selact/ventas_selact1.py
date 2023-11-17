@@ -22,8 +22,15 @@ contraseña_emisor = 'qsmikukzanvbchro' # del otro correo jgtlqydfeuosgzma.
 workbook = openpyxl.load_workbook(archivo_excel, data_only=True)
 sheet = workbook[hoja_excel]
 
+# Iniciar la aplicación de PyQt
+app = QApplication([])
+
 # Recorrer las filas del archivo Excel
+<<<<<<< HEAD
 for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_only=True):
+=======
+for fila in sheet.iter_rows(min_row=3, max_row=31, min_col=1, max_col=4, values_only=True):
+>>>>>>> parent of 5f3a41d (jp)
     nombre_empleado = str(fila[0]).lower().title()
     monto_venta = fila[1] if fila[1] is not None else 0
     
@@ -67,3 +74,6 @@ QMessageBox.warning(None, "Enviado", "Correos enviado exitosamente.")
 
 # Cerrar el archivo Excel
 workbook.close()
+
+# Salir de la aplicación de PyQt
+app.exec_()
