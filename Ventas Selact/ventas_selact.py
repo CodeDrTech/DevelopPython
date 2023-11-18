@@ -42,7 +42,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
             # Configuración del mensaje de correo
             asunto = 'Información sobre reporte de ventas'
 
-            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta_hoy)}.\n\nEsta semana ${"{:,.2f}".format(monto_venta_semanal)}.'
+            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta_hoy)}\n\nEsta semana ${"{:,.2f}".format(monto_venta_semanal)}'
 
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificacion de reporte <{correo_emisor}>'
