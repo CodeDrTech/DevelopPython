@@ -1031,7 +1031,9 @@ class VentanaCotizaciones(QMainWindow):
                 self.visualizar_datos_cotizacion()
                 self.visualizar_datos_detalle_cotizacion()
                 
-                
+                self.obtener_id_fila_cotizacion(idoctizacion)
+                self.lblDescuento.setText(self.bd_descuento)
+                self.lblTotal.setText(self.bd_total)
                 
                 # Limpia los TexBox
                 self.txtCantidad.setText("")
