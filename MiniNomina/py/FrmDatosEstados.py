@@ -1,5 +1,9 @@
 import sys
 import locale
+import os
+import textwrap
+from datetime import datetime
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QMessageBox, QStyledItemDelegate, QAbstractItemView
 from PyQt5 import QtGui
@@ -8,6 +12,13 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrintPreviewDialog
 from PyQt5.QtCore import Qt, QDate
 from Consultas_db import mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
+
+import win32api
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
 
 
 
@@ -42,7 +53,7 @@ class VentanaDatosEstados(QMainWindow):
         # Llama a la funcion que cierra la ventana
         self.BtnSalir.clicked.connect(self.fn_Salir)
         
-        self.BtnImprimir.clicked.connect(self.imprimir_datos_tbtabla)
+        self.BtnImprimir.clicked.connect(self.imprimir_pdf)
         
         self.BtnEliminar.clicked.connect(self.borrar_fila)
         
@@ -60,7 +71,7 @@ class VentanaDatosEstados(QMainWindow):
         model.select()
         column_data = []
         for i in range(model.rowCount()):
-            column_data.append(model.data(model.index(i, 0)))
+            column_data.append(model.data(model.index(i, 1)))
         
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox.
         combo_model = QStandardItemModel()
@@ -121,7 +132,7 @@ class VentanaDatosEstados(QMainWindow):
             UNION ALL\
             SELECT NULL AS FECHA, NULL AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
             UNION ALL\
-            SELECT NULL AS FECHA, '*DETALLE DE TRANSACCIONES*' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
+            SELECT NULL AS FECHA, '*faltante DE TRANSACCIONES*' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
             UNION ALL\
             SELECT 'FECHA' AS FECHA, 'NOMBRE' AS NOMBRE, 'BANCA' AS BANCA, 'ABONO' AS ABONO, 'FALTANTE' AS FALTANTE\
             UNION ALL\
@@ -212,6 +223,215 @@ class VentanaDatosEstados(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbtabla.resizeColumnsToContents()
         self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
+    def imprimir_pdf(self):
+        
+            
+            # Obtiene la fecha actual para usar en el pdf
+            fecha = QDate.currentDate()
+            fecha_formato = fecha.toString("dd-MMMM-yyyy")
+
+            FechaInicio = self.txtFechaInicio.date().toString("d-MMMM-yyyy")
+            FechaFinal = self.txtFechaFinal.date().toString("d-MMMM-yyyy")
+            Empleado = self.cmbEmpleado.currentText()
+            
+            if Empleado:
+                try:
+                    
+                    # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
+                    # que seran usados para la creacion del pdf.
+                    #self.obtener_id_fila_cotizacion(row) 
+                    
+                    
+                    # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+                    confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
+                                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                        
+                        
+                    # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
+                    if confirmacion == QMessageBox.Yes:
+                        
+                        c = canvas.Canvas(f"MiniNomina/pdf/reporte {fecha_formato}.pdf", pagesize=letter)
+
+                        # Agregar el logo de la empresa
+                        c.drawImage("MiniNomina/png/Logo.png", 400, 700, width=150, height=75)
+
+                        # Datos de la empresa
+                        data = [
+                            ["Banca Elix la Fortuna."],
+                            ["Ave. Ind. km 12 1/2 # 23."],
+                            ["809-534-2323"]
+                        ]
+
+                        table = Table(data)
+
+                        # Establecer el estilo de la tabla para datos de la empresa
+                        style = TableStyle([
+                            ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
+                            ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+
+                            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                            ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
+                            ('FONTSIZE', (0,0), (-1,-1), 12),
+
+                            ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+                            ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
+                            ('GRID', (0,0), (-1,-1), 1, colors.black)
+                        ])
+                        table.setStyle(style)
+
+                        # Agregar la tabla de datos de la empresa al canvas.
+                        table.wrapOn(c, 50, 750)
+                        table.drawOn(c, 50, 700)
+                        
+                        # Totales, subtotales, impuestos, etc.
+                        suma_faltantes = self.obtener_suma_faltantes()
+                        suma_abono = self.obtener_suma_abonos()
+
+                        # No. Cotización y fecha
+                        c.setFont("Helvetica", 15)
+                        c.drawString(390,680,"Abonos: " + "$ " + str(suma_abono))
+                        c.setFont("Helvetica", 15)
+                        c.drawString(390,660,"Faltantes: " + "$ " + str(suma_faltantes))
+
+                        # Datos del cliente
+                        c.setFont("Helvetica-Bold", 15)
+                        c.drawString(50,680,"Empleada: " + f"{Empleado}")
+                        c.setFont("Helvetica", 13)
+                        c.drawString(50,660,"Fecha de impresion: " + f"{fecha_formato}")
+                        
+                        # Dibujar una línea debajo de los datos de la empresa y logo.
+                        c.line(50, 695, 550, 695)
+
+                        # Dibujar una línea debajo de los datos del cliente
+                        c.line(50, 650, 550, 650)
+                        
+                        # Cabecera de los datos de los artículos
+                        c.setFont("Helvetica-Bold", 12)
+                        #c.drawString(50, 630, "ID")
+                        #c.drawString(50, 630, "CODIGO")
+                        c.drawString(50, 630, "FECHA.") 
+                        c.drawString(140, 630, "BANCA")                 
+                        c.drawString(210, 630, "NOMBRE")
+                        c.drawString(390, 630, "ABONO")
+                        c.drawString(480, 630, "FALTANTE")
+
+                        # Datos de los artículos.
+                        faltantes = self.obtener_faltantes()
+                        
+                        
+                        
+                        y = 610
+                        for faltante in faltantes:
+                            c.setFont("Helvetica", 10)
+                            
+                            # Establecer la configuración regional a español
+                            locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+                            
+                            # Convertir la cadena a un objeto datetime
+                            fecha_objeto = datetime.strptime(faltante['FECHA'], "%Y-%m-%d")
+
+                            # Formatear el objeto datetime como cadena en el nuevo formato
+                            fecha_faltante = fecha_objeto.strftime("%d-%B-%Y")
+                            
+                            c.drawString(50, y, fecha_faltante)
+                            c.drawString(140, y, str(faltante['BANCA']))
+
+                            # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
+                            # esta posicion la uso para que si el nombre del articulo tiene varias lineas
+                            # las demas columnas queden alineadas con la primera linea del nombre de articulo.
+                            alinear_columnas = y
+
+                            # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
+                            nombre_empleado = str(faltante['NOMBRE']) # obtengo el nombre del articulo en la variable nombre_empleado
+                            lineas_nombre_empleado = textwrap.wrap(nombre_empleado, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+
+                            # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
+                            for linea in lineas_nombre_empleado:
+                                c.drawString(210, y, linea)
+                                y -= 15
+                                
+                                
+                            
+                            c.drawString(390, alinear_columnas, "$ " + str(faltante['ABONO']))
+                            c.drawString(480, alinear_columnas, "$ " + str(faltante['FALTANTE']))
+                            y -= 15
+
+                            # Si los articulos llegan a la línea 40, se crea una nueva página
+                            # para seguir imprimiendo en ella
+                            if y <= 30:
+                                c.showPage()
+                                y = 750  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+                        c.save()
+
+                        # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
+                        pdf_file_name = os.path.abspath(f"MiniNomina/pdf/reporte {fecha_formato}.pdf")
+
+                        # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
+                        # imprime el archivo por la impresora predeterminada.
+                        
+                        win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                        
+                        #win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
+
+                        QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
+                except Exception as e:
+                    # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
+                    mensaje_error = QMessageBox()
+                    mensaje_error.setIcon(QMessageBox.Critical)
+                    mensaje_error.setWindowTitle("Llamar al administrador")
+                    mensaje_error.setText(f"Error al intentar imprimir: {str(e)}")
+                    mensaje_error.exec_()
+                    
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA CONTINUAR.")
+
+    
+    def obtener_faltantes(self):
+        Empleado = self.cmbEmpleado.currentText()
+        query = QSqlQuery()
+        query.exec_(f"SELECT * from faltantes WHERE NOMBRE = '{Empleado}'")
+
+        faltante = []
+        while query.next():
+            faltante.append({
+                    'FECHA': query.value('FECHA'),
+                    'BANCA': query.value('BANCA'),
+                    'NOMBRE': query.value('NOMBRE'),
+                    'ABONO': query.value('ABONO'),
+                    'FALTANTE': query.value('FALTANTE')
+                })
+
+        return faltante
+    
+    def obtener_suma_faltantes(self):
+        Empleado = self.cmbEmpleado.currentText()
+        query = QSqlQuery()
+        query.exec_(f"SELECT sum(FALTANTE) FROM faltantes WHERE NOMBRE = '{Empleado}'")
+
+        # Verificar si la consulta se ejecutó correctamente
+        if query.next():
+            # Obtener el valor de la suma (si es nulo, devolver 0)
+            suma_faltantes = query.value(0) or 0.0
+            return suma_faltantes
+        else:
+            # En caso de error o si no hay resultados, devolver 0
+            return 0.0
+
+    def obtener_suma_abonos(self):
+        Empleado = self.cmbEmpleado.currentText()
+        query = QSqlQuery()
+        query.exec_(f"SELECT sum(ABONO) FROM faltantes WHERE NOMBRE = '{Empleado}'")
+
+        # Verificar si la consulta se ejecutó correctamente
+        if query.next():
+            # Obtener el valor de la suma (si es nulo, devolver 0)
+            suma_abono = query.value(0) or 0.0
+            return suma_abono
+        else:
+            # En caso de error o si no hay resultados, devolver 0
+            return 0.0
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
