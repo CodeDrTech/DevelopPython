@@ -1,5 +1,8 @@
 import sys
 import locale
+import os
+import textwrap
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QMessageBox, QStyledItemDelegate, QAbstractItemView
 from PyQt5 import QtGui
@@ -8,6 +11,13 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrintPreviewDialog
 from PyQt5.QtCore import Qt, QDate
 from Consultas_db import mostrar_datos_de_empleados
 from PyQt5.QtSql import QSqlTableModel, QSqlQuery
+
+import win32api
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
 
 
 
@@ -121,7 +131,7 @@ class VentanaDatosEstados(QMainWindow):
             UNION ALL\
             SELECT NULL AS FECHA, NULL AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
             UNION ALL\
-            SELECT NULL AS FECHA, '*DETALLE DE TRANSACCIONES*' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
+            SELECT NULL AS FECHA, '*faltante DE TRANSACCIONES*' AS NOMBRE, NULL AS BANCA, NULL AS ABONO, NULL AS FALTANTE\
             UNION ALL\
             SELECT 'FECHA' AS FECHA, 'NOMBRE' AS NOMBRE, 'BANCA' AS BANCA, 'ABONO' AS ABONO, 'FALTANTE' AS FALTANTE\
             UNION ALL\
@@ -212,6 +222,169 @@ class VentanaDatosEstados(QMainWindow):
         # Ajustar el tamaño de las columnas para que se ajusten al contenido
         self.tbtabla.resizeColumnsToContents()
         self.tbtabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+    #------------------------------------------------------------------------------------------------------
+    #------------------------------------------------------------------------------------------------------
+    def imprimir_pdf(self):
+        # Obtener el índice de la fila seleccionada
+            indexes = self.tbDatos.selectedIndexes()
+
+            # Obtiene la fecha actual para usar en el pdf
+            fecha = QDate.currentDate()
+            fecha_formato = fecha.toString("dd-MMMM-yyyy")
+
+            FechaInicio = self.txtFechaInicio.date().toString("d-MMMM-yyyy")
+            FechaFinal = self.txtFechaFinal.date().toString("d-MMMM-yyyy")
+            Empleado = self.cmbEmpleado.currentText()
+            
+            if Empleado:
+                try:
+                    
+                    # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
+                    # que seran usados para la creacion del pdf.
+                    self.obtener_id_fila_cotizacion(row) 
+                    
+                    
+                    # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
+                    confirmacion = QMessageBox.question(self, "MENSAJE", "¿ESTA SEGURO QUE QUIERE CONTINUAR?",
+                                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                        
+                        
+                    # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
+                    if confirmacion == QMessageBox.Yes:
+                        
+                        c = canvas.Canvas(f"MiniNomina/pdf/reporte {self.bd_serie}.pdf", pagesize=letter)
+
+                        # Agregar el logo de la empresa
+                        c.drawImage("MiniNomina/png/Logo.jpg", 400, 700, width=150, height=75)
+
+                        # Datos de la empresa
+                        data = [
+                            ["Banca Elix la Fortuna."],
+                            ["Ave. Ind. km 12 1/2 # 23."],
+                            ["809-534-2323"]
+                        ]
+
+                        table = Table(data)
+
+                        # Establecer el estilo de la tabla para datos de la empresa
+                        style = TableStyle([
+                            ('BACKGROUND', (0,0), (-1,-1), colors.lightgrey),
+                            ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+
+                            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                            ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
+                            ('FONTSIZE', (0,0), (-1,-1), 12),
+
+                            ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+                            ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
+                            ('GRID', (0,0), (-1,-1), 1, colors.black)
+                        ])
+                        table.setStyle(style)
+
+                        # Agregar la tabla de datos de la empresa al canvas
+                        table.wrapOn(c, 50, 750)
+                        table.drawOn(c, 50, 700)
+
+                        # No. Cotización y fecha
+                        c.setFont("Helvetica-Bold", 15)
+                        c.drawString(390,680,"Cotización: " + str(self.bd_serie))
+                        c.setFont("Helvetica", 10)
+                        c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
+
+                        # Datos del cliente
+                        c.setFont("Helvetica-Bold", 15)
+                        c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
+                        c.setFont("Helvetica", 10)
+                        c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
+                        
+                        # Dibujar una línea debajo de los datos de la empresa y logo.
+                        c.line(50, 695, 550, 695)
+
+                        # Dibujar una línea debajo de los datos del cliente
+                        c.line(50, 650, 550, 650)
+                        
+                        # Cabecera de los datos de los artículos
+                        c.setFont("Helvetica-Bold", 12)
+                        #c.drawString(50, 630, "ID")
+                        c.drawString(50, 630, "CODIGO")
+                        c.drawString(120, 630, "FECHA.") 
+                        c.drawString(170, 630, "NOMBRE")                 
+                        c.drawString(340, 630, "BANCA")
+                        c.drawString(410, 630, "ABONO")
+                        c.drawString(495, 630, "FALTANTE")
+
+                        # Datos de los artículos.
+                        faltantes = self.obtener_faltantes_cotizacion(self.bd_id_cotizacion)
+                        y = 610
+                        for faltante in faltantes:
+                            c.setFont("Helvetica", 10)
+                            #c.drawString(50, y, str(faltante['idarticulo']))
+                            c.drawString(50, y, self.obtener_codigo_articulo(faltante['idarticulo']))
+                            c.drawString(120, y, str(faltante['cantidad']))
+
+                            # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
+                            # esta posicion la uso para que si el nombre del articulo tiene varias lineas
+                            # las demas columnas queden alineadas con la primera linea del nombre de articulo.
+                            alinear_columnas = y
+
+                            # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
+                            nombre_empleado = self.obtener_nombre_empleado(faltante['idarticulo']) # obtengo el nombre del articulo en la variable nombre_empleado
+                            lineas_nombre_empleado = textwrap.wrap(nombre_empleado, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
+
+                            # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
+                            for linea in lineas_nombre_empleado:
+                                c.drawString(170, y, linea)
+                                y -= 15
+                                
+                            c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(faltante['precio_venta']))
+                            c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(faltante['idarticulo'])))
+                            c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(faltante['cantidad'] * faltante['precio_venta']))
+                            y -= 15
+
+                            # Si los articulos llegan a la línea 40, se crea una nueva página
+                            # para seguir imprimiendo en ella
+                            if y <= 30:
+                                c.showPage()
+                                y = 750  # Posición inicial en "y" (up/down) de la nueva pagina creada.
+
+                        # Totales, subtotales, impuestos, etc.
+                        c.setFont("Helvetica-Bold", 16)
+                        c.drawString(50,120,"Subtotal: " + str(self.bd_sub_total))
+                        c.drawString(50,100,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
+                        c.drawString(50,80,"Descuento: " + str(int(self.bd_descuento)) + "%")
+                        c.drawString(50,60,"Total: " + str(self.bd_total))
+
+                        # Nombre del empleado que crea la cotizacion
+                        c.setFont("Helvetica", 10)
+                        c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).title())
+
+                        # Comentario de la cotizacion al pie de la hoja
+                        c.setFont("Helvetica", 10)
+                        c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).capitalize() + "**") 
+
+                        c.save()
+
+                        # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
+                        pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
+
+                        # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
+                        # imprime el archivo por la impresora predeterminada.
+                        
+                        win32api.ShellExecute(0, "open", pdf_file_name, None, ".", 0) # type: ignore
+                        
+                        #win32api.ShellExecute(0, "print", pdf_file_name, None, ".", 0) # type: ignore
+
+                        QMessageBox.warning(self, "MENSAJE", "HECHO SATISCAFTORIAMENTE")
+                except Exception as e:
+                    # Manejar otros errores, mostrar un mensaje de error o realizar otra acción necesaria
+                    mensaje_error = QMessageBox()
+                    mensaje_error.setIcon(QMessageBox.Critical)
+                    mensaje_error.setWindowTitle("Llamar al administrador")
+                    mensaje_error.setText(f"Error al intentar imprimir: {str(e)}")
+                    mensaje_error.exec_()
+            else:
+                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA CONTINUAR.")
+
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
