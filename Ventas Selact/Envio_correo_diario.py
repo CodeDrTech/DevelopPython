@@ -67,6 +67,3 @@ print("Correos enviado exitosamente.")
 
 # Cerrar el archivo Excel
 workbook.close()
-
-# Salir de la aplicación de PyQt
-app.exec_()
