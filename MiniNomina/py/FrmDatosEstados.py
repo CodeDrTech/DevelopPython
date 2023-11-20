@@ -354,8 +354,8 @@ class VentanaDatosEstados(QMainWindow):
                                 
                                 
                             
-                            c.drawString(390, alinear_columnas, "$ " + str(faltante['ABONO']))
-                            c.drawString(480, alinear_columnas, "$ " + str(faltante['FALTANTE']))
+                            c.drawString(390, alinear_columnas, "$ " + str(faltante['ABONO']) if str(faltante['ABONO']) else "$ 0.00")
+                            c.drawString(480, alinear_columnas, "$ " + str(faltante['FALTANTE']) if str(faltante['FALTANTE']) else "$ 0.00")
                             y -= 15
 
                             # Si los articulos llegan a la línea 40, se crea una nueva página
