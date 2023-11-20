@@ -286,8 +286,8 @@ class VentanaDatosEstados(QMainWindow):
                         table.drawOn(c, 50, 700)
                         
                         # Totales, subtotales, impuestos, etc.
-                        suma_faltantes = self.obtener_suma_faltantes()
-                        suma_abono = self.obtener_suma_abonos()
+                        suma_faltantes = self.obtener_suma_faltantes_por_fehca()
+                        suma_abono = self.obtener_suma_abonos_por_fehca()
 
                         # No. Cotización y fecha
                         c.setFont("Helvetica", 15)
@@ -298,8 +298,8 @@ class VentanaDatosEstados(QMainWindow):
                         # Datos del cliente
                         c.setFont("Helvetica-Bold", 15)
                         c.drawString(50,680,"Empleada: " + f"{Empleado}")
-                        c.setFont("Helvetica", 13)
-                        c.drawString(50,660,"Fecha de impresion: " + f"{fecha_formato}")
+                        c.setFont("Helvetica", 10)
+                        c.drawString(50,660,"Desde el " + f"{FechaInicio}" + " Hasta el " + f"{FechaFinal}")
                         
                         # Dibujar una línea debajo de los datos de la empresa y logo.
                         c.line(50, 695, 550, 695)
@@ -309,13 +309,11 @@ class VentanaDatosEstados(QMainWindow):
                         
                         # Cabecera de los datos de los artículos
                         c.setFont("Helvetica-Bold", 12)
-                        #c.drawString(50, 630, "ID")
-                        #c.drawString(50, 630, "CODIGO")
                         c.drawString(50, 630, "FECHA.") 
-                        c.drawString(140, 630, "BANCA")                 
-                        c.drawString(210, 630, "NOMBRE")
-                        c.drawString(390, 630, "ABONO")
-                        c.drawString(480, 630, "FALTANTE")
+                        c.drawString(150, 630, "BANCA")                 
+                        c.drawString(220, 630, "NOMBRE")
+                        c.drawString(400, 630, "ABONO")
+                        c.drawString(485, 630, "FALTANTE")
 
                         # Datos de los artículos.
                         faltantes = self.obtener_faltantes()
@@ -336,7 +334,7 @@ class VentanaDatosEstados(QMainWindow):
                             fecha_faltante = fecha_objeto.strftime("%d-%B-%Y")
                             
                             c.drawString(50, y, fecha_faltante)
-                            c.drawString(140, y, str(faltante['BANCA']))
+                            c.drawString(150, y, str(faltante['BANCA']))
 
                             # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
                             # esta posicion la uso para que si el nombre del articulo tiene varias lineas
@@ -349,13 +347,13 @@ class VentanaDatosEstados(QMainWindow):
 
                             # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
                             for linea in lineas_nombre_empleado:
-                                c.drawString(210, y, linea)
+                                c.drawString(220, y, linea)
                                 y -= 15
                                 
                                 
                             
-                            c.drawString(390, alinear_columnas, "$ " + str(faltante['ABONO']) if str(faltante['ABONO']) else "$ 0.00")
-                            c.drawString(480, alinear_columnas, "$ " + str(faltante['FALTANTE']) if str(faltante['FALTANTE']) else "$ 0.00")
+                            c.drawString(400, alinear_columnas, "$ " + str(faltante['ABONO']) if str(faltante['ABONO']) else "$ 0.00")
+                            c.drawString(485, alinear_columnas, "$ " + str(faltante['FALTANTE']) if str(faltante['FALTANTE']) else "$ 0.00")
                             y -= 15
 
                             # Si los articulos llegan a la línea 40, se crea una nueva página
@@ -390,8 +388,10 @@ class VentanaDatosEstados(QMainWindow):
     
     def obtener_faltantes(self):
         Empleado = self.cmbEmpleado.currentText()
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         query = QSqlQuery()
-        query.exec_(f"SELECT * from faltantes WHERE NOMBRE = '{Empleado}'")
+        query.exec_(f"SELECT * FROM faltantes WHERE NOMBRE LIKE '%{Empleado}%' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
 
         faltante = []
         while query.next():
@@ -405,10 +405,12 @@ class VentanaDatosEstados(QMainWindow):
 
         return faltante
     
-    def obtener_suma_faltantes(self):
+    def obtener_suma_faltantes_por_fehca(self):
         Empleado = self.cmbEmpleado.currentText()
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         query = QSqlQuery()
-        query.exec_(f"SELECT sum(FALTANTE) FROM faltantes WHERE NOMBRE = '{Empleado}'")
+        query.exec_(f"SELECT sum(FALTANTE) FROM faltantes WHERE NOMBRE LIKE '%{Empleado}%' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
 
         # Verificar si la consulta se ejecutó correctamente
         if query.next():
@@ -419,10 +421,12 @@ class VentanaDatosEstados(QMainWindow):
             # En caso de error o si no hay resultados, devolver 0
             return 0.0
 
-    def obtener_suma_abonos(self):
+    def obtener_suma_abonos_por_fehca(self):
         Empleado = self.cmbEmpleado.currentText()
+        FechaInicio = self.txtFechaInicio.date().toString("yyyy-MM-dd")
+        FechaFinal = self.txtFechaFinal.date().toString("yyyy-MM-dd")
         query = QSqlQuery()
-        query.exec_(f"SELECT sum(ABONO) FROM faltantes WHERE NOMBRE = '{Empleado}'")
+        query.exec_(f"SELECT sum(ABONO) FROM faltantes WHERE NOMBRE LIKE '%{Empleado}%' AND FECHA BETWEEN '{FechaInicio}' AND '{FechaFinal}'")
 
         # Verificar si la consulta se ejecutó correctamente
         if query.next():
