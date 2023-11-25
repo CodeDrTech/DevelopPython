@@ -52,7 +52,7 @@ class VentanaFaltantes(QMainWindow):
         model.select()
         columna_empleados = []
         for i in range(model.rowCount()):
-            columna_empleados.append(model.data(model.index(i, 0)))
+            columna_empleados.append(model.data(model.index(i, 1)))
         
         # Cargar los datos de la columna Nombre de la tabla empleados en el QComboBox asignado.
         combo_model = QStandardItemModel()
@@ -67,7 +67,7 @@ class VentanaFaltantes(QMainWindow):
         model.select()
         columna_banca = []
         for i in range(model.rowCount()):
-           columna_banca.append(model.data(model.index(i, 1)))
+           columna_banca.append(model.data(model.index(i, 2)))
         
         # Cargar los datos de la columna Banca de la tabla empleados en el QComboBox asignado.
         combo_model2 = QStandardItemModel()
@@ -85,7 +85,7 @@ class VentanaFaltantes(QMainWindow):
         model.select()
         columna_banca2 = []
         for i in range(model.rowCount()):
-            columna_banca2.append(model.data(model.index(i, 0)))
+            columna_banca2.append(model.data(model.index(i, 2)))
 
         combo_model3 = QStandardItemModel()
         for item in columna_banca2:
@@ -100,7 +100,7 @@ class VentanaFaltantes(QMainWindow):
         model.select()
         columna_empleados2 = []
         for i in range(model.rowCount()):
-            columna_empleados2.append(model.data(model.index(i, 1)))
+            columna_empleados2.append(model.data(model.index(i, 2)))
 
         combo_model4 = QStandardItemModel()
         for item in columna_empleados2:

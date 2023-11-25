@@ -59,12 +59,8 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
                 server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
 
         except Exception as e:
-            # Mostrar un mensaje de error utilizando QMessageBox
-            mensaje_error = QMessageBox()
-            mensaje_error.setWindowTitle("Error")
-            mensaje_error.setText(f"Error al enviar el correo: {str(e)}")
-            mensaje_error.setIcon(QMessageBox.Critical)
-            mensaje_error.exec()
+            # Mostrar un mensaje de error en la consola
+            print(f"Error al enviar el correo: {str(e)}")
 
 print("Correos enviado exitosamente.")
 
