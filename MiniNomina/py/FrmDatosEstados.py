@@ -2,10 +2,7 @@ import sys
 import locale
 import os
 import textwrap
-<<<<<<< HEAD
-=======
 from datetime import datetime
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QMessageBox, QStyledItemDelegate, QAbstractItemView
@@ -229,14 +226,8 @@ class VentanaDatosEstados(QMainWindow):
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_pdf(self):
-<<<<<<< HEAD
-        # Obtener el índice de la fila seleccionada
-            indexes = self.tbDatos.selectedIndexes()
-
-=======
         
             
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
             # Obtiene la fecha actual para usar en el pdf
             fecha = QDate.currentDate()
             fecha_formato = fecha.toString("dd-MMMM-yyyy")
@@ -250,11 +241,7 @@ class VentanaDatosEstados(QMainWindow):
                     
                     # Con el parametro row como int se obtienen todos los datos de la fila seleccionada, datos 
                     # que seran usados para la creacion del pdf.
-<<<<<<< HEAD
-                    self.obtener_id_fila_cotizacion(row) 
-=======
                     #self.obtener_id_fila_cotizacion(row) 
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
                     
                     
                     # Preguntar si el usuario está seguro de convertir la cotizacion seleccionada
@@ -265,17 +252,10 @@ class VentanaDatosEstados(QMainWindow):
                     # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
                     if confirmacion == QMessageBox.Yes:
                         
-<<<<<<< HEAD
-                        c = canvas.Canvas(f"MiniNomina/pdf/reporte {self.bd_serie}.pdf", pagesize=letter)
-
-                        # Agregar el logo de la empresa
-                        c.drawImage("MiniNomina/png/Logo.jpg", 400, 700, width=150, height=75)
-=======
                         c = canvas.Canvas(f"MiniNomina/pdf/reporte {fecha_formato}.pdf", pagesize=letter)
 
                         # Agregar el logo de la empresa
                         c.drawImage("MiniNomina/png/Logo.png", 400, 700, width=150, height=75)
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
 
                         # Datos de la empresa
                         data = [
@@ -301,23 +281,6 @@ class VentanaDatosEstados(QMainWindow):
                         ])
                         table.setStyle(style)
 
-<<<<<<< HEAD
-                        # Agregar la tabla de datos de la empresa al canvas
-                        table.wrapOn(c, 50, 750)
-                        table.drawOn(c, 50, 700)
-
-                        # No. Cotización y fecha
-                        c.setFont("Helvetica-Bold", 15)
-                        c.drawString(390,680,"Cotización: " + str(self.bd_serie))
-                        c.setFont("Helvetica", 10)
-                        c.drawString(390,660,"Fecha Cot.: " + f"{self.bd_fecha}")
-
-                        # Datos del cliente
-                        c.setFont("Helvetica-Bold", 15)
-                        c.drawString(50,680,"Cliente: " + str(self.bd_cliente))
-                        c.setFont("Helvetica", 10)
-                        c.drawString(50,660,"Fecha de impresion: " + str(fecha_formato))
-=======
                         # Agregar la tabla de datos de la empresa al canvas.
                         table.wrapOn(c, 50, 750)
                         table.drawOn(c, 50, 700)
@@ -337,7 +300,6 @@ class VentanaDatosEstados(QMainWindow):
                         c.drawString(50,680,"Empleada: " + f"{Empleado}")
                         c.setFont("Helvetica", 10)
                         c.drawString(50,660,"Desde el " + f"{FechaInicio}" + " Hasta el " + f"{FechaFinal}")
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
                         
                         # Dibujar una línea debajo de los datos de la empresa y logo.
                         c.line(50, 695, 550, 695)
@@ -347,24 +309,6 @@ class VentanaDatosEstados(QMainWindow):
                         
                         # Cabecera de los datos de los artículos
                         c.setFont("Helvetica-Bold", 12)
-<<<<<<< HEAD
-                        #c.drawString(50, 630, "ID")
-                        c.drawString(50, 630, "CODIGO")
-                        c.drawString(120, 630, "FECHA.") 
-                        c.drawString(170, 630, "NOMBRE")                 
-                        c.drawString(340, 630, "BANCA")
-                        c.drawString(410, 630, "ABONO")
-                        c.drawString(495, 630, "FALTANTE")
-
-                        # Datos de los artículos.
-                        faltantes = self.obtener_faltantes_cotizacion(self.bd_id_cotizacion)
-                        y = 610
-                        for faltante in faltantes:
-                            c.setFont("Helvetica", 10)
-                            #c.drawString(50, y, str(faltante['idarticulo']))
-                            c.drawString(50, y, self.obtener_codigo_articulo(faltante['idarticulo']))
-                            c.drawString(120, y, str(faltante['cantidad']))
-=======
                         c.drawString(50, 630, "FECHA.") 
                         c.drawString(150, 630, "BANCA")                 
                         c.drawString(220, 630, "NOMBRE")
@@ -391,7 +335,6 @@ class VentanaDatosEstados(QMainWindow):
                             
                             c.drawString(50, y, fecha_faltante)
                             c.drawString(150, y, str(faltante['BANCA']))
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
 
                             # Guardar la posición "y" (up/down) antes de dibujar el nombre del artículo
                             # esta posicion la uso para que si el nombre del articulo tiene varias lineas
@@ -399,23 +342,11 @@ class VentanaDatosEstados(QMainWindow):
                             alinear_columnas = y
 
                             # Obtener el nombre del artículo y dividirlo en varias líneas si es demasiado largo
-<<<<<<< HEAD
-                            nombre_empleado = self.obtener_nombre_empleado(faltante['idarticulo']) # obtengo el nombre del articulo en la variable nombre_empleado
-=======
                             nombre_empleado = str(faltante['NOMBRE']) # obtengo el nombre del articulo en la variable nombre_empleado
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
                             lineas_nombre_empleado = textwrap.wrap(nombre_empleado, width=30)  # Ajusta el ancho a un espacio de 30 caracteres.
 
                             # Revisa cada nombre de articulo si alguno pasa de 30 caracteres crea un salto de linea.
                             for linea in lineas_nombre_empleado:
-<<<<<<< HEAD
-                                c.drawString(170, y, linea)
-                                y -= 15
-                                
-                            c.drawString(340, alinear_columnas, "$" + "{:,.2f}".format(faltante['precio_venta']))
-                            c.drawString(410, alinear_columnas, self.obtener_presentacion_articulo(self.obtener_codigo_articulo(faltante['idarticulo'])))
-                            c.drawString(495, alinear_columnas, "$" + "{:,.2f}".format(faltante['cantidad'] * faltante['precio_venta']))
-=======
                                 c.drawString(220, y, linea)
                                 y -= 15
                                 
@@ -423,7 +354,6 @@ class VentanaDatosEstados(QMainWindow):
                             
                             c.drawString(400, alinear_columnas, "$ " + str(faltante['ABONO']) if str(faltante['ABONO']) else "$ 0.00")
                             c.drawString(485, alinear_columnas, "$ " + str(faltante['FALTANTE']) if str(faltante['FALTANTE']) else "$ 0.00")
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
                             y -= 15
 
                             # Si los articulos llegan a la línea 40, se crea una nueva página
@@ -431,33 +361,10 @@ class VentanaDatosEstados(QMainWindow):
                             if y <= 30:
                                 c.showPage()
                                 y = 750  # Posición inicial en "y" (up/down) de la nueva pagina creada.
-<<<<<<< HEAD
-
-                        # Totales, subtotales, impuestos, etc.
-                        c.setFont("Helvetica-Bold", 16)
-                        c.drawString(50,120,"Subtotal: " + str(self.bd_sub_total))
-                        c.drawString(50,100,"Impuesto: " + str(int(self.bd_impuesto)) + "%")
-                        c.drawString(50,80,"Descuento: " + str(int(self.bd_descuento)) + "%")
-                        c.drawString(50,60,"Total: " + str(self.bd_total))
-
-                        # Nombre del empleado que crea la cotizacion
-                        c.setFont("Helvetica", 10)
-                        c.drawString(50,40,"Le atendió: " + str(self.obtener_nombre_empleado(self.bd_id_cotizacion)).title())
-
-                        # Comentario de la cotizacion al pie de la hoja
-                        c.setFont("Helvetica", 10)
-                        c.drawString(50, 20,"Comentario: " + "**" + str(self.bd_comentario).capitalize() + "**") 
-
-                        c.save()
-
-                        # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
-                        pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
-=======
                         c.save()
 
                         # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
                         pdf_file_name = os.path.abspath(f"MiniNomina/pdf/reporte {fecha_formato}.pdf")
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
 
                         # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
                         # imprime el archivo por la impresora predeterminada.
@@ -474,11 +381,6 @@ class VentanaDatosEstados(QMainWindow):
                     mensaje_error.setWindowTitle("Llamar al administrador")
                     mensaje_error.setText(f"Error al intentar imprimir: {str(e)}")
                     mensaje_error.exec_()
-<<<<<<< HEAD
-            else:
-                QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA CONTINUAR.")
-
-=======
                     
             else:
                 QMessageBox.warning(self, "ERROR", "SELECCIONA LA COTIZACION PARA CONTINUAR.")
@@ -534,7 +436,6 @@ class VentanaDatosEstados(QMainWindow):
         else:
             # En caso de error o si no hay resultados, devolver 0
             return 0.0
->>>>>>> e2e48724c13b4dbed217a775e80788f4eeaee5d5
     #------------------------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------------------------
     def imprimir_datos_tbtabla(self):
