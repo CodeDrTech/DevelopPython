@@ -15,6 +15,7 @@
       background-color: #36835f;
       padding: 10px;
       text-align: left;
+      border-radius: 10px 15px 0 0; /* (superior izquierda) (superior derecha) (inferior derecha) (inferior izquierda) */
     }
 
     h1 {
@@ -41,11 +42,12 @@
       display: flex;
       flex-direction: column;
       margin-bottom: 15px;
+      margin-left: 5px;
     }
 
     label {
       font-size: 16px;
-      margin: 20px;
+      margin: 20px;      
       margin-bottom: -10px; /* Añadido para espaciar las etiquetas */
     }
 
@@ -54,7 +56,8 @@
       margin: 20px;
       padding: 10px;
       border: 1px solid #ccc;
-      margin-bottom: 10px; /* Añadido para espaciar los campos de entrada y el cuadro de selección */
+      margin-bottom: 10px; /* Añadido para espaciar los campos de entrada y el cuadro de selección */      
+      border-radius: 5px;
     }
 
     select {
@@ -62,22 +65,33 @@
       margin: 20px;
       padding: 10px;
       border: 1px solid #ccc;
+      border-radius: 5px;
       margin-bottom: 10px; /* Añadido para espaciar los campos de entrada y el cuadro de selección */
     }
 
     button {
       margin-top: 10px;
       padding: 10px;
-      margin: 20px;
+      margin: 30px;
+      margin-left: 20px;
       width: 30%;
       background-color: #7bdb61;
       color: #fff;
       cursor: pointer;
+      border-radius: 5px;
     }
 
     .results {
       width: 50%;
       margin: 20px;
+    }
+
+    .content {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px #aaa;
     }
 
     table {
@@ -94,20 +108,98 @@
     th {
       background-color: #f5f5f5;
     }
+
+  /* estilos css para el login */
+  .login-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.login-menu {
+  display: none; 
+}
+
+.user-icon {
+  display: inline-block;
+}
+
+.login-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 120px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0,0,0,.2);  
+  text-align: right;
+  display: none;
+}
+
+.login-menu .triangle {
+  width: 0; 
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;  
+  border-bottom: 10px solid #fff;
+  position: absolute;
+  top: -10px;
+  right: 10px;  
+}
+
+.login-menu ul li {
+  padding: 8px 12px;;  
+}
+
+.login-menu ul li a {
+  color: #333;
+  text-decoration: none;
+}
+
+.login-menu ul li:hover {
+  background: #eee; 
+}
+/* final del estilos css para el login */
   </style>
 </head>
-<body>
+
+<div class="content">
+<body>  
   <header>
+
+    <div class="login-container">
+      <div class="user-icon" onclick="toggleMenu()">
+        <img src="login (1).png" />
+      </div>
+
+      <div id="login-menu" class="login-menu">
+        <ul>
+          <li><a href="#">Perfil</a></li>
+          <li><a href="#">Salir</a></li>
+        </ul>
+      </div>
+    </div>
+
     <h1>Historial de Ventas</h1>
   </header>
+
+  
+  <script src="menu.js"></script>
+
+
+
   <main>
     <section class="search">
-      <h2>Buscar por</h2>
-      <select id="buscarPor">
-        <option value="fecha">Fechas</option>
-        <option value="numeroVenta">Número de Venta</option>        
-      </select>
+      
       <div class="fields">
+
+        <div class="field">
+            <label for="buscarPor">Buscar por</label>
+            <select id="buscarPor">
+              <option value="fecha">Fechas</option>
+              <option value="numeroVenta">Número de Venta</option>        
+            </select>
+        </div>
 
         <div class="field">
           <label for="fechaInicio">Fecha Inicio</label>
@@ -115,8 +207,8 @@
         </div>
       
         <div class="field">
-         <label for="fechaFin">Fecha Fin</label>
-         <input type="date" id="fechaFin">
+          <label for="fechaFin">Fecha Fin</label>
+          <input type="date" id="fechaFin">
         </div>
         
         <div class="field">
@@ -134,9 +226,9 @@
           <tr>
             <th>Fecha Registro</th>
             <th>Número de Venta</th>
-            <th>Tipo de Documento</th>
-            <th>Documento</th>
-            <th>Cliente</th>
+            <th>Tipo Documento</th>
+            <th>Documento Cliente</th>
+            <th>Nombre Cliente</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -153,5 +245,7 @@
       </table>
     </section>
   </main>
+  
 </body>
+</div>
 </html>
