@@ -39,7 +39,9 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
             # Configuración del mensaje de correo
             asunto = 'Descuento lavamanos pedestal 20%'
 
-            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nAtendiendo a una de sus solicitudes se colocaron estas ofertas.\n\n51486 Precio minimo $607.20\n50825 Precio minimo $1,536.78\n50694 Precio minimo $1472.00\n51221 Precio minimo $1,417.70\n\nOferta hasta agotar existacia\n\nMensaje de Jose Alfredo Tejeda.'
+            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nAtendiendo a una de sus solicitudes se colocaron estas ofertas.\
+            \n\n51486 Precio minimo $607.20\n50825 Precio minimo $1,536.78\n50694 Precio minimo $1472.00\n51221 Precio minimo $1,417.70\
+            \n\nOferta hasta agotar existacia\n\nMensaje de Jose Alfredo Tejeda.'
 
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Descuento del 20% <{correo_emisor}>'
