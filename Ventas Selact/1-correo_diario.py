@@ -15,8 +15,7 @@ hoja_excel = 'Envios'
 
 # Configuración del servidor SMTP de Gmail
 correo_emisor = 'jperez@selactcorp.com'
-contraseña_emisor = 'qsmikukzanvbchro' # del otro correo jgtlqydfeuosgzma.
-
+contraseña_emisor = 'qsmikukzanvbchro' 
 
 # Leer el archivo Excel
 workbook = openpyxl.load_workbook(archivo_excel, data_only=True)
