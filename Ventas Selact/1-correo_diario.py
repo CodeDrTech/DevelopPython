@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from PyQt5.QtWidgets import QMessageBox
 #--------------------------------------------------------- Envio de reportes sin meta diaria.
-# Configurar la localización para el formato de moneda
+# Configurar la localización para el formato de moneda.
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 # Obtener la ruta completa del archivo Excel
