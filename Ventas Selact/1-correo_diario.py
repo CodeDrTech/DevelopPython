@@ -43,6 +43,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificacion de reporte <{correo_emisor}>'
             mensaje['To'] = correo_destinatario
+            mensaje['CC'] = 'dvarela@selactcorp.com'
             mensaje['Subject'] = asunto
             mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
 
