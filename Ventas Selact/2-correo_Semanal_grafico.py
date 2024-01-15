@@ -68,7 +68,7 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
 
             # Configuración del mensaje de correo con el enlace a la imagen
             asunto = 'Información sobre reporte de ventas'
-            cuerpo_mensaje = f'''Buenas tardes {nombre_empleado},\n\nAdjunto el reporte semanal con las ventas diarias.\n\n'''
+            cuerpo_mensaje = f'''Buenas tardes {nombre_empleado},\nAdjunto el reporte semanal con las ventas diarias.\n\n'''
 
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificacion de reporte {correo_emisor}'
