@@ -22,15 +22,16 @@ workbook = openpyxl.load_workbook(archivo_excel, data_only=True)
 sheet = workbook[hoja_excel]
 
 # Recorrer las filas del archivo Excel
-for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_only=True):
+for fila in sheet.iter_rows(min_row=35, max_row=35, min_col=1, max_col=9, values_only=True):
     nombre_empleado = str(fila[0]).lower().title()
     monto_venta = fila[1] if fila[1] is not None else 0
+    cant_pedidos = fila[2] if fila[2] is not None else 0
     
     
     
     # Manejar casos especiales en correo_destinatario
-    correo_destinatario = f'{nombre_empleado} <{str(fila[8]) if fila[8] is not None and fila[8] != "#N/D" else "jperez@selactcorp.com"}>'
-    Copia_correo = 'jaquino@selactcorp.com'
+    correo_destinatario = f'{nombre_empleado} <{str(fila[3]) if fila[3] is not None and fila[3] != "#N/D" else "jperez@selactcorp.com"}>'
+    Copia_correo = 'jperez@zutenindustrial.com'
 
     
     # Verificar si el correo_destinatario es válido antes de intentar enviar el correo
@@ -39,12 +40,12 @@ for fila in sheet.iter_rows(min_row=3, max_row=30, min_col=1, max_col=9, values_
             # Configuración del mensaje de correo
             asunto = 'Información sobre reporte de ventas'
 
-            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta)}'
+            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta)}\n\nCantidad de pedidos {cant_pedidos}'
 
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificacion de reporte <{correo_emisor}>'
-            mensaje['To'] = correo_destinatario, Copia_correo
-            #mensaje['CC'] = 'dvarela@selactcorp.com'
+            mensaje['To'] = correo_destinatario
+            mensaje['Cc'] = Copia_correo
             mensaje['Subject'] = asunto
             mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
 
