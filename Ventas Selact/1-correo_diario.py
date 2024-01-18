@@ -22,7 +22,7 @@ workbook = openpyxl.load_workbook(archivo_excel, data_only=True)
 sheet = workbook[hoja_excel]
 
 # Recorrer las filas del archivo Excel
-for fila in sheet.iter_rows(min_row=35, max_row=35, min_col=1, max_col=9, values_only=True):
+for fila in sheet.iter_rows(min_row=4, max_row=31, min_col=1, max_col=9, values_only=True):
     nombre_empleado = str(fila[0]).lower().title()
     monto_venta = fila[1] if fila[1] is not None else 0
     cant_pedidos = fila[2] if fila[2] is not None else 0
@@ -31,7 +31,10 @@ for fila in sheet.iter_rows(min_row=35, max_row=35, min_col=1, max_col=9, values
     
     # Manejar casos especiales en correo_destinatario
     correo_destinatario = f'{nombre_empleado} <{str(fila[3]) if fila[3] is not None and fila[3] != "#N/D" else "jperez@selactcorp.com"}>'
-    Copia_correo = 'jperez@zutenindustrial.com'
+    correos_copia = ['dvarela@selactcorp.com', 'atejeda@selactcorp.com']  # Lista de correos a los que se enviará una copia
+    
+    # Convierte la lista de correos de copia en una cadena de texto
+    correos_copia_str = ', '.join(correos_copia)
 
     
     # Verificar si el correo_destinatario es válido antes de intentar enviar el correo
@@ -45,7 +48,7 @@ for fila in sheet.iter_rows(min_row=35, max_row=35, min_col=1, max_col=9, values
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificacion de reporte <{correo_emisor}>'
             mensaje['To'] = correo_destinatario
-            mensaje['Cc'] = Copia_correo
+            mensaje['CC'] = correos_copia_str
             mensaje['Subject'] = asunto
             mensaje.attach(MIMEText(cuerpo_mensaje, 'plain'))
 
@@ -55,7 +58,7 @@ for fila in sheet.iter_rows(min_row=35, max_row=35, min_col=1, max_col=9, values
                 server.login(correo_emisor, contraseña_emisor)
 
                 # Enviar el correo
-                server.sendmail(correo_emisor, correo_destinatario, mensaje.as_string())
+                server.sendmail(correo_emisor, [correo_destinatario] + correos_copia, mensaje.as_string())
 
         except Exception as e:
             # Mostrar un mensaje de error en la consola
