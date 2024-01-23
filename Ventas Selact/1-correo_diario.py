@@ -26,7 +26,7 @@ for fila in sheet.iter_rows(min_row=6, max_row=31, min_col=1, max_col=5, values_
     nombre_empleado = str(fila[0]).lower().title()
     monto_venta = fila[1] if fila[1] is not None else 0
     cant_pedidos = fila[2] if fila[2] is not None else 0
-    devoluciones = fila[4] if fila[4] is not None else 0
+    #devoluciones = fila[4] if fila[4] is not None else 0
     
     
     
@@ -44,7 +44,7 @@ for fila in sheet.iter_rows(min_row=6, max_row=31, min_col=1, max_col=5, values_
             # Configuración del mensaje de correo
             asunto = 'Información sobre reporte de ventas'
 
-            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta)}\n\nCantidad de pedidos {cant_pedidos}\n\nDevoluciones ${"{:,.2f}".format(devoluciones)}'
+            cuerpo_mensaje = f'Buenas tardes {nombre_empleado}.\n\nTus ventas en el día de hoy suman un total de ${"{:,.2f}".format(monto_venta)}\n\nCantidad de pedidos {cant_pedidos}' #\n\nDevoluciones ${"{:,.2f}".format(devoluciones)}'
 
             mensaje = MIMEMultipart()
             mensaje['From'] = f'Notificacion de reporte <{correo_emisor}>'
