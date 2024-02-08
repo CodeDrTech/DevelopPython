@@ -14,7 +14,7 @@ def read_database_config():
     return connection_string
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Connect to the SQL Server
+# Connect to the SQL Server.
 def connect_to_db():
     connection_string = read_database_config()
     
