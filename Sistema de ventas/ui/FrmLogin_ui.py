@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QDateTimeEdit, QGraphicsView, QGroupBox,
     QHeaderView, QLabel, QLineEdit, QMainWindow,
-    QPushButton, QSizePolicy, QStatusBar, QTableView,
-    QWidget)
+    QPushButton, QSizePolicy, QStatusBar, QTableWidget,
+    QTableWidgetItem, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -193,48 +193,9 @@ class Ui_MainWindow(object):
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
 "}")
-        self.tbDatos = QTableView(self.centralwidget)
+        self.tbDatos = QTableWidget(self.centralwidget)
         self.tbDatos.setObjectName(u"tbDatos")
-        self.tbDatos.setGeometry(QRect(10, 0, 161, 61))
-        self.tbDatos.setStyleSheet(u"QTableView {\n"
-"    background-color: #f2f7f4;\n"
-"    border: 1px solid #cccccc;\n"
-"    selection-background-color: #96bfaa;\n"
-"    selection-color: #ffffff;\n"
-"}\n"
-"\n"
-"QTableView QHeaderView {\n"
-"    background-color: #c0dacb;\n"
-"    color: #333333;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"QTableView QHeaderView::section {\n"
-"    background-color: #deede3;\n"
-"    color: #333333;\n"
-"    padding: 6px;\n"
-"    border: 1px solid #1e362d;\n"
-"}\n"
-"\n"
-"QTableView QHeaderView::section:checked {\n"
-"    background-color: #96bfaa;\n"
-"    color: #ffffff;\n"
-"}\n"
-"\n"
-"QTableView::item {\n"
-"    padding: 6px;\n"
-"}\n"
-"\n"
-"QTableView::item:selected {\n"
-"    background-color: #96bfaa;\n"
-"    color: #ffffff;\n"
-"}\n"
-"\n"
-"QTableView::item:focus {\n"
-"    background-color: #96bfaa;\n"
-"    color: #ffffff;\n"
-"    outline: none;\n"
-"}")
+        self.tbDatos.setGeometry(QRect(10, -10, 161, 61))
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
