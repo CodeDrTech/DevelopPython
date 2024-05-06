@@ -1,1 +1,7 @@
-DRIVER={SQL Server Native Client 11.0};SERVER=LAPTOPTECNOLOGI;DATABASE=Ventas;UID=sa;PWD=Ye.891916;
+{
+    "host": "localhost",
+    "user": "root",
+    "password": "Jose.Luis.8715",
+    "database": "ventas",
+    "port": 3306
+}

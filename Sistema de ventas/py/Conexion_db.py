@@ -1,25 +1,25 @@
-import pyodbc
+import mysql.connector
 from PyQt5.QtSql import QSqlDatabase
 from PyQt5.QtWidgets import QMessageBox
 
 
-#---------------------------------------------Este modulo esta comentado---------------------------------------------------------
-# Read the configuration file connection_string.txt, which contains the database connection string.
+# Función para leer la cadena de conexión de un archivo de configuración
 def read_database_config():
+    import json
     config_path = "Sistema de ventas/txt/connection_string.txt"
     
     with open(config_path, "r") as file:
-        connection_string = file.read().strip()
+        config = json.load(file)
     
-    return connection_string
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-# Connect to the SQL Server.
+    return config
+
+
+# Función para conectar a la base de datos MySQL
 def connect_to_db():
-    connection_string = read_database_config()
+    config = read_database_config()
     
     try:
-        conn = pyodbc.connect(connection_string)        
+        conn = mysql.connector.connect(**config)
         return conn
     except Exception as e:
         message = QMessageBox()
@@ -28,11 +28,3 @@ def connect_to_db():
         message.setText(f"An error occurred: {str(e)}")
         message.exec_()
         return None
-
-# --------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------
-
-# Connect to the database using the driver used by PyQt for QODBC.
-connection_string = read_database_config()
-db = QSqlDatabase.addDatabase("QODBC")
-db.setDatabaseName(connection_string)

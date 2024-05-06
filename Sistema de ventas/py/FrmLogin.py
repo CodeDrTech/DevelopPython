@@ -1,11 +1,14 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QGraphicsDropShadowEffect, QGraphicsScene
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QGraphicsDropShadowEffect, QGraphicsScene, QTableWidgetItem
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtSql import QSqlTableModel
+from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PyQt5.QtCore import QDateTime, Qt
 from FrmPrincipal import VentanaPrincipal
+import pymysql
+import json
+from Conexion_db import connect_to_db
 from Consultas_db import insertar_datos_sesion
 
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
@@ -66,37 +69,38 @@ class VentanaLogin(QMainWindow):
 #------------------------------------------------------------------------------------------------------  
 
     def visualizar_datos(self):
-        # Consulta SELECT * FROM Productos
-        model = QSqlTableModel()
-        model.setTable("empleado")
-        model.select()        
-        self.tbDatos.setModel(model)
+        # Conectar a la base de datos usando la función definida en Conexion_db.py
+        conn = connect_to_db()
+        if conn is not None:
+            model = QSqlTableModel(self, db=QSqlDatabase.database())
+            model.setTable("empleado")
+            model.select()
+            self.tbDatos.setModel(model)
 
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbDatos.resizeColumnsToContents()    
+            # Ajustar el tamaño de las columnas para que se ajusten al contenido
+            self.tbDatos.resizeColumnsToContents()
+
+            # Cerrar la conexión
+            conn.close()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     # Obtiene el codigo de idempleado de la tabla empleado al pasarle como parametro el nombre
     # de usuario que viene de la caja de texto de la ventana de login. Este codigo de usuario
     # se usa para obtener datos como contrasena entre otras cosas.
     def obtener_codigo_empleado(self, usuario):
-        model = QSqlTableModel()
-        model.setTable('empleado')
-        model.select()
-        
-            
-        # Encuentra el índice de la columna "usuario"
-        usuario_column_index = model.fieldIndex("usuario")
-    
-        # Itera a través de las filas para encontrar el usuario
-        for row in range(model.rowCount()):
-            index = model.index(row, usuario_column_index)
-            if model.data(index) == usuario:
-                # Si se encuentra el usuario, devuelve el número de fila
-                return row
-    
-        # Si no se encuentra el usuario, devuelve -1
-        return -1
+        conn = connect_to_db()
+        if conn is not None:
+            cursor = conn.cursor()
+            query = "SELECT idempleado FROM empleado WHERE usuario = %s"
+            cursor.execute(query, (usuario,))
+            result = cursor.fetchone()
+            conn.close()
+            if result:
+                return result[0]
+            else:
+                return -1
+        else:
+            return -1
         
         
 #------------------------------------------------------------------------------------------------------
@@ -260,11 +264,14 @@ class VentanaLogin(QMainWindow):
     # insertar un registro en la base de datos del usuario que inicia sesion.
     def insertar_sesion(self, empleadoId, nombre, apellidos, usuario, rol, fechaHora):
         try:
-
-
-            insertar_datos_sesion(empleadoId, nombre, apellidos, usuario, rol, fechaHora)
-
-
+            conn = connect_to_db()
+            if conn is not None:
+                cursor = conn.cursor()
+                query = "INSERT INTO sesiones (empleadoId, nombre, apellidos, usuario, rol, fechaHora) VALUES (%s, %s, %s, %s, %s, %s)"
+                cursor.execute(query, (empleadoId, nombre, apellidos, usuario, rol, fechaHora))
+                conn.commit()
+                cursor.close()
+                conn.close()
         except Exception as e:
             # Mensaje de error al usuario en caso que surja uno.
             mensaje = QMessageBox()
@@ -291,7 +298,7 @@ class VentanaLogin(QMainWindow):
         
         # Oculta el tableView que carga los datos del empleado que
         # van a ser usado para el inicio de sesion.
-        self.tbDatos.hide() 
+        #self.tbDatos.hide() 
         
         # Carga los datos de los empleados al tableView tbDatos que esta oculto. 
         self.visualizar_datos()

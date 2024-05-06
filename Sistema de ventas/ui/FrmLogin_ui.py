@@ -39,7 +39,6 @@ class Ui_MainWindow(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(210, 30, 191, 21))
         font = QFont()
-        font.setPointSize(1)
         font.setBold(True)
         self.label.setFont(font)
         self.label.setStyleSheet(u"QWidget {\n"
@@ -196,7 +195,7 @@ class Ui_MainWindow(object):
 "}")
         self.tbDatos = QTableView(self.centralwidget)
         self.tbDatos.setObjectName(u"tbDatos")
-        self.tbDatos.setGeometry(QRect(10, 0, 51, 41))
+        self.tbDatos.setGeometry(QRect(10, 0, 161, 61))
         self.tbDatos.setStyleSheet(u"QTableView {\n"
 "    background-color: #f2f7f4;\n"
 "    border: 1px solid #cccccc;\n"

@@ -46,7 +46,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>1</pointsize>
+      <pointsize>-1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -306,8 +306,8 @@ QLabel {
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>51</width>
-      <height>41</height>
+      <width>161</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
