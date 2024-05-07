@@ -111,15 +111,10 @@ def insertar_dato_generico(tabla, columnas, valores):
     try:
         cursor = conn.cursor()
         columnas_str = ', '.join(columnas)
-        valores_str = ', '.join(['%s'] * len(columnas))  # Cambio en la forma de representar los valores en la consulta
+        valores_str = ', '.join(['?'] * len(columnas))
         query = f"INSERT INTO {tabla} ({columnas_str}) VALUES ({valores_str})"
-        cursor.execute(query, valores)  # Se pasa directamente la lista de valores
+        cursor.execute(query, valores)
         conn.commit()
-        mensaje_exito = QMessageBox()
-        mensaje_exito.setWindowTitle("Éxito")
-        mensaje_exito.setText(f"Datos insertados correctamente en la tabla {tabla}")
-        mensaje_exito.setIcon(QMessageBox.Information)
-        mensaje_exito.exec_()
     except Exception as e:
         mensaje_error = QMessageBox()
         mensaje_error.setWindowTitle("Error")

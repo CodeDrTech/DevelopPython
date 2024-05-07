@@ -1,7 +1,1 @@
-{
-    "host": "localhost",
-    "user": "root",
-    "password": "Jose.Luis.8715",
-    "database": "ventas",
-    "port": 3306
-}
+DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=Ventas;UID=sa;PWD=Jose.Luis.8715;

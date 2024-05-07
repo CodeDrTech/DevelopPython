@@ -46,7 +46,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>-1</pointsize>
+      <pointsize>1</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -301,14 +301,55 @@ QLabel {
      </property>
     </widget>
    </widget>
-   <widget class="QTableWidget" name="tbDatos">
+   <widget class="QTableView" name="tbDatos">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>-10</y>
-      <width>161</width>
-      <height>61</height>
+      <y>0</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTableView {
+    background-color: #f2f7f4;
+    border: 1px solid #cccccc;
+    selection-background-color: #96bfaa;
+    selection-color: #ffffff;
+}
+
+QTableView QHeaderView {
+    background-color: #c0dacb;
+    color: #333333;
+    border: none;
+}
+
+QTableView QHeaderView::section {
+    background-color: #deede3;
+    color: #333333;
+    padding: 6px;
+    border: 1px solid #1e362d;
+}
+
+QTableView QHeaderView::section:checked {
+    background-color: #96bfaa;
+    color: #ffffff;
+}
+
+QTableView::item {
+    padding: 6px;
+}
+
+QTableView::item:selected {
+    background-color: #96bfaa;
+    color: #ffffff;
+}
+
+QTableView::item:focus {
+    background-color: #96bfaa;
+    color: #ffffff;
+    outline: none;
+}</string>
     </property>
    </widget>
   </widget>

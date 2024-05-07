@@ -1,14 +1,11 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QGraphicsDropShadowEffect, QGraphicsScene, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QGraphicsDropShadowEffect, QGraphicsScene
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
+from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtCore import QDateTime, Qt
 from FrmPrincipal import VentanaPrincipal
-import pymysql
-import json
-from Conexion_db import connect_to_db
 from Consultas_db import insertar_datos_sesion
 
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
@@ -69,54 +66,37 @@ class VentanaLogin(QMainWindow):
 #------------------------------------------------------------------------------------------------------  
 
     def visualizar_datos(self):
-        # Conectar a la base de datos usando la función definida en Conexion_db.py
-        conn = connect_to_db()
-        if conn is not None:
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM empleado")
-            results = cursor.fetchall()
+        # Consulta SELECT * FROM Productos
+        model = QSqlTableModel()
+        model.setTable("empleado")
+        model.select()        
+        self.tbDatos.setModel(model)
 
-            # Configurar QTableWidget
-            self.tbDatos.setRowCount(len(results))
-            self.tbDatos.setColumnCount(len(results[0]))
-            self.tbDatos.setHorizontalHeaderLabels([i[0] for i in cursor.description])
-
-            # Rellenar datos en QTableWidget
-            for row_index, row_data in enumerate(results):
-                for column_index, data in enumerate(row_data):
-                    self.tbDatos.setItem(row_index, column_index, QTableWidgetItem(str(data)))
-
-            # Ajustar el tamaño de las columnas para que se ajusten al contenido
-            self.tbDatos.resizeColumnsToContents()
-
-            # Cerrar la conexión
-            conn.close()
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()    
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------         
     # Obtiene el codigo de idempleado de la tabla empleado al pasarle como parametro el nombre
     # de usuario que viene de la caja de texto de la ventana de login. Este codigo de usuario
     # se usa para obtener datos como contrasena entre otras cosas.
     def obtener_codigo_empleado(self, usuario):
-        conn = connect_to_db()
-        if conn is not None:
-            try:
-                cursor = conn.cursor()
-                query = "SELECT idempleado FROM empleado WHERE usuario = %s"
-                print("Ejecutando query:", query % usuario)  # Imprime el query que se va a ejecutar
-                cursor.execute(query, (usuario,))
-                result = cursor.fetchone()
-                if result:
-                    return result[0] if result[0] is not None else -1
-                else:
-                    return -1
-            except Exception as e:
-                print("Error al ejecutar la consulta:", str(e))
-                return -1
-            finally:
-                conn.close()
-        else:
-            return -1
-
+        model = QSqlTableModel()
+        model.setTable('empleado')
+        model.select()
+        
+            
+        # Encuentra el índice de la columna "usuario"
+        usuario_column_index = model.fieldIndex("usuario")
+    
+        # Itera a través de las filas para encontrar el usuario
+        for row in range(model.rowCount()):
+            index = model.index(row, usuario_column_index)
+            if model.data(index) == usuario:
+                # Si se encuentra el usuario, devuelve el número de fila
+                return row
+    
+        # Si no se encuentra el usuario, devuelve -1
+        return -1
         
         
 #------------------------------------------------------------------------------------------------------
@@ -151,28 +131,17 @@ class VentanaLogin(QMainWindow):
     # Al pasar el numero de fila de la tabla como parametro se obtienen los datos de los indices
     # de esa fila.
     def obtener_datos_de_fila(self, fila_id):
-        # Verificar que el índice de fila sea válido
-        if 0 <= fila_id < self.tbDatos.rowCount():
-            # Almacenar los datos de la fila en variables
-            self.columna_0 = self.tbDatos.item(fila_id, 0).text() if self.tbDatos.item(fila_id, 0) else None
-            self.columna_1 = self.tbDatos.item(fila_id, 1).text() if self.tbDatos.item(fila_id, 1) else None
-            self.columna_2 = self.tbDatos.item(fila_id, 2).text() if self.tbDatos.item(fila_id, 2) else None
-            self.columna_9 = self.tbDatos.item(fila_id, 9).text() if self.tbDatos.item(fila_id, 9) else None
-            self.columna_10 = self.tbDatos.item(fila_id, 10).text() if self.tbDatos.item(fila_id, 10) else None
-            self.columna_11 = self.tbDatos.item(fila_id, 11).text() if self.tbDatos.item(fila_id, 11) else None
+        # Obtener el modelo de datos del QTableView
+        modelo = self.tbDatos.model()
+        if modelo is not None and 0 <= fila_id < modelo.rowCount():
             
-            # Crear un diccionario para almacenar los datos de la fila
-            datos_fila = {
-                'columna_0': self.columna_0,
-                'columna_1': self.columna_1,
-                'columna_2': self.columna_2,
-                'columna_9': self.columna_9,
-                'columna_10': self.columna_10,
-                'columna_11': self.columna_11
-            }
-            return datos_fila
-        else:
-            return None
+            # Obtener los datos de la fila seleccionada
+            self.valor_columna_0 = modelo.index(fila_id, 0).data()
+            self.valor_columna_1 = modelo.index(fila_id, 1).data()
+            self.valor_columna_2 = modelo.index(fila_id, 2).data()
+            self.valor_columna_9 = modelo.index(fila_id, 9).data()
+            self.valor_columna_10 = modelo.index(fila_id, 10).data()
+            self.valor_columna_11 = modelo.index(fila_id, 11).data()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------             
     # Evalua el usuario y la contrasena que se ingreso en la ventana login para buscarlo en la base de
@@ -195,14 +164,12 @@ class VentanaLogin(QMainWindow):
             self.obtener_datos_de_fila(fila)
             
             # Datos recibidos de las funciones anteriores para evaluar el usuario y su rol
-            bd_usuadrio_id = self.columna_0
-            bd_nombre = self.columna_1
-            bd_apellidos = self.columna_2
-            bd_rol = self.columna_9
-            bd_usuario = self.columna_10
-            bd_password = self.columna_11
-            
-            print(bd_usuadrio_id, bd_nombre, bd_apellidos, bd_rol, bd_usuario, bd_password)
+            bd_usuadrio_id = self.valor_columna_0
+            bd_nombre = self.valor_columna_1
+            bd_apellidos = self.valor_columna_2
+            bd_rol = self.valor_columna_9
+            bd_usuario = self.valor_columna_10
+            bd_password = self.valor_columna_11
             
             # Nombre y apellidos para ser enviados al femprincipal para identificar el
             # usuario que inicio sesion con su nombre en la pantalla arriba a la izquierda.
@@ -293,14 +260,11 @@ class VentanaLogin(QMainWindow):
     # insertar un registro en la base de datos del usuario que inicia sesion.
     def insertar_sesion(self, empleadoId, nombre, apellidos, usuario, rol, fechaHora):
         try:
-            conn = connect_to_db()
-            if conn is not None:
-                cursor = conn.cursor()
-                query = "INSERT INTO sesiones (idempleado, nombre, apellidos, usuario, rol, fecha) VALUES (%s, %s, %s, %s, %s, %s)"
-                cursor.execute(query, (empleadoId, nombre, apellidos, usuario, rol, fechaHora))
-                conn.commit()
-                cursor.close()
-                conn.close()
+
+
+            insertar_datos_sesion(empleadoId, nombre, apellidos, usuario, rol, fechaHora)
+
+
         except Exception as e:
             # Mensaje de error al usuario en caso que surja uno.
             mensaje = QMessageBox()
