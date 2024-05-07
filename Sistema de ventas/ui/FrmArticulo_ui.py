@@ -35,7 +35,6 @@ class Ui_MainWindow(object):
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(20, 0, 81, 21))
         font = QFont()
-        font.setPointSize(1)
         font.setBold(True)
         self.label.setFont(font)
         self.label.setStyleSheet(u"QWidget {\n"
@@ -489,7 +488,7 @@ class Ui_MainWindow(object):
 "}")
         self.cmbPresentacion = QComboBox(self.groupBox)
         self.cmbPresentacion.setObjectName(u"cmbPresentacion")
-        self.cmbPresentacion.setGeometry(QRect(580, 90, 100, 25))
+        self.cmbPresentacion.setGeometry(QRect(410, 90, 100, 25))
         self.cmbPresentacion.setStyleSheet(u"/* Estilos para QComboBox */\n"
 "QComboBox {\n"
 "    background-color: #96bfab;\n"
@@ -514,7 +513,7 @@ class Ui_MainWindow(object):
 "}")
         self.cmbCategoria = QComboBox(self.groupBox)
         self.cmbCategoria.setObjectName(u"cmbCategoria")
-        self.cmbCategoria.setGeometry(QRect(580, 30, 100, 25))
+        self.cmbCategoria.setGeometry(QRect(410, 30, 100, 25))
         self.cmbCategoria.setStyleSheet(u"/* Estilos para QComboBox */\n"
 "QComboBox {\n"
 "    background-color: #96bfab;\n"
@@ -539,7 +538,7 @@ class Ui_MainWindow(object):
 "}")
         self.label_7 = QLabel(self.groupBox)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setGeometry(QRect(480, 30, 81, 21))
+        self.label_7.setGeometry(QRect(310, 30, 81, 21))
         self.label_7.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
@@ -551,8 +550,32 @@ class Ui_MainWindow(object):
 "}")
         self.label_9 = QLabel(self.groupBox)
         self.label_9.setObjectName(u"label_9")
-        self.label_9.setGeometry(QRect(460, 90, 111, 21))
+        self.label_9.setGeometry(QRect(290, 90, 111, 21))
         self.label_9.setStyleSheet(u"QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_Categoria = QLabel(self.groupBox)
+        self.label_Categoria.setObjectName(u"label_Categoria")
+        self.label_Categoria.setGeometry(QRect(520, 30, 191, 21))
+        self.label_Categoria.setStyleSheet(u"QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_Presentacion = QLabel(self.groupBox)
+        self.label_Presentacion.setObjectName(u"label_Presentacion")
+        self.label_Presentacion.setGeometry(QRect(520, 90, 191, 21))
+        self.label_Presentacion.setStyleSheet(u"QWidget {\n"
 "    background-color: var(--jade-50);\n"
 "}\n"
 "\n"
@@ -606,6 +629,8 @@ class Ui_MainWindow(object):
         self.btnLimpiar.setText(QCoreApplication.translate("MainWindow", u"Limpiar", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Categoria", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"Presentacion", None))
+        self.label_Categoria.setText(QCoreApplication.translate("MainWindow", u"Herramientas manuales", None))
+        self.label_Presentacion.setText(QCoreApplication.translate("MainWindow", u"Unidad", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Mantenimiento", None))
     # retranslateUi
 

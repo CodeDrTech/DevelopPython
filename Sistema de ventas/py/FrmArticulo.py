@@ -42,6 +42,8 @@ class VentanaArticulo(QMainWindow):
         self.btnLimpiar.clicked.connect(self.limpiar_imagen)
         self.btnCargar.clicked.connect(self.cargar_imagen)
         
+        self.cmbCategoria.currentTextChanged.connect(self.actualizar_label_categoria)
+        
         
         # Crear un efecto de sombra en el tabpage y los groupBox.       
         tabWidget_shadow = QGraphicsDropShadowEffect()
@@ -63,6 +65,12 @@ class VentanaArticulo(QMainWindow):
         # Conectar el evento de clic para borrar el texto
         self.txtBuscar.setPlaceholderText('Buscar')        
         self.txtBuscar.mousePressEvent = self.borrarTexto
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+    def actualizar_label_categoria(self):
+        cmbText = self.cmbCategoria.currentText()
+        self.label_Categoria.setText(cmbText)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
     def visualiza_datos(self):
@@ -335,6 +343,7 @@ class VentanaArticulo(QMainWindow):
         self.cargar_presentacion()
         self.cargar_categoria() 
         self.visualiza_datos()
+        self.actualizar_label_categoria()
 
         # Al cargar el formulario se insertan en el control codigo. Barr 
         # el codigo siguiente siguiendo una secuencia de uso para los nuevos articulos.

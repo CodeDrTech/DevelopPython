@@ -126,6 +126,7 @@ class VentanaLogin(QMainWindow):
         self.llamar_venana_principal.showMaximized()
         self.llamar_venana_principal.etiqueta_usuario(rol, nombre_usuario)
         self.hide() # Oculto el formulario de login al iniciar la ventana principal.
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------      
     # Al pasar el numero de fila de la tabla como parametro se obtienen los datos de los indices
