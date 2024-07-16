@@ -18,7 +18,7 @@ class VentanaBuscarArticuloVentas(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Buscar Articulos .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('SSistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
         # Botones del formulario y sus funciones
         self.btnBuscar.clicked.connect(self.buscar_articulo)
