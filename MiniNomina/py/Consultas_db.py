@@ -68,7 +68,7 @@ def mostrar_datos_de_empleados(tbtabla):
     # Ajustar el tamaño de las columnas para que se ajusten al contenido
     tbtabla.resizeColumnsToContents()
     # Le da formato moneda a la columna con el indice 2.
-    tbtabla.setItemDelegateForColumn(2, currency_delegate)
+    tbtabla.setItemDelegateForColumn(3, currency_delegate)
     
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
