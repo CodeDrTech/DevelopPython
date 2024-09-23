@@ -1,0 +1,1 @@
+DRIVER={SQL Server Native Client 11.0};SERVER=LAPTOPTECNOLOGI;DATABASE=gestion_equipos;UID=sa;PWD=Ye.891916;
