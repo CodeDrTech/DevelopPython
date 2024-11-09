@@ -1,0 +1,27 @@
+# Ignorar el entorno virtual
+Entrega_De_equipos/Lib/
+Entrega_De_equipos/Scripts/
+Entrega_De_equipos/Include/
+Entrega_De_equipos/pyvenv.cfg
+
+# Archivos y carpetas comunes de Python
+*.pyc
+__pycache__/
+*.egg-info/
+
+# Configuraciones de Visual Studio Code
+.vscode/
+
+# Archivos de construcción y distribución
+build/
+dist/
+
+# Archivos de entorno y bloqueos
+.env
+*.lock
+
+# Archivos de log
+*.log
+
+# Carpetas adicionales
+.idx/
