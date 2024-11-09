@@ -1,8 +1,11 @@
-# Ignorar el entorno virtual
+# Ignorar el entorno virtual en Entrega_De_equipos
 Entrega_De_equipos/Lib/
 Entrega_De_equipos/Scripts/
 Entrega_De_equipos/Include/
 Entrega_De_equipos/pyvenv.cfg
+
+# Permitir específicamente los archivos .py en la carpeta Entrega_De_equipos
+!Entrega_De_equipos/*.py
 
 # Archivos y carpetas comunes de Python
 *.pyc
