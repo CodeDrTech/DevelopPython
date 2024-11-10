@@ -4,8 +4,8 @@ Entrega_De_equipos/Scripts/
 Entrega_De_equipos/Include/
 Entrega_De_equipos/pyvenv.cfg
 
-# Asegurarse de que el resto de archivos y carpetas en Entrega_De_equipos no sean ignorados
-!Entrega_De_equipos/*
+# Permitir explícitamente otros archivos y carpetas dentro de Entrega_De_equipos
+!Entrega_De_equipos/**/*
 
 # Archivos y carpetas comunes de Python
 *.pyc
