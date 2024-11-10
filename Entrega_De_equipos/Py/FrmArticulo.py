@@ -19,7 +19,7 @@ from PIL import Image
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
 class VentanaArticulo(QMainWindow):
     # Con esta variable se le informa al formulario principal (MDI) 
-    # que este formulario esta abierto y si es llamado no se abra otra vez..
+    # que este formulario esta abierto y si es llamado no se abra otra vez.
     ventana_abierta = False
     
     def __init__(self):
