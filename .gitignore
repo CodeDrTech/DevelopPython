@@ -4,15 +4,13 @@ Entrega_De_equipos/Scripts/
 Entrega_De_equipos/Include/
 Entrega_De_equipos/pyvenv.cfg
 
-# Asegurarse de que Git incluya las subcarpetas 'Py,' 'Txt,' y 'Ui' en Entrega_De_equipos
-!Entrega_De_equipos/Py/
-!Entrega_De_equipos/Txt/
-!Entrega_De_equipos/Ui/
+# Permitir todas las subcarpetas en Entrega_De_equipos
+!Entrega_De_equipos/
+!Entrega_De_equipos/*/
+!Entrega_De_equipos/*/*.py
+!Entrega_De_equipos/*/*.ui
+!Entrega_De_equipos/*/*.txt
 
-# Incluir los archivos .py, .txt, y .ui en las subcarpetas
-!Entrega_De_equipos/Py/*.py
-!Entrega_De_equipos/Txt/*.txt
-!Entrega_De_equipos/Ui/*.ui
 
 # Archivos y carpetas comunes de Python
 *.pyc
