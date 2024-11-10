@@ -1,11 +1,18 @@
-# Ignorar el entorno virtual específico sin ignorar el resto de la carpeta
+# Ignorar solo el entorno virtual dentro de Entrega_De_equipos
 Entrega_De_equipos/Lib/
 Entrega_De_equipos/Scripts/
 Entrega_De_equipos/Include/
 Entrega_De_equipos/pyvenv.cfg
 
-# Permitir todos los archivos y carpetas dentro de Entrega_De_equipos, excepto las especificadas arriba
-!Entrega_De_equipos/
+# Asegurarse de que Git incluya las subcarpetas 'Py,' 'Txt,' y 'Ui' en Entrega_De_equipos
+!Entrega_De_equipos/Py/
+!Entrega_De_equipos/Txt/
+!Entrega_De_equipos/Ui/
+
+# Incluir los archivos .py, .txt, y .ui en las subcarpetas
+!Entrega_De_equipos/Py/*.py
+!Entrega_De_equipos/Txt/*.txt
+!Entrega_De_equipos/Ui/*.ui
 
 # Archivos y carpetas comunes de Python
 *.pyc
