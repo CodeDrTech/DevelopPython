@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.setWindowModality(Qt.WindowModality.NonModal)
+        MainWindow.setWindowModality(Qt.NonModal)
         MainWindow.resize(1019, 658)
         MainWindow.setStyleSheet(u"QWidget {\n"
 "    background-color: #deede3;\n"

@@ -31,6 +31,7 @@ class VentanaArticulo(QMainWindow):
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Articulos .:.')
         self.setFixedSize(self.size())
+        # Qt::NonModal
         #self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
         
         #self.imagen_cargada = None
@@ -39,15 +40,15 @@ class VentanaArticulo(QMainWindow):
         #self.btnGuardar.clicked.connect(self.insertar_datos)
         #self.btnEditar.clicked.connect(self.editar_datos)
         #self.btnBuscar.clicked.connect(self.buscar_articulo)
-        #self.btnLimpiar.clicked.connect(self.limpiar_imagen)
-        #self.btnCargar.clicked.connect(self.cargar_imagen)
+        self.btnLimpiar.clicked.connect(self.limpiar_imagen)
+        self.btnCargar.clicked.connect(self.cargar_imagen)
         
         
         # Crear un efecto de sombra en el tabpage y los groupBox.       
         tabWidget_shadow = QGraphicsDropShadowEffect()
         tabWidget_shadow.setBlurRadius(20)
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
-        self.tabWidget.setGraphicsEffect(tabWidget_shadow)
+        self.tabContrato.setGraphicsEffect(tabWidget_shadow)
         
         groupBox_shadow = QGraphicsDropShadowEffect()
         groupBox_shadow.setBlurRadius(20)
