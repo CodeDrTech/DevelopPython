@@ -27,7 +27,7 @@
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>81</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -49,10 +49,10 @@ QLabel {
 }</string>
     </property>
     <property name="text">
-     <string>Articulos</string>
+     <string>Contartos</string>
     </property>
    </widget>
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QTabWidget" name="tabs">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -90,7 +90,7 @@ QLineEdit::placeholder {
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="tabListado">
      <attribute name="title">
       <string>Listado</string>
      </attribute>
@@ -316,9 +316,24 @@ QTableView::item:focus {
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="tabUsuario">
      <attribute name="title">
-      <string>Mantenimiento</string>
+      <string>Datos de usuario</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabEquipo">
+     <attribute name="title">
+      <string>Datos del equipo</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabImagenEquipo">
+     <attribute name="title">
+      <string>Imagenes</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabContrato">
+     <attribute name="title">
+      <string>Contrato</string>
      </attribute>
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">

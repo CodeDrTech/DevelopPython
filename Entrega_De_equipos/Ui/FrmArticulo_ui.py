@@ -33,7 +33,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(20, 0, 81, 21))
+        self.label.setGeometry(QRect(20, 0, 91, 21))
         font = QFont()
         font.setBold(True)
         self.label.setFont(font)
@@ -46,10 +46,10 @@ class Ui_MainWindow(object):
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
 "}")
-        self.tabWidget = QTabWidget(self.centralwidget)
-        self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(10, 30, 981, 581))
-        self.tabWidget.setStyleSheet(u"QLineEdit {\n"
+        self.tabs = QTabWidget(self.centralwidget)
+        self.tabs.setObjectName(u"tabs")
+        self.tabs.setGeometry(QRect(10, 30, 981, 581))
+        self.tabs.setStyleSheet(u"QLineEdit {\n"
 "    background-color: #96bfab;\n"
 "    border: 1px solid #cccccc;\n"
 "    padding: 6px;\n"
@@ -70,9 +70,9 @@ class Ui_MainWindow(object):
 "    color: #1e362d;\n"
 "    font-weight: bold;\n"
 "}")
-        self.tab = QWidget()
-        self.tab.setObjectName(u"tab")
-        self.groupBox_2 = QGroupBox(self.tab)
+        self.tabListado = QWidget()
+        self.tabListado.setObjectName(u"tabListado")
+        self.groupBox_2 = QGroupBox(self.tabListado)
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.groupBox_2.setGeometry(QRect(20, 10, 931, 521))
         self.groupBox_2.setStyleSheet(u"QGroupBox {\n"
@@ -219,10 +219,19 @@ class Ui_MainWindow(object):
 "    color: #ffffff;\n"
 "    outline: none;\n"
 "}")
-        self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QWidget()
-        self.tab_2.setObjectName(u"tab_2")
-        self.groupBox = QGroupBox(self.tab_2)
+        self.tabs.addTab(self.tabListado, "")
+        self.tabUsuario = QWidget()
+        self.tabUsuario.setObjectName(u"tabUsuario")
+        self.tabs.addTab(self.tabUsuario, "")
+        self.tabEquipo = QWidget()
+        self.tabEquipo.setObjectName(u"tabEquipo")
+        self.tabs.addTab(self.tabEquipo, "")
+        self.tabImagenEquipo = QWidget()
+        self.tabImagenEquipo.setObjectName(u"tabImagenEquipo")
+        self.tabs.addTab(self.tabImagenEquipo, "")
+        self.tabContrato = QWidget()
+        self.tabContrato.setObjectName(u"tabContrato")
+        self.groupBox = QGroupBox(self.tabContrato)
         self.groupBox.setObjectName(u"groupBox")
         self.groupBox.setGeometry(QRect(10, 20, 721, 351))
         self.groupBox.setStyleSheet(u"QGroupBox {\n"
@@ -584,7 +593,7 @@ class Ui_MainWindow(object):
 "    font-size: 16px;\n"
 "    font-weight: bold;\n"
 "}")
-        self.tabWidget.addTab(self.tab_2, "")
+        self.tabs.addTab(self.tabContrato, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -592,7 +601,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabs.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -600,9 +609,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Articulos", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Contartos", None))
 #if QT_CONFIG(tooltip)
-        self.tabWidget.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><br/></p></body></html>", None))
+        self.tabs.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><br/></p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.groupBox_2.setTitle("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
@@ -611,7 +620,10 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.btnBuscar.setText(QCoreApplication.translate("MainWindow", u"Buscar", None))
         self.btnImprimir.setText(QCoreApplication.translate("MainWindow", u"Imprimir", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Listado", None))
+        self.tabs.setTabText(self.tabs.indexOf(self.tabListado), QCoreApplication.translate("MainWindow", u"Listado", None))
+        self.tabs.setTabText(self.tabs.indexOf(self.tabUsuario), QCoreApplication.translate("MainWindow", u"Datos de usuario", None))
+        self.tabs.setTabText(self.tabs.indexOf(self.tabEquipo), QCoreApplication.translate("MainWindow", u"Datos del equipo", None))
+        self.tabs.setTabText(self.tabs.indexOf(self.tabImagenEquipo), QCoreApplication.translate("MainWindow", u"Imagenes", None))
         self.groupBox.setTitle("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Codigo", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
@@ -631,6 +643,6 @@ class Ui_MainWindow(object):
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"Presentacion", None))
         self.label_Categoria.setText(QCoreApplication.translate("MainWindow", u"Herramientas manuales", None))
         self.label_Presentacion.setText(QCoreApplication.translate("MainWindow", u"Unidad", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Mantenimiento", None))
+        self.tabs.setTabText(self.tabs.indexOf(self.tabContrato), QCoreApplication.translate("MainWindow", u"Contrato", None))
     # retranslateUi
 
