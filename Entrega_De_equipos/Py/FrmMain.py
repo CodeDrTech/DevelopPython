@@ -12,7 +12,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
 
 from PIL import Image
 
-from Entrega_De_equipos.Py.Conexion_db import connect_to_db
+
+from Conexion_db import connect_to_db
 
 
 # Correccion de error de ejecucion <enum>Qt::NonModal</enum>
@@ -90,7 +91,7 @@ class VentanaArticulo(QMainWindow):
 
         try:
             cursor = conn.cursor()
-            query = "SELECT * FROM Usuario ORDER BY fecha_creacion DESC"  # Ajusta 'fecha_creacion' al nombre de tu columna de fecha
+            query = "SELECT * FROM Usuario ORDER BY idUsuario DESC"  # Ajusta 'fecha_creacion' al nombre de tu columna de fecha
             cursor.execute(query)
             
             usuarios = cursor.fetchall()  # Recuperar todos los registros
