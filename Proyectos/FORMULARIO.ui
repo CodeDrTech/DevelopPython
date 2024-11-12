@@ -19,9 +19,31 @@
      <rect>
       <x>20</x>
       <y>40</y>
-      <width>75</width>
-      <height>23</height>
+      <width>181</width>
+      <height>71</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+QPushButton:hover {
+    background-color: #45a049;
+}
+
+QPushButton:pressed {
+    background-color: #388e3c;
+    padding-left: 12px;
+    padding-top: 12px;
+    shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+}
+</string>
     </property>
     <property name="text">
      <string>SALIR</string>
