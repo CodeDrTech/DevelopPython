@@ -320,16 +320,220 @@ QTableView::item:focus {
      <attribute name="title">
       <string>Datos de usuario</string>
      </attribute>
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>931</width>
+        <height>521</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+    border: 2px solid #1e362d;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: var(--jade-50);
+}
+
+QGroupBox:title {
+    color: #1e362d;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+</string>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QPushButton" name="btnBuscar_2">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>20</y>
+         <width>85</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
+    color: #ffffff;
+    border: 1px solid #1e362d;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
+}</string>
+       </property>
+       <property name="text">
+        <string>Buscar</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="tabEquipo">
      <attribute name="title">
       <string>Datos del equipo</string>
      </attribute>
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>931</width>
+        <height>521</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+    border: 2px solid #1e362d;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: var(--jade-50);
+}
+
+QGroupBox:title {
+    color: #1e362d;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+</string>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QPushButton" name="btnBuscar_3">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>20</y>
+         <width>85</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
+    color: #ffffff;
+    border: 1px solid #1e362d;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
+}</string>
+       </property>
+       <property name="text">
+        <string>Buscar</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="tabImagenEquipo">
      <attribute name="title">
       <string>Imagenes</string>
      </attribute>
+     <widget class="QGroupBox" name="groupBox_5">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>931</width>
+        <height>521</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+    border: 2px solid #1e362d;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: var(--jade-50);
+}
+
+QGroupBox:title {
+    color: #1e362d;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: none;
+}
+</string>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QPushButton" name="btnBuscar_4">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>20</y>
+         <width>85</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #c0dacb, stop: 1 #96bfab);
+    color: #ffffff;
+    border: 1px solid #1e362d;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #689f84, stop: 1 #96bfaa);
+    border: 1px solid #96bfaa;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #2a5242, stop: 1 #32624d);
+    border: 1px solid #32624d;
+}</string>
+       </property>
+       <property name="text">
+        <string>Buscar</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="tabContrato">
      <attribute name="title">
@@ -338,8 +542,8 @@ QTableView::item:focus {
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>20</y>
+        <x>20</x>
+        <y>10</y>
         <width>721</width>
         <height>351</height>
        </rect>

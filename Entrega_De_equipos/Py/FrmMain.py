@@ -12,10 +12,9 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
 
 from PIL import Image
 
-#from Consultas_db import insertar_nuevo_articulo, obtener_codigo_articulo, generar_nuevo_codigo_articulo,\
-                            #obtener_ultimo_codigo, generar_nuevo_codigo
+from Consultas_db import obtener_datos_contratos #insertar_nuevo_articulo
 
-
+# Correccion de error de ejecucion <enum>Qt::NonModal</enum>
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
 class VentanaArticulo(QMainWindow):
     # Con esta variable se le informa al formulario principal (MDI) 
@@ -29,10 +28,10 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Mantenimiento de Articulos .:.')
+        self.setWindowTitle('.:. Registro de enga de equipos .:.')
         self.setFixedSize(self.size())
-        # Qt::NonModal
-        #self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        
+        self.setWindowIcon(QtGui.QIcon('Entrega_De_equipos/Png/configuracion.png'))
         
         #self.imagen_cargada = None
         
@@ -59,6 +58,21 @@ class VentanaArticulo(QMainWindow):
         groupBox_2shadow.setBlurRadius(20)
         groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
         self.groupBox_2.setGraphicsEffect(groupBox_2shadow)
+        
+        groupBox_2shadow = QGraphicsDropShadowEffect()
+        groupBox_2shadow.setBlurRadius(20)
+        groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox_3.setGraphicsEffect(groupBox_2shadow)
+        
+        groupBox_2shadow = QGraphicsDropShadowEffect()
+        groupBox_2shadow.setBlurRadius(20)
+        groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox_4.setGraphicsEffect(groupBox_2shadow)
+        
+        groupBox_2shadow = QGraphicsDropShadowEffect()
+        groupBox_2shadow.setBlurRadius(20)
+        groupBox_2shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
+        self.groupBox_5.setGraphicsEffect(groupBox_2shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
