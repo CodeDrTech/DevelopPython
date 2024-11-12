@@ -12,7 +12,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
 
 from PIL import Image
 
-from Consultas_db import obtener_datos_contratos #insertar_nuevo_articulo
+from Entrega_De_equipos.Py.Conexion_db import connect_to_db
+
 
 # Correccion de error de ejecucion <enum>Qt::NonModal</enum>
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
@@ -75,7 +76,34 @@ class VentanaArticulo(QMainWindow):
         self.groupBox_5.setGraphicsEffect(groupBox_2shadow)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
+# Obtener todos los usuarios ordenados del más reciente al más antiguo
+    def obtener_datos_usuarios(self):
+        conn = connect_to_db()
+        if not conn:
+            # Mostrar mensaje si no se establece la conexión
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error")
+            mensaje.setText("No se pudo establecer la conexión con la base de datos.")
+            mensaje.exec_()
+            return None
 
+        try:
+            cursor = conn.cursor()
+            query = "SELECT * FROM Usuario ORDER BY fecha_creacion DESC"  # Ajusta 'fecha_creacion' al nombre de tu columna de fecha
+            cursor.execute(query)
+            
+            usuarios = cursor.fetchall()  # Recuperar todos los registros
+            
+            conn.close()  # Cerrar la conexión
+            return usuarios  # Retornar la lista de usuarios
+        except Exception as e:
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Critical)
+            mensaje.setWindowTitle("Error al obtener usuarios")
+            mensaje.setText(f"Ocurrió un error: {str(e)}")
+            mensaje.exec_()
+            return None
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -150,7 +178,9 @@ class VentanaArticulo(QMainWindow):
             mensaje.exec_()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
-    
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.obtener_datos_usuarios()
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
         

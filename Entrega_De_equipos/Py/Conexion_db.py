@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
-# Read the configuration file connection_string.txt, which contains the database connection string
+# Read the configuration file connection_string.txt, which contains the database connection string.
 def read_database_config():
     config_path = "Entrega_De_equipos/Txt/connection_string.txt"
     

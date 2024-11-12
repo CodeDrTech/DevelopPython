@@ -1,11 +1,11 @@
-from Conexion_db import connect_to_db
+from .Conexion_db import connect_to_db
 from PyQt5.QtWidgets import QMessageBox
 
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
-# Recibe el nombre de la tabla como parametro para buscar el ultimo codigo de articulo generado.
+# Recibe el nombre de la tabla como parametro para buscar el ultimo codigo de articulo generado
 def obtener_codigo_articulo(tabla):
     conn = connect_to_db()
     cursor = conn.execute(f"SELECT MAX(Codigo) FROM {tabla}")
