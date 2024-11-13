@@ -79,32 +79,18 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 # Obtener todos los usuarios ordenados del más reciente al más antiguo
     def obtener_datos_usuarios(self):
-        conn = connect_to_db()
-        if not conn:
-            # Mostrar mensaje si no se establece la conexión
-            mensaje = QMessageBox()
-            mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Error")
-            mensaje.setText("No se pudo establecer la conexión con la base de datos.")
-            mensaje.exec_()
-            return None
 
-        try:
-            cursor = conn.cursor()
-            query = "SELECT * FROM Usuario ORDER BY idUsuario DESC"  # Ajusta 'fecha_creacion' al nombre de tu columna de fecha
-            cursor.execute(query)
-            
-            usuarios = cursor.fetchall()  # Recuperar todos los registros
-            
-            conn.close()  # Cerrar la conexión
-            return usuarios  # Retornar la lista de usuarios
-        except Exception as e:
-            mensaje = QMessageBox()
-            mensaje.setIcon(QMessageBox.Critical)
-            mensaje.setWindowTitle("Error al obtener usuarios")
-            mensaje.setText(f"Ocurrió un error: {str(e)}")
-            mensaje.exec_()
-            return None
+        query = QSqlQuery()
+        query.exec_(f"SELECT * FROM Usuario")
+        
+        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
+        model = QSqlTableModel()    
+        model.setQuery(query)        
+        self.tbDatos.setModel(model)
+
+        # Ajustar el tamaño de las columnas para que se ajusten al contenido
+        self.tbDatos.resizeColumnsToContents()
+        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
