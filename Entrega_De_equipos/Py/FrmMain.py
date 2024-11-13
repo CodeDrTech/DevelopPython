@@ -40,7 +40,7 @@ class VentanaArticulo(QMainWindow):
         # Botones del formulario y sus funciones.
         #self.btnGuardar.clicked.connect(self.insertar_datos)
         #self.btnEditar.clicked.connect(self.editar_datos)
-        #self.btnBuscar.clicked.connect(self.buscar_articulo)
+        self.btnBuscar.clicked.connect(self.obtener_datos_usuarios)
         self.btnLimpiar.clicked.connect(self.limpiar_imagen)
         self.btnCargar.clicked.connect(self.cargar_imagen)
         
