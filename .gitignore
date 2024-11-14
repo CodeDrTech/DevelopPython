@@ -4,12 +4,13 @@ Entrega_De_equipos/Scripts/
 Entrega_De_equipos/Include/
 Entrega_De_equipos/pyvenv.cfg
 
-
-# Ignorar solo el entorno virtual dentro de Entrega_De_equipos
-#Entrega_De_equipos/Lib/
-#Entrega_De_equipos/Scripts/
-#Entrega_De_equipos/Include/
-#Flet/CursoFlet/pyvenv.cfg
+# Ignorar solo el entorno virtual dentro de Flet
+Flet/CursoFlet/Lib/
+Flet/CursoFlet/Scripts/
+Flet/CursoFlet/Include/
+Flet/CursoFlet/Share/          # Agregado para ignorar la carpeta Share
+Flet/CursoFlet/pyvenv.cfg
+Flet/Link.txt
 
 # Permitir explícitamente otros archivos y carpetas dentro de Entrega_De_equipos
 #!Entrega_De_equipos/**/*
