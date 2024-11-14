@@ -79,8 +79,13 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 # Obtener todos los usuarios ordenados del más reciente al más antiguo
     def obtener_datos_usuarios(self):
-
-        query = QSqlQuery()
+        db = connect_to_db()  # Llama a la función para abrir la conexión
+        
+        if db is None:
+            QMessageBox.critical(self, "Error", "No se pudo conectar a la base de datos.")
+            return
+        
+        
         query.exec_(f"SELECT * FROM Usuario")
         
         # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
@@ -168,6 +173,7 @@ class VentanaArticulo(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         self.obtener_datos_usuarios()
+        
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     
         
