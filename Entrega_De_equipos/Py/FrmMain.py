@@ -13,7 +13,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
 from PIL import Image
 
 
-from Conexion_db import connect_to_db
+from Py.Conexion_db import connect_to_db
 
 
 # Correccion de error de ejecucion <enum>Qt::NonModal</enum>
