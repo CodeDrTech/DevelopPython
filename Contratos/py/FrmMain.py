@@ -13,7 +13,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap
 from PIL import Image
 
 
-from py.Conexion_db import connect_to_db
+from py.Conexion_db import connect_to_db, close_db
 
 
 # Correccion de error de ejecucion <enum>Qt::NonModal</enum>
@@ -79,23 +79,31 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 # Obtener todos los usuarios ordenados del más reciente al más antiguo
     def obtener_datos_usuarios(self):
-        db = connect_to_db()  # Llama a la función para abrir la conexión
-        query = QSqlQuery()
-        if db is None:
+        db = connect_to_db()
+        if not db:
             QMessageBox.critical(self, "Error", "No se pudo conectar a la base de datos.")
             return
-        
-        
-        query.exec_(f"SELECT * FROM Usuario")
-        
-        # Crear un modelo de tabla SQL ejecuta el query y establecer el modelo en la tabla
-        model = QSqlTableModel()    
-        model.setQuery(query)        
-        self.tbDatos.setModel(model)
-
-        # Ajustar el tamaño de las columnas para que se ajusten al contenido
-        self.tbDatos.resizeColumnsToContents()
-        self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            
+        try:
+            # Crear y configurar el modelo
+            model = QSqlTableModel(self, db)
+            model.setTable("Usuario")
+            
+            if not model.select():
+                print(f"Error al seleccionar datos: {model.lastError().text()}")
+                QMessageBox.critical(self, "Error", f"Error al obtener datos: {model.lastError().text()}")
+                return
+                
+            self.tbDatos.setModel(model)
+            self.tbDatos.resizeColumnsToContents()
+            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            
+        except Exception as e:
+            print(f"Error inesperado: {str(e)}")
+            QMessageBox.critical(self, "Error", f"Error inesperado: {str(e)}")
+        finally:
+            if db:
+                close_db(db)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -173,6 +181,7 @@ class VentanaArticulo(QMainWindow):
     def showEvent(self, event):
         super().showEvent(event)
         self.obtener_datos_usuarios()
+        
         
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------     

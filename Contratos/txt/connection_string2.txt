@@ -1,1 +1,1 @@
-DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=Ventas;UID=sa;PWD=Jose.Luis.8715;
+DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=Contratos;UID=sa;PWD=Jose.Luis.8715;
