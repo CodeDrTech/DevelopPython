@@ -1,8 +1,8 @@
 # Ignorar solo el entorno virtual dentro de Entrega_De_equipos
-Entrega_De_equipos/Lib/
-Entrega_De_equipos/Scripts/
-Entrega_De_equipos/Include/
-Entrega_De_equipos/pyvenv.cfg
+Contratos/Lib/
+Contratos/Scripts/
+Contratos/Include/
+Contratos/pyvenv.cfg
 
 # Ignorar solo el entorno virtual dentro de Flet
 Flet/CursoFlet/Lib/
