@@ -80,7 +80,7 @@ class VentanaArticulo(QMainWindow):
 # Obtener todos los usuarios ordenados del más reciente al más antiguo
     def obtener_datos_usuarios(self):
         db = connect_to_db()  # Llama a la función para abrir la conexión
-        
+        query = QSqlQuery()
         if db is None:
             QMessageBox.critical(self, "Error", "No se pudo conectar a la base de datos.")
             return
