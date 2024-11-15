@@ -1,4 +1,4 @@
-from Py.Conexion_db import connect_to_db
+from py.Conexion_db import connect_to_db
 from PyQt5.QtWidgets import QMessageBox
 
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
