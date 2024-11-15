@@ -5,7 +5,7 @@ import os
 def get_connection_string():
     try:
         # Obtener la ruta al archivo de conexión
-        connection_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'txt', 'connection_string.txt')
+        connection_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'txt', 'connection_string2.txt')
         
         # Leer la cadena de conexión del archivo
         with open(connection_file, 'r') as file:
