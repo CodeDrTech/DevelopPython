@@ -25,7 +25,7 @@ class VentanaArticulo(QMainWindow):
     
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Entrega_De_equipos/Ui/FrmMain.ui',self)
+        uic.loadUi('Contratos/ui/FrmMain.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
@@ -33,7 +33,7 @@ class VentanaArticulo(QMainWindow):
         self.setWindowTitle('.:. Registro de enga de equipos .:.')
         self.setFixedSize(self.size())
         
-        self.setWindowIcon(QtGui.QIcon('Entrega_De_equipos/Png/configuracion.png'))
+        self.setWindowIcon(QtGui.QIcon('Contratos/images/configuracion.png'))
         
         #self.imagen_cargada = None
         
