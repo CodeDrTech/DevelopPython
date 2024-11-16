@@ -88,23 +88,29 @@ class Main(QMainWindow):
         try:
             # Crear la consulta SQL
             query = QSqlQuery(self.db)
-            query.prepare("""
-                SELECT 
-                    idUsuario AS 'ID',
-                    nombres AS 'Nombre',
-                    apellidos AS 'Apellido',
-                    cedula AS 'Cédula',
-                    numeroEmpleado AS 'Número de Empleado'
-                FROM Usuario
-            """)
+            query.prepare('''SELECT 
+                u.nombres AS Nombre,
+                u.apellidos AS Apellido,
+                u.cedula AS Cedula,
+                u.numeroEmpleado AS Empleado,
+                e.marca AS Marca,
+                e.modelo AS Modelo,
+                e.condicion AS Condicion,
+                c.numeroContrato AS NumeroContrato,
+                c.fecha AS Fecha
+            FROM Usuario u
+            INNER JOIN Equipo e ON u.idUsuario = e.idUsuario
+            INNER JOIN Contrato c ON u.idUsuario = c.idUsuario AND e.idEquipo = c.idEquipo
+            ORDER BY c.fecha DESC''')
             
             # Crear y configurar el modelo
             model = QStandardItemModel()
             
             # Ejecutar la consulta
             if query.exec_():
-                # Configurar las cabeceras
-                headers = ['ID', 'Nombre', 'Apellido', 'Cédula', 'Número de Empleado']
+                # Configurar las cabeceras con todas las columnas del SELECT
+                headers = ['Nombre', 'Apellido', 'Cédula', 'Empleado', 'Marca', 
+                        'Modelo', 'Condición', 'Número Contrato', 'Fecha']
                 model.setHorizontalHeaderLabels(headers)
                 
                 # Llenar el modelo con los datos
