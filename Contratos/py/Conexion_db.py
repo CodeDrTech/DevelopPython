@@ -12,41 +12,45 @@ def get_connection_string():
             connection_string = file.read().strip()
             return connection_string
     except Exception as e:
-        print(f"Error leyendo el archivo de conexión: {str(e)}")
+        QMessageBox.critical(None, "Error", f"Error leyendo el archivo de conexión: {str(e)}")
         return None
 
 def connect_to_db():
     try:
-        # Remover conexión existente si existe
         if 'qt_sql_default_connection' in QSqlDatabase.connectionNames():
             QSqlDatabase.removeDatabase('qt_sql_default_connection')
         
-        # Obtener la cadena de conexión
         connection_string = get_connection_string()
         if not connection_string:
-            print("No se pudo obtener la cadena de conexión")
+            QMessageBox.critical(None, "Error", "No se pudo obtener la cadena de conexión")
             return None
         
-        # Crear una nueva conexión
         db = QSqlDatabase.addDatabase('QODBC')
         db.setDatabaseName(connection_string)
         
-        # Intentar abrir la conexión
         if not db.open():
-            print(f"Error al conectar a la base de datos: {db.lastError().text()}")
+            QMessageBox.critical(None, "Error", f"Error al conectar a la base de datos: {db.lastError().text()}")
             return None
             
-        print("Conexión exitosa a SQL Server")
+        # Quitar el mensaje de conexión exitosa
         return db
         
     except Exception as e:
-        print(f"Error en la conexión: {str(e)}")
+        QMessageBox.critical(None, "Error", f"Error en la conexión: {str(e)}")
         return None
 
 def close_db(db):
     if db:
         try:
             db.close()
-            print("Conexión cerrada exitosamente")
+            # Quitar el mensaje de cierre exitoso
         except Exception as e:
-            print(f"Error al cerrar la conexión: {str(e)}")
+            QMessageBox.critical(None, "Error", f"Error al cerrar la conexión: {str(e)}")
+
+def close_db(db):
+    if db:
+        try:
+            db.close()
+            QMessageBox.information(None, "Éxito", "Conexión cerrada exitosamente")
+        except Exception as e:
+            QMessageBox.critical(None, "Error", f"Error al cerrar la conexión: {str(e)}")

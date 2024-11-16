@@ -26,6 +26,8 @@ class VentanaArticulo(QMainWindow):
     def __init__(self):
         super().__init__()        
         uic.loadUi('Contratos/ui/FrmMain.ui',self)
+        # Inicializar la conexión como atributo de la clase
+        self.db = None
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
@@ -85,19 +87,43 @@ class VentanaArticulo(QMainWindow):
             return
             
         try:
+            # Crear la consulta SQL
+            query = QSqlQuery(db)
+            query.prepare("""
+                SELECT 
+                    idUsuario AS 'ID',
+                    nombres AS 'Nombre',
+                    apellidos AS 'Apellido',
+                    cedula AS 'Cédula',
+                    numeroEmpleado AS 'Número de Empleado'
+                FROM Usuario
+            """)
+            
             # Crear y configurar el modelo
-            model = QSqlTableModel(self, db)
-            model.setTable("Usuario")
+            model = QStandardItemModel()
             
-            if not model.select():
-                print(f"Error al seleccionar datos: {model.lastError().text()}")
-                QMessageBox.critical(self, "Error", f"Error al obtener datos: {model.lastError().text()}")
-                return
+            # Ejecutar la consulta
+            if query.exec_():
+                # Configurar las cabeceras
+                headers = ['ID', 'Nombre', 'Apellido', 'Cédula', 'Número de Empleado']
+                model.setHorizontalHeaderLabels(headers)
                 
-            self.tbDatos.setModel(model)
-            self.tbDatos.resizeColumnsToContents()
-            self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
-            
+                # Llenar el modelo con los datos
+                row = 0
+                while query.next():
+                    for col in range(len(headers)):
+                        item = QStandardItem(str(query.value(col)))
+                        model.setItem(row, col, item)
+                    row += 1
+                    
+                self.tbDatos.setModel(model)
+                self.tbDatos.resizeColumnsToContents()
+                self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
+                
+            else:
+                print(f"Error al ejecutar la consulta: {query.lastError().text()}")
+                QMessageBox.critical(self, "Error", f"Error al obtener datos: {query.lastError().text()}")
+                
         except Exception as e:
             print(f"Error inesperado: {str(e)}")
             QMessageBox.critical(self, "Error", f"Error inesperado: {str(e)}")
