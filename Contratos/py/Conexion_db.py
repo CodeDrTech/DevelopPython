@@ -51,6 +51,6 @@ def close_db(db):
     if db:
         try:
             db.close()
-            QMessageBox.information(None, "Éxito", "Conexión cerrada exitosamente")
+            #QMessageBox.information(None, "Éxito", "Conexión cerrada exitosamente")
         except Exception as e:
             QMessageBox.critical(None, "Error", f"Error al cerrar la conexión: {str(e)}")

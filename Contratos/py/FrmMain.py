@@ -18,7 +18,7 @@ from py.Conexion_db import connect_to_db, close_db
 
 # Correccion de error de ejecucion <enum>Qt::NonModal</enum>
 #---------------------------------------------Este modulo esta comentado---------------------------------------------------------
-class VentanaArticulo(QMainWindow):
+class Main(QMainWindow):
     # Con esta variable se le informa al formulario principal (MDI) 
     # que este formulario esta abierto y si es llamado no se abra otra vez..
     ventana_abierta = False
@@ -81,14 +81,13 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------
 # Obtener todos los usuarios ordenados del más reciente al más antiguo
     def obtener_datos_usuarios(self):
-        db = connect_to_db()
-        if not db:
-            QMessageBox.critical(self, "Error", "No se pudo conectar a la base de datos.")
+        if not self.db:
+            QMessageBox.critical(self, "Error", "No hay conexión a la base de datos.")
             return
             
         try:
             # Crear la consulta SQL
-            query = QSqlQuery(db)
+            query = QSqlQuery(self.db)
             query.prepare("""
                 SELECT 
                     idUsuario AS 'ID',
@@ -124,12 +123,9 @@ class VentanaArticulo(QMainWindow):
                 print(f"Error al ejecutar la consulta: {query.lastError().text()}")
                 QMessageBox.critical(self, "Error", f"Error al obtener datos: {query.lastError().text()}")
                 
-        except Exception as e:
-            print(f"Error inesperado: {str(e)}")
+        except Exception as e:            
             QMessageBox.critical(self, "Error", f"Error inesperado: {str(e)}")
-        finally:
-            if db:
-                close_db(db)
+
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -206,7 +202,16 @@ class VentanaArticulo(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
     def showEvent(self, event):
         super().showEvent(event)
-        self.obtener_datos_usuarios()
+        # Abrir la conexión cuando se muestra la ventana
+        self.db = connect_to_db()
+        if self.db:
+            self.obtener_datos_usuarios()
+    
+    def closeEvent(self, event):
+        # Cerrar la conexión cuando se cierra la ventana
+        if self.db:
+            close_db(self.db)
+        super().closeEvent(event)
         
         
 #------------------------------------------------------------------------------------------------------
@@ -214,6 +219,6 @@ class VentanaArticulo(QMainWindow):
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)       
-    GUI = VentanaArticulo()
+    GUI = Main()
     GUI.show()
     sys.exit(app.exec_())
