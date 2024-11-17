@@ -43,8 +43,8 @@ class Main(QMainWindow):
         #self.btnGuardar.clicked.connect(self.insertar_datos)
         #self.btnEditar.clicked.connect(self.editar_datos)
         self.btnBuscar.clicked.connect(self.obtener_datos_usuarios)
-        self.btnLimpiar.clicked.connect(self.limpiar_imagen)
-        self.btnCargar.clicked.connect(self.cargar_imagen)
+        self.btnLimpia_imagen.clicked.connect(self.limpiar_imagen)
+        self.btnCargar_imagen.clicked.connect(self.cargar_imagen)
         
         
         # Crear un efecto de sombra en el tabpage y los groupBox.       

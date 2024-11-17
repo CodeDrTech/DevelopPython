@@ -238,9 +238,9 @@ class Ui_MainWindow(object):
 "")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setObjectName("groupBox_3")
-        self.btnBuscar_2 = QtWidgets.QPushButton(self.groupBox_3)
-        self.btnBuscar_2.setGeometry(QtCore.QRect(240, 20, 85, 37))
-        self.btnBuscar_2.setStyleSheet("QPushButton {\n"
+        self.btnGuardar_Usuario = QtWidgets.QPushButton(self.groupBox_3)
+        self.btnGuardar_Usuario.setGeometry(QtCore.QRect(10, 280, 85, 37))
+        self.btnGuardar_Usuario.setStyleSheet("QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
@@ -261,7 +261,155 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnBuscar_2.setObjectName("btnBuscar_2")
+        self.btnGuardar_Usuario.setObjectName("btnGuardar_Usuario")
+        self.txtNombres = QtWidgets.QLineEdit(self.groupBox_3)
+        self.txtNombres.setGeometry(QtCore.QRect(120, 40, 120, 35))
+        self.txtNombres.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtNombres.setReadOnly(True)
+        self.txtNombres.setObjectName("txtNombres")
+        self.label_8 = QtWidgets.QLabel(self.groupBox_3)
+        self.label_8.setGeometry(QtCore.QRect(10, 40, 81, 21))
+        self.label_8.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_8.setObjectName("label_8")
+        self.label_10 = QtWidgets.QLabel(self.groupBox_3)
+        self.label_10.setGeometry(QtCore.QRect(10, 100, 101, 21))
+        self.label_10.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_10.setObjectName("label_10")
+        self.txtApellidos = QtWidgets.QLineEdit(self.groupBox_3)
+        self.txtApellidos.setGeometry(QtCore.QRect(120, 100, 120, 35))
+        self.txtApellidos.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtApellidos.setReadOnly(True)
+        self.txtApellidos.setObjectName("txtApellidos")
+        self.label_11 = QtWidgets.QLabel(self.groupBox_3)
+        self.label_11.setGeometry(QtCore.QRect(10, 160, 61, 21))
+        self.label_11.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_11.setObjectName("label_11")
+        self.txtCodigo_4 = QtWidgets.QLineEdit(self.groupBox_3)
+        self.txtCodigo_4.setGeometry(QtCore.QRect(120, 160, 120, 35))
+        self.txtCodigo_4.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtCodigo_4.setReadOnly(True)
+        self.txtCodigo_4.setObjectName("txtCodigo_4")
+        self.label_12 = QtWidgets.QLabel(self.groupBox_3)
+        self.label_12.setGeometry(QtCore.QRect(10, 220, 61, 21))
+        self.label_12.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_12.setObjectName("label_12")
+        self.txtCodigo_5 = QtWidgets.QLineEdit(self.groupBox_3)
+        self.txtCodigo_5.setGeometry(QtCore.QRect(120, 220, 120, 35))
+        self.txtCodigo_5.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtCodigo_5.setReadOnly(True)
+        self.txtCodigo_5.setObjectName("txtCodigo_5")
         self.tabs.addTab(self.tabUsuario, "")
         self.tabEquipo = QtWidgets.QWidget()
         self.tabEquipo.setObjectName("tabEquipo")
@@ -286,9 +434,46 @@ class Ui_MainWindow(object):
 "")
         self.groupBox_4.setTitle("")
         self.groupBox_4.setObjectName("groupBox_4")
-        self.btnBuscar_3 = QtWidgets.QPushButton(self.groupBox_4)
-        self.btnBuscar_3.setGeometry(QtCore.QRect(240, 20, 85, 37))
-        self.btnBuscar_3.setStyleSheet("QPushButton {\n"
+        self.label_13 = QtWidgets.QLabel(self.groupBox_4)
+        self.label_13.setGeometry(QtCore.QRect(10, 40, 81, 21))
+        self.label_13.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_13.setObjectName("label_13")
+        self.txtID_usuario = QtWidgets.QLineEdit(self.groupBox_4)
+        self.txtID_usuario.setGeometry(QtCore.QRect(120, 40, 120, 35))
+        self.txtID_usuario.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtID_usuario.setReadOnly(True)
+        self.txtID_usuario.setObjectName("txtID_usuario")
+        self.btnGuardar_Equipo = QtWidgets.QPushButton(self.groupBox_4)
+        self.btnGuardar_Equipo.setGeometry(QtCore.QRect(10, 280, 85, 37))
+        self.btnGuardar_Equipo.setStyleSheet("QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
@@ -309,7 +494,118 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnBuscar_3.setObjectName("btnBuscar_3")
+        self.btnGuardar_Equipo.setObjectName("btnGuardar_Equipo")
+        self.label_14 = QtWidgets.QLabel(self.groupBox_4)
+        self.label_14.setGeometry(QtCore.QRect(10, 160, 61, 21))
+        self.label_14.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_14.setObjectName("label_14")
+        self.txtMarca = QtWidgets.QLineEdit(self.groupBox_4)
+        self.txtMarca.setGeometry(QtCore.QRect(120, 100, 120, 35))
+        self.txtMarca.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtMarca.setReadOnly(True)
+        self.txtMarca.setObjectName("txtMarca")
+        self.label_15 = QtWidgets.QLabel(self.groupBox_4)
+        self.label_15.setGeometry(QtCore.QRect(10, 220, 81, 21))
+        self.label_15.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_15.setObjectName("label_15")
+        self.txtModelo = QtWidgets.QLineEdit(self.groupBox_4)
+        self.txtModelo.setGeometry(QtCore.QRect(120, 160, 120, 35))
+        self.txtModelo.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtModelo.setReadOnly(True)
+        self.txtModelo.setObjectName("txtModelo")
+        self.label_16 = QtWidgets.QLabel(self.groupBox_4)
+        self.label_16.setGeometry(QtCore.QRect(10, 100, 101, 21))
+        self.label_16.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_16.setObjectName("label_16")
+        self.txtCondicion = QtWidgets.QLineEdit(self.groupBox_4)
+        self.txtCondicion.setGeometry(QtCore.QRect(120, 220, 120, 35))
+        self.txtCondicion.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtCondicion.setReadOnly(True)
+        self.txtCondicion.setObjectName("txtCondicion")
         self.tabs.addTab(self.tabEquipo, "")
         self.tabImagenEquipo = QtWidgets.QWidget()
         self.tabImagenEquipo.setObjectName("tabImagenEquipo")
@@ -334,9 +630,9 @@ class Ui_MainWindow(object):
 "")
         self.groupBox_5.setTitle("")
         self.groupBox_5.setObjectName("groupBox_5")
-        self.btnBuscar_4 = QtWidgets.QPushButton(self.groupBox_5)
-        self.btnBuscar_4.setGeometry(QtCore.QRect(240, 20, 85, 37))
-        self.btnBuscar_4.setStyleSheet("QPushButton {\n"
+        self.btnLimpia_imagen = QtWidgets.QPushButton(self.groupBox_5)
+        self.btnLimpia_imagen.setGeometry(QtCore.QRect(100, 280, 85, 31))
+        self.btnLimpia_imagen.setStyleSheet("QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
@@ -357,7 +653,75 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnBuscar_4.setObjectName("btnBuscar_4")
+        self.btnLimpia_imagen.setObjectName("btnLimpia_imagen")
+        self.btnCargar_imagen = QtWidgets.QPushButton(self.groupBox_5)
+        self.btnCargar_imagen.setGeometry(QtCore.QRect(10, 280, 85, 31))
+        self.btnCargar_imagen.setStyleSheet("QPushButton {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
+"    color: #ffffff;\n"
+"    border: 1px solid #1e362d;\n"
+"    padding: 8px 16px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #689f84, stop: 1 #96bfaa);\n"
+"    border: 1px solid #96bfaa;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
+"    border: 1px solid #32624d;\n"
+"}")
+        self.btnCargar_imagen.setObjectName("btnCargar_imagen")
+        self.gFoto = QtWidgets.QGraphicsView(self.groupBox_5)
+        self.gFoto.setGeometry(QtCore.QRect(10, 90, 231, 181))
+        self.gFoto.setStyleSheet("QGraphicsView {\n"
+"    background-color: #f2f7f4;\n"
+"    border: 1px solid #cccccc;\n"
+"}")
+        self.gFoto.setObjectName("gFoto")
+        self.label_17 = QtWidgets.QLabel(self.groupBox_5)
+        self.label_17.setGeometry(QtCore.QRect(10, 40, 81, 21))
+        self.label_17.setStyleSheet("QWidget {\n"
+"    background-color: var(--jade-50);\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: var(--jade-500);\n"
+"    font-size: 16px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.label_17.setObjectName("label_17")
+        self.txtID_Equipo = QtWidgets.QLineEdit(self.groupBox_5)
+        self.txtID_Equipo.setGeometry(QtCore.QRect(120, 40, 120, 35))
+        self.txtID_Equipo.setStyleSheet("QLineEdit {\n"
+"    background-color: #96bfab;\n"
+"    border: 1px solid #cccccc;\n"
+"    padding: 6px;\n"
+"    border-radius: 4px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #689f84;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #689f84;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #1e362d;\n"
+"    font-weight: bold;\n"
+"}")
+        self.txtID_Equipo.setReadOnly(True)
+        self.txtID_Equipo.setObjectName("txtID_Equipo")
         self.tabs.addTab(self.tabImagenEquipo, "")
         self.tabContrato = QtWidgets.QWidget()
         self.tabContrato.setObjectName("tabContrato")
@@ -442,9 +806,9 @@ class Ui_MainWindow(object):
 "    border: 1px solid #32624d;\n"
 "}")
         self.btnEditar.setObjectName("btnEditar")
-        self.btnGuardar = QtWidgets.QPushButton(self.groupBox)
-        self.btnGuardar.setGeometry(QtCore.QRect(120, 290, 85, 37))
-        self.btnGuardar.setStyleSheet("QPushButton {\n"
+        self.btnGuardar_Contrato = QtWidgets.QPushButton(self.groupBox)
+        self.btnGuardar_Contrato.setGeometry(QtCore.QRect(120, 290, 85, 37))
+        self.btnGuardar_Contrato.setStyleSheet("QPushButton {\n"
 "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
 "    color: #ffffff;\n"
@@ -465,7 +829,7 @@ class Ui_MainWindow(object):
 "                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
 "    border: 1px solid #32624d;\n"
 "}")
-        self.btnGuardar.setObjectName("btnGuardar")
+        self.btnGuardar_Contrato.setObjectName("btnGuardar_Contrato")
         self.txtCodigo = QtWidgets.QLineEdit(self.groupBox)
         self.txtCodigo.setGeometry(QtCore.QRect(120, 30, 120, 35))
         self.txtCodigo.setStyleSheet("QLineEdit {\n"
@@ -571,61 +935,6 @@ class Ui_MainWindow(object):
 "    font-weight: bold;\n"
 "}")
         self.label_6.setObjectName("label_6")
-        self.gFoto = QtWidgets.QGraphicsView(self.groupBox)
-        self.gFoto.setGeometry(QtCore.QRect(365, 150, 211, 181))
-        self.gFoto.setStyleSheet("QGraphicsView {\n"
-"    background-color: #f2f7f4;\n"
-"    border: 1px solid #cccccc;\n"
-"}")
-        self.gFoto.setObjectName("gFoto")
-        self.btnCargar = QtWidgets.QPushButton(self.groupBox)
-        self.btnCargar.setGeometry(QtCore.QRect(600, 150, 85, 31))
-        self.btnCargar.setStyleSheet("QPushButton {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
-"    color: #ffffff;\n"
-"    border: 1px solid #1e362d;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 4px;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #689f84, stop: 1 #96bfaa);\n"
-"    border: 1px solid #96bfaa;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
-"    border: 1px solid #32624d;\n"
-"}")
-        self.btnCargar.setObjectName("btnCargar")
-        self.btnLimpiar = QtWidgets.QPushButton(self.groupBox)
-        self.btnLimpiar.setGeometry(QtCore.QRect(600, 190, 85, 31))
-        self.btnLimpiar.setStyleSheet("QPushButton {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #c0dacb, stop: 1 #96bfab);\n"
-"    color: #ffffff;\n"
-"    border: 1px solid #1e362d;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 4px;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #689f84, stop: 1 #96bfaa);\n"
-"    border: 1px solid #96bfaa;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-"                                 stop: 0 #2a5242, stop: 1 #32624d);\n"
-"    border: 1px solid #32624d;\n"
-"}")
-        self.btnLimpiar.setObjectName("btnLimpiar")
         self.cmbPresentacion = QtWidgets.QComboBox(self.groupBox)
         self.cmbPresentacion.setGeometry(QtCore.QRect(410, 90, 100, 25))
         self.cmbPresentacion.setStyleSheet("/* Estilos para QComboBox */\n"
@@ -744,22 +1053,39 @@ class Ui_MainWindow(object):
         self.btnBuscar.setText(_translate("MainWindow", "Buscar"))
         self.btnImprimir.setText(_translate("MainWindow", "Imprimir"))
         self.tabs.setTabText(self.tabs.indexOf(self.tabListado), _translate("MainWindow", "Listado"))
-        self.btnBuscar_2.setText(_translate("MainWindow", "Buscar"))
+        self.btnGuardar_Usuario.setText(_translate("MainWindow", "Guardar"))
+        self.txtNombres.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
+        self.label_8.setText(_translate("MainWindow", "Nombres"))
+        self.label_10.setText(_translate("MainWindow", "Apelllidos"))
+        self.txtApellidos.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
+        self.label_11.setText(_translate("MainWindow", "Cedula"))
+        self.txtCodigo_4.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
+        self.label_12.setText(_translate("MainWindow", "Codigo"))
+        self.txtCodigo_5.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
         self.tabs.setTabText(self.tabs.indexOf(self.tabUsuario), _translate("MainWindow", "Datos de usuario"))
-        self.btnBuscar_3.setText(_translate("MainWindow", "Buscar"))
+        self.label_13.setText(_translate("MainWindow", "ID"))
+        self.txtID_usuario.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
+        self.btnGuardar_Equipo.setText(_translate("MainWindow", "Guardar"))
+        self.label_14.setText(_translate("MainWindow", "Modelo"))
+        self.txtMarca.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
+        self.label_15.setText(_translate("MainWindow", "Condicion"))
+        self.txtModelo.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
+        self.label_16.setText(_translate("MainWindow", "Marca"))
+        self.txtCondicion.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
         self.tabs.setTabText(self.tabs.indexOf(self.tabEquipo), _translate("MainWindow", "Datos del equipo"))
-        self.btnBuscar_4.setText(_translate("MainWindow", "Buscar"))
+        self.btnLimpia_imagen.setText(_translate("MainWindow", "Limpiar"))
+        self.btnCargar_imagen.setText(_translate("MainWindow", "Cargar"))
+        self.gFoto.setToolTip(_translate("MainWindow", "Imagen de articulo"))
+        self.label_17.setText(_translate("MainWindow", "ID"))
+        self.txtID_Equipo.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
         self.tabs.setTabText(self.tabs.indexOf(self.tabImagenEquipo), _translate("MainWindow", "Imagenes"))
         self.label_3.setText(_translate("MainWindow", "Codigo"))
         self.label_4.setText(_translate("MainWindow", "Nombre"))
         self.label_5.setText(_translate("MainWindow", "Descripcion"))
         self.btnEditar.setText(_translate("MainWindow", "Editar"))
-        self.btnGuardar.setText(_translate("MainWindow", " Guardar "))
+        self.btnGuardar_Contrato.setText(_translate("MainWindow", " Guardar "))
         self.txtCodigo.setToolTip(_translate("MainWindow", "Insertar codigo de articulo"))
         self.label_6.setText(_translate("MainWindow", "Codigo Barr."))
-        self.gFoto.setToolTip(_translate("MainWindow", "Imagen de articulo"))
-        self.btnCargar.setText(_translate("MainWindow", "Cargar"))
-        self.btnLimpiar.setText(_translate("MainWindow", "Limpiar"))
         self.label_7.setText(_translate("MainWindow", "Categoria"))
         self.label_9.setText(_translate("MainWindow", "Presentacion"))
         self.label_Categoria.setText(_translate("MainWindow", "Herramientas manuales"))
