@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\josep\Documents\DevelopPython\Contratos\ui\FrmMain.ui'
+# Form implementation generated from reading ui file 'c:\Users\acer\OneDrive\Documentos\GitHub\DevelopPython\Contratos\ui\FrmMain.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
