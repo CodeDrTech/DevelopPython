@@ -32,7 +32,7 @@ class Main(QMainWindow):
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Registro de enga de equipos .:.')
+        self.setWindowTitle('.:. Registro de entrega de equipos .:.')
         self.setFixedSize(self.size())
         
         self.setWindowIcon(QtGui.QIcon('Contratos/images/configuracion.png'))
@@ -97,7 +97,7 @@ class Main(QMainWindow):
                 e.modelo AS Modelo,
                 e.condicion AS Condicion,
                 c.numeroContrato AS NumeroContrato,
-                c.fecha AS Fecha
+                FORMAT(c.fecha, 'dd/MM/yyyy') AS Fecha
             FROM Usuario u
             INNER JOIN Equipo e ON u.idUsuario = e.idUsuario
             INNER JOIN Contrato c ON u.idUsuario = c.idUsuario AND e.idEquipo = c.idEquipo
@@ -108,7 +108,7 @@ class Main(QMainWindow):
             
             # Ejecutar la consulta
             if query.exec_():
-                # Configurar las cabeceras con todas las columnas del SELECT
+                # Configurar las cabeceras
                 headers = ['Nombre', 'Apellido', 'Cédula', 'Empleado', 'Marca', 
                         'Modelo', 'Condición', 'Número Contrato', 'Fecha']
                 model.setHorizontalHeaderLabels(headers)
@@ -126,7 +126,6 @@ class Main(QMainWindow):
                 self.tbDatos.setEditTriggers(QAbstractItemView.NoEditTriggers)
                 
             else:
-                print(f"Error al ejecutar la consulta: {query.lastError().text()}")
                 QMessageBox.critical(self, "Error", f"Error al obtener datos: {query.lastError().text()}")
                 
         except Exception as e:            
