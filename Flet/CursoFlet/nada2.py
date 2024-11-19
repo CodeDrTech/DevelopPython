@@ -1,3 +1,0 @@
-import nada
-
-nada.saludar
