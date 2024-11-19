@@ -19,14 +19,23 @@ def main(page: Page):
         page.update()
 
     page.add(
-        flet.Row(
+        Row(
             [
-                flet.IconButton(flet.icons.REMOVE, on_click=minus_click),
+                IconButton(icons.REMOVE, on_click=minus_click),
                 txt_number,
-                flet.IconButton(flet.icons.ADD, on_click=plus_click),
+                IconButton(icons.ADD, on_click=plus_click),
             ],
             alignment=flet.MainAxisAlignment.CENTER,
         )
     )
 
-flet.app(target=main, view=flet.web.WEB_BROWSER)
+# ... existing code ...
+
+# Ejecutar la aplicación en modo web
+# ... existing code ...
+
+# Ejecutar la aplicación en modo web
+# ... existing code ...
+
+# Ejecutar la aplicación en modo web
+flet.app(target=main, port=8080, host="0.0.0.0")
