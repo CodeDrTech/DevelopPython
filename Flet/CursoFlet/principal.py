@@ -2,6 +2,8 @@ import flet
 
 from flet import IconButton, Page, Row, TextField, icons
 
+import flet.web
+
 
 
 def main(page: Page):
@@ -38,4 +40,4 @@ def main(page: Page):
 # ... existing code ...
 
 # Ejecutar la aplicación en modo web
-flet.app(target=main, port=8080, host="0.0.0.0")
+flet.app(target=main, port=8080, view=flet.AppView.WEB_BROWSER)
