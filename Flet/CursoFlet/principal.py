@@ -1,30 +1,32 @@
-import flet as ft
+import flet
+
+from flet import IconButton, Page, Row, TextField, icons
 
 
 
-def main(page: ft.Page):
+def main(page: Page):
     page.title = "Flet counter example"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.vertical_alignment = flet.MainAxisAlignment.CENTER
 
-    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+    txt_number = TextField(value="0", text_align=flet.TextAlign.RIGHT, width=100)
 
-    def minus_click(e):
-        txt_number.value = str(int(txt_number.value) - 1)
+    def minus_click(event):
+        txt_number.value = int(txt_number.value) - 1
         page.update()
 
-    def plus_click(e):
-        txt_number.value = str(int(txt_number.value) + 1)
+    def plus_click(event):
+        txt_number.value = int(txt_number.value) + 1
         page.update()
 
     page.add(
-        ft.Row(
+        flet.Row(
             [
-                ft.IconButton(ft.icons.REMOVE, on_click=minus_click),
+                flet.IconButton(flet.icons.REMOVE, on_click=minus_click),
                 txt_number,
-                ft.IconButton(ft.icons.ADD, on_click=plus_click),
+                flet.IconButton(flet.icons.ADD, on_click=plus_click),
             ],
-            alignment=ft.MainAxisAlignment.CENTER,
+            alignment=flet.MainAxisAlignment.CENTER,
         )
     )
 
-ft.app(main)
+flet.app(target=main, view=flet.web.WEB_BROWSER)
