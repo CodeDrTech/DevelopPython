@@ -1,6 +1,28 @@
 import flet as ft
 from backend.database import get_all_users
 
+
+
+
+import flet as ft
+
+class UsuariosView(ft.UserControl):
+    def build(self):
+        return ft.Column(
+            controls=[
+                ft.Text("Gestión de Usuarios", size=24, weight="bold"),
+                ft.TextField(label="Nombre", placeholder="Introduce el nombre"),
+                ft.TextField(label="Apellido", placeholder="Introduce el apellido"),
+                ft.ElevatedButton(text="Guardar", on_click=self.guardar_usuario)
+            ],
+            alignment="center",
+            horizontal_alignment="center",
+        )
+
+    def guardar_usuario(self, e):
+            print("Usuario guardado")
+
+
 def UsuariosView():
     # Obtener datos de usuarios
     data = get_all_users()
