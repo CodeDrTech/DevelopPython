@@ -12,6 +12,10 @@ Flet/CursoFlet/Share/          # Agregado para ignorar la carpeta Share
 Flet/CursoFlet/pyvenv.cfg
 Flet/Link.txt
 
+# Ignorar solo el entorno virtual dentro de Contratos_Flet
+Contratos_Flet/env/
+Contratos_Flet/env/pyvenv.cfg
+
 # Permitir explícitamente otros archivos y carpetas dentro de Entrega_De_equipos
 #!Entrega_De_equipos/**/*
 
