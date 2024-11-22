@@ -1,31 +1,37 @@
 import flet as ft
 
 def main(page: ft.Page):
-    page.title = "Contratos Flet"
+    page.title = "Contratos"
     page.window_width = 800
     page.window.height = 600
     page.scroll = "auto"
 
     mainTab = ft.Tabs(
-        selected_index=0,  # Pestaña seleccionada por defecto
+        selected_index=1,  # Pestaña seleccionada por defecto
         animation_duration=300,
         expand=True,
+        
         # contenedor de pestañas
         tabs=[
             ft.Tab(
                 icon=ft.icons.FORMAT_LIST_NUMBERED,
                 text="Listado",
-                content=ft.Container(
-                    content=ft.Text("Listado de Contratos", size=20),
-                    padding=20,
+                content=ft.Column(
+                    [
+                        ft.Text("Listado de Contratos", size=20),  # Label
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
             ),
             ft.Tab(
                 icon=ft.icons.VERIFIED_USER_OUTLINED,
                 text="Datos de Usuario",
-                content=ft.Container(
-                    content=ft.Text("Datos de Usuario", size=20),
-                    padding=20,
+                content=ft.Row(
+                    [
+                        ft.Text("Datos de Usuario", size=20),
+                        ft.TextField(label="Buscar contrato"),
+                        ft.ElevatedButton(text="Buscar"),
+                    ]
                 ),
             ),
             ft.Tab(
