@@ -19,19 +19,21 @@ def main(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Listado de Contratos", size=20),  # Label
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    ]
+                    
                 ),
             ),
             ft.Tab(
                 icon=ft.icons.VERIFIED_USER_OUTLINED,
                 text="Datos de Usuario",
-                content=ft.Row(
+                content=ft.Column(
                     [
-                        ft.Text("Datos de Usuario", size=20),
-                        ft.TextField(label="Buscar contrato"),
-                        ft.ElevatedButton(text="Buscar"),
-                    ]
+                        ft.Text("Listado de Contratos"),
+                        ft.TextField(label="Buscar contrato", width=150),  # Ajusta el ancho según sea necesario
+                        ft.ElevatedButton(text="Buscar", on_click=lambda _: print("Buscar")),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=100,
                 ),
             ),
             ft.Tab(
