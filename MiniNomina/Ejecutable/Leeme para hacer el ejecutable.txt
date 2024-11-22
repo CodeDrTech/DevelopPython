@@ -1,9 +1,0 @@
-para que el comando funcione las carpetas ico, png, py, txt, y ui deben estar aqui dentro de esta carpeta.
-
-luego en la carpeta que se crea automaticamente llamada "dist", crear una carpeta con el nombre obligatorio de MiniNomina
-y meter dentro las carpetas ico, png, py, txt, y ui.
-
-
-Codigo
-
-pyinstaller --onefile --add-data "ico/*.ico;ico" --add-data "png/*.png;png" --add-data "ui/*.ui;ui" --add-data "txt/*.txt;txt" --add-data "py/FrmPrincipal.py;py" --windowed --icon=ico/lottery.ico py/FrmPrincipal.py
