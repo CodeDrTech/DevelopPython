@@ -2,7 +2,7 @@ import flet as ft
 
 def main(page: ft.Page):
     page.title = "Contratos"
-    page.window_width = 800
+    page.window.width = 800
     page.window.height = 600
     page.scroll = "auto"
 
@@ -26,7 +26,7 @@ def main(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.VERIFIED_USER_OUTLINED,
                 text="Datos de Usuario",
-                content=ft.Column(
+                content=ft.Row(
                     [
                         ft.Text("Listado de Contratos"),
                         ft.TextField(label="Buscar contrato", width=150),  # Ajusta el ancho según sea necesario
