@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\josep\Documents\DevelopPython\Sistema de ventas\ui\FrmArticulo.ui'
+# Form implementation generated from reading ui file 'c:\Users\josep\Documents\DevelopPython\Sistema_de_ventas\ui\FrmArticulo.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #

@@ -29,6 +29,9 @@ Flet/Link.txt
 Contratos_Flet/env/
 Contratos_Flet/env/pyvenv.cfg
 
+Contratos_Flet/Contratos_Flet/
+Contratos_Flet/Contratos_Flet/pyvenv.cfg
+
 # Permitir explícitamente otros archivos y carpetas dentro de Entrega_De_equipos
 #!Entrega_De_equipos/**/*
 
