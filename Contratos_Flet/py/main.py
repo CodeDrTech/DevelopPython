@@ -97,7 +97,7 @@ def main(page: ft.Page):
                 text="Datos de Usuario",
                 content=ft.Column(
                     [
-                        ft.Text("Registrar Usuario"),
+                        ft.Text("Registrar Usuario", size=20),
                         ft.TextField(label="Nombre", width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Apellido", width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Cedula", width=200, max_length=11, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
