@@ -31,7 +31,7 @@ def get_contract_list():
 
 def main(page: ft.Page):
     page.title = "Contratos"
-    page.window.width =1050
+    page.window.width =1080
     page.window.height = 600
     
     
@@ -69,7 +69,7 @@ def main(page: ft.Page):
     ]
 
     # Crear la tabla
-    tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200),)
+    tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200))
 
 
 
@@ -84,17 +84,33 @@ def main(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.FORMAT_LIST_NUMBERED,
                 text="Listado",
+                #Contenido de columnas que se muestran antes del DataTable con los datos de los contratos
                 content=ft.Column(
                     [
                         ft.Text("Listado de Contratos", size=20),
+                        
+                        #Fila de controles para una busqueda filtrada por nombre.
+                        ft.Row(
+                            [
+                                # TextField para ingresar el nombre
+                                ft.TextField(label="Buscar Nombre", width=200),
+                                
+                                # Botón de Buscar
+                                ft.ElevatedButton(text="Buscar"),
+                                
+                                # Botón de Imprimir
+                                ft.ElevatedButton(text="Imprimir"),
+                            ],
+                        ),
                         tabla_contratos
-                    ]
+                    ],
                 ),
             ),
             #Tab que contiene los controles para registrar a los usuarios en la tabla Usuario...........
             ft.Tab(
                 icon=ft.icons.PERSON,
                 text="Datos de Usuario",
+                
                 content=ft.Column(
                     [
                         ft.Text("Registrar Usuario", size=20),
@@ -102,20 +118,31 @@ def main(page: ft.Page):
                         ft.TextField(label="Apellido", width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Cedula", width=200, max_length=11, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ft.TextField(label="Codigo", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar")),
+                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
-                    spacing=10,
+                    spacing=15,
                 ),
             ),
             #Tab que contiene los controles para regisrar los datos del equipos en la tabla Equipo..................
             ft.Tab(
                 icon=ft.icons.DEVICES,
                 text="Datos del Equipo",
-                content=ft.Container(
-                    content=ft.Text("Datos del Equipo", size=20),
-                    padding=20,
+                
+                content=ft.Column(
+                    [
+                        ft.Text("Registrar Equipo", size=20),
+                        ft.TextField(label="ID", width=200,read_only=True),
+                        ft.TextField(label="Marca", width=200, capitalization=ft.TextCapitalization.WORDS),
+                        ft.TextField(label="Modelo", width=200, capitalization=ft.TextCapitalization.WORDS  ),
+                        ft.TextField(label="Condicion", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ft.Dropdown(width=200, options=[ft.dropdown.Option("Nuevo"), ft.dropdown.Option("Usado"),]),
+                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=15,
                 ),
+                
             ),
             #Tab que contiene los controsles para el registro de las imagenes del equipos en la tabla Images.........
             ft.Tab(
