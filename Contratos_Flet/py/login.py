@@ -1,5 +1,7 @@
 import flet as ft
 from database import connect_to_db
+from flet import AppView
+
 
 def login(page: ft.Page):
     page.title = "Inicio de Sesión"
@@ -58,4 +60,4 @@ def login(page: ft.Page):
         )
     )
     txt_usuario.focus()
-ft.app(login)
+ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)

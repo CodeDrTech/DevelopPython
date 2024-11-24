@@ -1,5 +1,6 @@
 import flet as ft
 from database import connect_to_db
+from flet import AppView
 
 
 # Función para obtener los datos del query
@@ -168,4 +169,4 @@ def main(page: ft.Page):
     page.add(mainTab)
     page.update()
 
-ft.app(main)
+ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
