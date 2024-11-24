@@ -1,20 +1,19 @@
 import flet as ft
 from database import connect_to_db
-#from main import main
-
-
 
 def login(page: ft.Page):
     page.title = "Inicio de Sesión"
+    page.window.alignment = ft.alignment.center
     page.window.width = 400
     page.window.height = 300
     page.window.resizable = False
-
+    
+    
 
     def iniciar_sesion(e):
         usuario = txt_usuario.value
         contrasena = txt_contrasena.value
-
+        
         conn = connect_to_db()
         if conn:
             cursor = conn.cursor()
@@ -26,7 +25,7 @@ def login(page: ft.Page):
             if result:
                 lbl_mensaje.value = "¡Inicio de sesión exitoso!"
                 lbl_mensaje.color = ft.colors.GREEN
-                page.window.close()
+                page.window.close()  # Cierra la ventana de login
                 
 
             else:
@@ -44,7 +43,7 @@ def login(page: ft.Page):
     txt_contrasena = ft.TextField(label="Contraseña", password=True, width=300)
     btn_iniciar = ft.ElevatedButton("Iniciar Sesión", on_click=iniciar_sesion)
     lbl_mensaje = ft.Text(value="", size=14)
-
+    
     page.add(
         ft.Column(
             [
@@ -58,5 +57,5 @@ def login(page: ft.Page):
             spacing=15,
         )
     )
-
+    txt_usuario.focus()
 ft.app(login)
