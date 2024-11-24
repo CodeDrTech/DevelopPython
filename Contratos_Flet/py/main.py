@@ -69,7 +69,7 @@ def main(page: ft.Page):
     ]
 
     # Crear la tabla
-    tabla_contratos = ft.DataTable(columns=encabezados, rows=filas)
+    tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200),)
 
 
 
@@ -93,7 +93,7 @@ def main(page: ft.Page):
             ),
             #Tab que contiene los controles para registrar a los usuarios en la tabla Usuario...........
             ft.Tab(
-                icon=ft.icons.VERIFIED_USER_OUTLINED,
+                icon=ft.icons.PERSON,
                 text="Datos de Usuario",
                 content=ft.Column(
                     [
