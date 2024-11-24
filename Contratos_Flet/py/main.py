@@ -33,6 +33,7 @@ def main(page: ft.Page):
     page.title = "Contratos"
     page.window.width =1080
     page.window.height = 600
+    page.window.resizable = False
     
     
     # Obtener datos para la tabla

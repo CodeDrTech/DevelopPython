@@ -1,0 +1,56 @@
+import flet as ft
+from database import connect_to_db
+
+
+
+def login(page: ft.Page):
+    page.title = "Inicio de Sesión"
+    page.window.width = 400
+    page.window.height = 300
+    page.window.resizable = False
+
+
+    def iniciar_sesion(e):
+        usuario = txt_usuario.value
+        contrasena = txt_contrasena.value
+
+        conn = connect_to_db()
+        if conn:
+            cursor = conn.cursor()
+            query = "SELECT * FROM Login WHERE usuario = ? AND contrasena = ?"
+            cursor.execute(query, (usuario, contrasena))
+            result = cursor.fetchone()
+            conn.close()
+
+            if result:
+                lbl_mensaje.value = "¡Inicio de sesión exitoso!"
+                lbl_mensaje.color = ft.colors.GREEN
+                page.window.close()
+                
+                
+                
+            else:
+                lbl_mensaje.value = "Usuario o contraseña incorrectos."
+                lbl_mensaje.color = ft.colors.RED
+            lbl_mensaje.update()
+
+    txt_usuario = ft.TextField(label="Usuario", width=300)
+    txt_contrasena = ft.TextField(label="Contraseña", password=True, width=300)
+    btn_iniciar = ft.ElevatedButton("Iniciar Sesión", on_click=iniciar_sesion)
+    lbl_mensaje = ft.Text(value="", size=14)
+
+    page.add(
+        ft.Column(
+            [
+                ft.Text("Inicio de Sesión", size=24, weight=ft.FontWeight.BOLD),
+                txt_usuario,
+                txt_contrasena,
+                btn_iniciar,
+                lbl_mensaje,
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            spacing=15,
+        )
+    )
+
+ft.app(login)
