@@ -1,5 +1,6 @@
 import flet as ft
 from database import connect_to_db
+#from main import main
 
 
 
@@ -27,11 +28,16 @@ def login(page: ft.Page):
                 lbl_mensaje.color = ft.colors.GREEN
                 page.window.close()
                 
-                
-                
+
             else:
                 lbl_mensaje.value = "Usuario o contraseña incorrectos."
                 lbl_mensaje.color = ft.colors.RED
+                txt_usuario.value = ""
+                txt_contrasena.value = ""
+                txt_usuario.update()
+                txt_contrasena.update()
+                txt_usuario.focus()
+
             lbl_mensaje.update()
 
     txt_usuario = ft.TextField(label="Usuario", width=300)
