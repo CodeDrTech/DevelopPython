@@ -2,6 +2,7 @@ import flet as ft
 from database import connect_to_db
 from queries import insertar_nuevo_usuario
 from flet import AppView
+import datetime
 
 
 # Función para obtener los datos del query
@@ -118,6 +119,7 @@ def main(page: ft.Page):
         animation_duration=300,
         expand=True,
         
+        
         # Contenedor de tabs
         tabs=[
             #Tab con el listado de los contratos registraod.............................................
@@ -200,9 +202,18 @@ def main(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.LIST,
                 text="Contrato",
-                content=ft.Container(
-                    content=ft.Text("Contrato", size=20),
-                    padding=20,
+                
+                content=ft.Column(
+                    [
+                        ft.Text("Registrar Contrato", size=20),
+                        ft.TextField(label="ID", width=200,read_only=True),
+                        ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.WORDS),
+                        ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS  ),
+                        ft.DatePicker(field_label_text="Fecha" ,visible=True),
+                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=15,
                 ),
             ),
         ],
