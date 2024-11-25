@@ -1,5 +1,6 @@
 import flet as ft
 from database import connect_to_db
+from queries import insertar_nuevo_usuario
 from flet import AppView
 
 
@@ -35,6 +36,43 @@ def main(page: ft.Page):
     page.window.width =1080
     page.window.height = 600
     page.window.resizable = False
+    
+    
+    # Referencias para los campos de texto
+    txt_nombre = ft.Ref[ft.TextField]()
+    txt_apellidos = ft.Ref[ft.TextField]()
+    txt_cedula = ft.Ref[ft.TextField]()
+    txt_numero_empleado = ft.Ref[ft.TextField]()
+
+    def agregar_usuario(e):
+        try:
+            nombre = txt_nombre.current.value
+            apellidos = txt_apellidos.current.value
+            cedula = txt_cedula.current.value
+            numero_empleado = txt_numero_empleado.current.value
+
+            # Llama a la función de queries
+            insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado)
+
+            # Muestra un snack_bar al usuario
+            snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
+
+
+            # Limpia los campos
+            txt_nombre.current.value = ""
+            txt_apellidos.current.value = ""
+            txt_cedula.current.value = ""
+            txt_numero_empleado.current.value = ""
+            page.update()
+
+        except Exception as error:
+            # Muestra un error en snack_bar
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True)
+            page.update()
+
     
     # Obtener datos para la tabla
     contratos = get_contract_list()
@@ -120,11 +158,11 @@ def main(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Registrar Usuario", size=20),
-                        ft.TextField(label="Nombre", width=200, capitalization=ft.TextCapitalization.WORDS),
-                        ft.TextField(label="Apellido", width=200, capitalization=ft.TextCapitalization.WORDS),
-                        ft.TextField(label="Cedula", width=200, max_length=11, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ft.TextField(label="Codigo", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
+                        ft.TextField(label="Nombre", ref=txt_nombre, width=200, capitalization=ft.TextCapitalization.WORDS),
+                        ft.TextField(label="Apellido", ref=txt_apellidos, width=200, capitalization=ft.TextCapitalization.WORDS),
+                        ft.TextField(label="Cedula", ref=txt_cedula, width=200, max_length=11, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ft.TextField(label="Codigo", ref=txt_numero_empleado,width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ft.ElevatedButton(text="Guardar", on_click=agregar_usuario, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
