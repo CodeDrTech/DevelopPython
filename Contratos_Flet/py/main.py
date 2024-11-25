@@ -36,7 +36,6 @@ def main(page: ft.Page):
     page.window.height = 600
     page.window.resizable = False
     
-    
     # Obtener datos para la tabla
     contratos = get_contract_list()
 
@@ -74,7 +73,8 @@ def main(page: ft.Page):
     tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200))
 
 
-
+    
+    
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto
         animation_duration=300,
@@ -86,6 +86,7 @@ def main(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.FORMAT_LIST_NUMBERED,
                 text="Listado",
+                
                 #Contenido de columnas que se muestran antes del DataTable con los datos de los contratos
                 content=ft.Column(
                     [
@@ -102,6 +103,9 @@ def main(page: ft.Page):
                                 
                                 # Botón de Imprimir
                                 ft.ElevatedButton(text="Imprimir"),
+                                
+                                # Botón de Nuevo
+                                ft.ElevatedButton(text="Nuevo"),
                             ],
                         ),
                         tabla_contratos
@@ -165,8 +169,7 @@ def main(page: ft.Page):
             ),
         ],
     )
-
     page.add(mainTab)
     page.update()
-
-ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
+ft.app(main)
+#ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)

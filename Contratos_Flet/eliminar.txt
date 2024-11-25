@@ -1,9 +1,0 @@
-este es el contenido que debe llecar el archivo .env
-DB_CONNECTION_STRING="DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=Contratos;UID=sa;PWD=Jose.Luis.8715;"
-
-debe estar en la carpeta raiz Contratos_flet
-
-
-DRIVER={SQL Server Native Client 11.0};SERVER=LAPTOPTECNOLOGI;DATABASE=Contratos;UID=sa;PWD=Ye.891916;
-
-DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=Contratos;UID=sa;PWD=Jose.Luis.8715;
