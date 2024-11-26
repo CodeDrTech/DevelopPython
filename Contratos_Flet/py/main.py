@@ -39,11 +39,32 @@ def main(page: ft.Page):
     page.window.resizable = False
     
     
-    # Referencias para los campos de texto
+    # Referencias para los campos de texto del tab Datod de Usuario
     txt_nombre = ft.Ref[ft.TextField]()
     txt_apellidos = ft.Ref[ft.TextField]()
     txt_cedula = ft.Ref[ft.TextField]()
     txt_numero_empleado = ft.Ref[ft.TextField]()
+    
+    def mostrar_datepicker(e):
+        page.overlay.append(date_picker_dialog)
+        date_picker_dialog.open = True
+        page.update()
+
+    def seleccionar_fecha(e):
+        fecha_actual = date_picker_dialog.value # Obtiene la fecha seleccionada del DatePicker.
+        if fecha_actual:
+            fecha_solo = fecha_actual.date() # Convierte a formato solo de fecha sin la hora.
+            fecha_texto.value = f"               {fecha_solo}" # Actualiza el texto para mostrar la fecha seleccionada.
+            date_picker_dialog.open = False # Cierra el diálogo configurando `open = False`.
+            page.update() # Finalmente, actualiza la página para reflejar los cambios.
+
+    # Inicializa la fecha actual y crea un texto para mostrar la fecha seleccionada.
+    fecha_actual = datetime.date.today()
+    fecha_texto = ft.Text(f"               {fecha_actual}")
+
+    # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
+    date_picker_dialog = ft.DatePicker(
+        on_change=seleccionar_fecha)
 
     def agregar_usuario(e):
         try:
@@ -209,7 +230,8 @@ def main(page: ft.Page):
                         ft.TextField(label="ID", width=200,read_only=True),
                         ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS  ),
-                        ft.DatePicker(field_label_text="Fecha" ,visible=True),
+                        fecha_texto,
+                        ft.ElevatedButton(text="Fecha", icon=ft.icons.CALENDAR_MONTH, on_click=mostrar_datepicker, width=200),
                         ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
@@ -220,5 +242,5 @@ def main(page: ft.Page):
     )
     page.add(mainTab)
     page.update()
-ft.app(main)
-#ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
+#ft.app(main)
+ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
