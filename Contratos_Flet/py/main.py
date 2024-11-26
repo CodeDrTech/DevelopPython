@@ -223,13 +223,12 @@ def main(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.LIST,
                 text="Contrato",
-                
                 content=ft.Column(
                     [
                         ft.Text("Registrar Contrato", size=20),
                         ft.TextField(label="ID", width=200,read_only=True),
                         ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.WORDS),
-                        ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS  ),
+                        ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS),
                         fecha_texto,
                         ft.ElevatedButton(text="Fecha", icon=ft.icons.CALENDAR_MONTH, on_click=mostrar_datepicker, width=200),
                         ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
