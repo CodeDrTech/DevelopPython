@@ -17,7 +17,14 @@ Sistema de ventas MYSQL/Links_iconos.txt
 Sistema de ventas MYSQL/txt/
 
 
-Ventas Selact/
+Ventas Selact/1-Send_mail_no_dev.py
+Ventas Selact/2-send_mail_with_dev.py
+Ventas Selact/3-correo_Semanal_grafico.py
+Ventas Selact/4-correo_semanal.py
+Ventas Selact/5-correo_mensaje.py
+Ventas Selact/6-Send_mail_no_dev viernes.py
+Ventas Selact/ventas_selact3.py
+Ventas Selact/Ventas.xlsx
 
 # Ignorar solo el entorno virtual dentro de Flet
 Flet/CursoFlet/Lib/
