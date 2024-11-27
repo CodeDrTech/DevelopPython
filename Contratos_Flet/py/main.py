@@ -1,6 +1,6 @@
 import flet as ft
 from database import connect_to_db
-from queries import insertar_nuevo_usuario, insertar_nuevo_equipo
+from queries import insertar_nuevo_usuario, insertar_nuevo_equipo, insertar_nuevo_contrato
 from flet import AppView
 import datetime
 
@@ -65,6 +65,44 @@ def main(page: ft.Page):
     page.overlay.append(file_picker)    
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Codigo para insertar datos a la tabla Contrato mediante los controles del tab Contrato
+    # Referencias para los campos de texto del tab Contrato
+    txt_contrato = ft.Ref[ft.TextField]()
+    txt_texto_contrato = ft.Ref[ft.TextField]()
+    txt_id_usuario_contrato = ft.Ref[ft.TextField]()
+    txt_id_equipo_contrato = ft.Ref[ft.TextField]()
+    
+    
+    def agregar_contrato(e):
+        try:
+            numero_Contrato = txt_contrato.current.value
+            texto_Contrato = txt_texto_contrato.current.value
+            id_Usuario = txt_id_usuario_contrato.current.value
+            id_Equipo = txt_id_equipo_contrato.current.value
+            fecha_Contrato = fecha_actual
+
+            # Llama a la función de queries
+            insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo)
+
+            # Muestra un snack_bar al usuario
+            snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
+
+
+            # Limpia los campos
+            txt_contrato.current.value = ""
+            txt_texto_contrato.current.value = ""
+            txt_id_usuario_contrato.current.value = ""
+            txt_id_equipo_contrato.current.value = ""
+            page.update()
+
+        except Exception as error:
+            # Muestra un error en snack_bar
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True, duration=3000)
+            page.update()
+    
     def mostrar_datepicker(e):
         page.overlay.append(date_picker_dialog)
         date_picker_dialog.open = True
@@ -120,7 +158,7 @@ def main(page: ft.Page):
 
         except Exception as error:
             # Muestra un error en snack_bar
-            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True)
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True, duration=3000)
             page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -168,7 +206,7 @@ def main(page: ft.Page):
 
         except ValueError as ve:
             # Manejo específico de validación
-            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ve}"), open=True)
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ve}"), open=True, duration=3000)
             page.update()
 
         except Exception as error:
@@ -314,12 +352,13 @@ def main(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Registrar Contrato", size=20),
-                        ft.TextField(label="ID", width=200,read_only=True),
-                        ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.WORDS),
-                        ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS),
+                        ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.WORDS, ref=txt_contrato),
+                        ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS, ref=txt_texto_contrato),
+                        ft.TextField(label="Usuario", width=200,read_only=False, ref=txt_id_usuario_contrato),
+                        ft.TextField(label="Equipo", width=200,read_only=False, ref=txt_id_equipo_contrato),    
                         fecha_texto,
                         ft.ElevatedButton(text="Fecha", icon=ft.icons.CALENDAR_MONTH, on_click=mostrar_datepicker, width=200),
-                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
+                        ft.ElevatedButton(text="Guardar", on_click=agregar_contrato, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
