@@ -62,7 +62,7 @@ def main(page: ft.Page):
     file_picker = ft.FilePicker(on_result=previsualizar_imagenes)
 
     # Añadir el file_picker a la superposición de la página
-    page.overlay.append(file_picker)    
+    page.overlay.append(file_picker)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Codigo para insertar datos a la tabla Contrato mediante los controles del tab Contrato
@@ -96,6 +96,8 @@ def main(page: ft.Page):
             txt_texto_contrato.current.value = ""
             txt_id_usuario_contrato.current.value = ""
             txt_id_equipo_contrato.current.value = ""
+            
+            
             page.update()
 
         except Exception as error:
@@ -104,17 +106,23 @@ def main(page: ft.Page):
             page.update()
     
     def mostrar_datepicker(e):
+        # Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
         page.overlay.append(date_picker_dialog)
         date_picker_dialog.open = True
         page.update()
 
     def seleccionar_fecha(e):
-        fecha_actual = date_picker_dialog.value # Obtiene la fecha seleccionada del DatePicker.
+        # Obtiene la fecha seleccionada del DatePicker.
+        fecha_actual = date_picker_dialog.value
         if fecha_actual:
-            fecha_solo = fecha_actual.date() # Convierte a formato solo de fecha sin la hora.
-            fecha_texto.value = f"               {fecha_solo}" # Actualiza el texto para mostrar la fecha seleccionada.
-            date_picker_dialog.open = False # Cierra el diálogo configurando `open = False`.
-            page.update() # Finalmente, actualiza la página para reflejar los cambios.
+            # Convierte a formato solo de fecha sin la hora.
+            fecha_solo = fecha_actual.date()
+            # Actualiza el texto para mostrar la fecha seleccionada.
+            fecha_texto.value = f"               {fecha_solo}"
+            # Cierra el diálogo configurando `open = False`.
+            date_picker_dialog.open = False
+            # Finalmente, actualiza la página para reflejar los cambios.
+            page.update()
 
     # Inicializa la fecha actual y crea un texto para mostrar la fecha seleccionada.
     fecha_actual = datetime.date.today()
@@ -153,7 +161,7 @@ def main(page: ft.Page):
             txt_nombre.current.value = ""
             txt_apellidos.current.value = ""
             txt_cedula.current.value = ""
-            txt_numero_empleado.current.hint_text = ""
+            txt_numero_empleado.current.value = ""
             page.update()
 
         except Exception as error:
@@ -352,7 +360,7 @@ def main(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Registrar Contrato", size=20),
-                        ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.WORDS, ref=txt_contrato),
+                        ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.CHARACTERS, ref=txt_contrato),
                         ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS, ref=txt_texto_contrato),
                         ft.TextField(label="Usuario", width=200,read_only=False, ref=txt_id_usuario_contrato),
                         ft.TextField(label="Equipo", width=200,read_only=False, ref=txt_id_equipo_contrato),    
