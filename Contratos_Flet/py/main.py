@@ -126,37 +126,31 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Codigo para insertar datos a la tabla Equipo mediante los controles del tab Datos del Equipo
     # Referencias para los campos de texto del tab Datos de Equipo
-    txt_id_equipo = ft.Ref[ft.TextField]()
+    txt_id_usuario = ft.Ref[ft.TextField]()
     txt_marca = ft.Ref[ft.TextField]()
     txt_modelo = ft.Ref[ft.TextField]()
-    dd_condicion = ft.Ref[ft.Dropdown]()
+    rg_condicion = ft.Ref[ft.RadioGroup]()
     
-    # Crear el Dropdown y vincularlo a la referencia
-    dropdown_condicion = ft.Dropdown(
-        ref=dd_condicion,  # Vincula la referencia aquí
-        width=200,
-        options=[
-            ft.dropdown.Option("Nuevo"),
-            ft.dropdown.Option("Usado"),
-        ]
-    )
-    
-
     def agregar_equipo(e):
         try:
-            # Verifica si hay una opción seleccionada            
-            if dd_condicion is None:
+            
+            # Verificar que la referencia está inicializada
+            if rg_condicion.current is None:
+                raise ValueError("El control RadioGroup no está inicializado.")
+
+            # Obtener el valor seleccionado
+            condicion = rg_condicion.current.value
+            if not condicion:
                 raise ValueError("Debe seleccionar una condición para el equipo.")
+            
             # Obtener los valores de los campos
-            id_equipo = txt_id_equipo.current.value
+            id_usuario = txt_id_usuario.current.value
             marca = txt_marca.current.value
             modelo = txt_modelo.current.value
-            condicion = dd_condicion
-            
-            #condicion = dd_condicion  # Usando Dropdown para condición
+            condicion = rg_condicion.current.value  # Obtener el valor del RadioGroup
 
             # Llama a la función de queries para insertar el equipo
-            insertar_nuevo_equipo(id_equipo, marca, modelo, condicion)
+            insertar_nuevo_equipo(id_usuario, marca, modelo, condicion)
 
 
             # Muestra un snack_bar al usuario
@@ -166,15 +160,21 @@ def main(page: ft.Page):
             page.update()
 
             # Limpia los campos
-            txt_id_equipo.current.value = ""
+            txt_id_usuario.current.value = ""
             txt_marca.current.value = ""
             txt_modelo.current.value = ""
-            #dd_condicion = None
+            rg_condicion.current.value = None  # Restablece la selección
+            page.update()
+
+        except ValueError as ve:
+            # Manejo específico de validación
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ve}"), open=True)
             page.update()
 
         except Exception as error:
-            # Muestra un error en snack_bar
-            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True)
+            # Muestra un error general en el snack_bar
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True, duration=3000)
+            page.overlay.append(page.snack_bar)
             page.update()
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -280,11 +280,11 @@ def main(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Registrar Equipo", size=20),
-                        ft.TextField(label="ID", width=200,read_only=False),
-                        ft.TextField(label="Marca", width=200, capitalization=ft.TextCapitalization.WORDS),
-                        ft.TextField(label="Modelo", width=200, capitalization=ft.TextCapitalization.WORDS  ),
+                        ft.TextField(label="ID",ref=txt_id_usuario, width=200,read_only=False),
+                        ft.TextField(label="Marca",ref=txt_marca, width=200, capitalization=ft.TextCapitalization.WORDS),
+                        ft.TextField(label="Modelo",ref=txt_modelo, width=200, capitalization=ft.TextCapitalization.WORDS  ),
                         ft.Text("Condicion", width=200),
-                        dropdown_condicion,
+                        ft.RadioGroup(content=ft.Column([ft.Radio(value="Nuevo", label="Nuevo"), ft.Radio(value="Usado", label="Usado")]),ref=rg_condicion),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_equipo, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
