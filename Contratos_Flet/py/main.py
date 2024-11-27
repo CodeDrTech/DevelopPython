@@ -1,6 +1,6 @@
 import flet as ft
 from database import connect_to_db
-from queries import insertar_nuevo_usuario
+from queries import insertar_nuevo_usuario, insertar_nuevo_equipo
 from flet import AppView
 import datetime
 
@@ -39,7 +39,8 @@ def main(page: ft.Page):
     page.window.resizable = False
     
     
-    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Función que se ejecuta al seleccionar los archivos
     def previsualizar_imagenes(e):
         # Limpiar las imágenes previas
@@ -61,14 +62,9 @@ def main(page: ft.Page):
     file_picker = ft.FilePicker(on_result=previsualizar_imagenes)
 
     # Añadir el file_picker a la superposición de la página
-    page.overlay.append(file_picker)
-    
-    # Referencias para los campos de texto del tab Datod de Usuario
-    txt_nombre = ft.Ref[ft.TextField]()
-    txt_apellidos = ft.Ref[ft.TextField]()
-    txt_cedula = ft.Ref[ft.TextField]()
-    txt_numero_empleado = ft.Ref[ft.TextField]()
-    
+    page.overlay.append(file_picker)    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def mostrar_datepicker(e):
         page.overlay.append(date_picker_dialog)
         date_picker_dialog.open = True
@@ -89,7 +85,15 @@ def main(page: ft.Page):
     # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
     date_picker_dialog = ft.DatePicker(
         on_change=seleccionar_fecha)
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Codigo para insertar datos a la tabla usuario mediante los controles del tab Datos Usuario
+    # Referencias para los campos de texto del tab Datos de Usuario
+    txt_nombre = ft.Ref[ft.TextField]()
+    txt_apellidos = ft.Ref[ft.TextField]()
+    txt_cedula = ft.Ref[ft.TextField]()
+    txt_numero_empleado = ft.Ref[ft.TextField]()
+    
     def agregar_usuario(e):
         try:
             nombre = txt_nombre.current.value
@@ -111,7 +115,61 @@ def main(page: ft.Page):
             txt_nombre.current.value = ""
             txt_apellidos.current.value = ""
             txt_cedula.current.value = ""
-            txt_numero_empleado.current.value = ""
+            txt_numero_empleado.current.hint_text = ""
+            page.update()
+
+        except Exception as error:
+            # Muestra un error en snack_bar
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True)
+            page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Codigo para insertar datos a la tabla Equipo mediante los controles del tab Datos del Equipo
+    # Referencias para los campos de texto del tab Datos de Equipo
+    txt_id_equipo = ft.Ref[ft.TextField]()
+    txt_marca = ft.Ref[ft.TextField]()
+    txt_modelo = ft.Ref[ft.TextField]()
+    dd_condicion = ft.Ref[ft.Dropdown]()
+    
+    # Crear el Dropdown y vincularlo a la referencia
+    dropdown_condicion = ft.Dropdown(
+        ref=dd_condicion,  # Vincula la referencia aquí
+        width=200,
+        options=[
+            ft.dropdown.Option("Nuevo"),
+            ft.dropdown.Option("Usado"),
+        ]
+    )
+    
+
+    def agregar_equipo(e):
+        try:
+            # Verifica si hay una opción seleccionada            
+            if dd_condicion is None:
+                raise ValueError("Debe seleccionar una condición para el equipo.")
+            # Obtener los valores de los campos
+            id_equipo = txt_id_equipo.current.value
+            marca = txt_marca.current.value
+            modelo = txt_modelo.current.value
+            condicion = dd_condicion
+            
+            #condicion = dd_condicion  # Usando Dropdown para condición
+
+            # Llama a la función de queries para insertar el equipo
+            insertar_nuevo_equipo(id_equipo, marca, modelo, condicion)
+
+
+            # Muestra un snack_bar al usuario
+            snack_bar = ft.SnackBar(ft.Text("¡Equipo agregado exitosamente!"))
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
+
+            # Limpia los campos
+            txt_id_equipo.current.value = ""
+            txt_marca.current.value = ""
+            txt_modelo.current.value = ""
+            #dd_condicion = None
             page.update()
 
         except Exception as error:
@@ -119,7 +177,8 @@ def main(page: ft.Page):
             page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True)
             page.update()
 
-    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Obtener datos para la tabla
     contratos = get_contract_list()
 
@@ -155,10 +214,8 @@ def main(page: ft.Page):
 
     # Crear la tabla
     tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200))
-
-
-    
-    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto
         animation_duration=300,
@@ -223,12 +280,12 @@ def main(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Registrar Equipo", size=20),
-                        ft.TextField(label="ID", width=200,read_only=True),
+                        ft.TextField(label="ID", width=200,read_only=False),
                         ft.TextField(label="Marca", width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Modelo", width=200, capitalization=ft.TextCapitalization.WORDS  ),
-                        ft.TextField(label="Condicion", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ft.Dropdown(width=200, options=[ft.dropdown.Option("Nuevo"), ft.dropdown.Option("Usado"),]),
-                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Buscar"), width=200),
+                        ft.Text("Condicion", width=200),
+                        dropdown_condicion,
+                        ft.ElevatedButton(text="Guardar", on_click=agregar_equipo, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
@@ -271,6 +328,8 @@ def main(page: ft.Page):
         ],
     )
     page.add(mainTab)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     page.update()
 ft.app(main)
 #ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)

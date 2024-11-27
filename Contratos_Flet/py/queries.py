@@ -23,9 +23,10 @@ def insertar_dato_generico(tabla, columnas, valores):
 # Función específica para insertar un usuario
 def insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado):
     # Inserta el nuevo usuario en la base de datos
-    insertar_dato_generico(
-        'Usuario',
-        ['nombres', 'apellidos', 'cedula', 'numeroEmpleado'],
-        [nombre, apellidos, cedula, numero_empleado]
+    insertar_dato_generico('Usuario',['nombres', 'apellidos', 'cedula', 'numeroEmpleado'],[nombre, apellidos, cedula, numero_empleado]
     )
+
+def insertar_nuevo_equipo(equipo_id, marca, modelo, condicion):
+# Llamada a insertar_dato_generico para la tabla 'Equipo'
+    insertar_dato_generico('Equipo',['idEquipo', 'marca', 'modelo', 'condicion'],[equipo_id, marca, modelo, condicion],)
 
