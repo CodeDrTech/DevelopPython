@@ -27,6 +27,6 @@ def insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado):
     )
 
 def insertar_nuevo_equipo(equipo_id, marca, modelo, condicion):
-# Llamada a insertar_dato_generico para la tabla 'Equipo'
+    #Llamada a insertar_dato_generico para la tabla 'Equipo'
     insertar_dato_generico('Equipo',['idUsuario', 'marca', 'modelo', 'condicion'],[equipo_id, marca, modelo, condicion],)
 
