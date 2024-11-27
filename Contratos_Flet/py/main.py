@@ -39,6 +39,30 @@ def main(page: ft.Page):
     page.window.resizable = False
     
     
+    
+    # Función que se ejecuta al seleccionar los archivos
+    def previsualizar_imagenes(e):
+        # Limpiar las imágenes previas
+        imagenes_columna.controls.clear()
+        # Asegurarse de que solo se agreguen hasta 3 imágenes
+        for i, file in enumerate(e.files[:3]):
+            imagen = ft.Image(src=file.path, width=100, height=100)  # Ajustar tamaño de las imágenes
+            imagenes_columna.controls.append(imagen)
+        page.update()
+        
+    # Función para abrir el selector de archivos
+    def abrir_selector_archivos(e):
+        file_picker.pick_files(allow_multiple=True) # Abre el selector de archivos para seleccionar imágenes
+
+    # Contenedor donde se mostrarán las imágenes seleccionadas
+    imagenes_columna = ft.Row()  # Usamos Row para mostrar las imágenes en una fila
+
+    # Crear el FilePicker para seleccionar imágenes
+    file_picker = ft.FilePicker(on_result=previsualizar_imagenes)
+
+    # Añadir el file_picker a la superposición de la página
+    page.overlay.append(file_picker)
+    
     # Referencias para los campos de texto del tab Datod de Usuario
     txt_nombre = ft.Ref[ft.TextField]()
     txt_apellidos = ft.Ref[ft.TextField]()
@@ -215,11 +239,18 @@ def main(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.IMAGE,
                 text="Imágenes",
-                content=ft.Container(
-                    content=ft.Text("Imágenes", size=20),
-                    padding=20,
+                content=ft.Column(
+                    [
+                        ft.Text("Guarda las Imágenes", size=20),
+                        ft.ElevatedButton(text="Seleccionar Imágenes", on_click=abrir_selector_archivos, width=200),
+                        imagenes_columna,  # Aquí se mostrarán las imágenes
+                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Guardar imágenes"), width=200),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=15,
                 ),
-            ),#Tab que contiene los controles para el registro de los contratos en la tabla Contrato.................
+            ),
+            #Tab que contiene los controles para el registro de los contratos en la tabla Contrato.................
             ft.Tab(
                 icon=ft.icons.LIST,
                 text="Contrato",
