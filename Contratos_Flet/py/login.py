@@ -30,6 +30,8 @@ def login(page: ft.Page):
                 page.window.close()  # Cierra la ventana de login
                 
 
+                
+
             else:
                 lbl_mensaje.value = "Usuario o contraseña incorrectos."
                 lbl_mensaje.color = ft.colors.RED
@@ -60,4 +62,5 @@ def login(page: ft.Page):
         )
     )
     txt_usuario.focus()
-ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)
+ft.app(target=login)
+#ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)
