@@ -11,7 +11,8 @@ def get_contract_list():
     if conn:
         cursor = conn.cursor()
         query = """
-            SELECT 
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY c.fecha DESC) AS NumeroRegistro,
                 u.nombres AS Nombre,
                 u.apellidos AS Apellido,
                 u.cedula AS Cedula,
@@ -34,7 +35,7 @@ def get_contract_list():
 
 def main(page: ft.Page):
     page.title = "Contratos"
-    page.window.width =1080
+    page.window.width =1150
     page.window.height = 600
     page.window.resizable = False
     
@@ -81,24 +82,28 @@ def main(page: ft.Page):
             id_Equipo = txt_id_equipo_contrato.current.value
             fecha_Contrato = fecha_actual
 
-            # Llama a la función de queries
-            insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo)
+            if not numero_Contrato or not texto_Contrato or not id_Usuario or not id_Equipo:
+                open_dlg_modal(e)
+            else:
+                # Llama a la función de queries
+                insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo)
 
-            # Muestra un snack_bar al usuario
-            snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))
-            page.overlay.append(snack_bar)
-            snack_bar.open = True
-            page.update()
+                # Muestra un snack_bar al usuario
+                snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))
+                page.overlay.append(snack_bar)
+                snack_bar.open = True
+                #page.update()
 
 
-            # Limpia los campos
-            txt_contrato.current.value = ""
-            txt_texto_contrato.current.value = ""
-            txt_id_usuario_contrato.current.value = ""
-            txt_id_equipo_contrato.current.value = ""
-            
-            
-            page.update()
+                # Limpia los campos
+                txt_contrato.current.value = ""
+                txt_texto_contrato.current.value = ""
+                txt_id_usuario_contrato.current.value = ""
+                txt_id_equipo_contrato.current.value = ""
+                
+                get_contract_list()
+                
+                page.update()
 
         except Exception as error:
             # Muestra un error en snack_bar
@@ -132,14 +137,35 @@ def main(page: ft.Page):
     date_picker_dialog = ft.DatePicker(
         on_change=seleccionar_fecha)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------    
+    # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
+    def open_dlg_modal(e):
+        e.control.page.overlay.append(dlg_modal)
+        dlg_modal.open = True
+        e.control.page.update()
+        
+    def close_dlg(e):
+        dlg_modal.open = False
+        e.control.page.update()
+
+    dlg_modal = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Falta información"),
+        content=ft.Text("Ha dejado algun campo vacío"),
+        actions=[
+                    ft.TextButton("Ok", on_click=close_dlg),
+                ],
+        actions_alignment=ft.MainAxisAlignment.END,
+        #on_dismiss=lambda e: print("Modal dialog dismissed!"),
+    )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------- 
     # Codigo para insertar datos a la tabla usuario mediante los controles del tab Datos Usuario
     # Referencias para los campos de texto del tab Datos de Usuario
     txt_nombre = ft.Ref[ft.TextField]()
     txt_apellidos = ft.Ref[ft.TextField]()
     txt_cedula = ft.Ref[ft.TextField]()
     txt_numero_empleado = ft.Ref[ft.TextField]()
-    
     def agregar_usuario(e):
         try:
             nombre = txt_nombre.current.value
@@ -147,22 +173,26 @@ def main(page: ft.Page):
             cedula = txt_cedula.current.value
             numero_empleado = txt_numero_empleado.current.value
 
-            # Llama a la función de queries
-            insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado)
+            if not nombre or not apellidos or not cedula or not numero_empleado:
+                open_dlg_modal(e)
 
-            # Muestra un snack_bar al usuario
-            snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))
-            page.overlay.append(snack_bar)
-            snack_bar.open = True
-            page.update()
+            else:
+                # Llama a la función de queries
+                insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado)
+
+                # Muestra un snack_bar al usuario
+                snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))
+                page.overlay.append(snack_bar)
+                snack_bar.open = True
+                page.update()
 
 
-            # Limpia los campos
-            txt_nombre.current.value = ""
-            txt_apellidos.current.value = ""
-            txt_cedula.current.value = ""
-            txt_numero_empleado.current.value = ""
-            page.update()
+                # Limpia los campos
+                txt_nombre.current.value = ""
+                txt_apellidos.current.value = ""
+                txt_cedula.current.value = ""
+                txt_numero_empleado.current.value = ""
+                page.update()
 
         except Exception as error:
             # Muestra un error en snack_bar
@@ -195,22 +225,25 @@ def main(page: ft.Page):
             modelo = txt_modelo.current.value
             condicion = rg_condicion.current.value  # Obtener el valor del RadioGroup
 
-            # Llama a la función de queries para insertar el equipo
-            insertar_nuevo_equipo(id_usuario, marca, modelo, condicion)
+            if not id_usuario or not marca or not modelo or not condicion:
+                open_dlg_modal(e)
+            else:
+                # Llama a la función de queries para insertar el equipo
+                insertar_nuevo_equipo(id_usuario, marca, modelo, condicion)
 
 
-            # Muestra un snack_bar al usuario
-            snack_bar = ft.SnackBar(ft.Text("¡Equipo agregado exitosamente!"))
-            page.overlay.append(snack_bar)
-            snack_bar.open = True
-            page.update()
+                # Muestra un snack_bar al usuario
+                snack_bar = ft.SnackBar(ft.Text("¡Equipo agregado exitosamente!"))
+                page.overlay.append(snack_bar)
+                snack_bar.open = True
+                page.update()
 
-            # Limpia los campos
-            txt_id_usuario.current.value = ""
-            txt_marca.current.value = ""
-            txt_modelo.current.value = ""
-            rg_condicion.current.value = None  # Restablece la selección
-            page.update()
+                # Limpia los campos
+                txt_id_usuario.current.value = ""
+                txt_marca.current.value = ""
+                txt_modelo.current.value = ""
+                rg_condicion.current.value = None  # Restablece la selección
+                page.update()
 
         except ValueError as ve:
             # Manejo específico de validación
@@ -230,6 +263,7 @@ def main(page: ft.Page):
 
     # Crear encabezados
     encabezados = [
+        ft.DataColumn(ft.Text("#")),
         ft.DataColumn(ft.Text("Nombre")),
         ft.DataColumn(ft.Text("Apellido")),
         ft.DataColumn(ft.Text("Cedula")),
@@ -245,15 +279,16 @@ def main(page: ft.Page):
     filas = [
         ft.DataRow(
             cells=[
-                ft.DataCell(ft.Text(str(contrato[0]))),  # Nombre
-                ft.DataCell(ft.Text(str(contrato[1]))),  # Apellido
-                ft.DataCell(ft.Text(str(contrato[2]))),  # Cedula
-                ft.DataCell(ft.Text(str(contrato[3]))),  # Empleado
-                ft.DataCell(ft.Text(str(contrato[4]))),  # Marca
-                ft.DataCell(ft.Text(str(contrato[5]))),  # Modelo
-                ft.DataCell(ft.Text(str(contrato[6]))),  # Condicion
-                ft.DataCell(ft.Text(str(contrato[7]))),  # NumeroContrato
-                ft.DataCell(ft.Text(str(contrato[8]))),  # Fecha
+                ft.DataCell(ft.Text(str(contrato[0]))),  # Numero
+                ft.DataCell(ft.Text(str(contrato[1]))),  # Nomre
+                ft.DataCell(ft.Text(str(contrato[2]))),  # Apellido
+                ft.DataCell(ft.Text(str(contrato[3]))),  # Cedula
+                ft.DataCell(ft.Text(str(contrato[4]))),  # Empleado
+                ft.DataCell(ft.Text(str(contrato[5]))),  # Marca
+                ft.DataCell(ft.Text(str(contrato[6]))),  # Modelo
+                ft.DataCell(ft.Text(str(contrato[7]))),  # Condicio
+                ft.DataCell(ft.Text(str(contrato[8]))),  # NumeroContrato
+                ft.DataCell(ft.Text(str(contrato[9]))),  # Fecha
             ]
         ) for contrato in contratos
     ]
@@ -263,7 +298,7 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
-        selected_index=0,  # Pestaña seleccionada por defecto
+        selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
         expand=True,
         
@@ -284,14 +319,11 @@ def main(page: ft.Page):
                         ft.Row(
                             [
                                 # TextField para ingresar el nombre
-                                ft.TextField(label="Buscar Nombre", width=200),
-                                
+                                ft.TextField(label="Buscar Nombre", width=200),                                
                                 # Botón de Buscar
-                                ft.ElevatedButton(text="Buscar"),
-                                
+                                ft.ElevatedButton(text="Buscar"),                                
                                 # Botón de Imprimir
-                                ft.ElevatedButton(text="Imprimir"),
-                                
+                                ft.ElevatedButton(text="Imprimir"),                                
                                 # Botón de Nuevo
                                 ft.ElevatedButton(text="Nuevo"),
                             ],
@@ -336,7 +368,6 @@ def main(page: ft.Page):
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
                 ),
-                
             ),
             #Tab que contiene los controsles para el registro de las imagenes del equipos en la tabla Images.........
             ft.Tab(
