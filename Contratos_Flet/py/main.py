@@ -35,6 +35,7 @@ def get_contract_list():
 
 def main(page: ft.Page):
     page.title = "Contratos"
+    page.window.alignment = ft.alignment.center
     page.window.width =1150
     page.window.height = 600
     page.window.resizable = True
@@ -439,5 +440,5 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     page.update()
-ft.app(main)
+#ft.app(main)
 #ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)

@@ -27,10 +27,14 @@ def login(page: ft.Page):
             if result:
                 lbl_mensaje.value = "¡Inicio de sesión exitoso!"
                 lbl_mensaje.color = ft.colors.GREEN
-                page.window.close()  # Cierra la ventana de login
+                lbl_mensaje.update()
+            
+                # En lugar de iniciar una nueva aplicación, limpiamos la página actual
+                page.clean()
                 
-
-                
+                # Importamos y ejecutamos la función main en la página actual
+                from main import main
+                main(page)
 
             else:
                 lbl_mensaje.value = "Usuario o contraseña incorrectos."
@@ -62,5 +66,5 @@ def login(page: ft.Page):
         )
     )
     txt_usuario.focus()
-ft.app(target=login)
+ft.app(login)
 #ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)
