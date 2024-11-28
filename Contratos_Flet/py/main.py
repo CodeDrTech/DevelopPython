@@ -37,7 +37,8 @@ def main(page: ft.Page):
     page.title = "Contratos"
     page.window.width =1150
     page.window.height = 600
-    page.window.resizable = False
+    page.window.resizable = True
+    
     
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -92,7 +93,7 @@ def main(page: ft.Page):
                 snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))
                 page.overlay.append(snack_bar)
                 snack_bar.open = True
-                #page.update()
+                #page.update() no se activa por estar antes de los dialogos de alerta
 
 
                 # Limpia los campos
@@ -297,11 +298,40 @@ def main(page: ft.Page):
     tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200))
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Funcion para actualizar la vista principal de los datos al seleccionar el tab Listado
+    def cambio_tab(e):
+        # El índice del tab seleccionado está en e.control.selected_index
+        indice_seleccionado = e.control.selected_index
+        
+        # Aquí puedes agregar la lógica que necesites según el tab seleccionado
+        if indice_seleccionado == 0:  # Tab Listado
+            # Actualizar la lista de contratos
+            contratos = get_contract_list()
+            # Actualizar las filas de la tabla
+            filas = [
+                ft.DataRow(
+                    cells=[
+                        ft.DataCell(ft.Text(str(contrato[0]))),  # Numero
+                        ft.DataCell(ft.Text(str(contrato[1]))),  # Nomre
+                        ft.DataCell(ft.Text(str(contrato[2]))),  # Apellido
+                        ft.DataCell(ft.Text(str(contrato[3]))),  # Cedula
+                        ft.DataCell(ft.Text(str(contrato[4]))),  # Empleado
+                        ft.DataCell(ft.Text(str(contrato[5]))),  # Marca
+                        ft.DataCell(ft.Text(str(contrato[6]))),  # Modelo
+                        ft.DataCell(ft.Text(str(contrato[7]))),  # Condicio
+                        ft.DataCell(ft.Text(str(contrato[8]))),  # NumeroContrato
+                        ft.DataCell(ft.Text(str(contrato[9]))),  # Fecha
+                    ]
+                ) for contrato in contratos
+            ]
+            tabla_contratos.rows = filas
+            page.update()
+    
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
         expand=True,
-        
+        on_change=cambio_tab,
         
         # Contenedor de tabs
         tabs=[
