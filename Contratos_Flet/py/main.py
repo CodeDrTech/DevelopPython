@@ -298,7 +298,7 @@ def main(page: ft.Page):
     tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200))
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #Funcion para actualizar la vista principal de los datos al seleccionar el tab Listado
+    #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
     def cambio_tab(e):
         # El índice del tab seleccionado está en e.control.selected_index
         indice_seleccionado = e.control.selected_index
