@@ -12,7 +12,15 @@ def contract_panel(page: ft.Page):
     page.window.height = 600
     page.window.resizable = True
     page.padding = 20
-    page.scroll = "auto" # type: ignore
+    #page.scroll = "auto" # type: ignore
+    
+    def main_panel(e):
+        # En lugar de iniciar una nueva aplicación, limpiamos la página actual
+        page.clean()
+
+        # Importamos y ejecutamos la función y sus controles en la página actual
+        from main import main
+        main(page)
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
@@ -131,6 +139,7 @@ def contract_panel(page: ft.Page):
                         fecha_texto,
                         ft.ElevatedButton(text="Fecha", icon=ft.icons.CALENDAR_MONTH, on_click=mostrar_datepicker, width=200),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_contrato, width=200),
+                        ft.ElevatedButton(text="Listado", on_click=main_panel, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,

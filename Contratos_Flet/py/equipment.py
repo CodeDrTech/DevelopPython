@@ -12,7 +12,7 @@ def equipment_panel(page: ft.Page):
     page.window.height = 600
     page.window.resizable = True
     page.padding = 20
-    page.scroll = "auto" # type: ignore
+    #page.scroll = "auto" # type: ignore
     
     def tab_insertar_contrato(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
