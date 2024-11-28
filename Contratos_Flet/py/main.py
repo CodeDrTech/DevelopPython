@@ -60,7 +60,7 @@ def main(page: ft.Page):
         
     # Función para abrir el selector de archivos
     def abrir_selector_archivos(e):
-        file_picker.pick_files(allow_multiple=True) # Abre el selector de archivos para seleccionar imágenes
+        file_picker.pick_files(allow_multiple=True, allowed_extensions=["jpg", "png", "jpeg"]) # Abre el selector de archivos para seleccionar imágenes
 
     # Contenedor donde se mostrarán las imágenes seleccionadas
     imagenes_columna = ft.Row()  # Usamos Row para mostrar las imágenes en una fila
