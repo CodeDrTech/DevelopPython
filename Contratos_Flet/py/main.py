@@ -36,9 +36,13 @@ def get_contract_list():
 def main(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
-    page.window.width =1150
+    page.window.width = 1250
     page.window.height = 600
     page.window.resizable = True
+    page.padding = 20
+    page.scroll = "auto" # type: ignore
+    
+    
     
     
     
@@ -333,6 +337,8 @@ def main(page: ft.Page):
         animation_duration=300,
         expand=True,
         on_change=cambio_tab,
+        #scrollable=True,
+        
         
         # Contenedor de tabs
         tabs=[
@@ -436,9 +442,16 @@ def main(page: ft.Page):
             ),
         ],
     )
+    # Envolver el mainTab en un Container para mejor control del layout
+    main_container = ft.Container(
+        content=mainTab,
+        expand=True,
+        padding=10,
+    )
     page.add(mainTab)
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
     page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #ft.app(main)
 #ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
