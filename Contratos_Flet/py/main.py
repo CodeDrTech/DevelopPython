@@ -107,8 +107,6 @@ def main(page: ft.Page):
                 txt_id_usuario_contrato.current.value = ""
                 txt_id_equipo_contrato.current.value = ""
                 
-                get_contract_list()
-                
                 page.update()
 
         except Exception as error:
@@ -303,14 +301,16 @@ def main(page: ft.Page):
     tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200))
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Funciones para abrir los modulos y sus controles 
     def tab_insertar_usuario(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
         page.clean()
-                
-        # Importamos y ejecutamos la función main en la página actual
+
+        # Importamos y ejecutamos la función y sus controles en la página actual
         from users import user_panel
         user_panel(page)
-        
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
     def cambio_tab(e):
         # El índice del tab seleccionado está en e.control.selected_index
@@ -449,12 +449,6 @@ def main(page: ft.Page):
                 ),
             ),
         ],
-    )
-    # Envolver el mainTab en un Container para mejor control del layout
-    main_container = ft.Container(
-        content=mainTab,
-        expand=True,
-        padding=10,
     )
     page.add(mainTab)
     page.update()

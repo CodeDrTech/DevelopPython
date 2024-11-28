@@ -1,6 +1,6 @@
 import flet as ft
 from database import connect_to_db
-from queries import insertar_nuevo_usuario, insertar_nuevo_equipo, insertar_nuevo_contrato
+from queries import insertar_nuevo_usuario
 from flet import AppView
 import datetime
 
@@ -13,6 +13,15 @@ def user_panel(page: ft.Page):
     page.window.resizable = True
     page.padding = 20
     page.scroll = "auto" # type: ignore
+    
+    
+    def tab_insertar_equipo(e):
+        # En lugar de iniciar una nueva aplicación, limpiamos la página actual
+        page.clean()
+
+        # Importamos y ejecutamos la función y sus controles en la página actual
+        from equipment import equipment_panel
+        equipment_panel(page)
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
@@ -98,6 +107,7 @@ def user_panel(page: ft.Page):
                         ft.TextField(label="Cedula", ref=txt_cedula, width=200, max_length=11, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ft.TextField(label="Codigo", ref=txt_numero_empleado,width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_usuario, width=200),
+                        ft.ElevatedButton(text="equipos", on_click=tab_insertar_equipo, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
