@@ -67,6 +67,9 @@ def contract_panel(page: ft.Page):
             else:
                 # Llama a la función de queries
                 insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo)
+                
+                #Si el insert se realiza pasa el tab listado.
+                main_panel(e)
 
                 # Muestra un snack_bar al usuario
                 snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))

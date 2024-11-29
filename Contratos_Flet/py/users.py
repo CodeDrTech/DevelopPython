@@ -15,6 +15,7 @@ def user_panel(page: ft.Page):
     #page.scroll = "auto" # type: ignore
     
     
+    
     def tab_insertar_equipo(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
         page.clean()
@@ -66,6 +67,9 @@ def user_panel(page: ft.Page):
             else:
                 # Llama a la función de queries
                 insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado)
+                
+                #Si el insert se realiza pasa el tab para ingresar datos sobre el equipo.
+                tab_insertar_equipo(e)
 
                 # Muestra un snack_bar al usuario
                 snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"))

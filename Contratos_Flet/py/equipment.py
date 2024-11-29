@@ -76,6 +76,9 @@ def equipment_panel(page: ft.Page):
             else:
                 # Llama a la función de queries para insertar el equipo
                 insertar_nuevo_equipo(id_usuario, marca, modelo, condicion)
+                
+                #Si el insert se realiza pasa el tab para ingresar datos sobre las imagenes.
+                tab_inserta_imagen(e)
 
 
                 # Muestra un snack_bar al usuario
