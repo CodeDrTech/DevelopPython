@@ -19,7 +19,7 @@ def equipment_panel(page: ft.Page):
         page.clean()
 
         # Importamos y ejecutamos la función y sus controles en la página actual
-        from images import image_panel
+        from image import image_panel
         image_panel(page)
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ def equipment_panel(page: ft.Page):
                         ft.Text("Condicion", width=200),
                         ft.RadioGroup(content=ft.Column([ft.Radio(value="Nuevo", label="Nuevo"), ft.Radio(value="Usado", label="Usado")]),ref=rg_condicion),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_equipo, width=200),
-                        ft.ElevatedButton(text="Contrato", on_click=tab_insertar_contrato, width=200),
+                        ft.ElevatedButton(text="Imagenes", on_click=tab_inserta_imagen, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,

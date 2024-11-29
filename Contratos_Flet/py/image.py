@@ -69,3 +69,31 @@ def image_panel(page: ft.Page):
     page.overlay.append(file_picker)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    mainTab = ft.Tabs(
+        selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
+        animation_duration=300,
+        expand=True,
+        
+        
+        # Contenedor de tabs
+        tabs=[
+            #Tab que contiene los controsles para el registro de las imagenes del equipos en la tabla Images.........
+            ft.Tab(
+                icon=ft.icons.IMAGE,
+                text="Imágenes",
+                content=ft.Column(
+                    [
+                        ft.Text("Guarda las Imágenes", size=20),
+                        ft.ElevatedButton(text="Seleccionar Imágenes", on_click=abrir_selector_archivos, width=200),
+                        imagenes_columna,  # Aquí se mostrarán las imágenes
+                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Guardar imágenes"), width=200),
+                        ft.ElevatedButton(text="Contrato", on_click=tab_insertar_contrato, width=200),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=15,
+                ),
+            ),
+            ],
+    )
+    page.add(mainTab)
+    page.update()
