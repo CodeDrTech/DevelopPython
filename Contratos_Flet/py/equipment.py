@@ -82,7 +82,7 @@ def equipment_panel(page: ft.Page):
 
 
                 # Muestra un snack_bar al usuario
-                snack_bar = ft.SnackBar(ft.Text("¡Equipo agregado exitosamente!"))
+                snack_bar = ft.SnackBar(ft.Text("¡Equipo agregado exitosamente!"), duration=3000)
                 page.overlay.append(snack_bar)
                 snack_bar.open = True
                 page.update()

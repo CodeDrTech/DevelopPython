@@ -109,7 +109,7 @@ def image_panel(page: ft.Page):
                 insertar_nueva_imagen(id_equipo, nombre_imagen, imagen)
 
             # Notificar éxito al usuario
-            snack_bar = ft.SnackBar(ft.Text("¡Imagen(es) agregadas exitosamente!"))
+            snack_bar = ft.SnackBar(ft.Text("¡Imagen(es) agregadas exitosamente!"), duration=3000)
             page.overlay.append(snack_bar)
             snack_bar.open = True
             page.update()
