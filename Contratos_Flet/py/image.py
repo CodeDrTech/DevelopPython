@@ -69,6 +69,68 @@ def image_panel(page: ft.Page):
     page.overlay.append(file_picker)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    def obtener_numero_contrato(id_equipo):
+        query = """
+        SELECT c.numeroContrato
+        FROM Contrato c
+        INNER JOIN Equipo e ON c.idEquipo = e.idEquipo
+        WHERE e.idEquipo = ?
+        """
+        conexion = connect_to_db()
+        with conexion.cursor() as cursor:
+            cursor.execute(query, (id_equipo,))
+            result = cursor.fetchone()
+        return result[0] if result else None
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    txt_id_equipo = ft.Ref[ft.TextField]()
+
+    def agregar_imagen(e):
+        try:
+            id_equipo = txt_id_equipo.current.value
+            imagenes = imagenes_columna  # Asegúrate de que contenga las imágenes cargadas
+
+            # Validaciones iniciales
+            if not id_equipo:
+                raise ValueError("Debe proporcionar un ID de equipo.")
+            if not imagenes or len(imagenes) == 0:
+                raise ValueError("Debe cargar al menos una imagen.")
+
+            # Obtener el número de contrato asociado al idEquipo
+            numero_contrato = obtener_numero_contrato(id_equipo)
+            if not numero_contrato:
+                raise ValueError(f"No se encontró un contrato asociado al ID de equipo {id_equipo}.")
+
+            # Procesar e insertar imágenes con nombres basados en el número de contrato
+            for idx, imagen in enumerate(imagenes):
+                nombre_imagen = f"{numero_contrato}_{idx + 1}.jpg" if idx > 0 else f"{numero_contrato}.jpg"
+                insertar_nueva_imagen(id_equipo, nombre_imagen, imagen)
+
+            # Notificar éxito al usuario
+            snack_bar = ft.SnackBar(ft.Text("¡Imagen(es) agregadas exitosamente!"))
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
+
+            # Limpiar campos
+            txt_id_equipo.current.value = ""
+            imagenes_columna.clear()
+            page.update()
+
+        except ValueError as ve:
+            # Manejo de errores específicos
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ve}"), open=True, duration=3000)
+            page.update()
+
+        except Exception as error:
+            # Manejo de errores generales
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error inesperado: {error}"), open=True, duration=3000)
+            page.update()
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
@@ -84,9 +146,10 @@ def image_panel(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Guarda las Imágenes", size=20),
+                        ft.TextField(label="ID",ref=txt_id_equipo, width=200,read_only=False),
                         ft.ElevatedButton(text="Seleccionar Imágenes", on_click=abrir_selector_archivos, width=200),
                         imagenes_columna,  # Aquí se mostrarán las imágenes
-                        ft.ElevatedButton(text="Guardar", on_click=lambda _: print("Guardar imágenes"), width=200),
+                        ft.ElevatedButton(text="Guardar", on_click=agregar_imagen, width=200),
                         ft.ElevatedButton(text="Contrato", on_click=tab_insertar_contrato, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
