@@ -40,12 +40,7 @@ def main(page: ft.Page):
     page.window.height = 600
     page.window.resizable = True
     page.padding = 20
-    page.scroll = "auto" # type: ignore
-    
-    
-    
-    
-    
+    page.scroll = "auto" # type: ignore    
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Función que se ejecuta al seleccionar los archivos

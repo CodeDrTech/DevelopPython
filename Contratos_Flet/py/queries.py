@@ -24,7 +24,8 @@ def insertar_dato_generico(tabla, columnas, valores):
 def insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado):
     # Inserta el nuevo usuario en la base de datos
     insertar_dato_generico('Usuario',['nombres', 'apellidos', 'cedula', 'numeroEmpleado'],[nombre, apellidos, cedula, numero_empleado])
-    
+
+# Función específica para insertar datos en la tabla Equipo
 def insertar_nuevo_equipo(equipo_id, marca, modelo, condicion):
     #Llamada a insertar_dato_generico para la tabla 'Equipo'
     insertar_dato_generico('Equipo',['idUsuario', 'marca', 'modelo', 'condicion'],[equipo_id, marca, modelo, condicion],)
@@ -32,4 +33,10 @@ def insertar_nuevo_equipo(equipo_id, marca, modelo, condicion):
 # Función específica para insertar datos en la tabla Contrato
 def insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo):
     insertar_dato_generico('Contrato',['numeroContrato', 'fecha', 'textoContrato', 'idUsuario', 'idEquipo'],[numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo],)
+    
+
+# Función específica para insertar datos en la tabla EquipoImagen
+def insertar_nueva_imagen(equipo_id, ruta_imagen):
+    insertar_dato_generico('EquipoImagen',['idEquipo', 'rutaImagen'],[equipo_id, ruta_imagen],)
+
 

@@ -14,13 +14,13 @@ def equipment_panel(page: ft.Page):
     page.padding = 20
     #page.scroll = "auto" # type: ignore
     
-    def tab_insertar_contrato(e):
+    def tab_inserta_imagen(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
         page.clean()
 
         # Importamos y ejecutamos la función y sus controles en la página actual
-        from contract import contract_panel
-        contract_panel(page)
+        from images import image_panel
+        image_panel(page)
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
