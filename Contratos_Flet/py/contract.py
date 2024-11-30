@@ -11,13 +11,19 @@ def get_last_ids():
         query = """
             SELECT TOP 1
                 u.idUsuario,
-                e.idEquipo
+                e.idEquipo,
+                c.numeroContrato
             FROM Usuario u
             CROSS APPLY (
                 SELECT TOP 1 idEquipo
                 FROM Equipo
                 ORDER BY idEquipo DESC
             ) e
+            CROSS APPLY (
+                SELECT TOP 1 numeroContrato
+                FROM Contrato
+                ORDER BY idContrato DESC
+            ) c
             ORDER BY u.idUsuario DESC
         """
         cursor.execute(query)
@@ -25,6 +31,27 @@ def get_last_ids():
         conn.close()
         return row
     return None
+
+#Funcion para generar el numero de contrato siguiente SL00001+1=SL00002
+def incrementar_numero_contrato(ultimo_contrato=None):
+    try:
+        # Si no hay contrato previo o es None, empezar con SL00001
+        if not ultimo_contrato:
+            return "SL00001"
+            
+        # Si hay contrato previo, incrementar
+        letras = ''.join(filter(str.isalpha, ultimo_contrato))  # Obtiene "SL"
+        numeros = ''.join(filter(str.isdigit, ultimo_contrato)) # Obtiene "00012"
+        
+        siguiente_numero = int(numeros) + 1
+        nuevo_numero = str(siguiente_numero).zfill(len(numeros))
+        nuevo_contrato = f"{letras}{nuevo_numero}"
+        
+        return nuevo_contrato
+        
+    except Exception as e:
+        print(f"Error al incrementar número de contrato: {e}")
+        return "SL00001"  # En caso de error, también empezar con SL00001
 
 def contract_panel(page: ft.Page):
     page.title = "Contratos"
@@ -144,6 +171,13 @@ def contract_panel(page: ft.Page):
     #Extrae los id del usuario y equipo recien insertados a la base de dato.
     ultimos_ids = get_last_ids()
     
+    if not ultimos_ids[2]:
+        Siguiente_contrato = "SL00000"
+    else:
+        Siguiente_contrato = incrementar_numero_contrato(ultimos_ids[2])
+        
+    #Siguiente_contrato = incrementar_numero_contrato(ultimos_ids[2] if ultimos_ids else "SL00000")
+    
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
@@ -159,7 +193,7 @@ def contract_panel(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Registre el equipo", size=20),
-                        ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.CHARACTERS, ref=txt_contrato),
+                        ft.TextField(label="Contrato", width=200, read_only=True, capitalization=ft.TextCapitalization.CHARACTERS, ref=txt_contrato, value=Siguiente_contrato),
                         ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS, ref=txt_texto_contrato),
                         ft.TextField(label="Usuario", width=200,read_only=True, ref=txt_id_usuario_contrato, value=ultimos_ids[0]),
                         ft.TextField(label="Equipo", width=200,read_only=True, ref=txt_id_equipo_contrato, value=ultimos_ids[1]),    
@@ -175,5 +209,5 @@ def contract_panel(page: ft.Page):
         ],
     )
     page.add(mainTab)
-    txt_contrato.current.focus()
+    txt_texto_contrato.current.focus()
     page.update()
