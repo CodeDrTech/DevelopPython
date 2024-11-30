@@ -11,6 +11,7 @@ def login(page: ft.Page):
     page.window.resizable = False
     
     
+    
 
     def iniciar_sesion(e):
         usuario = txt_usuario.value
@@ -66,5 +67,5 @@ def login(page: ft.Page):
         )
     )
     txt_usuario.focus()
-#ft.app(login)
-ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)
+ft.app(login)
+#ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)

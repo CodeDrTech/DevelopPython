@@ -97,15 +97,16 @@ def user_panel(page: ft.Page):
         expand=True,
         #on_change=cambio_tab,
         #scrollable=True
+        
         tabs=[
         #Tab que contiene los controles para registrar a los usuarios en la tabla Usuario...........
             ft.Tab(
                 icon=ft.icons.PERSON,
-                text="Datos de Usuario",
+                text="Datos del usuario",
                 
                 content=ft.Column(
                     [
-                        ft.Text("Registrar Usuario", size=20),
+                        ft.Text("Registre al usuario", size=20),
                         ft.TextField(label="Nombre", ref=txt_nombre, width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Apellido", ref=txt_apellidos, width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Cedula", ref=txt_cedula, width=200, max_length=11, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
@@ -119,5 +120,8 @@ def user_panel(page: ft.Page):
             ),
         ],
     )
+    
     page.add(mainTab)
+    #Lleva el foco el textFiled usuaro al cargar el formulario
+    txt_nombre.current.focus()
     page.update()

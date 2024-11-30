@@ -4,6 +4,27 @@ from queries import insertar_nuevo_contrato
 from flet import AppView
 import datetime
 
+def get_last_ids():
+    conn = connect_to_db()
+    if conn:
+        cursor = conn.cursor()
+        query = """
+            SELECT TOP 1
+                u.idUsuario,
+                e.idEquipo
+            FROM Usuario u
+            CROSS APPLY (
+                SELECT TOP 1 idEquipo
+                FROM Equipo
+                ORDER BY idEquipo DESC
+            ) e
+            ORDER BY u.idUsuario DESC
+        """
+        cursor.execute(query)
+        row = cursor.fetchone()
+        conn.close()
+        return row
+    return None
 
 def contract_panel(page: ft.Page):
     page.title = "Contratos"
@@ -72,7 +93,7 @@ def contract_panel(page: ft.Page):
                 main_panel(e)
 
                 # Muestra un snack_bar al usuario
-                snack_bar = ft.SnackBar(ft.Text("¡Usuario agregado exitosamente!"), duration=3000)
+                snack_bar = ft.SnackBar(ft.Text("¡Contrato agregado exitosamente!"), duration=3000)
                 page.overlay.append(snack_bar)
                 snack_bar.open = True
                 page.update()
@@ -120,6 +141,9 @@ def contract_panel(page: ft.Page):
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Extrae los id del usuario y equipo recien insertados a la base de dato.
+    ultimos_ids = get_last_ids()
+    
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
@@ -134,11 +158,11 @@ def contract_panel(page: ft.Page):
                 text="Contrato",
                 content=ft.Column(
                     [
-                        ft.Text("Registrar Contrato", size=20),
+                        ft.Text("Registre el equipo", size=20),
                         ft.TextField(label="Contrato", width=200, capitalization=ft.TextCapitalization.CHARACTERS, ref=txt_contrato),
                         ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS, ref=txt_texto_contrato),
-                        ft.TextField(label="Usuario", width=200,read_only=False, ref=txt_id_usuario_contrato),
-                        ft.TextField(label="Equipo", width=200,read_only=False, ref=txt_id_equipo_contrato),    
+                        ft.TextField(label="Usuario", width=200,read_only=True, ref=txt_id_usuario_contrato, value=ultimos_ids[0]),
+                        ft.TextField(label="Equipo", width=200,read_only=True, ref=txt_id_equipo_contrato, value=ultimos_ids[1]),    
                         fecha_texto,
                         ft.ElevatedButton(text="Fecha", icon=ft.icons.CALENDAR_MONTH, on_click=mostrar_datepicker, width=200),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_contrato, width=200),
@@ -151,4 +175,5 @@ def contract_panel(page: ft.Page):
         ],
     )
     page.add(mainTab)
+    txt_contrato.current.focus()
     page.update()

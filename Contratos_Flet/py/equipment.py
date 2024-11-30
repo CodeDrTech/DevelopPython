@@ -4,6 +4,23 @@ from queries import insertar_nuevo_equipo
 from flet import AppView
 import datetime
 
+def get_user_list():
+    conn = connect_to_db()
+    if conn:
+        cursor = conn.cursor()
+        query = """
+            SELECT TOP 1
+                idUsuario,
+                nombres,
+                apellidos
+            FROM Usuario
+            ORDER BY idUsuario DESC
+        """
+        cursor.execute(query)
+        row = cursor.fetchone()  # Usamos fetchone() en lugar de fetchall()
+        conn.close()
+        return row
+    return None
 
 def equipment_panel(page: ft.Page):
     page.title = "Contratos"
@@ -106,33 +123,85 @@ def equipment_panel(page: ft.Page):
             page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Obtener datos del último usuario
+    ultimo_usuario = get_user_list()
+
+    #Aun no lo uso
+    # Crear contenedor de información del usuario
+    info_usuario = ft.Container(
+        content=ft.Column([
+            ft.Text("Último Usuario Registrado", size=16, weight=ft.FontWeight.BOLD),
+            ft.Container(
+                content=ft.Column([
+                    ft.Text(f"ID: {ultimo_usuario[0]}", size=14) if ultimo_usuario else ft.Text("No hay usuarios registrados"),
+                    ft.Text(f"Nombre: {ultimo_usuario[1]} {ultimo_usuario[2]}", size=14) if ultimo_usuario else ft.Text("")
+                ]),
+                border=ft.border.all(1, ft.colors.GREY_400),
+                border_radius=10,
+                padding=10
+            )
+        ]),
+        padding=20,
+        width=300  # Ancho fijo para el contenedor
+    )
+
     mainTab = ft.Tabs(
-        selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
+        selected_index=0,
         animation_duration=300,
         expand=True,
-        #scrollable=True,
-        # Contenedor de tabs
         tabs=[
-            #Tab que contiene los controles para regisrar los datos del equipos en la tabla Equipo..................
             ft.Tab(
                 icon=ft.icons.DEVICES,
-                text="Datos del Equipo",
-                content=ft.Column(
-                    [
-                        ft.Text("Registrar Equipo", size=20),
-                        ft.TextField(label="ID",ref=txt_id_usuario, width=200,read_only=False),
-                        ft.TextField(label="Marca",ref=txt_marca, width=200, capitalization=ft.TextCapitalization.WORDS),
-                        ft.TextField(label="Modelo",ref=txt_modelo, width=200, capitalization=ft.TextCapitalization.WORDS  ),
-                        ft.Text("Condicion", width=200),
-                        ft.RadioGroup(content=ft.Column([ft.Radio(value="Nuevo", label="Nuevo"), ft.Radio(value="Usado", label="Usado")]),ref=rg_condicion),
-                        ft.ElevatedButton(text="Guardar", on_click=agregar_equipo, width=200),
-                        ft.ElevatedButton(text="Imagenes", on_click=tab_inserta_imagen, width=200),
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    spacing=15,
-                ),
-            ),
-        ],
+                text="Datos del equipo",
+                #content=ft.Container(
+                    content=ft.Column(
+                        controls=[
+                            # Fila con el título y la información del usuario
+                            ft.Row(
+                                controls=[
+                                    ft.Text("Registre el equipo", size=20),
+                                    ft.Text(f"Nombre: {ultimo_usuario[1]} {ultimo_usuario[2]}", size=14) if ultimo_usuario else ft.Text("")
+                                ],                                
+                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                            ),
+                            
+                            # Columna con los controles del formulario
+                            ft.Container(
+                                content=ft.Column(
+                                    controls=[
+                                        ft.TextField(label="ID", ref=txt_id_usuario, width=200, read_only=True, value=ultimo_usuario[0]),
+                                        ft.TextField(label="Marca", ref=txt_marca, width=200,capitalization=ft.TextCapitalization.WORDS),
+                                        ft.TextField(label="Modelo", ref=txt_modelo, width=200, capitalization=ft.TextCapitalization.WORDS),
+                                        ft.Text("Condicion", width=200),
+                                        ft.RadioGroup(
+                                            content=ft.Column(
+                                                controls=[
+                                                            ft.Radio(value="Nuevo", label="Nuevo"),
+                                                            ft.Radio(value="Usado", label="Usado")
+                                                        ]
+                                                            ),
+                                                            ref=rg_condicion
+                                        ),
+                                        ft.Row(
+                                            controls=[
+                                                ft.ElevatedButton(text="Guardar", on_click=agregar_equipo, width=200),
+                                                ft.ElevatedButton(text="Imagenes", on_click=tab_inserta_imagen, width=200)
+                                            ],
+                                            spacing=20
+                                        )
+                                    ],
+                                    spacing=15,
+                                    alignment=ft.MainAxisAlignment.START
+                                ),
+                                #padding=20
+                            )
+                        ]
+                    ),
+                    #padding=20
+                #)
+            )
+        ]
     )
     page.add(mainTab)
+    txt_marca.current.focus()
     page.update()
