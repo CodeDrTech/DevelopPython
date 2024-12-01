@@ -4,27 +4,26 @@ from queries import insertar_nuevo_contrato
 from flet import AppView
 import datetime
 
-def get_last_ids():
+def get_last_records():
     conn = connect_to_db()
     if conn:
         cursor = conn.cursor()
         query = """
             SELECT TOP 1
                 u.idUsuario,
+                u.nombres,
+                u.apellidos,
                 e.idEquipo,
+                e.marca,
+                e.modelo,
+                e.condicion,
                 c.numeroContrato
-            FROM Usuario u
-            CROSS APPLY (
-                SELECT TOP 1 idEquipo
-                FROM Equipo
-                ORDER BY idEquipo DESC
-            ) e
-            CROSS APPLY (
-                SELECT TOP 1 numeroContrato
-                FROM Contrato
-                ORDER BY idContrato DESC
-            ) c
-            ORDER BY u.idUsuario DESC
+            FROM            Usuario u
+            LEFT JOIN      Equipo e ON u.idUsuario = e.idUsuario
+            CROSS APPLY   (SELECT TOP 1 numeroContrato 
+                          FROM   Contrato 
+                          ORDER  BY idContrato DESC) c
+            ORDER BY      u.idUsuario DESC
         """
         cursor.execute(query)
         row = cursor.fetchone()
@@ -168,45 +167,95 @@ def contract_panel(page: ft.Page):
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #Extrae los id del usuario y equipo recien insertados a la base de dato.
-    ultimos_ids = get_last_ids()
+    # Obtener todos los últimos registros
+    ultimo_registro = get_last_records()
     
-    if not ultimos_ids[2]:
+    if not ultimo_registro[7]:
         Siguiente_contrato = "SL00000"
     else:
-        Siguiente_contrato = incrementar_numero_contrato(ultimos_ids[2])
+        Siguiente_contrato = incrementar_numero_contrato(ultimo_registro[7])
         
-    #Siguiente_contrato = incrementar_numero_contrato(ultimos_ids[2] if ultimos_ids else "SL00000")
+    #Siguiente_contrato = incrementar_numero_contrato(ultimos_registros[2] if ultimos_registros else "SL00000")
     
     mainTab = ft.Tabs(
-        selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
+        selected_index=    0,
         animation_duration=300,
-        expand=True,
-        #scrollable=True,
-        
-        
-        # Contenedor de tabs
-        tabs=[#Tab que contiene los controles para el registro de los contratos en la tabla Contrato.................
+        expand=           True,
+        tabs=[
             ft.Tab(
-                icon=ft.icons.LIST,
-                text="Contrato",
-                content=ft.Column(
-                    [
-                        ft.Text("Registre el equipo", size=20),
-                        ft.TextField(label="Contrato", width=200, read_only=True, capitalization=ft.TextCapitalization.CHARACTERS, ref=txt_contrato, value=Siguiente_contrato),
-                        ft.TextField(label="Texto", width=200, capitalization=ft.TextCapitalization.WORDS, ref=txt_texto_contrato),
-                        ft.TextField(label="Usuario", width=200,read_only=True, ref=txt_id_usuario_contrato, value=ultimos_ids[0]),
-                        ft.TextField(label="Equipo", width=200,read_only=True, ref=txt_id_equipo_contrato, value=ultimos_ids[1]),    
-                        fecha_texto,
-                        ft.ElevatedButton(text="Fecha", icon=ft.icons.CALENDAR_MONTH, on_click=mostrar_datepicker, width=200),
-                        ft.ElevatedButton(text="Guardar", on_click=agregar_contrato, width=200),
-                        ft.ElevatedButton(text="Listado", on_click=main_panel, width=200),
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    spacing=15,
-                ),
-            ),
-        ],
+                icon=    ft.icons.LIST,
+                text=    "Contrato",
+                content= ft.Column(
+                    controls=[
+                        # Fila con el título y la información del usuario y equipo
+                        ft.Row(
+                            controls=[
+                                ft.Text("Registre el Contrato", size=20),
+                                ft.Column([
+                                    ft.Text(f"Nombre: {ultimo_registro[1]} {ultimo_registro[2]}", size=14) if ultimo_registro else ft.Text(""),
+                                    ft.Text(f"Equipo: {ultimo_registro[4]} {ultimo_registro[5]} {ultimo_registro[6]}", size=14) if ultimo_registro and ultimo_registro[4] else ft.Text("")
+                                ])
+                            ],                                
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                        ),
+                        
+                        # Columna con los controles del formulario
+                        ft.Container(
+                            content=ft.Column(
+                                controls=[
+                                    ft.TextField(
+                                        label=          "Contrato",
+                                        ref=            txt_contrato,
+                                        width=          200,
+                                        capitalization= ft.TextCapitalization.CHARACTERS,
+                                        value=          Siguiente_contrato
+                                    ),
+                                    ft.TextField(
+                                        label=          "Texto",
+                                        ref=            txt_texto_contrato,
+                                        width=          200,
+                                        capitalization= ft.TextCapitalization.WORDS
+                                    ),
+                                    ft.TextField(
+                                        label=          "Usuario",
+                                        ref=            txt_id_usuario_contrato,
+                                        width=          200,
+                                        read_only=      True,
+                                        value=          ultimo_registro[0] if ultimo_registro else ""
+                                    ),
+                                    ft.TextField(
+                                        label=          "Equipo",
+                                        ref=            txt_id_equipo_contrato,
+                                        width=          200,
+                                        read_only=      True,
+                                        value=          ultimo_registro[3] if ultimo_registro else ""
+                                    ),
+                                    fecha_texto,
+                                    ft.ElevatedButton(
+                                        text=           "Fecha",
+                                        icon=           ft.icons.CALENDAR_MONTH,
+                                        on_click=       mostrar_datepicker,
+                                        width=          200
+                                    ),
+                                    ft.ElevatedButton(
+                                        text=           "Guardar",
+                                        on_click=       agregar_contrato,
+                                        width=          200
+                                    ),
+                                    ft.ElevatedButton(
+                                        text=           "Listado",
+                                        on_click=       main_panel,
+                                        width=          200
+                                    ),
+                                ],
+                                spacing=    15,
+                                alignment= ft.MainAxisAlignment.START
+                            )
+                        )
+                    ]
+                )
+            )
+        ]
     )
     page.add(mainTab)
     txt_texto_contrato.current.focus()
