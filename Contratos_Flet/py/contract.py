@@ -176,7 +176,30 @@ def contract_panel(page: ft.Page):
         Siguiente_contrato = incrementar_numero_contrato(ultimo_registro[7])
         
     #Siguiente_contrato = incrementar_numero_contrato(ultimos_registros[2] if ultimos_registros else "SL00000")
-    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    texto_contrato_completo = f"CONTRATO DE ENTREGA, USO Y GUARDA DE EQUIPOS DE TECNOLOGIA\
+                                    ENTRE:\
+                                        De una parte, la entidad SELACT CORP SRL, RNC 130-872392, sociedad de comercio constituida y funcionando bajo las Leyes Dominicanas, con su domicilio en la ciudad de Santo Domingo, Distrito Nacional debidamente representada por la señora JENNYFFER MARLENY RAMIREZ MIESES, dominicana, mayor de edad, titular de la cedula de identidad y electoral numero 001-1574646-3, domiciliado en Santo Domingo, Distrito Nacional, quien lo sucesivo del presente contrato se denominará LA PRIMERA PARTE.\
+                                        Y de la otra parte, el señor {ultimo_registro[1]} {ultimo_registro[2]} dominicano, mayor de edad, portador de la cedula de identidad y electoral No. 402-4304825-9, domiciliado y residente en CALLE FRANCISCO DEL ROSARIO SANCHEZ NO. 25 Republica Dominicana quien actúa en nombre y representación de la citada persona jurídica y por si, quienes en lo sucesivo del presente contrato se denominara LA SEGUNDA PARTE.\
+                                        PREAMBULO\
+                                        POR CUANTO: LA PRIMERA PARTE, es una entidad comercial que se dedica a la importación, distribución, venta de materiales de construcción y ferretería, y para esto necesita un personal de seguridad física, y que este a su vez este comunicado;\
+                                        POR CUANTO: LA SEGUNDA PARTE, como trabajador de LA PRIMERA PARTE, acepta la asignación de equipos (teléfonos, móviles, flotas, etc.) en termino comerciales y bajo lo convenido en este documento;\
+                                        POR CUANTO: El presente Contrato de entrega, y uso de teléfonos celulares, flotas, tiene por finalidad, establecer la forma en la cual se cumplirán las obligaciones establecidas en el contrato, suscrito por LAS PARTES;\
+                                        POR LO TANTO y en el entendido de que el anterior preámbulo forma parte integral del presente Contrato, las Partes, libre y voluntariamente,\
+                                        SE HA CONVENIDO Y PACTADO LO SIGUIENTE:\
+                                        PRIMERO: LA SEGUNDA PARTE, declara acepta que le sean colocados y asignados el teléfono tipo MOTO G NO.72 SERIE NO. 351523812143736 (USADO) para los fines laborales y responsabilidades con LA PRIMERA PARTE.\
+                                        Párrafo I: LA SEGUNDA PARTE cubrirá el 100%' del valor del equipo antes descrito si esta lo extravía, pierde, destruye o lo desaparece.\
+                                        Párrafo II: Se reconoce a LA SEGUNDA PARTE, se marcha, renuncia o es desahuciado (se rompe el vinculo laboral), y respectando lo acordado en este contrato, dicho aparato telefónico o flota será propiedad de LA PRIMERA PARTE.\
+                                        Párrafo IV: LA SEGUNDA PARTE, será responsable exclusiva, y de sus consecuencias si el aparato telefónico o flota lo utiliza otra persona que no sea ella misma la suscribiente, de ser así libera de toda responsabilidad a LA PRIMERA PARTE.\
+                                        SEGUNDO: LA PRIMERA PARTE, declara que se compromete a pagar el servicio de la prestadora de servicios, telefónica, u otra empresa que tenga a cargo la conexión con el aparato telefónico o flota asignado a LA SEGUNDA PARTE, pudiendo asignar LA PRIMERA PARTE, el plan de su conveniencia, la prestadora de servicio de su preferencia, y esto debe ser aceptado por LA SEGUNDA PARTE.\
+                                        TERCERO: LA SEGUNDA PARTE, declara que la propiedad exclusiva de los precitados aparato telefónico o flota es de LA PRIMERA PARTE.\
+                                        CUANTO: Para lo no revisto en el presente contrato las partes se remiten al derecho común.\
+                                        En la ciudad de Santo Domingo, Distrito Nacional, Capital de la Republica Dominicana, a los diecinueve (19) días del mes de junio del Dos Mil Veinticuatro (2024).\
+                                        LA PRIMERA PARTE _____________________________\
+                                        LA SEGUNDA PARTE_____________________________"
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
         selected_index=    0,
         animation_duration=300,
