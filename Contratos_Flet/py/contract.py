@@ -4,20 +4,28 @@ from queries import insertar_nuevo_contrato
 from flet import AppView
 import datetime
 
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+import os
+
 def get_last_records():
     conn = connect_to_db()
     if conn:
         cursor = conn.cursor()
         query = """
             SELECT TOP 1
-                u.idUsuario,
-                u.nombres,
-                u.apellidos,
-                e.idEquipo,
-                e.marca,
-                e.modelo,
-                e.condicion,
-                c.numeroContrato
+                u.idUsuario,      -- índice [0]
+                u.nombres,        -- índice [1]
+                u.apellidos,      -- índice [2]
+                e.idEquipo,       -- índice [3]
+                e.marca,          -- índice [4]
+                e.modelo,         -- índice [5]
+                e.condicion,      -- índice [6]
+                c.numeroContrato, -- índice [7]
+                u.cedula,        -- índice [8]
+                u.numeroEmpleado -- índice [9] 
             FROM            Usuario u
             LEFT JOIN      Equipo e ON u.idUsuario = e.idUsuario
             CROSS APPLY   (SELECT TOP 1 numeroContrato 
@@ -178,26 +186,168 @@ def contract_panel(page: ft.Page):
     #Siguiente_contrato = incrementar_numero_contrato(ultimos_registros[2] if ultimos_registros else "SL00000")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    texto_contrato_completo = f"CONTRATO DE ENTREGA, USO Y GUARDA DE EQUIPOS DE TECNOLOGIA\
-                                    ENTRE:\
-                                        De una parte, la entidad SELACT CORP SRL, RNC 130-872392, sociedad de comercio constituida y funcionando bajo las Leyes Dominicanas, con su domicilio en la ciudad de Santo Domingo, Distrito Nacional debidamente representada por la señora JENNYFFER MARLENY RAMIREZ MIESES, dominicana, mayor de edad, titular de la cedula de identidad y electoral numero 001-1574646-3, domiciliado en Santo Domingo, Distrito Nacional, quien lo sucesivo del presente contrato se denominará LA PRIMERA PARTE.\
-                                        Y de la otra parte, el señor {ultimo_registro[1]} {ultimo_registro[2]} dominicano, mayor de edad, portador de la cedula de identidad y electoral No. 402-4304825-9, domiciliado y residente en CALLE FRANCISCO DEL ROSARIO SANCHEZ NO. 25 Republica Dominicana quien actúa en nombre y representación de la citada persona jurídica y por si, quienes en lo sucesivo del presente contrato se denominara LA SEGUNDA PARTE.\
-                                        PREAMBULO\
-                                        POR CUANTO: LA PRIMERA PARTE, es una entidad comercial que se dedica a la importación, distribución, venta de materiales de construcción y ferretería, y para esto necesita un personal de seguridad física, y que este a su vez este comunicado;\
-                                        POR CUANTO: LA SEGUNDA PARTE, como trabajador de LA PRIMERA PARTE, acepta la asignación de equipos (teléfonos, móviles, flotas, etc.) en termino comerciales y bajo lo convenido en este documento;\
-                                        POR CUANTO: El presente Contrato de entrega, y uso de teléfonos celulares, flotas, tiene por finalidad, establecer la forma en la cual se cumplirán las obligaciones establecidas en el contrato, suscrito por LAS PARTES;\
-                                        POR LO TANTO y en el entendido de que el anterior preámbulo forma parte integral del presente Contrato, las Partes, libre y voluntariamente,\
-                                        SE HA CONVENIDO Y PACTADO LO SIGUIENTE:\
-                                        PRIMERO: LA SEGUNDA PARTE, declara acepta que le sean colocados y asignados el teléfono tipo MOTO G NO.72 SERIE NO. 351523812143736 (USADO) para los fines laborales y responsabilidades con LA PRIMERA PARTE.\
-                                        Párrafo I: LA SEGUNDA PARTE cubrirá el 100%' del valor del equipo antes descrito si esta lo extravía, pierde, destruye o lo desaparece.\
-                                        Párrafo II: Se reconoce a LA SEGUNDA PARTE, se marcha, renuncia o es desahuciado (se rompe el vinculo laboral), y respectando lo acordado en este contrato, dicho aparato telefónico o flota será propiedad de LA PRIMERA PARTE.\
-                                        Párrafo IV: LA SEGUNDA PARTE, será responsable exclusiva, y de sus consecuencias si el aparato telefónico o flota lo utiliza otra persona que no sea ella misma la suscribiente, de ser así libera de toda responsabilidad a LA PRIMERA PARTE.\
-                                        SEGUNDO: LA PRIMERA PARTE, declara que se compromete a pagar el servicio de la prestadora de servicios, telefónica, u otra empresa que tenga a cargo la conexión con el aparato telefónico o flota asignado a LA SEGUNDA PARTE, pudiendo asignar LA PRIMERA PARTE, el plan de su conveniencia, la prestadora de servicio de su preferencia, y esto debe ser aceptado por LA SEGUNDA PARTE.\
-                                        TERCERO: LA SEGUNDA PARTE, declara que la propiedad exclusiva de los precitados aparato telefónico o flota es de LA PRIMERA PARTE.\
-                                        CUANTO: Para lo no revisto en el presente contrato las partes se remiten al derecho común.\
-                                        En la ciudad de Santo Domingo, Distrito Nacional, Capital de la Republica Dominicana, a los diecinueve (19) días del mes de junio del Dos Mil Veinticuatro (2024).\
-                                        LA PRIMERA PARTE _____________________________\
-                                        LA SEGUNDA PARTE_____________________________"
+    texto_contrato_completo = f"""
+    Contrato de Entrega de Equipo Tecnológico
+    Número de Contrato: {ultimo_registro[7]}
+    Fecha: {fecha_actual}
+
+    Entre SELACT CORP, con domicilio en [dirección de la empresa], en lo sucesivo denominada “La Empresa,” y el/la empleado(a) {ultimo_registro[1]} {ultimo_registro[2]}, identificado(a) con la cédula de identidad {ultimo_registro[8]} y el código de empleado {ultimo_registro[9]}, en adelante denominado “El Empleado,” se acuerda lo siguiente:
+
+    Cláusula Primera: Entrega del Equipo
+    La Empresa hace entrega a El Empleado del siguiente equipo tecnológico:
+
+    Marca: {ultimo_registro[4]}
+    Modelo: {ultimo_registro[5]}
+    Condición: {ultimo_registro[6]}
+    El equipo entregado es propiedad de La Empresa y será utilizado exclusivamente para actividades relacionadas con sus funciones laborales.
+
+    Cláusula Segunda: Obligaciones de El Empleado
+    El Empleado se compromete a:
+
+    Utilizar el equipo de manera responsable y únicamente para los fines establecidos por La Empresa.
+    Cuidar el equipo y tomar todas las precauciones necesarias para evitar daños, pérdidas o deterioros.
+    No realizar modificaciones, reparaciones no autorizadas o transferir el equipo a terceros sin el consentimiento previo de La Empresa.
+    En caso de daños al equipo atribuibles a negligencia, mal uso o incumplimiento de estas obligaciones, El Empleado se compromete a cubrir los costos de reparación o reposición del equipo, según corresponda.
+
+    Cláusula Tercera: Responsabilidades de La Empresa
+    La Empresa se compromete a:
+
+    Proveer el equipo en condiciones óptimas de funcionamiento.
+    Brindar el soporte técnico necesario para el mantenimiento preventivo y correctivo del equipo, siempre que el daño no sea atribuible a El Empleado.
+    Establecer las políticas internas aplicables a la gestión y uso del equipo tecnológico.
+    Cláusula Cuarta: Devolución del Equipo
+    El Empleado deberá devolver el equipo en las mismas condiciones en las que fue recibido, salvo el desgaste natural, en los siguientes casos:
+
+    Al término de su relación laboral con La Empresa.
+    Cuando La Empresa lo solicite.
+    En caso de pérdida del equipo, El Empleado será responsable de cubrir el costo total de reposición.
+
+    Cláusula Quinta: Aceptación del Contrato
+    Ambas partes declaran que han leído y comprendido el contenido de este contrato, aceptando sus términos y condiciones.
+
+    Firma de La Empresa:
+    __________________________
+    Representante autorizado
+    SELACT CORP
+
+    Firma de El Empleado:
+    __________________________
+    {ultimo_registro[1]} {ultimo_registro[2]}
+    Cédula: {ultimo_registro[8]}
+    Código de Empleado: {ultimo_registro[9]}
+    """
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    def generar_pdf_contrato(e):
+        try:
+            # Crear el directorio si no existe
+            os.makedirs("Contratos_Flet/pdf", exist_ok=True)
+            
+            # Crear el documento PDF
+            doc = SimpleDocTemplate(
+                f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf",
+                pagesize=letter,
+                rightMargin=72,
+                leftMargin=72,
+                topMargin=72,
+                bottomMargin=72
+            )
+
+            # Lista para almacenar los elementos del PDF
+            elementos = []
+
+            # Estilos
+            estilos = getSampleStyleSheet()
+            estilos.add(ParagraphStyle(
+                name='Justificado',
+                parent=estilos['Normal'],
+                alignment=4,  # Justificado
+                spaceAfter=12,
+                fontSize=11
+            ))
+            
+            # Título
+            titulo = Paragraph(
+                "<para align=center><b>CONTRATO DE ENTREGA DE EQUIPO TECNOLÓGICO</b></para>", 
+                estilos['Heading1']
+            )
+            elementos.append(titulo)
+            elementos.append(Spacer(1, 20))
+
+            # Información del contrato
+            info_contrato = f"""
+            <para align=left>
+            <b>Número de Contrato:</b> {ultimo_registro[7]}<br/>
+            <b>Fecha:</b> {fecha_actual}<br/><br/>
+            </para>
+            """
+            elementos.append(Paragraph(info_contrato, estilos['Normal']))
+            elementos.append(Spacer(1, 12))
+
+            # Partes del contrato
+            partes = f"""
+            <para>
+            Entre <b>SELACT CORP</b>, con domicilio en [dirección de la empresa], en lo sucesivo denominada "La Empresa," 
+            y el/la empleado(a) <b>{ultimo_registro[1]} {ultimo_registro[2]}</b>, identificado(a) con la cédula de identidad 
+            <b>{ultimo_registro[8]}</b> y el código de empleado <b>{ultimo_registro[9]}</b>, en adelante denominado "El Empleado," 
+            se acuerda lo siguiente:
+            </para>
+            """
+            elementos.append(Paragraph(partes, estilos['Justificado']))
+            elementos.append(Spacer(1, 12))
+
+            # Cláusula Primera
+            clausula_primera = f"""
+            <para>
+            <b>Cláusula Primera: Entrega del Equipo</b><br/>
+            La Empresa hace entrega a El Empleado del siguiente equipo tecnológico:<br/><br/>
+            <b>Marca:</b> {ultimo_registro[4]}<br/>
+            <b>Modelo:</b> {ultimo_registro[5]}<br/>
+            <b>Condición:</b> {ultimo_registro[6]}<br/><br/>
+            El equipo entregado es propiedad de La Empresa y será utilizado exclusivamente para actividades relacionadas con sus funciones laborales.
+            </para>
+            """
+            elementos.append(Paragraph(clausula_primera, estilos['Justificado']))
+            elementos.append(Spacer(1, 12))
+
+            # Firmas
+            firmas = f"""
+            <para align=center>
+            <br/><br/><br/>
+            ____________________________<br/>
+            Representante autorizado<br/>
+            SELACT CORP<br/><br/><br/>
+            ____________________________<br/>
+            {ultimo_registro[1]} {ultimo_registro[2]}<br/>
+            Cédula: {ultimo_registro[8]}<br/>
+            Código de Empleado: {ultimo_registro[9]}
+            </para>
+            """
+            elementos.append(Paragraph(firmas, estilos['Normal']))
+
+            # Generar el PDF
+            doc.build(elementos)
+            
+            # Mostrar mensaje de éxito
+            snack_bar = ft.SnackBar(
+                ft.Text(f"PDF del contrato generado exitosamente"), 
+                duration=3000
+            )
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
+
+        except Exception as error:
+            # Mostrar mensaje de error
+            snack_bar = ft.SnackBar(
+                ft.Text(f"Error al generar PDF: {str(error)}"), 
+                duration=3000
+            )
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
@@ -268,6 +418,11 @@ def contract_panel(page: ft.Page):
                                     ft.ElevatedButton(
                                         text=           "Listado",
                                         on_click=       main_panel,
+                                        width=          200
+                                    ),
+                                    ft.ElevatedButton(
+                                        text=           "PDF",
+                                        on_click=       generar_pdf_contrato,
                                         width=          200
                                     ),
                                 ],

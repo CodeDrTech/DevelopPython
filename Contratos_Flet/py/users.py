@@ -48,6 +48,23 @@ def user_panel(page: ft.Page):
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+    def format_cedula(e):
+        # Quitar caracteres no numéricos
+        raw = ''.join(filter(str.isdigit, e.control.value))
+        
+        # Aplicar formato deseado para la cédula (XXX-XXXXXXX-X)
+        formatted = ''
+        for i, char in enumerate(raw):
+            if i == 3 or i == 10:  # Añadir guion después de la tercera y décima posición
+                formatted += '-'
+            formatted += char
+
+        # Actualizar el campo de texto
+        txt_cedula.current.value = formatted
+        txt_cedula.current.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------- 
     # Codigo para insertar datos a la tabla usuario mediante los controles del tab Datos Usuario
     # Referencias para los campos de texto del tab Datos de Usuario
     txt_nombre = ft.Ref[ft.TextField]()
@@ -109,7 +126,7 @@ def user_panel(page: ft.Page):
                         ft.Text("Registre al usuario", size=20),
                         ft.TextField(label="Nombre", ref=txt_nombre, width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Apellido", ref=txt_apellidos, width=200, capitalization=ft.TextCapitalization.WORDS),
-                        ft.TextField(label="Cedula", ref=txt_cedula, width=200, max_length=11, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ft.TextField(label="Cedula", ref=txt_cedula, width=200, max_length=13, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9-]*$", replacement_string=""),on_change=format_cedula),
                         ft.TextField(label="Codigo", ref=txt_numero_empleado,width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_usuario, width=200),
                         ft.ElevatedButton(text="equipos", on_click=tab_insertar_equipo, width=200),
