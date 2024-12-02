@@ -189,67 +189,23 @@ def contract_panel(page: ft.Page):
     #Siguiente_contrato = incrementar_numero_contrato(ultimos_registros[2] if ultimos_registros else "SL00000")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    texto_contrato_completo = f"""
-    Contrato de Entrega de Equipo Tecnológico
-    Número de Contrato: {ultimo_registro[7]}
-    Fecha: {fecha_actual}
-
-    Entre SELACT CORP, con domicilio en [dirección de la empresa], en lo sucesivo denominada “La Empresa,” y el/la empleado(a) {ultimo_registro[1]} {ultimo_registro[2]}, identificado(a) con la cédula de identidad {ultimo_registro[8]} y el código de empleado {ultimo_registro[9]}, en adelante denominado “El Empleado,” se acuerda lo siguiente:
-
-    Cláusula Primera: Entrega del Equipo
-    La Empresa hace entrega a El Empleado del siguiente equipo tecnológico:
-
-    Marca: {ultimo_registro[4]}
-    Modelo: {ultimo_registro[5]}
-    Condición: {ultimo_registro[6]}
-    El equipo entregado es propiedad de La Empresa y será utilizado exclusivamente para actividades relacionadas con sus funciones laborales.
-
-    Cláusula Segunda: Obligaciones de El Empleado
-    El Empleado se compromete a:
-
-    Utilizar el equipo de manera responsable y únicamente para los fines establecidos por La Empresa.
-    Cuidar el equipo y tomar todas las precauciones necesarias para evitar daños, pérdidas o deterioros.
-    No realizar modificaciones, reparaciones no autorizadas o transferir el equipo a terceros sin el consentimiento previo de La Empresa.
-    En caso de daños al equipo atribuibles a negligencia, mal uso o incumplimiento de estas obligaciones, El Empleado se compromete a cubrir los costos de reparación o reposición del equipo, según corresponda.
-
-    Cláusula Tercera: Responsabilidades de La Empresa
-    La Empresa se compromete a:
-
-    Proveer el equipo en condiciones óptimas de funcionamiento.
-    Brindar el soporte técnico necesario para el mantenimiento preventivo y correctivo del equipo, siempre que el daño no sea atribuible a El Empleado.
-    Establecer las políticas internas aplicables a la gestión y uso del equipo tecnológico.
-    Cláusula Cuarta: Devolución del Equipo
-    El Empleado deberá devolver el equipo en las mismas condiciones en las que fue recibido, salvo el desgaste natural, en los siguientes casos:
-
-    Al término de su relación laboral con La Empresa.
-    Cuando La Empresa lo solicite.
-    En caso de pérdida del equipo, El Empleado será responsable de cubrir el costo total de reposición.
-
-    Cláusula Quinta: Aceptación del Contrato
-    Ambas partes declaran que han leído y comprendido el contenido de este contrato, aceptando sus términos y condiciones.
-
-    Firma de La Empresa:
-    __________________________
-    Representante autorizado
-    SELACT CORP
-
-    Firma de El Empleado:
-    __________________________
-    {ultimo_registro[1]} {ultimo_registro[2]}
-    Cédula: {ultimo_registro[8]}
-    Código de Empleado: {ultimo_registro[9]}
-    """
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
 
     def generar_pdf_contrato(e):
         try:
-            # Crear el directorio si no existe
+            ultimo_registro = get_last_records()
+            if not ultimo_registro:
+                snack_bar = ft.SnackBar(
+                    ft.Text("No hay datos para generar el PDF"), 
+                    duration=3000
+                )
+                page.overlay.append(snack_bar)
+                snack_bar.open = True
+                page.update()
+                return
+
             os.makedirs("Contratos_Flet/pdf", exist_ok=True)
-            
-            # Crear el documento PDF
             doc = SimpleDocTemplate(
-                f"Contratos_Flet/pdf/Contrato_{Siguiente_contrato}.pdf",
+                f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf",
                 pagesize=letter,
                 rightMargin=72,
                 leftMargin=72,
@@ -257,35 +213,30 @@ def contract_panel(page: ft.Page):
                 bottomMargin=72
             )
 
-            # Lista para almacenar los elementos del PDF
             elementos = []
-
-            # Estilos
             estilos = getSampleStyleSheet()
             estilos.add(ParagraphStyle(
                 name='Justificado',
                 parent=estilos['Normal'],
-                alignment=4,  # Justificado
+                alignment=4,
                 spaceAfter=12,
                 fontSize=11
             ))
-            
-            # Título
-            titulo = Paragraph(
-                "<para align=center><b>CONTRATO DE ENTREGA DE EQUIPO TECNOLÓGICO</b></para>", 
-                estilos['Heading1']
-            )
-            elementos.append(titulo)
-            elementos.append(Spacer(1, 20))
 
-            # Información del contrato
-            info_contrato = f"""
-            <para align=left>
-            <b>Número de Contrato:</b> {ultimo_registro[7]}<br/>
-            <b>Fecha:</b> {fecha_actual}<br/><br/>
+            # Título y fecha
+            titulo = """
+            <para align=center><b>CONTRATO DE ENTREGA DE EQUIPO TECNOLÓGICO</b></para>
+            """
+            elementos.append(Paragraph(titulo, estilos['Heading1']))
+            elementos.append(Spacer(1, 12))
+
+            info = f"""
+            <para>
+            Número de Contrato: {ultimo_registro[7]}<br/>
+            Fecha: {fecha_actual}
             </para>
             """
-            elementos.append(Paragraph(info_contrato, estilos['Normal']))
+            elementos.append(Paragraph(info, estilos['Normal']))
             elementos.append(Spacer(1, 12))
 
             # Partes del contrato
@@ -303,25 +254,77 @@ def contract_panel(page: ft.Page):
             # Cláusula Primera
             clausula_primera = f"""
             <para>
-            <b>Cláusula Primera: Entrega del Equipo</b><br/>
+            <b>Cláusula Primera: Entrega del Equipo</b><br/><br/>
             La Empresa hace entrega a El Empleado del siguiente equipo tecnológico:<br/><br/>
-            <b>Marca:</b> {ultimo_registro[4]}<br/>
-            <b>Modelo:</b> {ultimo_registro[5]}<br/>
-            <b>Condición:</b> {ultimo_registro[6]}<br/><br/>
+            Marca: {ultimo_registro[4] or 'N/A'}<br/>
+            Modelo: {ultimo_registro[5] or 'N/A'}<br/>
+            Condición: {ultimo_registro[6] or 'N/A'}<br/><br/>
             El equipo entregado es propiedad de La Empresa y será utilizado exclusivamente para actividades relacionadas con sus funciones laborales.
             </para>
             """
             elementos.append(Paragraph(clausula_primera, estilos['Justificado']))
             elementos.append(Spacer(1, 12))
 
-            # Firmas
+            # Cláusula Segunda
+            clausula_segunda = """
+            <para>
+            <b>Cláusula Segunda: Obligaciones de El Empleado</b><br/><br/>
+            El Empleado se compromete a:<br/><br/>
+            • Utilizar el equipo de manera responsable y únicamente para los fines establecidos por La Empresa.<br/>
+            • Cuidar el equipo y tomar todas las precauciones necesarias para evitar daños, pérdidas o deterioros.<br/>
+            • No realizar modificaciones, reparaciones no autorizadas o transferir el equipo a terceros sin el consentimiento previo de La Empresa.<br/><br/>
+            En caso de daños al equipo atribuibles a negligencia, mal uso o incumplimiento de estas obligaciones, El Empleado se compromete a cubrir los costos de reparación o reposición del equipo, según corresponda.
+            </para>
+            """
+            elementos.append(Paragraph(clausula_segunda, estilos['Justificado']))
+            elementos.append(Spacer(1, 12))
+
+            # Cláusula Tercera
+            clausula_tercera = """
+            <para>
+            <b>Cláusula Tercera: Responsabilidades de La Empresa</b><br/><br/>
+            La Empresa se compromete a:<br/><br/>
+            • Proveer el equipo en condiciones óptimas de funcionamiento.<br/>
+            • Brindar el soporte técnico necesario para el mantenimiento preventivo y correctivo del equipo, siempre que el daño no sea atribuible a El Empleado.<br/>
+            • Establecer las políticas internas aplicables a la gestión y uso del equipo tecnológico.
+            </para>
+            """
+            elementos.append(Paragraph(clausula_tercera, estilos['Justificado']))
+            elementos.append(Spacer(1, 12))
+
+            # Cláusula Cuarta
+            clausula_cuarta = """
+            <para>
+            <b>Cláusula Cuarta: Devolución del Equipo</b><br/><br/>
+            El Empleado deberá devolver el equipo en las mismas condiciones en las que fue recibido, salvo el desgaste natural, en los siguientes casos:<br/><br/>
+            • Al término de su relación laboral con La Empresa.<br/>
+            • Cuando La Empresa lo solicite.<br/>
+            • En caso de pérdida del equipo, El Empleado será responsable de cubrir el costo total de reposición.
+            </para>
+            """
+            elementos.append(Paragraph(clausula_cuarta, estilos['Justificado']))
+            elementos.append(Spacer(1, 12))
+
+            # Cláusula Quinta y Firmas
+            clausula_quinta = f"""
+            <para>
+            <b>Cláusula Quinta: Aceptación del Contrato</b><br/><br/>
+            Ambas partes declaran que han leído y comprendido el contenido de este contrato, aceptando sus términos y condiciones.
+            </para>
+            """
+            elementos.append(Paragraph(clausula_quinta, estilos['Justificado']))
+            elementos.append(Spacer(1, 24))
+
+            # Firmas centradas
             firmas = f"""
             <para align=center>
-            <br/><br/><br/>
-            ____________________________<br/>
+            Firma de La Empresa:<br/><br/>
+            __________________________<br/><br/>
             Representante autorizado<br/>
-            SELACT CORP<br/><br/><br/>
-            ____________________________<br/>
+            SELACT CORP<br/><br/><br/><br/>
+            
+            Firma de El Empleado:<br/><br/>
+            __________________________<br/><br/>
             {ultimo_registro[1]} {ultimo_registro[2]}<br/>
             Cédula: {ultimo_registro[8]}<br/>
             Código de Empleado: {ultimo_registro[9]}
@@ -329,10 +332,8 @@ def contract_panel(page: ft.Page):
             """
             elementos.append(Paragraph(firmas, estilos['Normal']))
 
-            # Generar el PDF
             doc.build(elementos)
             
-            # Mostrar mensaje de éxito
             snack_bar = ft.SnackBar(
                 ft.Text(f"PDF del contrato generado exitosamente"), 
                 duration=3000
@@ -342,7 +343,6 @@ def contract_panel(page: ft.Page):
             page.update()
 
         except Exception as error:
-            # Mostrar mensaje de error
             snack_bar = ft.SnackBar(
                 ft.Text(f"Error al generar PDF: {str(error)}"), 
                 duration=3000
