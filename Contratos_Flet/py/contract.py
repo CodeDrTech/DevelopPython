@@ -123,6 +123,9 @@ def contract_panel(page: ft.Page):
                 # Llama a la función de queries
                 insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo)
                 
+                #Genera el contrato en PDF
+                generar_pdf_contrato(e)
+                
                 #Si el insert se realiza pasa el tab listado.
                 main_panel(e)
 
@@ -246,7 +249,7 @@ def contract_panel(page: ft.Page):
             
             # Crear el documento PDF
             doc = SimpleDocTemplate(
-                f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf",
+                f"Contratos_Flet/pdf/Contrato_{Siguiente_contrato}.pdf",
                 pagesize=letter,
                 rightMargin=72,
                 leftMargin=72,
