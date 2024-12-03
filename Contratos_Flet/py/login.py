@@ -30,7 +30,7 @@ def login(page: ft.Page):
                 lbl_mensaje.color = ft.colors.GREEN
                 lbl_mensaje.update()
             
-                # En lugar de iniciar una nueva aplicación, limpiamos la página actual
+                # En lugar de iniciar una nueva aplicación, limpiamos la página actual.
                 page.clean()
                 
                 # Importamos y ejecutamos la función main en la página actual

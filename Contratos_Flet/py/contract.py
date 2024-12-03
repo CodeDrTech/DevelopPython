@@ -24,11 +24,12 @@ def get_last_records():
                 e.modelo,         -- índice [5]
                 e.condicion,      -- índice [6]
                 c.numeroContrato, -- índice [7]
-                u.cedula,        -- índice [8]
-                u.numeroEmpleado -- índice [9] 
+                u.cedula,         -- índice [8]
+                u.numeroEmpleado, -- índice [9]
+                c.fecha           -- índice [10] (nuevo campo añadido)
             FROM            Usuario u
             LEFT JOIN      Equipo e ON u.idUsuario = e.idUsuario
-            CROSS APPLY   (SELECT TOP 1 numeroContrato 
+            CROSS APPLY   (SELECT TOP 1 numeroContrato, fecha 
                           FROM   Contrato 
                           ORDER  BY idContrato DESC) c
             ORDER BY      u.idUsuario DESC
@@ -234,7 +235,7 @@ def contract_panel(page: ft.Page):
             info = f"""
             <para>
             Número de Contrato: {ultimo_registro[7]}<br/>
-            Fecha: {fecha_actual}
+            Fecha: {ultimo_registro[10]}
             </para>
             """
             elementos.append(Paragraph(info, estilos['Normal']))
