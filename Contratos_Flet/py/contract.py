@@ -67,8 +67,9 @@ def contract_panel(page: ft.Page):
     page.window.height = 600
     page.window.resizable = True
     page.padding = 20
-    #page.scroll = "auto" # type: ignore
     
+    
+    #Funcion para llamar al panel principal.
     def main_panel(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
         page.clean()
