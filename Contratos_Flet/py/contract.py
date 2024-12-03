@@ -325,9 +325,7 @@ def contract_panel(page: ft.Page):
             
             
             __________________________<br/>
-            <b>{ultimo_registro[1]} {ultimo_registro[2]}</b><br/>
-            Cédula: <b>{ultimo_registro[8]}</b><br/>
-            Código de Empleado: <b>{ultimo_registro[9]}</b>
+            <b>{ultimo_registro[1]} {ultimo_registro[2]}</b>
             </para>
             """
             elementos.append(Paragraph(firmas, estilos['Normal']))
