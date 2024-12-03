@@ -237,20 +237,18 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Función para manejar la selección de fila
-    def on_select_row(e: ft.DataRow):
-        selected_contract = e.data
-        if selected_contract:
-            contrato_data = get_contract_by_number(selected_contract)
-            if contrato_data:
-                generar_pdf_contrato(e, contrato_data)
-            else:
-                snack_bar = ft.SnackBar(
-                    ft.Text("No se encontró el contrato seleccionado"), 
-                    duration=3000
-                )
-                page.overlay.append(snack_bar)
-                snack_bar.open = True
-                page.update()
+    def on_select_row(num_contrato):
+        contrato_data = get_contract_by_number(num_contrato)
+        if contrato_data:
+            generar_pdf_contrato(None, contrato_data)  # Pasar None como evento            
+        else:
+            snack_bar = ft.SnackBar(
+                ft.Text("No se encontró el contrato seleccionado"), 
+                duration=3000
+            )
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
 
     
     # Crear tabla vacía primero
@@ -296,7 +294,7 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(str(contrato[8]))),
                     ft.DataCell(ft.Text(str(contrato[9]))),
                 ],
-                on_select_changed=lambda e, num_contrato=contrato[8]: on_select_row(e, num_contrato),
+                on_select_changed=lambda e, num_contrato=contrato[8]: on_select_row(num_contrato),
                 data=contrato[8]
             ) for contrato in contratos
         ]
