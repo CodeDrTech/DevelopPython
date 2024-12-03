@@ -38,25 +38,13 @@ def get_contract_list():
         return rows
     return []
 
-
-
-def main(page: ft.Page):
-    page.title = "Contratos"
-    page.window.alignment = ft.alignment.center
-    page.window.width = 1250
-    page.window.height = 600
-    page.window.resizable = True
-    page.padding = 20
-    page.scroll = "auto" # type: ignore    
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #Funcion para traer los datos necesarios para crear e imprimir el PDF
-    def get_last_records():
+# Función para obtener un contrato específico
+def get_contract_by_number(numero_contrato):
         conn = connect_to_db()
         if conn:
             cursor = conn.cursor()
             query = """
-                SELECT TOP 1
+                SELECT
                     u.idUsuario,      -- índice [0]
                     u.nombres,        -- índice [1]
                     u.apellidos,      -- índice [2]
@@ -67,28 +55,33 @@ def main(page: ft.Page):
                     c.numeroContrato, -- índice [7]
                     u.cedula,         -- índice [8]
                     u.numeroEmpleado, -- índice [9]
-                    c.fecha           -- índice [10] (nuevo campo añadido)
-                FROM            Usuario u
-                LEFT JOIN      Equipo e ON u.idUsuario = e.idUsuario
-                CROSS APPLY   (SELECT TOP 1 numeroContrato, fecha 
-                            FROM   Contrato 
-                            ORDER  BY idContrato DESC) c
-                ORDER BY      u.idUsuario DESC
+                    c.fecha           -- índice [10]
+                FROM Usuario u
+                INNER JOIN Equipo e ON u.idUsuario = e.idUsuario
+                INNER JOIN Contrato c ON u.idUsuario = c.idUsuario AND e.idEquipo = c.idEquipo
+                WHERE c.numeroContrato = ?
             """
-            cursor.execute(query)
+            cursor.execute(query, (numero_contrato,))
             row = cursor.fetchone()
             conn.close()
             return row
         return None
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+def main(page: ft.Page):
+    page.title = "Contratos"
+    page.window.alignment = ft.alignment.center
+    page.window.width = 1250
+    page.window.height = 600
+    page.window.resizable = True
+    page.padding = 20
+    page.scroll = "auto" # type: ignore   
+    
     #Funcion para generar los PDFs
-    def generar_pdf_contrato(e):
+    def generar_pdf_contrato(e, ultimo_registro=None):
         try:
-            ultimo_registro = get_last_records()
             if not ultimo_registro:
                 snack_bar = ft.SnackBar(
-                    ft.Text("No hay datos para generar el PDF"), 
+                    ft.Text("Por favor seleccione un contrato"), 
                     duration=3000
                 )
                 page.overlay.append(snack_bar)
@@ -242,6 +235,100 @@ def main(page: ft.Page):
             snack_bar.open = True
             page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Función para manejar la selección de fila
+    def on_select_row(e: ft.DataRow):
+        selected_contract = e.data
+        if selected_contract:
+            contrato_data = get_contract_by_number(selected_contract)
+            if contrato_data:
+                generar_pdf_contrato(e, contrato_data)
+            else:
+                snack_bar = ft.SnackBar(
+                    ft.Text("No se encontró el contrato seleccionado"), 
+                    duration=3000
+                )
+                page.overlay.append(snack_bar)
+                snack_bar.open = True
+                page.update()
+
+    
+    # Crear tabla vacía primero
+    tabla_contratos = ft.DataTable(
+        columns=[],
+        rows=[],
+        border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200),
+        border_radius=10,
+        vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200),
+        show_checkbox_column=True,
+    )
+
+    def actualizar_tabla():
+        # Obtener datos
+        contratos = get_contract_list()
+        
+        # Actualizar encabezados
+        tabla_contratos.columns = [
+            ft.DataColumn(ft.Text("#")),
+            ft.DataColumn(ft.Text("Nombre")),
+            ft.DataColumn(ft.Text("Apellido")),
+            ft.DataColumn(ft.Text("Cedula")),
+            ft.DataColumn(ft.Text("Empleado")),
+            ft.DataColumn(ft.Text("Marca")),
+            ft.DataColumn(ft.Text("Modelo")),
+            ft.DataColumn(ft.Text("Condicion")),
+            ft.DataColumn(ft.Text("Contrato")),
+            ft.DataColumn(ft.Text("Fecha")),
+        ]
+
+        # Actualizar filas
+        tabla_contratos.rows = [
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(str(contrato[0]))),
+                    ft.DataCell(ft.Text(str(contrato[1]))),
+                    ft.DataCell(ft.Text(str(contrato[2]))),
+                    ft.DataCell(ft.Text(str(contrato[3]))),
+                    ft.DataCell(ft.Text(str(contrato[4]))),
+                    ft.DataCell(ft.Text(str(contrato[5]))),
+                    ft.DataCell(ft.Text(str(contrato[6]))),
+                    ft.DataCell(ft.Text(str(contrato[7]))),
+                    ft.DataCell(ft.Text(str(contrato[8]))),
+                    ft.DataCell(ft.Text(str(contrato[9]))),
+                ],
+                on_select_changed=lambda e, num_contrato=contrato[8]: on_select_row(e, num_contrato),
+                data=contrato[8]
+            ) for contrato in contratos
+        ]
+        page.update()
+    # Obtener datos iniciales
+    contratos = get_contract_list()
+    actualizar_tabla()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Modificar la creación de filas para incluir selección y datos
+    filas = [
+        ft.DataRow(
+            cells=[
+                ft.DataCell(ft.Text(str(contrato[0]))),
+                ft.DataCell(ft.Text(str(contrato[1]))),
+                ft.DataCell(ft.Text(str(contrato[2]))),
+                ft.DataCell(ft.Text(str(contrato[3]))),
+                ft.DataCell(ft.Text(str(contrato[4]))),
+                ft.DataCell(ft.Text(str(contrato[5]))),
+                ft.DataCell(ft.Text(str(contrato[6]))),
+                ft.DataCell(ft.Text(str(contrato[7]))),
+                ft.DataCell(ft.Text(str(contrato[8]))),
+                ft.DataCell(ft.Text(str(contrato[9]))),
+            ],
+            on_select_changed=lambda e: on_select_row(e),
+            data=contrato[8]  # Guardamos el número de contrato
+        ) for contrato in contratos
+    ]    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
     # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
     def open_dlg_modal(e):
@@ -375,11 +462,11 @@ def main(page: ft.Page):
                                 # TextField para ingresar el nombre
                                 ft.TextField(label="Buscar Nombre", width=200),                                
                                 # Botón de Buscar
-                                ft.ElevatedButton(text="Buscar"),                                
+                                ft.ElevatedButton(text="Buscar", icon=ft.icons.SEARCH),                                
                                 # Botón de Imprimir
-                                ft.ElevatedButton(text="Imprimir", on_click=generar_pdf_contrato),                                
+                                ft.ElevatedButton(text="Imprimir", icon=ft.icons.PRINT, on_click= lambda e: generar_pdf_contrato(e, None)),                                
                                 # Botón de Nuevo
-                                ft.ElevatedButton(text="Nuevo", on_click=tab_insertar_usuario),
+                                ft.ElevatedButton(text="Nuevo", icon=ft.icons.ADD, on_click=tab_insertar_usuario),
                             ],
                         ),
                         tabla_contratos
@@ -388,6 +475,9 @@ def main(page: ft.Page):
             ),
         ],
     )
+    # Actualizar la tabla con los datos
+    actualizar_tabla()
+    
     page.add(mainTab)
     page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
