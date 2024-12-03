@@ -371,8 +371,7 @@ def contract_panel(page: ft.Page):
                                 ])
                             ],                                
                             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                        ),
-                        
+                        ),                        
                         # Columna con los controles del formulario
                         ft.Container(
                             content=ft.Column(
