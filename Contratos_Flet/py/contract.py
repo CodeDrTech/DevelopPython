@@ -256,9 +256,9 @@ def contract_panel(page: ft.Page):
             <para>
             <b>Cláusula Primera: Entrega del Equipo</b><br/><br/>
             La Empresa hace entrega a El Empleado del siguiente equipo tecnológico:<br/><br/>
-            Marca: {ultimo_registro[4] or 'N/A'}<br/>
-            Modelo: {ultimo_registro[5] or 'N/A'}<br/>
-            Condición: {ultimo_registro[6] or 'N/A'}<br/><br/>
+            Marca: <b>{ultimo_registro[4] or 'N/A'}</b><br/>
+            Modelo: <b>{ultimo_registro[5] or 'N/A'}</b><br/>
+            Condición: <b>{ultimo_registro[6] or 'N/A'}</b><br/><br/>
             El equipo entregado es propiedad de La Empresa y será utilizado exclusivamente para actividades relacionadas con sus funciones laborales.
             </para>
             """
@@ -321,13 +321,13 @@ def contract_panel(page: ft.Page):
             
             __________________________<br/>
             Representante autorizado<br/>
-            SELACT CORP<br/><br/><br/><br/>
+            <b>SELACT CORP</b><br/><br/><br/><br/>
             
             
             __________________________<br/>
-            {ultimo_registro[1]} {ultimo_registro[2]}<br/>
-            Cédula: {ultimo_registro[8]}<br/>
-            Código de Empleado: {ultimo_registro[9]}
+            <b>{ultimo_registro[1]} {ultimo_registro[2]}</b><br/>
+            Cédula: <b>{ultimo_registro[8]}</b><br/>
+            Código de Empleado: <b>{ultimo_registro[9]}</b>
             </para>
             """
             elementos.append(Paragraph(firmas, estilos['Normal']))
