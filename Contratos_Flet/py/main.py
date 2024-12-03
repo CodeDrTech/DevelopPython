@@ -81,7 +81,7 @@ def main(page: ft.Page):
             try:
                 if not ultimo_registro:
                     snack_bar = ft.SnackBar(
-                        ft.Text("Por favor seleccione un contrato"), 
+                        ft.Text("Por favor seleccione un contratode la lista"), 
                         duration=3000
                     )
                     page.overlay.append(snack_bar)
