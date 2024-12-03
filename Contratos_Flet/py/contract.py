@@ -318,13 +318,13 @@ def contract_panel(page: ft.Page):
             # Firmas centradas
             firmas = f"""
             <para align=center>
-            Firma de La Empresa:<br/><br/>
-            __________________________<br/><br/>
+            
+            __________________________<br/>
             Representante autorizado<br/>
             SELACT CORP<br/><br/><br/><br/>
             
-            Firma de El Empleado:<br/><br/>
-            __________________________<br/><br/>
+            
+            __________________________<br/>
             {ultimo_registro[1]} {ultimo_registro[2]}<br/>
             Cédula: {ultimo_registro[8]}<br/>
             Código de Empleado: {ultimo_registro[9]}
