@@ -1,7 +1,7 @@
 import flet as ft
 from database import connect_to_db
 from flet import AppView
-import datetime, time
+import datetime, time, subprocess
 
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
@@ -89,7 +89,7 @@ def main(page: ft.Page):
                     page.update()
                     return
 
-                pdf_path = f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf"
+                pdf_path = os.path.abspath(f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf")
                 os.makedirs("Contratos_Flet/pdf", exist_ok=True)
                 
                 doc = SimpleDocTemplate(
@@ -226,7 +226,7 @@ def main(page: ft.Page):
                 time.sleep(3)
                 
                 # Abrir el PDF después de generarlo
-                os.startfile(pdf_path)  # Esto abrirá el PDF con el programa predeterminado
+                subprocess.Popen([pdf_path], shell=True)
                 
                 snack_bar = ft.SnackBar(
                     ft.Text(f"PDF del contrato generado y abierto exitosamente"), 
