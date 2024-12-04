@@ -294,7 +294,7 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(str(contrato[8]))),
                     ft.DataCell(ft.Text(str(contrato[9]))),
                 ],
-                on_select_changed=lambda e, num_contrato=contrato[8]: on_select_row(num_contrato),
+                on_long_press=lambda e, num_contrato=contrato[8]: on_select_row(num_contrato),
                 data=contrato[8]
             ) for contrato in contratos
         ]
