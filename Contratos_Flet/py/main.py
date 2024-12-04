@@ -220,9 +220,6 @@ def main(page: ft.Page):
 
                 doc.build(elementos)
                 
-                # Mensaje de depuración
-                #print(f"PDF generado en: {pdf_path}")  # Verifica la ruta
-                
                 time.sleep(1)
                 
                 # Abrir el PDF después de generarlo

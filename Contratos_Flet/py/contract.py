@@ -2,7 +2,8 @@ import flet as ft
 from database import connect_to_db
 from queries import insertar_nuevo_contrato
 from flet import AppView
-import datetime
+import datetime, time, subprocess
+
 
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
@@ -205,9 +206,10 @@ def contract_panel(page: ft.Page):
                 page.update()
                 return
 
+            pdf_path = os.path.abspath(f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf")
             os.makedirs("Contratos_Flet/pdf", exist_ok=True)
             doc = SimpleDocTemplate(
-                f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf",
+                pdf_path,
                 pagesize=letter,
                 rightMargin=72,
                 leftMargin=72,
@@ -333,6 +335,11 @@ def contract_panel(page: ft.Page):
             elementos.append(Paragraph(firmas, estilos['Normal']))
 
             doc.build(elementos)
+            
+            time.sleep(1)
+                
+            # Abrir el PDF después de generarlo
+            subprocess.Popen([pdf_path], shell=True)
             
             snack_bar = ft.SnackBar(
                 ft.Text(f"PDF del contrato generado exitosamente"), 
