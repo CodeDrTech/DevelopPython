@@ -1,7 +1,7 @@
 import flet as ft
 from database import connect_to_db
 from flet import AppView
-import datetime
+import datetime, time
 
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
@@ -219,6 +219,11 @@ def main(page: ft.Page):
                 elementos.append(Paragraph(firmas, estilos['Normal']))
 
                 doc.build(elementos)
+                
+                # Mensaje de depuración
+                print(f"PDF generado en: {pdf_path}")  # Verifica la ruta
+                
+                time.sleep(3)
                 
                 # Abrir el PDF después de generarlo
                 os.startfile(pdf_path)  # Esto abrirá el PDF con el programa predeterminado
