@@ -221,9 +221,9 @@ def main(page: ft.Page):
                 doc.build(elementos)
                 
                 # Mensaje de depuración
-                print(f"PDF generado en: {pdf_path}")  # Verifica la ruta
+                #print(f"PDF generado en: {pdf_path}")  # Verifica la ruta
                 
-                time.sleep(3)
+                time.sleep(1)
                 
                 # Abrir el PDF después de generarlo
                 subprocess.Popen([pdf_path], shell=True)
