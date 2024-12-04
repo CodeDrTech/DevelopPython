@@ -81,7 +81,7 @@ def main(page: ft.Page):
             try:
                 if not ultimo_registro:
                     snack_bar = ft.SnackBar(
-                        ft.Text("Por favor seleccione un contratode la lista"), 
+                        ft.Text("Por favor seleccione un contrato de la lista"), 
                         duration=3000
                     )
                     page.overlay.append(snack_bar)
@@ -89,9 +89,11 @@ def main(page: ft.Page):
                     page.update()
                     return
 
+                pdf_path = f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf"
                 os.makedirs("Contratos_Flet/pdf", exist_ok=True)
+                
                 doc = SimpleDocTemplate(
-                    f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf",
+                    pdf_path,
                     pagesize=letter,
                     rightMargin=72,
                     leftMargin=72,
@@ -218,8 +220,11 @@ def main(page: ft.Page):
 
                 doc.build(elementos)
                 
+                # Abrir el PDF después de generarlo
+                os.startfile(pdf_path)  # Esto abrirá el PDF con el programa predeterminado
+                
                 snack_bar = ft.SnackBar(
-                    ft.Text(f"PDF del contrato generado exitosamente"), 
+                    ft.Text(f"PDF del contrato generado y abierto exitosamente"), 
                     duration=3000
                 )
                 page.overlay.append(snack_bar)
