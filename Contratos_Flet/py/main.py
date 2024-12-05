@@ -67,20 +67,6 @@ def get_contract_by_number(numero_contrato):
             return row
         return None
 
-
-def filter_contracts(search_text):
-    all_contracts = get_contract_list()
-    if not search_text:
-        return all_contracts
-    filtered_contracts = [
-        contrato for contrato in all_contracts
-        if search_text.lower() in contrato[1].lower() or  # Nombre
-           search_text.lower() in contrato[2].lower() or  # Apellido
-           search_text.lower() in contrato[3].lower()      # Cédula
-    ]
-    return filtered_contracts
-
-
 def main(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
@@ -322,7 +308,7 @@ def main(page: ft.Page):
     def buscar_contratos(e):
         # Obtener el texto ingresado por el usuario
         texto_busqueda = e.control.value.lower().strip()
-        
+
         # Filtrar los contratos que coincidan con el nombre
         contratos_filtrados = [
             contrato for contrato in contratos
