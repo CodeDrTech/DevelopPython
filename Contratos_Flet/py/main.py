@@ -30,7 +30,7 @@ def get_contract_list():
             FROM Usuario u
             INNER JOIN Equipo e ON u.idUsuario = e.idUsuario
             INNER JOIN Contrato c ON u.idUsuario = c.idUsuario AND e.idEquipo = c.idEquipo
-            ORDER BY c.fecha DESC
+            ORDER BY c.numeroContrato DESC
         """
         cursor.execute(query)
         rows = cursor.fetchall()
