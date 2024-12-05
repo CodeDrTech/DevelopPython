@@ -317,16 +317,25 @@ def main(page: ft.Page):
                 ],
                 on_long_press=lambda e, num_contrato=contrato[8]: on_select_row(num_contrato),
                 data=contrato[8]
-            ) for contrato in contratos
+            ) for contrato in contracts
         ]
         page.update()
         
     
     
     def buscar_contratos(e):
-        search_text = e.control.value
-        filtered_contracts = filter_contracts(search_text)
-        actualizar_tabla(filtered_contracts)
+        # Obtener el texto ingresado por el usuario
+        texto_busqueda = e.control.value.lower().strip()
+
+        # Filtrar los contratos que coincidan con el nombre
+        contratos_filtrados = [
+            contrato for contrato in contratos
+            if texto_busqueda in contrato[1].lower()  # Comparar con el nombre (índice 1)
+        ]
+
+        # Actualizar las filas del DataTable
+        actualizar_tabla(contratos_filtrados)
+
         
     # Obtener datos iniciales
     contratos = get_contract_list()
