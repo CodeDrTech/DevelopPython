@@ -10,10 +10,6 @@ def login(page: ft.Page):
     page.window.height = 300
     page.window.resizable = False
     
-    
-    
-    
-
     def iniciar_sesion(e):
         usuario = txt_usuario.value
         contrasena = txt_contrasena.value
