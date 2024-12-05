@@ -10,6 +10,10 @@ def login(page: ft.Page):
     page.window.height = 300
     page.window.resizable = False
     
+    #Inicia el foco el en campo contrasena si se presiona enter en el campo usuario.
+    def foco_contrasena(e):
+        txt_contrasena.focus()
+
     def iniciar_sesion(e):
         usuario = txt_usuario.value
         contrasena = txt_contrasena.value
@@ -45,8 +49,8 @@ def login(page: ft.Page):
 
             lbl_mensaje.update()
 
-    txt_usuario = ft.TextField(label="Usuario", width=300)
-    txt_contrasena = ft.TextField(label="Contraseña", password=True, width=300)
+    txt_usuario = ft.TextField(label="Usuario", width=300, on_submit=foco_contrasena)
+    txt_contrasena = ft.TextField(label="Contraseña", password=True, width=300, on_submit=iniciar_sesion)
     btn_iniciar = ft.ElevatedButton("Iniciar Sesión", on_click=iniciar_sesion)
     lbl_mensaje = ft.Text(value="", size=14)
     
