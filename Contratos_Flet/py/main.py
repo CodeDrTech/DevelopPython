@@ -10,7 +10,7 @@ from reportlab.lib.units import inch
 import os
 
 
-# Función para obtener los datos del query
+# Función para obtener los datos de los contratos registrados
 def get_contract_list():
     conn = connect_to_db()
     if conn:
@@ -38,7 +38,7 @@ def get_contract_list():
         return rows
     return []
 
-# Función para obtener un contrato específico
+# Función para obtener un contrato específico, tomando como parametro el numero del contrato
 def get_contract_by_number(numero_contrato):
         conn = connect_to_db()
         if conn:
@@ -67,6 +67,7 @@ def get_contract_by_number(numero_contrato):
             return row
         return None
 
+#Funcion principal para iniciar la ventana con los controles.
 def main(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
@@ -76,7 +77,7 @@ def main(page: ft.Page):
     page.padding = 20
     page.scroll = "auto" # type: ignore
 
-    #Funcion para generar los PDFs
+    #Funcion para generar los PDFs, guradarlos y abrirlos.
     def generar_pdf_contrato(e, ultimo_registro=None):
             try:
                 if not ultimo_registro:
@@ -89,7 +90,11 @@ def main(page: ft.Page):
                     page.update()
                     return
 
+                
+                # Se define la ruta absoluta para el archivo PDF, usando el número de contrato.
                 pdf_path = os.path.abspath(f"Contratos_Flet/pdf/Contrato_{ultimo_registro[7]}.pdf")
+                
+                # Se crea el directorio "Contratos_Flet/pdf" si no existe, sin generar error si ya existe.
                 os.makedirs("Contratos_Flet/pdf", exist_ok=True)
                 
                 doc = SimpleDocTemplate(
@@ -220,9 +225,10 @@ def main(page: ft.Page):
 
                 doc.build(elementos)
                 
+                #Esperar un segundo antes de abrir el pdf luego de ser creado.
                 time.sleep(1)
                 
-                # Abrir el PDF después de generarlo
+                # Abrir el PDF después de generarlo y esperar un segundo.
                 subprocess.Popen([pdf_path], shell=True)
                 
                 snack_bar = ft.SnackBar(
@@ -243,7 +249,7 @@ def main(page: ft.Page):
                 page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Función para manejar la selección de fila
+    # Función para manejar la selección de fila, para crear el pdf del contrato seleccionado de la lista.
     def on_select_row(num_contrato):        
         contrato_data = get_contract_by_number(num_contrato)
         if contrato_data:
@@ -258,7 +264,8 @@ def main(page: ft.Page):
             page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Crear tabla vacía primero
+    
+    # Crea una tabla para mostrar los contratos. Inicialmente está vacía.
     tabla_contratos = ft.DataTable(
         columns=[],
         rows=[],
@@ -268,8 +275,9 @@ def main(page: ft.Page):
         show_checkbox_column=True,
     )
     
+    # Función para actualizar la tabla de contratos con nuevos datos.
     def actualizar_tabla(contracts):        
-        # Actualizar encabezados
+        # Define las columnas de la tabla.
         tabla_contratos.columns = [
             ft.DataColumn(ft.Text("#")),
             ft.DataColumn(ft.Text("Nombre")),
@@ -283,7 +291,7 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Fecha")),
         ]
 
-        # Actualizar filas
+        # Crea las filas de la tabla a partir de la lista de contratos.  Cada fila tiene un evento on_long_press que llama a on_select_row cuando se mantiene pulsada.
         tabla_contratos.rows = [
             ft.DataRow(
                 cells=[
@@ -299,61 +307,75 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(str(contrato[9]))),
                 ],
                 on_long_press=lambda e, num_contrato=contrato[8]: on_select_row(num_contrato),
-                data=contrato[8]
+                data=contrato[8] # Guarda el número de contrato en los datos de la fila
             ) for contrato in contracts
         ]
+        # Actualiza la página para que los cambios sean visibles.
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Función para buscar contratos por nombre.  Se activa cuando cambia el valor del TextField de búsqueda.
     def buscar_contratos(e):
-        # Obtener el texto ingresado por el usuario
+        # Obtiene el texto de búsqueda, lo convierte a minúsculas y elimina espacios en blanco.
         texto_busqueda = e.control.value.lower().strip()
 
-        # Filtrar los contratos que coincidan con el nombre
+        # Filtra la lista de contratos para encontrar coincidencias con el texto de búsqueda en el campo "Nombre" (índice 1).
         contratos_filtrados = [
             contrato for contrato in contratos
             if texto_busqueda in contrato[1].lower()  # Comparar con el nombre (índice 1)
         ]
 
-        # Actualizar las filas del DataTable
+        # Actualiza la tabla de contratos con los resultados filtrados.
         actualizar_tabla(contratos_filtrados)
 
-    # Obtener datos iniciales
+    # Obtiene la lista completa de contratos de la base de datos al iniciar la aplicación.
     contratos = get_contract_list()
+    # Carga la tabla de contratos con los datos obtenidos.
     actualizar_tabla(contratos)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Modificar la creación de filas para incluir selección y datos
+    # Crea una lista de filas para la tabla de contratos. Cada fila representa un contrato.
     filas = [
+        # Crea una fila de datos para cada contrato.
         ft.DataRow(
+            # Define las celdas de datos de cada fila, cada celda contiene un elemento de texto que representa un campo del contrato.
             cells=[
-                ft.DataCell(ft.Text(str(contrato[0]))),
-                ft.DataCell(ft.Text(str(contrato[1]))),
-                ft.DataCell(ft.Text(str(contrato[2]))),
-                ft.DataCell(ft.Text(str(contrato[3]))),
-                ft.DataCell(ft.Text(str(contrato[4]))),
-                ft.DataCell(ft.Text(str(contrato[5]))),
-                ft.DataCell(ft.Text(str(contrato[6]))),
-                ft.DataCell(ft.Text(str(contrato[7]))),
-                ft.DataCell(ft.Text(str(contrato[8]))),
-                ft.DataCell(ft.Text(str(contrato[9]))),
+                ft.DataCell(ft.Text(str(contrato[0]))), # Número de registro
+                ft.DataCell(ft.Text(str(contrato[1]))), # Nombre
+                ft.DataCell(ft.Text(str(contrato[2]))), # Apellido
+                ft.DataCell(ft.Text(str(contrato[3]))), # Cédula
+                ft.DataCell(ft.Text(str(contrato[4]))), # Empleado
+                ft.DataCell(ft.Text(str(contrato[5]))), # Marca
+                ft.DataCell(ft.Text(str(contrato[6]))), # Modelo
+                ft.DataCell(ft.Text(str(contrato[7]))), # Condición
+                ft.DataCell(ft.Text(str(contrato[8]))), # Número de contrato
+                ft.DataCell(ft.Text(str(contrato[9]))), # Fecha
             ],
+            # Define la función a ejecutar cuando se selecciona una fila.
             on_select_changed=lambda e: on_select_row(e),
+            # Guarda el número de contrato como dato de la fila para facilitar el acceso posterior.
             data=contrato[8]  # Guardamos el número de contrato
-        ) for contrato in contratos
+        ) for contrato in contratos # Itera sobre la lista de contratos para crear las filas.
     ]
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
-    # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
+    # Función para abrir un cuadro de diálogo modal.
     def open_dlg_modal(e):
+        # Agrega el cuadro de diálogo modal a la sobrecapa de la página.
         e.control.page.overlay.append(dlg_modal)
+        # Abre el cuadro de diálogo modal.
         dlg_modal.open = True
+        # Actualiza la página para mostrar el cuadro de diálogo.
         e.control.page.update()
         
+    # Función para cerrar un cuadro de diálogo modal.
     def close_dlg(e):
+        # Cierra el cuadro de diálogo modal.
         dlg_modal.open = False
+        # Actualiza la página para ocultar el cuadro de diálogo.
         e.control.page.update()
 
+    # Define el cuadro de diálogo modal que se mostrará al usuario.
     dlg_modal = ft.AlertDialog(
         modal=True,
         title=ft.Text("Falta información"),
@@ -366,42 +388,42 @@ def main(page: ft.Page):
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Obtener datos para la tabla
+    # Obtener datos de la lista de contratos desde la base de datos.
     contratos = get_contract_list()
 
-    # Crear encabezados
+    # Definir los encabezados de la tabla.
     encabezados = [
-        ft.DataColumn(ft.Text("#")),
-        ft.DataColumn(ft.Text("Nombre")),
-        ft.DataColumn(ft.Text("Apellido")),
-        ft.DataColumn(ft.Text("Cedula")),
-        ft.DataColumn(ft.Text("Empleado")),
-        ft.DataColumn(ft.Text("Marca")),
-        ft.DataColumn(ft.Text("Modelo")),
-        ft.DataColumn(ft.Text("Condicion")),
-        ft.DataColumn(ft.Text("Contrato")),
-        ft.DataColumn(ft.Text("Fecha")),
+        ft.DataColumn(ft.Text("#")), # Encabezado para el número de registro.
+        ft.DataColumn(ft.Text("Nombre")), # Encabezado para el nombre del usuario.
+        ft.DataColumn(ft.Text("Apellido")), # Encabezado para el apellido del usuario.
+        ft.DataColumn(ft.Text("Cedula")), # Encabezado para la cédula del usuario.
+        ft.DataColumn(ft.Text("Empleado")), # Encabezado para el número de empleado.
+        ft.DataColumn(ft.Text("Marca")), # Encabezado para la marca del equipo.
+        ft.DataColumn(ft.Text("Modelo")), # Encabezado para el modelo del equipo.
+        ft.DataColumn(ft.Text("Condicion")), # Encabezado para la condición del equipo.
+        ft.DataColumn(ft.Text("Contrato")), # Encabezado para el número de contrato.
+        ft.DataColumn(ft.Text("Fecha")), # Encabezado para la fecha del contrato.
     ]
 
-    # Crear filas de la tabla
+    # Crear las filas de la tabla, iterando sobre la lista de contratos.  Cada fila representa un contrato.
     filas = [
         ft.DataRow(
             cells=[
-                ft.DataCell(ft.Text(str(contrato[0]))),  # Numero
-                ft.DataCell(ft.Text(str(contrato[1]))),  # Nomre
-                ft.DataCell(ft.Text(str(contrato[2]))),  # Apellido
-                ft.DataCell(ft.Text(str(contrato[3]))),  # Cedula
-                ft.DataCell(ft.Text(str(contrato[4]))),  # Empleado
-                ft.DataCell(ft.Text(str(contrato[5]))),  # Marca
-                ft.DataCell(ft.Text(str(contrato[6]))),  # Modelo
-                ft.DataCell(ft.Text(str(contrato[7]))),  # Condicio
-                ft.DataCell(ft.Text(str(contrato[8]))),  # NumeroContrato
-                ft.DataCell(ft.Text(str(contrato[9]))),  # Fecha
+                ft.DataCell(ft.Text(str(contrato[0]))),  # Número de registro del contrato.
+                ft.DataCell(ft.Text(str(contrato[1]))),  # Nombre del usuario.
+                ft.DataCell(ft.Text(str(contrato[2]))),  # Apellido del usuario.
+                ft.DataCell(ft.Text(str(contrato[3]))),  # Cédula del usuario.
+                ft.DataCell(ft.Text(str(contrato[4]))),  # Número de empleado.
+                ft.DataCell(ft.Text(str(contrato[5]))),  # Marca del equipo.
+                ft.DataCell(ft.Text(str(contrato[6]))),  # Modelo del equipo.
+                ft.DataCell(ft.Text(str(contrato[7]))),  # Condición del equipo.
+                ft.DataCell(ft.Text(str(contrato[8]))),  # Número de contrato.
+                ft.DataCell(ft.Text(str(contrato[9]))),  # Fecha del contrato.
             ]
         ) for contrato in contratos
     ]
 
-    # Crear la tabla
+    # Crear la tabla con los encabezados y filas definidos previamente. Se definen estilos de borde y radio.
     tabla_contratos = ft.DataTable(columns=encabezados, rows=filas, border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200), border_radius=10, vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200))
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -450,7 +472,6 @@ def main(page: ft.Page):
         animation_duration=300,
         expand=True,
         on_change=cambio_tab,
-        #scrollable=True,
         
         
         # Contenedor de tabs
@@ -487,6 +508,3 @@ def main(page: ft.Page):
     page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-
-#ft.app(main)
-#ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
