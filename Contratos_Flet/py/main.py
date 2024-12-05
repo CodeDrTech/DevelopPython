@@ -67,6 +67,20 @@ def get_contract_by_number(numero_contrato):
             return row
         return None
 
+
+def filter_contracts(search_text):
+    all_contracts = get_contract_list()
+    if not search_text:
+        return all_contracts
+    filtered_contracts = [
+        contrato for contrato in all_contracts
+        if search_text.lower() in contrato[1].lower() or  # Nombre
+           search_text.lower() in contrato[2].lower() or  # Apellido
+           search_text.lower() in contrato[3].lower()      # Cédula
+    ]
+    return filtered_contracts
+
+
 def main(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
@@ -268,7 +282,7 @@ def main(page: ft.Page):
         show_checkbox_column=True,
     )
     
-    def actualizar_tabla():
+    def actualizar_tabla(contracts):
         # Obtener datos
         contratos = get_contract_list()
         
@@ -307,9 +321,16 @@ def main(page: ft.Page):
         ]
         page.update()
         
+    
+    
+    def buscar_contratos(e):
+        search_text = e.control.value
+        filtered_contracts = filter_contracts(search_text)
+        actualizar_tabla(filtered_contracts)
+        
     # Obtener datos iniciales
     contratos = get_contract_list()
-    actualizar_tabla()
+    actualizar_tabla(contratos)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Modificar la creación de filas para incluir selección y datos
@@ -466,7 +487,7 @@ def main(page: ft.Page):
                         ft.Row(
                             [
                                 # TextField para ingresar el nombre
-                                ft.TextField(label="Buscar Nombre", width=200),                                
+                                ft.TextField(label="Buscar Nombre", width=200, on_change=buscar_contratos),                                
                                 # Botón de Buscar
                                 ft.ElevatedButton(text="Buscar", icon=ft.icons.SEARCH),                                
                                 # Botón de Imprimir
@@ -482,7 +503,7 @@ def main(page: ft.Page):
         ],
     )
     # Actualizar la tabla con los datos
-    actualizar_tabla()
+    actualizar_tabla(contratos)
     
     page.add(mainTab)
     page.update()
