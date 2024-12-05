@@ -496,11 +496,7 @@ def main(page: ft.Page):
                         ft.Row(
                             [
                                 # TextField para ingresar el nombre
-                                ft.TextField(label="Buscar Nombre", width=200, on_change=buscar_contratos),                                
-                                # Botón de Buscar
-                                ft.ElevatedButton(text="Buscar", icon=ft.icons.SEARCH),                                
-                                # Botón de Imprimir
-                                ft.ElevatedButton(text="Imprimir", icon=ft.icons.PRINT, on_click= lambda e: generar_pdf_contrato(e, None)),                                
+                                ft.TextField(label="Buscar Nombre", width=200, on_change=buscar_contratos, icon=ft.icons.SEARCH),                                
                                 # Botón de Nuevo
                                 ft.ElevatedButton(text="Nuevo", icon=ft.icons.ADD, on_click=tab_insertar_usuario),
                             ],
