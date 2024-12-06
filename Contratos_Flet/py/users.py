@@ -2,7 +2,7 @@ import flet as ft
 from database import connect_to_db
 from queries import insertar_nuevo_usuario
 from flet import AppView, ScrollMode
-import datetime
+import datetime, time
 
 
 def user_panel(page: ft.Page):
@@ -57,9 +57,9 @@ def user_panel(page: ft.Page):
         formatted = ''
         for i, char in enumerate(raw):
             if i == 3 or i == 10:  # Añadir guion después de la tercera y décima posición
-                formatted += '-'
+                formatted += f'-'
             formatted += char
-
+            
         # Actualizar el campo de texto
         txt_cedula.current.value = formatted
         txt_cedula.current.update()

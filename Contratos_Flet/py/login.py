@@ -71,5 +71,5 @@ def login(page: ft.Page):
     )
     txt_usuario.focus()
     
-ft.app(login)
-#ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)
+#ft.app(login)
+ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)
