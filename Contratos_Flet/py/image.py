@@ -10,10 +10,11 @@ def image_panel(page: ft.Page):
     page.window.alignment = ft.alignment.center
     page.window.width = 1250
     page.window.height = 600
-    page.window.resizable = True
+    page.window.resizable = False
     page.padding = 20
-    #page.scroll = "auto" # type: ignore
+    page.scroll = "auto"
     
+    #Funcion para llamar al panel principal.
     def tab_insertar_contrato(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
         page.clean()
@@ -21,7 +22,7 @@ def image_panel(page: ft.Page):
         # Importamos y ejecutamos la función y sus controles en la página actual
         from contract import contract_panel
         contract_panel(page)
-        #-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
     # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
     def open_dlg_modal(e):

@@ -73,7 +73,7 @@ def main(page: ft.Page):
     page.window.alignment = ft.alignment.center
     page.window.width = 1250
     page.window.height = 600
-    page.window.resizable = True
+    page.window.resizable = False
     page.padding = 20
     page.scroll = "auto" # type: ignore
 
