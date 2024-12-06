@@ -1,7 +1,7 @@
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nuevo_contrato
-from flet import AppView
+from flet import AppView, ScrollMode
 import datetime, time, subprocess
 
 
@@ -69,7 +69,7 @@ def contract_panel(page: ft.Page):
     page.window.height = 600
     page.window.resizable = False
     page.padding = 20
-    page.scroll = "auto"
+    page.scroll = ScrollMode.AUTO
     
     
     #Funcion para llamar al panel principal.

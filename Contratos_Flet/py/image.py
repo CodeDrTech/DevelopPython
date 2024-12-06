@@ -1,7 +1,7 @@
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nueva_imagen
-from flet import AppView
+from flet import AppView, ScrollMode
 import datetime
 
 
@@ -12,7 +12,7 @@ def image_panel(page: ft.Page):
     page.window.height = 600
     page.window.resizable = False
     page.padding = 20
-    page.scroll = "auto"
+    page.scroll = ScrollMode.AUTO
     
     #Funcion para llamar al panel principal.
     def tab_insertar_contrato(e):

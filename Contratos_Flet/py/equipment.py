@@ -1,7 +1,7 @@
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nuevo_equipo
-from flet import AppView
+from flet import AppView, ScrollMode
 import datetime
 
 def get_user_list():
@@ -29,7 +29,7 @@ def equipment_panel(page: ft.Page):
     page.window.height = 600
     page.window.resizable = False
     page.padding = 20
-    page.scroll = "auto"
+    page.scroll = ScrollMode.AUTO
     
     def tab_inserta_imagen(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual

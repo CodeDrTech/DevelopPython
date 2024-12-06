@@ -1,6 +1,6 @@
 import flet as ft
 from database import connect_to_db
-from flet import AppView
+from flet import AppView, ScrollMode
 
 
 def login(page: ft.Page):
@@ -9,7 +9,7 @@ def login(page: ft.Page):
     page.window.width = 400
     page.window.height = 300
     page.window.resizable = False
-    page.scroll = "auto"
+    page.scroll = ScrollMode.AUTO
     
     #Inicia el foco el en campo contrasena si se presiona enter en el campo usuario.
     def foco_contrasena(e):

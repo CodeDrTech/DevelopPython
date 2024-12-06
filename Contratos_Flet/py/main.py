@@ -1,6 +1,6 @@
 import flet as ft
 from database import connect_to_db
-from flet import AppView
+from flet import AppView, ScrollMode
 import datetime, time, subprocess
 
 from reportlab.lib.pagesizes import letter
@@ -75,7 +75,7 @@ def main(page: ft.Page):
     page.window.height = 600
     page.window.resizable = False
     page.padding = 20
-    page.scroll = "auto" # type: ignore
+    page.scroll = ScrollMode.AUTO
 
     #Funcion para generar los PDFs, guradarlos y abrirlos.
     def generar_pdf_contrato(e, ultimo_registro=None):
