@@ -12,6 +12,7 @@ def login(page: ft.Page):
     
     #Inicia el foco el en campo contrasena si se presiona enter en el campo usuario.
     def foco_contrasena(e):
+        
         txt_contrasena.focus()
 
     def iniciar_sesion(e):
@@ -28,7 +29,7 @@ def login(page: ft.Page):
 
             if result:
                 lbl_mensaje.value = "¡Inicio de sesión exitoso!"
-                lbl_mensaje.color = ft.colors.GREEN
+                lbl_mensaje.color = ft.Colors.GREEN
                 lbl_mensaje.update()
             
                 # En lugar de iniciar una nueva aplicación, limpiamos la página actual.
@@ -40,7 +41,7 @@ def login(page: ft.Page):
 
             else:
                 lbl_mensaje.value = "Usuario o contraseña incorrectos."
-                lbl_mensaje.color = ft.colors.RED
+                lbl_mensaje.color = ft.Colors.RED
                 txt_usuario.value = ""
                 txt_contrasena.value = ""
                 txt_usuario.update()
@@ -68,5 +69,6 @@ def login(page: ft.Page):
         )
     )
     txt_usuario.focus()
+    
 ft.app(login)
 #ft.app(target=login, port=8080, view=AppView.WEB_BROWSER)
