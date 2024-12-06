@@ -75,7 +75,7 @@ def main(page: ft.Page):
     page.window.height = 600
     page.window.resizable = False
     page.padding = 20
-    page.scroll = ScrollMode.AUTO
+    page.scroll = ScrollMode.ADAPTIVE
 
     #Funcion para generar los PDFs, guradarlos y abrirlos.
     def generar_pdf_contrato(e, ultimo_registro=None):
