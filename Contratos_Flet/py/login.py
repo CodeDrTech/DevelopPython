@@ -11,9 +11,18 @@ def login(page: ft.Page):
     page.window.resizable = False
     page.scroll = ScrollMode.ADAPTIVE
     
-    #Inicia el foco el en campo contrasena si se presiona enter en el campo usuario.
-    def foco_contrasena(e):        
-        txt_contrasena.focus()
+    # Maneja el foco de los campos de texto si el usuario o la contraseña estan vacios.
+    def foco_contrasena(e):
+        if txt_usuario.value == "":
+            lbl_mensaje.value = "¡Introduce tu usuario!"
+            lbl_mensaje.color = ft.Colors.RED_100
+            lbl_mensaje.update()        
+            txt_usuario.focus()
+        else:
+            lbl_mensaje.value = "¡Introduce tu contraseña!"
+            lbl_mensaje.color = ft.Colors.RED_100
+            lbl_mensaje.update()        
+            txt_contrasena.focus()
 
     def iniciar_sesion(e):
         usuario = txt_usuario.value
