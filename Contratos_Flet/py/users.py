@@ -127,7 +127,7 @@ def user_panel(page: ft.Page):
                         ft.TextField(label="Nombre", ref=txt_nombre, width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Apellido", ref=txt_apellidos, width=200, capitalization=ft.TextCapitalization.WORDS),
                         ft.TextField(label="Cedula", ref=txt_cedula, width=200, max_length=13, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9-]*$", replacement_string=""),on_change=format_cedula),
-                        ft.TextField(label="Codigo", ref=txt_numero_empleado,width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ft.TextField(label="Codigo", on_submit=agregar_usuario, ref=txt_numero_empleado,width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_usuario, width=200),
                         ft.ElevatedButton(text="equipos", on_click=tab_insertar_equipo, width=200),
                     ],

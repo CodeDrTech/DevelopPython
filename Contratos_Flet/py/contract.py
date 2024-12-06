@@ -410,6 +410,7 @@ def contract_panel(page: ft.Page):
                                         ref=            txt_id_equipo_contrato,
                                         width=          200,
                                         read_only=      True,
+                                        on_submit =     agregar_contrato,
                                         value=          ultimo_registro[3] if ultimo_registro else ""
                                     ),
                                     fecha_texto,
