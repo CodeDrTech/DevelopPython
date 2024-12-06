@@ -12,8 +12,7 @@ def login(page: ft.Page):
     page.scroll = ScrollMode.ADAPTIVE
     
     #Inicia el foco el en campo contrasena si se presiona enter en el campo usuario.
-    def foco_contrasena(e):
-        
+    def foco_contrasena(e):        
         txt_contrasena.focus()
 
     def iniciar_sesion(e):
