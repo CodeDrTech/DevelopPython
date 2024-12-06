@@ -484,7 +484,7 @@ def main(page: ft.Page):
                 #Contenido de columnas que se muestran antes del DataTable con los datos de los contratos
                 content=ft.Column(
                     [
-                        ft.Text("Listado de Contratos", size=20),
+                        ft.Text("Listado de contratos", size=20),
                         
                         #Fila de controles para una busqueda filtrada por nombre.
                         ft.Row(
