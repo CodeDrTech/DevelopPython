@@ -56,6 +56,7 @@ def get_contract_by_number(numero_contrato):
                     u.cedula,         -- índice [8]
                     u.numeroEmpleado, -- índice [9]
                     c.fecha           -- índice [10]
+                    e.imei            -- índice [11]
                 FROM Usuario u
                 INNER JOIN Equipo e ON u.idUsuario = e.idUsuario
                 INNER JOIN Contrato c ON u.idUsuario = c.idUsuario AND e.idEquipo = c.idEquipo
@@ -151,7 +152,8 @@ def main(page: ft.Page):
                 La Empresa hace entrega a El Empleado del siguiente equipo tecnológico:<br/><br/>
                 Marca: <b>{ultimo_registro[4] or 'N/A'}</b><br/>
                 Modelo: <b>{ultimo_registro[5] or 'N/A'}</b><br/>
-                Condición: <b>{ultimo_registro[6] or 'N/A'}</b><br/><br/>
+                Condición: <b>{ultimo_registro[6] or 'N/A'}</b><br/>
+                IMEI/Serial: <b>{ultimo_registro[11] or 'N/A'}</b><br/><br/>
                 El equipo entregado es propiedad de La Empresa y será utilizado exclusivamente para actividades relacionadas con sus funciones laborales.
                 </para>
                 """
