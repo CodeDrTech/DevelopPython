@@ -3,11 +3,18 @@ from database import connect_to_db
 from queries import insertar_nuevo_equipo
 from flet import AppView, ScrollMode
 import datetime
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+# Función para obtener la lista de equipos registrados
+# Se utiliza en la sección de equipos para mostrar los equipos existentes
+# y en la sección de contratos para seleccionar un equipo
 def get_equipment_list():
+    # Conectamos a la base de datos
     conn = connect_to_db()
     if conn:
+        # Creamos un cursor para realizar la consulta
         cursor = conn.cursor()
+        # Creamos la consulta SQL
         query = """
             SELECT 
                 u.idUsuario,
@@ -22,31 +29,70 @@ def get_equipment_list():
             INNER JOIN Usuario u ON e.idUsuario = u.idUsuario
             ORDER BY e.idEquipo DESC
         """
+        # Ejecutamos la consulta
         cursor.execute(query)
+        # Obtenemos los resultados
         rows = cursor.fetchall()
+        # Cerramos la conexión
         conn.close()
+        # Devolvemos los resultados
         return rows
+    # Si no se puede conectar a la base de datos, devolvemos una lista vacía
     return []
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def actualizar_equipo(id_equipo, marca, modelo, imei, condicion):
+    """
+    Actualiza los datos de un equipo en la base de datos
+
+    :param id_equipo: Identificador único del equipo
+    :param marca: Marca del equipo
+    :param modelo: Modelo del equipo
+    :param imei: IMEI o serie del equipo
+    :param condicion: Condición del equipo (nuevo o usado)
+    :return: True si se actualizó correctamente, False en caso contrario
+    """
     try:
+        # Conectamos a la base de datos
         conn = connect_to_db()
+        # Creamos un cursor para realizar la consulta
         cursor = conn.cursor()
+        # Creamos la consulta SQL
         query = """
             UPDATE Equipo 
             SET marca = ?, modelo = ?, imei = ?, condicion = ?
             WHERE idEquipo = ?
         """
+        # Ejecutamos la consulta
         cursor.execute(query, (marca, modelo, imei, condicion, id_equipo))
+        # Confirmamos los cambios
         conn.commit()
+        # Cerramos la conexión
         conn.close()
+        # Devolvemos True para indicar que se actualizó correctamente
         return True
     except Exception as e:
+        # Mostramos un mensaje de error si algo falla
         print(f"Error al actualizar equipo: {e}")
+        # Devolvemos False para indicar que hubo un error
         return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def mostrar_dialogo_edicion(e, equipo_data, on_update_callback):
+    """
+    Muestra un diálogo modal para editar los datos de un equipo.
+
+    :param e: Instancia de la clase Principal
+    :param equipo_data: Tupla con los datos del equipo a editar
+    :param on_update_callback: Función a llamar cuando el usuario guarde los cambios
+    """
     def guardar_cambios(e):
+        """
+        Guarda los cambios realizados en el diálogo modal y cierra el diálogo.
+
+        :param e: Instancia de la clase Principal
+        """
         if actualizar_equipo(
             equipo_data[3],  # idEquipo
             edit_marca.value,
@@ -93,7 +139,8 @@ def mostrar_dialogo_edicion(e, equipo_data, on_update_callback):
     e.page.dialog = dlg_modal
     dlg_modal.open = True
     e.page.update()
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def get_user_list():
     conn = connect_to_db()
@@ -112,7 +159,8 @@ def get_user_list():
         conn.close()
         return row
     return None
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def equipment_panel(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
@@ -238,6 +286,16 @@ def equipment_panel(page: ft.Page):
         width=300  # Ancho fijo para el contenedor
     )
 
+    # Actualiza la tabla de equipos con los datos actuales en la base de datos
+    #
+    # - Llama a la función get_equipment_list para obtener la lista de equipos
+    # - Convierte cada equipo en una fila de la tabla (objeto DataRow)
+    # - Cada celda (DataCell) tiene un Text con el valor correspondiente
+    # - La celda de la columna de Acciones tiene un Row con un IconButton
+    #   que cuando se hace clic llama a la función mostrar_dialogo_edicion
+    #   pasando como argumento el equipo actual y la función actualizar_tabla_equipos
+    #   como callback
+    # - Finalmente, se actualiza la página para mostrar los cambios
     def actualizar_tabla_equipos(e=None):
         # Obtener la lista actualizada de equipos
         equipos = get_equipment_list()
@@ -265,7 +323,11 @@ def equipment_panel(page: ft.Page):
         ]
         page.update()
 
-    # Crear la tabla de datos
+    # Crea la tabla de datos
+    # - columns: define las columnas de la tabla
+    # - rows: almacena las filas de la tabla
+    #      cada fila es un objeto DataRow con cells que es una lista de DataCell
+    #      cada DataCell contiene un Text con el valor de la celda
     data_table = ft.DataTable(
         columns=[
             ft.DataColumn(ft.Text("Usuario")),
