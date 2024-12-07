@@ -69,6 +69,7 @@ def equipment_panel(page: ft.Page):
     txt_marca = ft.Ref[ft.TextField]()
     txt_modelo = ft.Ref[ft.TextField]()
     rg_condicion = ft.Ref[ft.RadioGroup]()
+    txt_imei = ft.Ref[ft.TextField]()
     
     def agregar_equipo(e):
         try:
@@ -87,12 +88,13 @@ def equipment_panel(page: ft.Page):
             marca = txt_marca.current.value
             modelo = txt_modelo.current.value
             condicion = rg_condicion.current.value  # Obtener el valor del RadioGroup
+            imei = txt_imei.current.value
 
             if not id_usuario or not marca or not modelo or not condicion:
                 open_dlg_modal(e)
             else:
                 # Llama a la función de queries para insertar el equipo
-                insertar_nuevo_equipo(id_usuario, marca, modelo, condicion)
+                insertar_nuevo_equipo(id_usuario, marca, modelo, condicion, imei)
                 
                 #Si el insert se realiza pasa el tab para ingresar datos sobre las imagenes.
                 tab_inserta_imagen(e)
@@ -172,7 +174,7 @@ def equipment_panel(page: ft.Page):
                                         ft.TextField(label="ID", ref=txt_id_usuario, width=200, read_only=True, value=ultimo_usuario[0]),
                                         ft.TextField(label="Marca", ref=txt_marca, width=200,capitalization=ft.TextCapitalization.WORDS),
                                         ft.TextField(label="Modelo", ref=txt_modelo, width=200, capitalization=ft.TextCapitalization.WORDS),
-                                        ft.TextField(label="IMEI", width=200, capitalization=ft.TextCapitalization.WORDS),
+                                        ft.TextField(label="IMEI", ref=txt_imei, width=200, capitalization=ft.TextCapitalization.WORDS),
                                         ft.Text("Condicion", width=200),
                                         ft.RadioGroup(
                                             content=ft.Row(

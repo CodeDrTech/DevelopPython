@@ -26,9 +26,9 @@ def insertar_nuevo_usuario(nombre, apellidos, cedula, numero_empleado):
     insertar_dato_generico('Usuario',['nombres', 'apellidos', 'cedula', 'numeroEmpleado'],[nombre, apellidos, cedula, numero_empleado])
 
 # Función específica para insertar datos en la tabla Equipo
-def insertar_nuevo_equipo(equipo_id, marca, modelo, condicion):
+def insertar_nuevo_equipo(equipo_id, marca, modelo, condicion, imei):
     #Llamada a insertar_dato_generico para la tabla 'Equipo'
-    insertar_dato_generico('Equipo',['idUsuario', 'marca', 'modelo', 'condicion'],[equipo_id, marca, modelo, condicion])
+    insertar_dato_generico('Equipo',['idUsuario', 'marca', 'modelo', 'condicion', 'imei'],[equipo_id, marca, modelo, condicion, imei])
     
 # Función específica para insertar datos en la tabla Contrato
 def insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, id_Usuario, id_Equipo):
