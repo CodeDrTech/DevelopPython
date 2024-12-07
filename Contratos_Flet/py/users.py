@@ -73,6 +73,25 @@ def user_panel(page: ft.Page):
         :param usuario_data: Tupla con los datos del usuario a editar
         :param on_update_callback: Función a llamar cuando el usuario guarde los cambios
         """
+        
+        def format_cedula_edit(e):
+            """
+            Función específica para formatear la cédula en el diálogo de edición
+            """
+            # Quitar caracteres no numéricos
+            raw = ''.join(filter(str.isdigit, e.control.value))
+            
+            # Aplicar formato deseado para la cédula (XXX-XXXXXXX-X)
+            formatted = ''
+            for i, char in enumerate(raw):
+                if i == 3 or i == 10:  # Añadir guion después de la tercera y décima posición
+                    formatted += '-'
+                formatted += char
+                
+            # Actualizar el campo de texto directamente
+            e.control.value = formatted
+            e.control.update()
+            
         def guardar_cambios(e):
             """
             Guarda los cambios realizados en el diálogo modal y cierra el diálogo.
@@ -114,7 +133,7 @@ def user_panel(page: ft.Page):
             value=usuario_data[3],
             width=300,
             on_submit=guardar_cambios,
-            on_change=format_cedula,
+            on_change=format_cedula_edit,
             max_length=13,
             input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9-]*$", replacement_string="")
         )
