@@ -11,7 +11,7 @@ def login(page: ft.Page):
     page.window.resizable = False
     page.scroll = ScrollMode.ADAPTIVE
     
-    # Maneja el foco de los campos de texto si el usuario o la contraseña estan vacios.
+    # Maneja el foco de los campos de texto si el usuario o la contraseña estan vacios
     def foco_contrasena(e):
         if txt_usuario.value == "":
             lbl_mensaje.value = "¡Introduce tu usuario!"
