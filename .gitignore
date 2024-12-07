@@ -1,13 +1,12 @@
-# En lugar de ignorar todo Contratos/, especificar solo lo que queremos ignorar
-Contratos/Lib/**
-Contratos/Scripts/**
-Contratos/Include/**
-Contratos/pyvenv.cfg
+# Ignorar solo los archivos y carpetas específicos del entorno virtual
+/Contratos/Lib/
+/Contratos/Scripts/
+/Contratos/Include/
+/Contratos/pyvenv.cfg
 
-# Asegurarnos de que la carpeta Database y el archivo .bak no sean ignorados
-!Contratos/Database/
-!Contratos/Database/**
-!Contratos/Database/Home/Contratos.bak
+# Incluir explícitamente la carpeta Database y su contenido
+!/Contratos/Database/
+!/Contratos/Database/**/*
 
 
 #ignorar algunos archivos de la carpeta de Sistema de ventas
