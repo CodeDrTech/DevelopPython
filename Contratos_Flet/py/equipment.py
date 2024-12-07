@@ -174,7 +174,7 @@ def equipment_panel(page: ft.Page):
                                         ft.TextField(label="ID", ref=txt_id_usuario, width=200, read_only=True, value=ultimo_usuario[0]),
                                         ft.TextField(label="Marca", ref=txt_marca, width=200,capitalization=ft.TextCapitalization.WORDS),
                                         ft.TextField(label="Modelo", ref=txt_modelo, width=200, capitalization=ft.TextCapitalization.WORDS),
-                                        ft.TextField(label="IMEI", ref=txt_imei, width=200, capitalization=ft.TextCapitalization.WORDS),
+                                        ft.TextField(label="IMEI/Serie", ref=txt_imei, width=200, capitalization=ft.TextCapitalization.WORDS),
                                         ft.Text("Condicion", width=200),
                                         ft.RadioGroup(
                                             content=ft.Row(
