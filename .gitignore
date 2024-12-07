@@ -1,8 +1,12 @@
-# Ignorar solo el entorno virtual dentro de Entrega_De_equipos
-Contratos/Lib/
-Contratos/Scripts/
-Contratos/Include/
+# En lugar de ignorar todo Contratos/, especificar solo lo que queremos ignorar
+Contratos/Lib/**
+Contratos/Scripts/**
+Contratos/Include/**
 Contratos/pyvenv.cfg
+
+# Asegurarnos de que la carpeta Database y el archivo .bak no sean ignorados
+!Contratos/Database/
+!Contratos/Database/**
 !Contratos/Database/Home/Contratos.bak
 
 
