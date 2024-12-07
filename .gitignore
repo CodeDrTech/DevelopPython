@@ -3,6 +3,7 @@ Contratos/Lib/
 Contratos/Scripts/
 Contratos/Include/
 Contratos/pyvenv.cfg
+!Contratos/Database/Home/Contratos.bak
 
 
 #ignorar algunos archivos de la carpeta de Sistema de ventas
