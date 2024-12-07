@@ -1,8 +1,8 @@
 # Ignorar solo los archivos y carpetas específicos del entorno virtual
-/Contratos/Lib/
-/Contratos/Scripts/
-/Contratos/Include/
-/Contratos/pyvenv.cfg
+Contratos/Lib/
+Contratos/Scripts/
+Contratos/Include/
+Contratos/pyvenv.cfg
 
 
 #ignorar algunos archivos de la carpeta de Sistema de ventas
