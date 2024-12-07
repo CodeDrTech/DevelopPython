@@ -1,0 +1,69 @@
+# Ignorar solo los archivos y carpetas específicos del entorno virtual
+/Contratos/Lib/
+/Contratos/Scripts/
+/Contratos/Include/
+/Contratos/pyvenv.cfg
+
+
+#ignorar algunos archivos de la carpeta de Sistema de ventas
+Sistema_de_ventas/Video.txt
+Sistema_de_ventas/Extension.txt
+Sistema_de_ventas/Links_iconos.txt
+Sistema_de_ventas/txt/
+
+Sistema de ventas MYSQL/Video.txt
+Sistema de ventas MYSQL/Extension.txt
+Sistema de ventas MYSQL/Links_iconos.txt
+Sistema de ventas MYSQL/txt/
+
+
+Ventas Selact/1-Send_mail_no_dev.py
+Ventas Selact/2-send_mail_with_dev.py
+Ventas Selact/3-correo_Semanal_grafico.py
+Ventas Selact/4-correo_semanal.py
+Ventas Selact/5-correo_mensaje.py
+Ventas Selact/6-Send_mail_no_dev viernes.py
+Ventas Selact/ventas_selact3.py
+Ventas Selact/Ventas.xlsx
+
+# Ignorar solo el entorno virtual dentro de Flet
+Flet/CursoFlet/Lib/
+Flet/CursoFlet/Scripts/
+Flet/CursoFlet/Include/
+Flet/CursoFlet/Share/          # Agregado para ignorar la carpeta Share
+Flet/CursoFlet/pyvenv.cfg
+Flet/Link.txt
+
+# Ignorar solo el entorno virtual dentro de Contratos_Flet
+Contratos_Flet/env/
+Contratos_Flet/env/pyvenv.cfg
+
+Contratos_Flet/Contratos_Flet/
+Contratos_Flet/Contratos_Flet/pyvenv.cfg
+
+# Permitir explícitamente otros archivos y carpetas dentro de Entrega_De_equipos
+#!Entrega_De_equipos/**/*
+
+# Archivos y carpetas comunes de Python
+*.pyc
+__pycache__/
+*.egg-info/
+
+# Configuraciones de Visual Studio Code
+.vscode/
+
+# Archivos de construcción y distribución
+build/
+dist/
+
+# Archivos de entorno y bloqueos
+.env
+*.lock
+
+# Archivos de log
+*.log
+
+
+
+# Carpetas adicionales
+.idx/

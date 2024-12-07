@@ -1,0 +1,1 @@
+para poder programar sin errores al abrir los archivos .py las carpetas ico, png, py, txt, y ui deben estar aqui dentro de esta carpeta.
