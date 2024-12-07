@@ -437,5 +437,4 @@ def contract_panel(page: ft.Page):
         ]
     )
     page.add(mainTab)
-    txt_texto_contrato.current.focus()
     page.update()
