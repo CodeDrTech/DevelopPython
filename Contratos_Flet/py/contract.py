@@ -108,7 +108,6 @@ def contract_panel(page: ft.Page):
     # Codigo para insertar datos a la tabla Contrato mediante los controles del tab Contrato
     # Referencias para los campos de texto del tab Contrato
     txt_contrato = ft.Ref[ft.TextField]()
-    txt_texto_contrato = ft.Ref[ft.TextField]()
     txt_id_usuario_contrato = ft.Ref[ft.TextField]()
     txt_id_equipo_contrato = ft.Ref[ft.TextField]()
     
@@ -116,16 +115,15 @@ def contract_panel(page: ft.Page):
     def agregar_contrato(e):
         try:
             numero_Contrato = txt_contrato.current.value
-            texto_Contrato = txt_texto_contrato.current.value
             id_Usuario = txt_id_usuario_contrato.current.value
             id_Equipo = txt_id_equipo_contrato.current.value
             fecha_Contrato = fecha_actual
 
-            if not numero_Contrato or not texto_Contrato or not id_Usuario or not id_Equipo:
+            if not numero_Contrato or not id_Usuario or not id_Equipo:
                 open_dlg_modal(e)
             else:
                 # Llama a la función de queries
-                insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, texto_Contrato, id_Usuario, id_Equipo)
+                insertar_nuevo_contrato(numero_Contrato, fecha_Contrato, id_Usuario, id_Equipo)
                 
                 #Genera el contrato en PDF
                 generar_pdf_contrato(e)
@@ -142,10 +140,8 @@ def contract_panel(page: ft.Page):
 
                 # Limpia los campos
                 txt_contrato.current.value = ""
-                txt_texto_contrato.current.value = ""
                 txt_id_usuario_contrato.current.value = ""
                 txt_id_equipo_contrato.current.value = ""
-                
                 page.update()
 
         except Exception as error:
@@ -392,12 +388,6 @@ def contract_panel(page: ft.Page):
                                         width=          200,
                                         capitalization= ft.TextCapitalization.CHARACTERS,
                                         value=          Siguiente_contrato
-                                    ),
-                                    ft.TextField(
-                                        label=          "Texto",
-                                        ref=            txt_texto_contrato,
-                                        width=          200,
-                                        capitalization= ft.TextCapitalization.WORDS
                                     ),
                                     ft.TextField(
                                         label=          "Usuario",
