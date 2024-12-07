@@ -15,8 +15,8 @@ def get_equipment_list():
         # Creamos un cursor para realizar la consulta
         cursor = conn.cursor()
         # Creamos la consulta SQL
-        query = """
-            SELECT 
+        query =  """
+            SELECT DISTINCT
                 u.idUsuario,
                 u.nombres,
                 u.apellidos,
@@ -27,6 +27,7 @@ def get_equipment_list():
                 e.imei
             FROM Equipo e
             INNER JOIN Usuario u ON e.idUsuario = u.idUsuario
+            INNER JOIN Contrato c ON e.idEquipo = c.idEquipo AND e.idUsuario = c.idUsuario
             ORDER BY e.idEquipo DESC
         """
         # Ejecutamos la consulta
