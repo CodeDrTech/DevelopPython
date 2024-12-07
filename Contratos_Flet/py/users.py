@@ -98,22 +98,32 @@ def user_panel(page: ft.Page):
         edit_nombres = ft.TextField(
             label="Nombres",
             value=usuario_data[1],
-            width=300
+            width=300,
+            capitalization=ft.TextCapitalization.WORDS,
+            on_submit=guardar_cambios
         )
         edit_apellidos = ft.TextField(
             label="Apellidos",
             value=usuario_data[2],
-            width=300
+            width=300,
+            capitalization=ft.TextCapitalization.WORDS,
+            on_submit=guardar_cambios
         )
         edit_cedula = ft.TextField(
             label="Cédula",
             value=usuario_data[3],
-            width=300
+            width=300,
+            on_submit=guardar_cambios,
+            on_change=format_cedula,
+            max_length=13,
+            input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9-]*$", replacement_string="")
         )
         edit_numero_empleado = ft.TextField(
             label="Número de Empleado",
             value=usuario_data[4],
-            width=300
+            width=300,
+            on_submit=guardar_cambios,
+            input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9-]*$", replacement_string="")
         )
 
         dlg_modal_edit = ft.AlertDialog(
