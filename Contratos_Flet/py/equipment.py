@@ -4,6 +4,97 @@ from queries import insertar_nuevo_equipo
 from flet import AppView, ScrollMode
 import datetime
 
+def get_equipment_list():
+    conn = connect_to_db()
+    if conn:
+        cursor = conn.cursor()
+        query = """
+            SELECT 
+                u.idUsuario,
+                u.nombres,
+                u.apellidos,
+                e.idEquipo,
+                e.marca,
+                e.modelo,
+                e.condicion,
+                e.imei
+            FROM Equipo e
+            INNER JOIN Usuario u ON e.idUsuario = u.idUsuario
+            ORDER BY e.idEquipo DESC
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        conn.close()
+        return rows
+    return []
+
+def actualizar_equipo(id_equipo, marca, modelo, imei, condicion):
+    try:
+        conn = connect_to_db()
+        cursor = conn.cursor()
+        query = """
+            UPDATE Equipo 
+            SET marca = ?, modelo = ?, imei = ?, condicion = ?
+            WHERE idEquipo = ?
+        """
+        cursor.execute(query, (marca, modelo, imei, condicion, id_equipo))
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Error al actualizar equipo: {e}")
+        return False
+
+def mostrar_dialogo_edicion(e, equipo_data, on_update_callback):
+    def guardar_cambios(e):
+        if actualizar_equipo(
+            equipo_data[3],  # idEquipo
+            edit_marca.value,
+            edit_modelo.value,
+            edit_imei.value,
+            edit_condicion.value
+        ):
+            dlg_modal.open = False
+            e.page.update()
+            # Llamar al callback para actualizar la vista
+            if on_update_callback:
+                on_update_callback(e)
+            e.page.show_snack_bar(ft.SnackBar(content=ft.Text("Datos actualizados correctamente")))
+        else:
+            e.page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar datos")))
+
+    edit_marca = ft.TextField(label="Marca", value=equipo_data[4])
+    edit_modelo = ft.TextField(label="Modelo", value=equipo_data[5])
+    edit_imei = ft.TextField(label="IMEI/Serie", value=equipo_data[7])
+    edit_condicion = ft.Dropdown(
+        label="Condición",
+        value=equipo_data[6],
+        options=[
+            ft.dropdown.Option("Nuevo"),
+            ft.dropdown.Option("Usado")
+        ],
+    )
+
+    dlg_modal = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Editar Equipo"),
+        content=ft.Column([
+            edit_marca,
+            edit_modelo,
+            edit_imei,
+            edit_condicion,
+        ], tight=True),
+        actions=[
+            ft.TextButton("Cancelar", on_click=lambda e: setattr(dlg_modal, 'open', False)),
+            ft.TextButton("Guardar", on_click=guardar_cambios),
+        ],
+    )
+
+    e.page.dialog = dlg_modal
+    dlg_modal.open = True
+    e.page.update()
+
+
 def get_user_list():
     conn = connect_to_db()
     if conn:
@@ -147,6 +238,49 @@ def equipment_panel(page: ft.Page):
         width=300  # Ancho fijo para el contenedor
     )
 
+    def actualizar_tabla_equipos(e=None):
+        # Obtener la lista actualizada de equipos
+        equipos = get_equipment_list()
+        # Actualizar la tabla
+        data_table.rows = [
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(f"{equipo[1]} {equipo[2]}")),  # Nombre completo
+                    ft.DataCell(ft.Text(equipo[4])),  # Marca
+                    ft.DataCell(ft.Text(equipo[5])),  # Modelo
+                    ft.DataCell(ft.Text(equipo[7] or "")),  # IMEI
+                    ft.DataCell(ft.Text(equipo[6])),  # Condición
+                    ft.DataCell(
+                        ft.Row([
+                            ft.IconButton(
+                                icon=ft.icons.EDIT,
+                                icon_color="blue400",
+                                tooltip="Editar",
+                                on_click=lambda e, eq=equipo: mostrar_dialogo_edicion(e, eq, actualizar_tabla_equipos)
+                            )
+                        ])
+                    ),
+                ]
+            ) for equipo in equipos
+        ]
+        page.update()
+
+    # Crear la tabla de datos
+    data_table = ft.DataTable(
+        columns=[
+            ft.DataColumn(ft.Text("Usuario")),
+            ft.DataColumn(ft.Text("Marca")),
+            ft.DataColumn(ft.Text("Modelo")),
+            ft.DataColumn(ft.Text("IMEI/Serie")),
+            ft.DataColumn(ft.Text("Condición")),
+            ft.DataColumn(ft.Text("Acciones")),
+        ],
+        rows=[]
+    )
+
+    # Llamar a la función para cargar los datos inicialmente
+    actualizar_tabla_equipos()
+    
     mainTab = ft.Tabs(
         selected_index=0,
         animation_duration=300,
@@ -192,17 +326,30 @@ def equipment_panel(page: ft.Page):
                                             ],
                                             spacing=20
                                         )
-                                    ],
-                                    spacing=15,
-                                    alignment=ft.MainAxisAlignment.START
+                                    ]
+                                    
                                 ),
-                                #padding=20
+                                padding=20
                             )
                         ]
                     ),
                     #padding=20
                 #)
+            ),
+            ft.Tab(
+                icon=ft.icons.LIST,
+                text="Lista de equipos",
+                content=ft.Container(
+                    content=ft.Column([
+                        ft.Row([
+                            ft.Text("Equipos registrados", size=20, weight=ft.FontWeight.BOLD),
+                        ]),
+                        data_table
+                    ]),
+                    padding=20
+                )
             )
+            
         ]
     )
     page.add(mainTab)
