@@ -110,9 +110,9 @@ def mostrar_dialogo_edicion(e, equipo_data, on_update_callback):
         else:
             e.page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar datos")))
 
-    edit_marca = ft.TextField(label="Marca", value=equipo_data[4])
-    edit_modelo = ft.TextField(label="Modelo", value=equipo_data[5])
-    edit_imei = ft.TextField(label="IMEI/Serie", value=equipo_data[7])
+    edit_marca = ft.TextField(label="Marca", value=equipo_data[4], on_submit=guardar_cambios)
+    edit_modelo = ft.TextField(label="Modelo", value=equipo_data[5], on_submit=guardar_cambios)
+    edit_imei = ft.TextField(label="IMEI/Serie", value=equipo_data[7], on_submit=guardar_cambios)
     edit_condicion = ft.Dropdown(
         label="Condición",
         value=equipo_data[6],
