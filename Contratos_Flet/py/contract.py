@@ -27,7 +27,7 @@ def get_last_records():
                 c.numeroContrato, -- índice [7]
                 u.cedula,         -- índice [8]
                 u.numeroEmpleado, -- índice [9]
-                c.fecha           -- índice [10]
+                c.fecha,          -- índice [10]
                 e.imei            -- índice [11]
             FROM            Usuario u
             LEFT JOIN      Equipo e ON u.idUsuario = e.idUsuario

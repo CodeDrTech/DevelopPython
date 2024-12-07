@@ -55,7 +55,7 @@ def get_contract_by_number(numero_contrato):
                     c.numeroContrato, -- índice [7]
                     u.cedula,         -- índice [8]
                     u.numeroEmpleado, -- índice [9]
-                    c.fecha           -- índice [10]
+                    c.fecha,          -- índice [10]
                     e.imei            -- índice [11]
                 FROM Usuario u
                 INNER JOIN Equipo e ON u.idUsuario = e.idUsuario
