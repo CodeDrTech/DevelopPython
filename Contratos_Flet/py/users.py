@@ -226,7 +226,14 @@ def user_panel(page: ft.Page):
         # Importamos y ejecutamos la función y sus controles en la página actual
         from equipment import equipment_panel
         equipment_panel(page)
-    
+        
+    def regresar_a_main(e):
+        # En lugar de iniciar una nueva aplicación, limpiamos la página actual
+        page.clean()
+
+        # Importamos y ejecutamos la función y sus controles en la página actual
+        from main import main
+        main(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
     # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
@@ -333,6 +340,7 @@ def user_panel(page: ft.Page):
                         ft.TextField(label="Codigo", on_submit=agregar_usuario, ref=txt_numero_empleado,width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_usuario, width=200),
                         ft.ElevatedButton(text="equipos", on_click=tab_insertar_equipo, width=200),
+                        ft.ElevatedButton(text="Atras", tooltip="Atras", icon=ft.icons.ARROW_BACK, on_click=regresar_a_main, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
