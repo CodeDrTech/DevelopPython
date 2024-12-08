@@ -178,6 +178,15 @@ def equipment_panel(page: ft.Page):
         # Importamos y ejecutamos la función y sus controles en la página actual
         from image import image_panel
         image_panel(page)
+        
+    # Funciones para abrir los modulos y sus controles 
+    def regresar_a_usuarios(e):
+        # En lugar de iniciar una nueva aplicación, limpiamos la página actual
+        page.clean()
+
+        # Importamos y ejecutamos la función y sus controles en la página actual
+        from users import user_panel
+        user_panel(page)
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
@@ -388,7 +397,8 @@ def equipment_panel(page: ft.Page):
                                         ft.Row(
                                             controls=[
                                                 ft.ElevatedButton(text="Guardar", on_click=agregar_equipo, width=200),
-                                                ft.ElevatedButton(text="Imagenes", on_click=tab_inserta_imagen, width=200)
+                                                ft.ElevatedButton(text="Imagenes", on_click=tab_inserta_imagen, width=200),
+                                                ft.ElevatedButton(text="Atras", tooltip="Regresa a usuarios", icon=ft.icons.ARROW_BACK, on_click=regresar_a_usuarios, width=200)
                                             ],
                                             spacing=20
                                         )
