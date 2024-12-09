@@ -58,7 +58,7 @@ def login(page: ft.Page):
                 txt_usuario.focus()
 
             lbl_mensaje.update()
-
+    
     txt_usuario = ft.TextField(label="Usuario", width=300, on_submit=foco_contrasena)
     txt_contrasena = ft.TextField(label="Contraseña", password=True, width=300, on_submit=iniciar_sesion)
     btn_iniciar = ft.ElevatedButton("Iniciar Sesión", on_click=iniciar_sesion)
