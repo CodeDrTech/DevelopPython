@@ -1,7 +1,7 @@
 # CalculoSalario
 
 ## Descripción
-Este proyecto tiene como objetivo calcular el salario de empleados basado en diferentes parámetros como horas trabajadas, tarifa por hora, y deducciones. Toma en cuenta el impuesto sobre la renta (ISR) en cuyo salarios aplica.
+Este proyecto simple tiene como objetivo calcular el salario de empleados basado en diferentes parámetros como horas trabajadas, tarifa por hora, y deducciones. Toma en cuenta el impuesto sobre la renta (ISR) en cuyo salarios aplica.
 
 
 
