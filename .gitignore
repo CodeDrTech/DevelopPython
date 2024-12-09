@@ -5,6 +5,16 @@ Contratos/Include/
 Contratos/pyvenv.cfg
 
 
+.Base de datos/
+.Contratos/
+.Flet/
+.Proyectos/
+.Sistema_de_ventas/SQLSERVER/
+.QT Design Studio/
+.QT Creator/
+
+
+
 #ignorar algunos archivos de la carpeta de Sistema de ventas
 Sistema_de_ventas/Video.txt
 Sistema_de_ventas/Extension.txt
