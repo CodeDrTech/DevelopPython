@@ -44,7 +44,7 @@ Ventas\ Selact/4-correo_semanal.py
 Ventas\ Selact/5-correo_mensaje.py
 Ventas\ Selact/ventas_selact3.py
 # Archivos específicos de Ventas Selact
-"Ventas Selact/6-Send_mail_no_dev viernes.py"
+Ventas\ Selact/6-Send_mail_no_dev*
 Ventas\ Selact/*.xlsx
 
 # Carpetas de sistema y configuración
