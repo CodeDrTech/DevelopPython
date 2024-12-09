@@ -4,6 +4,17 @@ Contratos/Scripts/
 Contratos/Include/
 Contratos/pyvenv.cfg
 
+# Archivos sensibles de Contratos_Flet
+Contratos_Flet/.env
+Contratos_Flet/env/
+Contratos_Flet/__pycache__/
+Contratos_Flet/**/__pycache__/
+Contratos_Flet/.venv/
+Contratos_Flet/venv/
+Contratos_Flet/*.pyc
+Contratos_Flet/**/*.pyc
+Contratos_Flet/.env.*
+
 # Directorios de proyectos
 Base\ de\ datos/
 Contratos/
