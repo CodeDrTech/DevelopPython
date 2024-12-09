@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1236</width>
+    <height>874</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">/* Estilos comunes para varios controles */
+QWidget {
+    background-color: #deede3;
+}</string>
+   </property>
+   <widget class="QMdiArea" name="mdiArea">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>20</y>
+      <width>1900</width>
+      <height>900</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblUsuario">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
+    color: var(--jade-500);
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Usuario:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblEmpleado">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>0</y>
+      <width>331</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
+    color: var(--jade-500);
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Empleado</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1236</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <widget class="QMenu" name="menuSistema">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>SisVentas</string>
+    </property>
+    <addaction name="actionCambiar_de_usuario"/>
+    <addaction name="actionSalir"/>
+   </widget>
+   <widget class="QMenu" name="menuHerramientas">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>Herramientas</string>
+    </property>
+    <widget class="QMenu" name="menuBase_de_datos">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="title">
+      <string>Base de datos</string>
+     </property>
+     <addaction name="actionBack_up"/>
+    </widget>
+    <addaction name="menuBase_de_datos"/>
+   </widget>
+   <widget class="QMenu" name="menuAlmacen">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>Almacen</string>
+    </property>
+    <addaction name="actionArticulos"/>
+    <addaction name="actionCategorias"/>
+    <addaction name="actionPresentaciones"/>
+   </widget>
+   <widget class="QMenu" name="menuCompras">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>Compras</string>
+    </property>
+    <addaction name="actionIngresos"/>
+    <addaction name="actionProveedores"/>
+   </widget>
+   <widget class="QMenu" name="menuVentas">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>Ventas</string>
+    </property>
+    <addaction name="actionVentas"/>
+    <addaction name="actionCotizacion"/>
+    <addaction name="actionClientes"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuMantenimiento">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>Mantenimiento</string>
+    </property>
+    <addaction name="actionEmpleados"/>
+   </widget>
+   <widget class="QMenu" name="menuConsultas">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>Consultas</string>
+    </property>
+    <addaction name="actionVentas_2"/>
+    <addaction name="actionCompras_por_fechas"/>
+    <addaction name="actionStock_de_articulos"/>
+   </widget>
+   <addaction name="menuSistema"/>
+   <addaction name="menuAlmacen"/>
+   <addaction name="menuCompras"/>
+   <addaction name="menuVentas"/>
+   <addaction name="menuMantenimiento"/>
+   <addaction name="menuConsultas"/>
+   <addaction name="menuHerramientas"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionIndice">
+   <property name="text">
+    <string>Indice</string>
+   </property>
+  </action>
+  <action name="actionAcerca_de">
+   <property name="text">
+    <string>Acerca de</string>
+   </property>
+  </action>
+  <action name="actionSalir">
+   <property name="text">
+    <string>Salir</string>
+   </property>
+  </action>
+  <action name="actionArticulos">
+   <property name="text">
+    <string>Articulos</string>
+   </property>
+  </action>
+  <action name="actionCategorias">
+   <property name="text">
+    <string>Categorias</string>
+   </property>
+  </action>
+  <action name="actionPresentaciones">
+   <property name="text">
+    <string>Presentaciones</string>
+   </property>
+  </action>
+  <action name="actionIngresos">
+   <property name="text">
+    <string>Ingresos</string>
+   </property>
+  </action>
+  <action name="actionProveedores">
+   <property name="text">
+    <string>Proveedores</string>
+   </property>
+  </action>
+  <action name="actionVentas">
+   <property name="text">
+    <string>Ventas</string>
+   </property>
+  </action>
+  <action name="actionClientes">
+   <property name="text">
+    <string>Clientes</string>
+   </property>
+  </action>
+  <action name="actionEmpleados">
+   <property name="text">
+    <string>Empleados</string>
+   </property>
+  </action>
+  <action name="actionVentas_2">
+   <property name="text">
+    <string>Ventas por fecha</string>
+   </property>
+  </action>
+  <action name="actionCompras_por_fechas">
+   <property name="text">
+    <string>Compras por fecha</string>
+   </property>
+  </action>
+  <action name="actionStock_de_articulos">
+   <property name="text">
+    <string>Stock de articulos</string>
+   </property>
+  </action>
+  <action name="actionBack_up">
+   <property name="text">
+    <string>Back up</string>
+   </property>
+  </action>
+  <action name="actionCambiar_de_usuario">
+   <property name="text">
+    <string>Cerrar sesion</string>
+   </property>
+  </action>
+  <action name="actionCotizacion">
+   <property name="text">
+    <string>Cotizacion</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
