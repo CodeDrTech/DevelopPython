@@ -366,6 +366,15 @@ def equipment_panel(page: ft.Page, llamada: str):
     # Llamar a la función para cargar los datos inicialmente
     actualizar_tabla_equipos()
     
+    
+    #Funcion para avanzar al modulo de insertar imagen.
+    def handle_siguiente_click(e):
+        tab_inserta_imagen(e)
+    
+    #Boton para avanzar al modulo de insertar imagen desde el modulo de insertar equipo.
+    #Solo estará habilitado si se retrocede desde el modulo insertar imagen cuando se quiere actualizar datos de equipo.
+    btn_siguiente = ft.ElevatedButton(text="Siguiente", on_click=handle_siguiente_click, width=200, icon=ft.icons.ARROW_FORWARD)
+    
     mainTab = ft.Tabs(
         selected_index=0,
         animation_duration=300,
@@ -430,7 +439,8 @@ def equipment_panel(page: ft.Page, llamada: str):
                         ft.Row([
                             ft.Text("Equipos registrados", size=20, weight=ft.FontWeight.BOLD),
                         ]),
-                        data_table
+                        data_table,
+                        btn_siguiente,
                     ]),
                     padding=20
                 )
@@ -465,10 +475,9 @@ def equipment_panel(page: ft.Page, llamada: str):
         
         rg_condicion.current.disabled = True  # Suponiendo que rg_condicion es un RadioGroup
     else:
-        # Habilitar controles para otros módulos
-        #txt_id_usuario.current.read_only = False
-        #txt_marca.current.read_only = False
-        #txt_modelo.current.read_only = False
-        #rg_condicion.current.disabled = False    
+        #Deshabilita el boton siguiente para que no avance si no se llenan los datos del usuario
+        btn_siguiente.disabled = True
+        
+          
         txt_marca.current.focus()
     page.update()

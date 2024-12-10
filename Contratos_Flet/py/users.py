@@ -321,11 +321,12 @@ def user_panel(page: ft.Page, llamada: str):
             page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #Funcion para avanzar al modulo de insertar equipo solo si se ha registrado un usuario
+    #Funcion para avanzar al modulo de insertar equipo.
     def handle_siguiente_click(e):
         tab_insertar_equipo(e)
     
-    #Boton para avanzar al modulo de insertar equipo, estara activo solo si se ha registrado un usuario
+    #Boton para avanzar al modulo de insertar equipo desde el modulo de insertar usuario.
+    #Solo estará habilitado si se retrocede desde el modulo insertar equipo cuando se quiere actualizar datos de usuario.
     btn_siguiente = ft.ElevatedButton(text="Siguiente", on_click=handle_siguiente_click, width=200, icon=ft.icons.ARROW_FORWARD)
     
     mainTab = ft.Tabs(
