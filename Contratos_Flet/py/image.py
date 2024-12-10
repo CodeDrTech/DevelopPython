@@ -77,6 +77,11 @@ def image_panel(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
+    # Esta función se utiliza para obtener el número de contrato asociado a un equipo
+    # Se utiliza en la sección de equipos, para mostrar el número de contrato en la tarjeta de cada equipo
+    # y en la sección de contratos, para saber qué número de contrato se debe asignar al nuevo contrato
+    # que se está creando
+    # Se llama en la función agregar_imagen
     def obtener_numero_contrato(id_equipo):
         query = """
         SELECT c.numeroContrato
@@ -89,6 +94,7 @@ def image_panel(page: ft.Page):
             cursor.execute(query, (id_equipo,))
             result = cursor.fetchone()
         return result[0] if result else None
+
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
