@@ -332,8 +332,6 @@ def user_panel(page: ft.Page, llamada: str):
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
         expand=True,
-        #on_change=cambio_tab,
-        #scrollable=True
         
         tabs=[
         #Tab que contiene los controles para registrar a los usuarios en la tabla Usuario...........
@@ -364,6 +362,7 @@ def user_panel(page: ft.Page, llamada: str):
                     controls=[
                         ft.Text("Usuarios Registrados", size=20, weight=ft.FontWeight.BOLD),
                         tabla_usuarios,
+                        btn_siguiente,
                     ],
                     scroll=ft.ScrollMode.AUTO,
                 ),
