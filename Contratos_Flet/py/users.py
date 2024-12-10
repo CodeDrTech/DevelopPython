@@ -362,6 +362,7 @@ def user_panel(page: ft.Page, llamada: str):
     )
     # Inicializar la lista de usuarios
     actualizar_lista_usuarios()
+    
     page.add(mainTab)
     
     # Lógica para habilitar o deshabilitar controles según el módulo que llamó

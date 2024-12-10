@@ -438,9 +438,7 @@ def equipment_panel(page: ft.Page, llamada: str):
             
         ]
     )
-    page.add(mainTab)
-    
-    
+    page.add(mainTab)    
     
     # Lógica para habilitar o deshabilitar controles según el módulo que llamó
     if llamada == "contract":
