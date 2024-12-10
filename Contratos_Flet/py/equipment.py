@@ -245,7 +245,8 @@ def equipment_panel(page: ft.Page, llamada: str):
             modelo = txt_modelo.current.value
             condicion = rg_condicion.current.value  # Obtener el valor del RadioGroup
             imei = txt_imei.current.value
-
+            
+            
             if not id_usuario or not marca or not modelo or not condicion:
                 open_dlg_modal(e)
             else:
@@ -438,5 +439,20 @@ def equipment_panel(page: ft.Page, llamada: str):
         ]
     )
     page.add(mainTab)
-    txt_marca.current.focus()
+    # Lógica para habilitar o deshabilitar controles según el módulo que llamó
+    if llamada == "contract":
+        # Deshabilitar controles de inserción si fue llamado desde el módulo de contratos
+        txt_id_usuario.current.read_only = True
+        txt_marca.current.read_only = True
+        txt_modelo.current.read_only = True
+        txt_imei.current.read_only = True
+        rg_condicion.current.disabled = True  # Suponiendo que rg_condicion es un RadioGroup
+    else:
+        # Habilitar controles para otros módulos
+        txt_id_usuario.current.read_only = False
+        txt_marca.current.read_only = False
+        txt_modelo.current.read_only = False
+        rg_condicion.current.disabled = False
+    
+        txt_marca.current.focus()
     page.update()
