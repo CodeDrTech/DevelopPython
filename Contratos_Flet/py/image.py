@@ -76,22 +76,16 @@ def image_panel(page: ft.Page):
     page.overlay.append(file_picker)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    # Esta función se utiliza para obtener el número de contrato asociado a un equipo
-    # Se utiliza en la sección de equipos, para mostrar el número de contrato en la tarjeta de cada equipo
-    # y en la sección de contratos, para saber qué número de contrato se debe asignar al nuevo contrato
-    # que se está creando
-    # Se llama en la función agregar_imagen
-    def obtener_numero_contrato(id_equipo):
+    def obtener_ultimo_equipo():
         query = """
-        SELECT c.numeroContrato
-        FROM Contrato c
-        INNER JOIN Equipo e ON c.idEquipo = e.idEquipo
-        WHERE e.idEquipo = ?
+        SELECT idEquipo
+        FROM Equipo
+        ORDER BY idEquipo DESC
+        LIMIT 1
         """
         conexion = connect_to_db()
         with conexion.cursor() as cursor:
-            cursor.execute(query, (id_equipo,))
+            cursor.execute(query)
             result = cursor.fetchone()
         return result[0] if result else None
 
@@ -104,7 +98,7 @@ def image_panel(page: ft.Page):
     os.makedirs(IMAGES_FOLDER, exist_ok=True)  # Crea la carpeta si no existe
     
     txt_id_equipo = ft.Ref[ft.TextField]()
-
+    ultimo_equipo_id = obtener_ultimo_equipo()
     def agregar_imagen(e):
         try:
             id_equipo = txt_id_equipo.current.value
@@ -115,14 +109,14 @@ def image_panel(page: ft.Page):
             if not rutas_imagenes or len(rutas_imagenes) == 0:
                 raise ValueError("Debe cargar al menos una imagen.")
     
-            # Obtener el número de contrato asociado al idEquipo
-            numero_contrato = obtener_numero_contrato(id_equipo)
-            if not numero_contrato:
-                raise ValueError(f"No se encontró un contrato asociado al ID de equipo {id_equipo}.")
+            # Obtener el último ID de equipo
+            ultimo_equipo_id = obtener_ultimo_equipo()
+            if not ultimo_equipo_id:
+                raise ValueError(f"No se encontró un equipo con el ID {id_equipo}.")
     
             # Procesar e insertar imágenes con nombres basados en el número de contrato
             for idx, ruta_imagen in enumerate(rutas_imagenes):
-                nombre_imagen = f"{numero_contrato}_{idx + 1}.jpg" if idx > 0 else f"{numero_contrato}.jpg"
+                nombre_imagen = f"{ultimo_equipo_id}_{idx + 1}.jpg" if idx > 0 else f"{ultimo_equipo_id}.jpg"
                 ruta_destino = os.path.join(IMAGES_FOLDER, nombre_imagen)  # Define IMAGES_FOLDER antes
                 
                 # Guardar la imagen en el sistema de archivos
@@ -172,7 +166,7 @@ def image_panel(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Guarda las Imágenes", size=20),
-                        ft.TextField(label="ID",ref=txt_id_equipo, width=200,read_only=False),
+                        ft.TextField(label="ID",ref=txt_id_equipo, width=200,read_only=False, value=ultimo_equipo_id[0]),
                         ft.ElevatedButton(text="Seleccionar Imágenes", on_click=abrir_selector_archivos, width=200),
                         imagenes_columna,  # Aquí se mostrarán las imágenes
                         ft.ElevatedButton(text="Guardar", on_click=agregar_imagen, width=200),
