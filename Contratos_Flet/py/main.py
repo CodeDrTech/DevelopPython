@@ -436,7 +436,7 @@ def main(page: ft.Page):
 
         # Importamos y ejecutamos la función y sus controles en la página actual
         from users import user_panel
-        user_panel(page)
+        user_panel(page, "main")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     #Funcion para manejar diferentes eventos al seleccionar algunos de los tab

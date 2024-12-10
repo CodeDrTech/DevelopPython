@@ -191,7 +191,7 @@ def equipment_panel(page: ft.Page, llamada: str):
 
         # Importamos y ejecutamos la función y sus controles en la página actual
         from users import user_panel
-        user_panel(page)
+        user_panel(page, "equipment")
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
@@ -468,10 +468,9 @@ def equipment_panel(page: ft.Page, llamada: str):
         rg_condicion.current.disabled = True  # Suponiendo que rg_condicion es un RadioGroup
     else:
         # Habilitar controles para otros módulos
-        txt_id_usuario.current.read_only = False
-        txt_marca.current.read_only = False
-        txt_modelo.current.read_only = False
-        rg_condicion.current.disabled = False
-    
+        #txt_id_usuario.current.read_only = False
+        #txt_marca.current.read_only = False
+        #txt_modelo.current.read_only = False
+        #rg_condicion.current.disabled = False    
         txt_marca.current.focus()
     page.update()

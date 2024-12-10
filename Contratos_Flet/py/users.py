@@ -54,7 +54,7 @@ def get_user_list():
     return []
 
 
-def user_panel(page: ft.Page):
+def user_panel(page: ft.Page, llamada: str):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
     page.window.width = 1250
@@ -363,6 +363,30 @@ def user_panel(page: ft.Page):
     # Inicializar la lista de usuarios
     actualizar_lista_usuarios()
     page.add(mainTab)
-    #Lleva el foco el textFiled usuaro al cargar el formulario
-    txt_nombre.current.focus()
+    
+    # Lógica para habilitar o deshabilitar controles según el módulo que llamó
+    if llamada == "equipment":
+        
+        # Establecer el índice de la pestaña activa
+        mainTab.selected_index = 1
+        
+        # Deshabilitar controles de inserción si fue llamado desde el módulo de contratos
+        txt_nombre.current.read_only = True
+        txt_nombre.current.color = "red"
+        txt_nombre.current.value = "Deshabilitado"
+        
+        txt_apellidos.current.read_only = True
+        txt_apellidos.current.color = "red"
+        txt_apellidos.current.value = "Deshabilitado"
+        
+        txt_cedula.current.read_only = True
+        txt_cedula.current.color = "red"
+        txt_cedula.current.value = "Deshabilitado"
+        
+        txt_numero_empleado.current.read_only = True
+        txt_numero_empleado.current.color = "red"
+        txt_numero_empleado.current.value = "Deshabilitado"
+    else:
+        #Lleva el foco el textFiled usuaro al cargar el formulario
+        txt_nombre.current.focus()
     page.update()
