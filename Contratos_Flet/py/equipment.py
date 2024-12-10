@@ -478,6 +478,6 @@ def equipment_panel(page: ft.Page, llamada: str):
         #Deshabilita el boton siguiente para que no avance si no se llenan los datos del usuario
         btn_siguiente.disabled = True
         
-          
+        
         txt_marca.current.focus()
     page.update()
