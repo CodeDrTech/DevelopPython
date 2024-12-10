@@ -439,13 +439,29 @@ def equipment_panel(page: ft.Page, llamada: str):
         ]
     )
     page.add(mainTab)
+    
+    # Establecer el índice de la pestaña activa
+    mainTab.selected_index = 1
+    
     # Lógica para habilitar o deshabilitar controles según el módulo que llamó
     if llamada == "contract":
         # Deshabilitar controles de inserción si fue llamado desde el módulo de contratos
         txt_id_usuario.current.read_only = True
+        txt_id_usuario.current.color = "red"
+        txt_id_usuario.current.value = "Deshabilitado"
+        
         txt_marca.current.read_only = True
+        txt_marca.current.color = "red"
+        txt_marca.current.value = "Deshabilitado"
+        
         txt_modelo.current.read_only = True
+        txt_modelo.current.color = "red"
+        txt_modelo.current.value = "Deshabilitado"
+        
         txt_imei.current.read_only = True
+        txt_imei.current.color = "red"
+        txt_imei.current.value = "Deshabilitado"
+        
         rg_condicion.current.disabled = True  # Suponiendo que rg_condicion es un RadioGroup
     else:
         # Habilitar controles para otros módulos
