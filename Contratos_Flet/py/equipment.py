@@ -440,11 +440,14 @@ def equipment_panel(page: ft.Page, llamada: str):
     )
     page.add(mainTab)
     
-    # Establecer el índice de la pestaña activa
-    mainTab.selected_index = 1
+    
     
     # Lógica para habilitar o deshabilitar controles según el módulo que llamó
     if llamada == "contract":
+        
+        # Establecer el índice de la pestaña activa
+        mainTab.selected_index = 1
+        
         # Deshabilitar controles de inserción si fue llamado desde el módulo de contratos
         txt_id_usuario.current.read_only = True
         txt_id_usuario.current.color = "red"
