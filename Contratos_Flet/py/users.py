@@ -1,3 +1,4 @@
+from math import e
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nuevo_usuario
@@ -62,6 +63,8 @@ def user_panel(page: ft.Page, llamada: str):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.AUTO
+    
+    
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -318,6 +321,13 @@ def user_panel(page: ft.Page, llamada: str):
             page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Funcion para avanzar al modulo de insertar equipo solo si se ha registrado un usuario
+    def handle_siguiente_click(e):
+        tab_insertar_equipo(e)
+    
+    #Boton para avanzar al modulo de insertar equipo, estara activo solo si se ha registrado un usuario
+    btn_siguiente = ft.ElevatedButton(text="Siguiente", on_click=handle_siguiente_click, width=200, icon=ft.icons.ARROW_FORWARD)
+    
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
@@ -339,7 +349,7 @@ def user_panel(page: ft.Page, llamada: str):
                         ft.TextField(label="Cedula", ref=txt_cedula, width=200, max_length=13, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9-]*$", replacement_string=""), on_change=format_cedula),
                         ft.TextField(label="Codigo", on_submit=agregar_usuario, ref=txt_numero_empleado,width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ft.ElevatedButton(text="Guardar", on_click=agregar_usuario, width=200),
-                        ft.ElevatedButton(text="equipos", on_click=tab_insertar_equipo, width=200),
+                        btn_siguiente, #ft.ElevatedButton(text="Siguiente", on_click=tab_insertar_equipo, width=200, icon=ft.icons.ARROW_FORWARD),
                         ft.ElevatedButton(text="Atras", tooltip="reguresa al menu principal", icon=ft.icons.ARROW_BACK, on_click=regresar_a_main, width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
@@ -360,14 +370,17 @@ def user_panel(page: ft.Page, llamada: str):
             ),
         ],
     )
+    
+    
     # Inicializar la lista de usuarios
     actualizar_lista_usuarios()
     
     page.add(mainTab)
     
+    
+    
     # Lógica para habilitar o deshabilitar controles según el módulo que llamó
     if llamada == "equipment":
-        
         # Establecer el índice de la pestaña activa
         mainTab.selected_index = 1
         
@@ -388,6 +401,10 @@ def user_panel(page: ft.Page, llamada: str):
         txt_numero_empleado.current.color = "red"
         txt_numero_empleado.current.value = "Deshabilitado"
     else:
+        #Deshabilita el boton siguiente para que no avance si no se llenan los datos del usuario
+        btn_siguiente.disabled = True
         #Lleva el foco el textFiled usuaro al cargar el formulario
         txt_nombre.current.focus()
+        
+        
     page.update()
