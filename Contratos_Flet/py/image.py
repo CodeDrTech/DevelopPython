@@ -2,7 +2,7 @@ import flet as ft
 from database import connect_to_db
 from queries import insertar_nueva_imagen
 from flet import AppView, ScrollMode
-import datetime
+import datetime, os
 
 
 def image_panel(page: ft.Page):
@@ -47,13 +47,19 @@ def image_panel(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Función que se ejecuta al seleccionar los archivos
+    # Variable para almacenar las rutas de las imágenes seleccionadas
+    rutas_imagenes = []
+    
     def previsualizar_imagenes(e):
         # Limpiar las imágenes previas
         imagenes_columna.controls.clear()
+        rutas_imagenes.clear()  # Limpiar las rutas anteriores
+    
         # Asegurarse de que solo se agreguen hasta 3 imágenes
         for i, file in enumerate(e.files[:3]):
             imagen = ft.Image(src=file.path, width=100, height=100)  # Ajustar tamaño de las imágenes
             imagenes_columna.controls.append(imagen)
+            rutas_imagenes.append(file.path)  # Guardar la ruta del archivo
         page.update()
         
     # Función para abrir el selector de archivos
@@ -86,45 +92,58 @@ def image_panel(page: ft.Page):
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Definir la carpeta donde se guardarán las imágenes
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Obtiene el directorio del archivo actual
+    IMAGES_FOLDER = os.path.join(BASE_DIR, '..', 'static', 'images')  # Ruta a static/images
+    os.makedirs(IMAGES_FOLDER, exist_ok=True)  # Crea la carpeta si no existe
+    
     txt_id_equipo = ft.Ref[ft.TextField]()
 
     def agregar_imagen(e):
         try:
             id_equipo = txt_id_equipo.current.value
-            imagenes = imagenes_columna  # Asegúrate de que contenga las imágenes cargadas
-
+    
             # Validaciones iniciales
             if not id_equipo:
                 raise ValueError("Debe proporcionar un ID de equipo.")
-            if not imagenes or len(imagenes) == 0:
+            if not rutas_imagenes or len(rutas_imagenes) == 0:
                 raise ValueError("Debe cargar al menos una imagen.")
-
+    
             # Obtener el número de contrato asociado al idEquipo
             numero_contrato = obtener_numero_contrato(id_equipo)
             if not numero_contrato:
                 raise ValueError(f"No se encontró un contrato asociado al ID de equipo {id_equipo}.")
-
+    
             # Procesar e insertar imágenes con nombres basados en el número de contrato
-            for idx, imagen in enumerate(imagenes):
+            for idx, ruta_imagen in enumerate(rutas_imagenes):
                 nombre_imagen = f"{numero_contrato}_{idx + 1}.jpg" if idx > 0 else f"{numero_contrato}.jpg"
-                insertar_nueva_imagen(id_equipo, nombre_imagen, imagen)
-
+                ruta_destino = os.path.join(IMAGES_FOLDER, nombre_imagen)  # Define IMAGES_FOLDER antes
+                
+                # Guardar la imagen en el sistema de archivos
+                with open(ruta_imagen, "rb") as f:  # Usa la ruta del archivo
+                    with open(ruta_destino, "wb") as out_file:  # Abre el archivo de destino
+                        out_file.write(f.read())  # Guarda la imagen en el sistema de archivos
+                
+                # Inserta la imagen en la base de datos
+                insertar_nueva_imagen(id_equipo, ruta_destino)
+    
             # Notificar éxito al usuario
             snack_bar = ft.SnackBar(ft.Text("¡Imagen(es) agregadas exitosamente!"), duration=3000)
             page.overlay.append(snack_bar)
             snack_bar.open = True
             page.update()
-
+    
             # Limpiar campos
             txt_id_equipo.current.value = ""
-            imagenes_columna.clear()
+            imagenes_columna.controls.clear()  # Limpiar las imágenes cargadas
+            rutas_imagenes.clear()  # Limpiar las rutas
             page.update()
-
+    
         except ValueError as ve:
             # Manejo de errores específicos
             page.snack_bar = ft.SnackBar(ft.Text(f"Error: {ve}"), open=True, duration=3000)
             page.update()
-
+    
         except Exception as error:
             # Manejo de errores generales
             page.snack_bar = ft.SnackBar(ft.Text(f"Error inesperado: {error}"), open=True, duration=3000)
