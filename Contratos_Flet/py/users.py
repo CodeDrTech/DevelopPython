@@ -225,7 +225,7 @@ def user_panel(page: ft.Page):
 
         # Importamos y ejecutamos la función y sus controles en la página actual
         from equipment import equipment_panel
-        equipment_panel(page)
+        equipment_panel(page, "users")
         
     def regresar_a_main(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual

@@ -162,7 +162,7 @@ def get_user_list():
     return None
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-def equipment_panel(page: ft.Page):
+def equipment_panel(page: ft.Page, llamada: str):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
     page.window.width = 1250
@@ -170,6 +170,11 @@ def equipment_panel(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.AUTO
+    
+    
+    
+    
+    
     
     def tab_inserta_imagen(e):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
@@ -219,6 +224,8 @@ def equipment_panel(page: ft.Page):
     txt_modelo = ft.Ref[ft.TextField]()
     rg_condicion = ft.Ref[ft.RadioGroup]()
     txt_imei = ft.Ref[ft.TextField]()
+    
+    
     
     def agregar_equipo(e):
         try:
@@ -272,6 +279,8 @@ def equipment_panel(page: ft.Page):
             page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True, duration=3000)
             page.overlay.append(page.snack_bar)
             page.update()
+            
+    
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Obtener datos del último usuario

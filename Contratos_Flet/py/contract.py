@@ -82,13 +82,13 @@ def contract_panel(page: ft.Page):
         from main import main
         main(page)
         
-    def regresar_a_equipos(e):
+    def regresar_a_equipos(e, tabs):
         # En lugar de iniciar una nueva aplicación, limpiamos la página actual
         page.clean()
 
         # Importamos y ejecutamos la función y sus controles en la página actual
         from equipment import equipment_panel
-        equipment_panel(page)
+        equipment_panel(page, "contract")
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
@@ -436,7 +436,7 @@ def contract_panel(page: ft.Page):
                                         on_click=       generar_pdf_contrato,
                                         width=          200
                                     ),
-                                    ft.ElevatedButton(text="Atras", tooltip="Regresar a equipos", icon=ft.icons.ARROW_BACK, on_click=regresar_a_equipos, width=200),
+                                    ft.ElevatedButton(text="Atras", tooltip="Regresar a equipos", icon=ft.icons.ARROW_BACK, on_click=lambda e: regresar_a_equipos(e), width=200),
                                 ],
                                 spacing=    15,
                                 alignment= ft.MainAxisAlignment.START
