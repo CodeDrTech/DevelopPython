@@ -17,16 +17,28 @@ lista_equipos = ft.ListView(expand=True)
 imagen_frame = ft.Row(spacing=10, scroll=ft.ScrollMode.AUTO)
 
 # Función para obtener equipos con imágenes
-def obtener_equipos_con_imagenes():
+def obtener_informacion_equipos():
     conn = connect_to_db()  # Conectar a la base de datos
     cursor = conn.cursor()
     
     query = """
-    SELECT e.idEquipo, e.marca
-    FROM Equipo e
-    JOIN EquipoImagen ei ON e.idEquipo = ei.idEquipo
-    GROUP BY e.idEquipo, e.marca;
-
+    SELECT 
+        c.numeroContrato AS Contrato,
+        u.nombres AS nombre,
+        u.apellidos AS apellido,
+        e.marca AS marca,
+        e.modelo AS modelo,
+        e.condicion AS condicion
+    FROM 
+        EquipoImagen ei
+    JOIN 
+        Equipo e ON ei.idEquipo = e.idEquipo
+    JOIN 
+        Usuario u ON e.idUsuario = u.idUsuario
+    JOIN 
+        Contrato c ON e.idEquipo = c.idEquipo  -- Relaciona el equipo con el contrato
+    ORDER BY 
+        c.numeroContrato;  -- Ordenar por el número del contrato
     """
     
     cursor.execute(query)
@@ -34,17 +46,23 @@ def obtener_equipos_con_imagenes():
     conn.close()  # Cerrar la conexión
     
     # Convertir resultados a un formato adecuado (lista de diccionarios)
-    equipos = [{'id': row[0], 'nombre': row[1]} for row in resultados]
-    return equipos
+    equipos_info = [{'Contrato': row[0], 'nombre': row[1], 'apellido': row[2], 
+                     'marca': row[3], 'modelo': row[4], 'condicion': row[5]} for row in resultados]
+    return equipos_info
 
 # Función para cargar equipos en el ListView
 def cargar_equipos():
-    equipos = obtener_equipos_con_imagenes()
-    lista_equipos.controls.clear()
-    for equipo in equipos:
-        lista_equipos.controls.append(ft.ListTile(title=ft.Text(equipo["nombre"]), on_click=lambda e, equipo=equipo: mostrar_imagenes(equipo)))
-    # Actualizar el componente SOLO después de que esté agregado al árbol
-    lista_equipos.update()
+    equipos_info = obtener_informacion_equipos()  # Obtener información de los equipos
+    lista_equipos.controls.clear()  # Limpiar la lista antes de cargar nuevos datos
+    for equipo in equipos_info:
+        lista_equipos.controls.append(
+            ft.ListTile(
+                title=ft.Text(f"{equipo['Contrato']} - {equipo['nombre']} {equipo['apellido']}"),
+                subtitle=ft.Text(f"Marca: {equipo['marca']}, Modelo: {equipo['modelo']}, Condición: {equipo['condicion']}"),
+                on_click=lambda e, equipo=equipo: mostrar_imagenes(equipo)  # Llama a mostrar_imagenes con el equipo seleccionado
+            )
+        )
+    lista_equipos.update()  # Actualiza el componente después de agregar los controles
 
 # Función para obtener imágenes por equipo
 def obtener_imagenes_por_equipo(equipo):
@@ -63,13 +81,13 @@ def obtener_imagenes_por_equipo(equipo):
     imagenes = [{'rutaImagen': row[0]} for row in resultados]
     return imagenes
 
-def mostrar_imagenes(equipo):   
+def mostrar_imagenes(equipo):
     imagenes = obtener_imagenes_por_equipo(equipo)  # Obtener imágenes por equipo
     imagen_frame.controls.clear()  # Limpiar imágenes anteriores
     for imagen in imagenes:
         # Asegúrate de que la ruta de la imagen sea correcta
         imagen_frame.controls.append(ft.Image(src=imagen['rutaImagen'], width=200, height=200))
-    imagen_frame.update()
+    imagen_frame.update()  # Actualiza el contenedor para mostrar las imágenes
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------  
 def image_panel(page: ft.Page):
