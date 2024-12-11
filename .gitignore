@@ -50,3 +50,5 @@ Ventas\ Selact/*.xlsx
 # Carpetas de sistema y configuración
 .vscode/
 .idx/
+
+.windsurfrules

@@ -8,12 +8,7 @@ import datetime, os
 
 
 # Definición de variables globales para la interfaz
-lista_equipos = ListView()  # Lista para mostrar equipos
-imagen_frame = Container()   # Contenedor para mostrar imágenes
-
-# Variables y referencias
-txt_id_equipo = ft.Ref[ft.TextField]()
-lista_equipos = ft.ListView(expand=True)
+lista_equipos = ft.ListView(expand=True)  # Esta línea se eliminará
 imagen_frame = ft.Row(spacing=10, scroll=ft.ScrollMode.AUTO)
 
 # Función para obtener equipos con imágenes
@@ -22,7 +17,8 @@ def obtener_informacion_equipos():
     cursor = conn.cursor()
     
     query = """
-    SELECT 
+    SELECT
+        e.idEquipo AS id,
         c.numeroContrato AS Contrato,
         u.nombres AS nombre,
         u.apellidos AS apellido,
@@ -46,23 +42,50 @@ def obtener_informacion_equipos():
     conn.close()  # Cerrar la conexión
     
     # Convertir resultados a un formato adecuado (lista de diccionarios)
-    equipos_info = [{'Contrato': row[0], 'nombre': row[1], 'apellido': row[2], 
-                     'marca': row[3], 'modelo': row[4], 'condicion': row[5]} for row in resultados]
+    equipos_info = [{'id': row[0], 'Contrato': row[1], 'nombre': row[2], 
+                     'apellido': row[3], 'marca': row[4], 'modelo': row[5], 
+                     'condicion': row[6]} for row in resultados]
     return equipos_info
 
-# Función para cargar equipos en el ListView
+# Nueva función para crear un DataTable con la información de los equipos
+def crear_tabla_equipos(equipos_info):
+    columns = [
+        ft.DataColumn(ft.Text("Contrato")),
+        ft.DataColumn(ft.Text("Nombre")),
+        ft.DataColumn(ft.Text("Apellido")),
+        ft.DataColumn(ft.Text("Marca")),
+        ft.DataColumn(ft.Text("Modelo")),
+        ft.DataColumn(ft.Text("Condición")),
+    ]
+    
+    rows = []
+    for equipo in equipos_info:
+        rows.append(ft.DataRow(cells=[
+            ft.DataCell(ft.Text(equipo['Contrato'])),
+            ft.DataCell(ft.Text(equipo['nombre'])),
+            ft.DataCell(ft.Text(equipo['apellido'])),
+            ft.DataCell(ft.Text(equipo['marca'])),
+            ft.DataCell(ft.Text(equipo['modelo'])),
+            ft.DataCell(ft.Text(equipo['condicion'])),
+        ],
+        on_long_press=lambda e, equipo=equipo: mostrar_imagenes(equipo)
+                            ))
+    
+    data_table = ft.DataTable(
+        columns=columns,
+        rows=rows,
+        border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200),
+        border_radius=10,
+        vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200),
+    )
+    
+    return data_table
+
+# Función para cargar equipos en el DataTable
 def cargar_equipos():
     equipos_info = obtener_informacion_equipos()  # Obtener información de los equipos
-    lista_equipos.controls.clear()  # Limpiar la lista antes de cargar nuevos datos
-    for equipo in equipos_info:
-        lista_equipos.controls.append(
-            ft.ListTile(
-                title=ft.Text(f"{equipo['Contrato']} - {equipo['nombre']} {equipo['apellido']}"),
-                subtitle=ft.Text(f"Marca: {equipo['marca']}, Modelo: {equipo['modelo']}, Condición: {equipo['condicion']}"),
-                on_click=lambda e, equipo=equipo: mostrar_imagenes(equipo)  # Llama a mostrar_imagenes con el equipo seleccionado
-            )
-        )
-    lista_equipos.update()  # Actualiza el componente después de agregar los controles
+    data_table = crear_tabla_equipos(equipos_info)  # Crear el DataTable
+    return data_table  # Devolver el DataTable
 
 # Función para obtener imágenes por equipo
 def obtener_imagenes_por_equipo(equipo):
@@ -99,7 +122,9 @@ def image_panel(page: ft.Page):
     page.padding = 20
     page.scroll = ScrollMode.AUTO
     
-    global lista_equipos
+    # Crear el DataTable y agregarlo a la interfaz
+    data_table = cargar_equipos()  # Cargar equipos y obtener el DataTable
+
     
     #Funcion para llamar al panel principal.
     def tab_insertar_contrato(e):
@@ -269,9 +294,8 @@ def image_panel(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Lista de Equipos", size=20),
-                        lista_equipos,  # Usar la lista definida
-                        ft.Text("Imágenes del equipo seleccionado:", size=16),
-                        imagen_frame,    # Usar el contenedor definido
+                        data_table,
+                        imagen_frame,
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
@@ -282,5 +306,4 @@ def image_panel(page: ft.Page):
             
     )
     page.add(mainTab)
-    cargar_equipos()
     page.update()
