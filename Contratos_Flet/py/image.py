@@ -124,6 +124,9 @@ def image_panel(page: ft.Page):
     
     # Crear el DataTable y agregarlo a la interfaz
     data_table = cargar_equipos()  # Cargar equipos y obtener el DataTable
+    
+    # Crear un contenedor para las imágenes
+    imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO)  # Cambiado a Column para mostrar imágenes verticalmente
 
     
     #Funcion para llamar al panel principal.
@@ -291,16 +294,21 @@ def image_panel(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.LIST,
                 text="Equipos con Imágenes",
-                content=ft.Column(
-                    [
-                        ft.Text("Lista de Equipos", size=20),
-                        data_table,
-                        imagen_frame,
+                content=ft.Row(  # Cambiar a Row para colocar la tabla y las imágenes lado a lado
+                    controls=[
+                        ft.Column(  # Columna para el DataTable
+                            controls=[
+                                ft.Text("Lista de Equipos", size=20),
+                                data_table,  # Agrega el DataTable aquí
+                            ],
+                            expand=True,  # Permitir que ocupe el espacio disponible
+                        ),
+                        imagen_frame,  # Contenedor para las imágenes
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
-                                ),
-                )
+                ),
+            ),
             ],
             
             
