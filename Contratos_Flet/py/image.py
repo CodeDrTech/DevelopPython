@@ -9,7 +9,7 @@ import datetime, os
 
 # Definición de variables globales para la interfaz
 lista_equipos = ft.ListView(expand=True)  # Esta línea se eliminará
-imagen_frame = ft.Row(spacing=10, scroll=ft.ScrollMode.AUTO)
+imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO)
 
 # Función para obtener equipos con imágenes
 def obtener_informacion_equipos():
@@ -126,7 +126,7 @@ def image_panel(page: ft.Page):
     data_table = cargar_equipos()  # Cargar equipos y obtener el DataTable
     
     # Crear un contenedor para las imágenes
-    imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO)  # Cambiado a Column para mostrar imágenes verticalmente
+    #imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO)  # Cambiado a Column para mostrar imágenes verticalmente
 
     
     #Funcion para llamar al panel principal.
@@ -294,20 +294,15 @@ def image_panel(page: ft.Page):
             ft.Tab(
                 icon=ft.icons.LIST,
                 text="Equipos con Imágenes",
-                content=ft.Row(  # Cambiar a Row para colocar la tabla y las imágenes lado a lado
-                    controls=[
-                        ft.Column(  # Columna para el DataTable
-                            controls=[
-                                ft.Text("Lista de Equipos", size=20),
-                                data_table,  # Agrega el DataTable aquí
-                            ],
-                            expand=True,  # Permitir que ocupe el espacio disponible
-                        ),
-                        imagen_frame,  # Contenedor para las imágenes
+                content=ft.Column(
+                    [data_table,
+                    imagen_frame,
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
-                ),
+                )
+                
+                
             ),
             ],
             
