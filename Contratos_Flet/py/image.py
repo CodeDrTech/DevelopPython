@@ -1,3 +1,4 @@
+from math import trunc
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nueva_imagen
@@ -78,16 +79,15 @@ def image_panel(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def obtener_ultimo_equipo():
         query = """
-        SELECT idEquipo
-        FROM Equipo
-        ORDER BY idEquipo DESC
-        LIMIT 1
+        SELECT TOP 1 idEquipo
+            FROM Equipo
+            ORDER BY idEquipo DESC
         """
         conexion = connect_to_db()
         with conexion.cursor() as cursor:
             cursor.execute(query)
             result = cursor.fetchone()
-        return result[0] if result else None
+        return result if result else None
 
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -166,7 +166,7 @@ def image_panel(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Text("Guarda las Imágenes", size=20),
-                        ft.TextField(label="ID",ref=txt_id_equipo, width=200,read_only=False, value=ultimo_equipo_id[0]),
+                        ft.TextField(label="ID",ref=txt_id_equipo, width=200,read_only=True, value=ultimo_equipo_id[0]),
                         ft.ElevatedButton(text="Seleccionar Imágenes", on_click=abrir_selector_archivos, width=200),
                         imagenes_columna,  # Aquí se mostrarán las imágenes
                         ft.ElevatedButton(text="Guardar", on_click=agregar_imagen, width=200),
