@@ -2,7 +2,7 @@ from math import trunc
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nueva_imagen
-from flet import AppView, ScrollMode, ListView, Container
+from flet import AppView, ScrollMode, ListView, Container, border
 import datetime, os
 
 
@@ -14,7 +14,7 @@ imagen_frame = Container()   # Contenedor para mostrar imágenes
 # Variables y referencias
 txt_id_equipo = ft.Ref[ft.TextField]()
 lista_equipos = ft.ListView(expand=True)
-imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO)
+imagen_frame = ft.Row(spacing=10, scroll=ft.ScrollMode.AUTO)
 
 # Función para obtener equipos con imágenes
 def obtener_equipos_con_imagenes():

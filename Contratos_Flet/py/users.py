@@ -218,7 +218,10 @@ def user_panel(page: ft.Page, llamada: str):
             ft.DataColumn(ft.Text("Número de Empleado")),
             ft.DataColumn(ft.Text("Acciones")),
         ],
-        rows=[]
+        rows=[],
+        border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200),
+        border_radius=10,
+        vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200),
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------  
