@@ -126,6 +126,8 @@ def image_panel(page: ft.Page):
                 
                 # Inserta la imagen en la base de datos
                 insertar_nueva_imagen(id_equipo, ruta_destino)
+                
+                tab_insertar_contrato(e)
     
             # Notificar éxito al usuario
             snack_bar = ft.SnackBar(ft.Text("¡Imagen(es) agregadas exitosamente!"), duration=3000)
