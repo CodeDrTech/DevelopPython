@@ -2,10 +2,76 @@ from math import trunc
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nueva_imagen
-from flet import AppView, ScrollMode
+from flet import AppView, ScrollMode, ListView, Container
 import datetime, os
 
 
+
+# Definición de variables globales para la interfaz
+lista_equipos = ListView()  # Lista para mostrar equipos
+imagen_frame = Container()   # Contenedor para mostrar imágenes
+
+# Variables y referencias
+txt_id_equipo = ft.Ref[ft.TextField]()
+lista_equipos = ft.ListView(expand=True)
+imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO)
+
+# Función para obtener equipos con imágenes
+def obtener_equipos_con_imagenes():
+    conn = connect_to_db()  # Conectar a la base de datos
+    cursor = conn.cursor()
+    
+    query = """
+    SELECT e.idEquipo, e.marca
+    FROM Equipo e
+    JOIN EquipoImagen ei ON e.idEquipo = ei.idEquipo
+    GROUP BY e.idEquipo, e.marca;
+
+    """
+    
+    cursor.execute(query)
+    resultados = cursor.fetchall()  # Obtener todos los resultados
+    conn.close()  # Cerrar la conexión
+    
+    # Convertir resultados a un formato adecuado (lista de diccionarios)
+    equipos = [{'id': row[0], 'nombre': row[1]} for row in resultados]
+    return equipos
+
+# Función para cargar equipos en el ListView
+def cargar_equipos():
+    equipos = obtener_equipos_con_imagenes()
+    lista_equipos.controls.clear()
+    for equipo in equipos:
+        lista_equipos.controls.append(ft.ListTile(title=ft.Text(equipo["nombre"])))
+    # Actualizar el componente SOLO después de que esté agregado al árbol
+    lista_equipos.update()
+
+# Función para obtener imágenes por equipo
+def obtener_imagenes_por_equipo(equipo):
+    conn = connect_to_db()  # Conectar a la base de datos
+    cursor = conn.cursor()
+    
+    query = """
+    SELECT rutaImagen FROM EquipoImagen WHERE id_equipo = ?;
+    """
+    
+    cursor.execute(query, (equipo['id'],))
+    resultados = cursor.fetchall()  # Obtener todas las imágenes
+    conn.close()  # Cerrar la conexión
+    
+    # Convertir resultados a un formato adecuado (lista de diccionarios)
+    imagenes = [{'rutaImagen': row[0]} for row in resultados]
+    return imagenes
+
+def mostrar_imagenes(equipo):   
+    imagenes = obtener_imagenes_por_equipo(equipo)  # Obtener imágenes por equipo
+    imagen_frame.controls.clear()  # Limpiar imágenes anteriores
+    for imagen in imagenes:
+        # Asegúrate de que la ruta de la imagen sea correcta
+        imagen_frame.controls.append(ft.Image(src=imagen['rutaImagen'], width=200, height=200))
+    imagen_frame.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------  
 def image_panel(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
@@ -14,6 +80,8 @@ def image_panel(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.AUTO
+    
+    global lista_equipos
     
     #Funcion para llamar al panel principal.
     def tab_insertar_contrato(e):
@@ -88,8 +156,6 @@ def image_panel(page: ft.Page):
             cursor.execute(query)
             result = cursor.fetchone()
         return result if result else None
-
-
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Definir la carpeta donde se guardarán las imágenes
@@ -153,11 +219,12 @@ def image_panel(page: ft.Page):
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
         expand=True,
-        
         
         # Contenedor de tabs
         tabs=[
@@ -178,7 +245,24 @@ def image_panel(page: ft.Page):
                     spacing=15,
                 ),
             ),
+            ft.Tab(
+                icon=ft.icons.LIST,
+                text="Equipos con Imágenes",
+                content=ft.Column(
+                    [
+                        ft.Text("Lista de Equipos", size=20),
+                        lista_equipos,  # Usar la lista definida
+                        ft.Text("Imágenes del equipo seleccionado:", size=16),
+                        imagen_frame,    # Usar el contenedor definido
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=15,
+                                ),
+                )
             ],
+            
+            
     )
     page.add(mainTab)
+    cargar_equipos()
     page.update()
