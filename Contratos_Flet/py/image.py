@@ -42,7 +42,7 @@ def cargar_equipos():
     equipos = obtener_equipos_con_imagenes()
     lista_equipos.controls.clear()
     for equipo in equipos:
-        lista_equipos.controls.append(ft.ListTile(title=ft.Text(equipo["nombre"])))
+        lista_equipos.controls.append(ft.ListTile(title=ft.Text(equipo["nombre"]), on_click=lambda e, equipo=equipo: mostrar_imagenes(equipo)))
     # Actualizar el componente SOLO después de que esté agregado al árbol
     lista_equipos.update()
 
@@ -52,7 +52,7 @@ def obtener_imagenes_por_equipo(equipo):
     cursor = conn.cursor()
     
     query = """
-    SELECT rutaImagen FROM EquipoImagen WHERE id_equipo = ?;
+    SELECT rutaImagen FROM EquipoImagen WHERE idEquipo = ?;
     """
     
     cursor.execute(query, (equipo['id'],))
