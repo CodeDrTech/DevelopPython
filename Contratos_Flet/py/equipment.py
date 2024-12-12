@@ -166,7 +166,7 @@ def equipment_panel(page: ft.Page, llamada: str):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
     page.window.width = 1250
-    page.window.height = 600
+    page.window.height = 800
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.AUTO
