@@ -113,6 +113,10 @@ def mostrar_imagenes(equipo):
         # Asegúrate de que la ruta de la imagen sea correcta
         imagen_frame.controls.append(ft.Image(src=imagen['rutaImagen'], width=200, height=200))
     imagen_frame.update()  # Actualiza el contenedor para mostrar las imágenes
+    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------  
 
@@ -319,7 +323,7 @@ def image_panel(page: ft.Page):
                             ft.Column(
                                 controls=[
                                     # TextField para ingresar el nombre
-                                    ft.TextField(label="Buscar Nombre", width=200),
+                                    ft.TextField(label="Buscar Nombre", icon=ft.icons.SEARCH, width=200),
                                     data_table,
                                 ],
                                 expand=True,  # Hace que el data_table ocupe el espacio necesario
