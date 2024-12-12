@@ -1,4 +1,4 @@
-from math import trunc
+from math import exp, trunc
 import flet as ft
 from database import connect_to_db
 from queries import insertar_nueva_imagen
@@ -9,7 +9,7 @@ import datetime, os
 
 # Definición de variables globales para la interfaz
 lista_equipos = ft.ListView(expand=True)  # Esta línea se eliminará
-imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO)
+imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.CENTER, width=300, expand=True)
 
 # Función para obtener equipos con imágenes
 def obtener_informacion_equipos():
@@ -119,7 +119,7 @@ def image_panel(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
     page.window.width = 1250
-    page.window.height = 600
+    page.window.height = 800
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.AUTO
