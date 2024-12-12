@@ -318,6 +318,8 @@ def image_panel(page: ft.Page):
                         controls=[
                             ft.Column(
                                 controls=[
+                                    # TextField para ingresar el nombre
+                                    ft.TextField(label="Buscar Nombre", width=200),
                                     data_table,
                                 ],
                                 expand=True,  # Hace que el data_table ocupe el espacio necesario
