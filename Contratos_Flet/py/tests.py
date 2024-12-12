@@ -1,52 +1,24 @@
 import flet as ft
-from flet_model import Model, Router
-
-
-class First(Model):
-    route = 'first'
-    vertical_alignment = ft.MainAxisAlignment.CENTER
-    horizontal_alignment = ft.CrossAxisAlignment.CENTER
-
-    appbar = ft.AppBar(
-        title=ft.Text("First View"),
-        center_title=True,
-        bgcolor=ft.Colors.SURFACE)
-    controls = [
-        ft.ElevatedButton("Go to Second Page", on_click="go_second")
-    ]
-
-    def go_second(self, e):
-        self.page.go('/first/second')
-
-
-class Second(Model):
-    route = 'second'
-    title = "Test"
-    vertical_alignment = ft.MainAxisAlignment.CENTER
-    horizontal_alignment = ft.CrossAxisAlignment.CENTER
-
-    appbar = ft.AppBar(
-        title=ft.Text("Second View"),
-        center_title=True,
-        bgcolor=ft.Colors.SURFACE)
-    controls = [
-        ft.ElevatedButton("Go to First", on_click="go_first")
-    ]
-
-    def go_first(self, e):
-        self.page.go('first')
-
 
 def main(page: ft.Page):
-    page.title = "Title"
-    page.theme_mode = "light"
-    # Initialize router with route mappings
-    Router(
-        {'first': First(page)},
-        {'second': Second(page)}
-    )
+    def open_dlg_modal(message):
+        dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Información"),
+            content=ft.Text(message),
+            actions=[
+                ft.TextButton("Ok", on_click=lambda e: close_dlg(dlg_modal)),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        page.open(dlg_modal)  # Abre el cuadro de diálogo
 
-    page.go(page.route)
+    def close_dlg(dialog):
+        page.close(dialog)  # Cierra el cuadro de diálogo
+        page.add(ft.Text("El diálogo se cerró correctamente."))  # Mensaje opcional
 
+    # Botón para abrir el cuadro de diálogo
+    page.add(ft.ElevatedButton("Mostrar Mensaje", on_click=lambda e: open_dlg_modal("Este es un mensaje de prueba.")))
 
+# Ejecutar la aplicación
 ft.app(target=main)

@@ -16,7 +16,7 @@ def login(page: ft.Page):
         if txt_usuario.value == "":
             lbl_mensaje.value = "¡Introduce tu usuario!"
             lbl_mensaje.color = ft.Colors.RED_100
-            lbl_mensaje.update()        
+            lbl_mensaje.update()
             txt_usuario.focus()
         else:
             lbl_mensaje.value = "¡Introduce tu contraseña!"

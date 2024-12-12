@@ -115,6 +115,7 @@ def mostrar_imagenes(equipo):
     imagen_frame.update()  # Actualiza el contenedor para mostrar las imágenes
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------  
+
 def image_panel(page: ft.Page):
     page.title = "Contratos"
     page.window.alignment = ft.alignment.center
@@ -142,24 +143,36 @@ def image_panel(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
     # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
-    def open_dlg_modal(e):
-        e.control.page.overlay.append(dlg_modal)
-        dlg_modal.open = True
-        e.control.page.update()
-        
-    def close_dlg(e):
-        dlg_modal.open = False
-        e.control.page.update()
+    # Función para abrir el cuadro de diálogo
+    
+    def open_dlg_modal(message):
+        dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Información"),
+            content=ft.Text(message),
+            actions=[
+                ft.TextButton("Ok", on_click=lambda e: close_dlg(dlg_modal)),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        page.open(dlg_modal)  # Abre el cuadro de diálogo
+
+    def close_dlg(dialog):
+        page.close(dialog)  # Cierra el cuadro de diálogo
+        #page.add(ft.Text("El cuadro de diálogo se cerró correctamente."))  # Mensaje opcional
+
+    # Botón para abrir el cuadro de diálogo
+    #page.add(ft.ElevatedButton("Mostrar Mensaje", on_click=lambda e: open_dlg_modal("Este es un mensaje de prueba.")))
+
 
     dlg_modal = ft.AlertDialog(
         modal=True,
         title=ft.Text("Falta información"),
         content=ft.Text("Ha dejado algun campo vacío"),
         actions=[
-                    ft.TextButton("Ok", on_click=close_dlg),
+                    ft.TextButton("Ok", on_click=lambda e: close_dlg(dlg_modal)),
                 ],
         actions_alignment=ft.MainAxisAlignment.END,
-        #on_dismiss=lambda e: print("Modal dialog dismissed!"),
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -172,11 +185,16 @@ def image_panel(page: ft.Page):
         imagenes_columna.controls.clear()
         rutas_imagenes.clear()  # Limpiar las rutas anteriores
     
-        # Asegurarse de que solo se agreguen hasta 3 imágenes
-        for i, file in enumerate(e.files[:3]):
-            imagen = ft.Image(src=file.path, width=100, height=100)  # Ajustar tamaño de las imágenes
-            imagenes_columna.controls.append(imagen)
-            rutas_imagenes.append(file.path)  # Guardar la ruta del archivo
+        # Verificar si e.files no es None y tiene elementos
+        if e.files and len(e.files) > 0:
+            # Asegurarse de que solo se agreguen hasta 3 imágenes
+            for i, file in enumerate(e.files[:3]):
+                imagen = ft.Image(src=file.path, width=100, height=100)  # Ajustar tamaño de las imágenes
+                imagenes_columna.controls.append(imagen)
+                rutas_imagenes.append(file.path)  # Guardar la ruta del archivo
+        else:
+            open_dlg_modal("No se seleccionaron archivos.")  # Mostrar el mensaje en un cuadro de diálogo
+
         page.update()
         
     # Función para abrir el selector de archivos
