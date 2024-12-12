@@ -18,7 +18,7 @@ def obtener_informacion_equipos():
     
     query = """
     SELECT
-        e.idEquipo AS id,
+        e.idEquipo AS id,  -- Reincluir el idEquipo
         c.numeroContrato AS Contrato,
         u.nombres AS nombre,
         u.apellidos AS apellido,
@@ -33,6 +33,8 @@ def obtener_informacion_equipos():
         Usuario u ON e.idUsuario = u.idUsuario
     JOIN 
         Contrato c ON e.idEquipo = c.idEquipo  -- Relaciona el equipo con el contrato
+    GROUP BY 
+        c.numeroContrato, u.nombres, u.apellidos, e.marca, e.modelo, e.condicion, e.idEquipo  -- Asegúrate de agrupar por idEquipo
     ORDER BY 
         c.numeroContrato;  -- Ordenar por el número del contrato
     """
@@ -43,8 +45,8 @@ def obtener_informacion_equipos():
     
     # Convertir resultados a un formato adecuado (lista de diccionarios)
     equipos_info = [{'id': row[0], 'Contrato': row[1], 'nombre': row[2], 
-                     'apellido': row[3], 'marca': row[4], 'modelo': row[5], 
-                     'condicion': row[6]} for row in resultados]
+                     'apellido': row[3], 'marca': row[4], 
+                     'modelo': row[5], 'condicion': row[6]} for row in resultados]
     return equipos_info
 
 # Nueva función para crear un DataTable con la información de los equipos
@@ -292,18 +294,29 @@ def image_panel(page: ft.Page):
                 ),
             ),
             ft.Tab(
-                icon=ft.icons.LIST,
-                text="Equipos con Imágenes",
-                content=ft.Column(
-                    [data_table,
-                    imagen_frame,
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    spacing=15,
-                )
-                
-                
-            ),
+                    icon=ft.icons.LIST,
+                    text="Equipos con Imágenes",
+                    content=ft.Row(
+                        controls=[
+                            ft.Column(
+                                controls=[
+                                    data_table,
+                                ],
+                                expand=True,  # Hace que el data_table ocupe el espacio necesario
+                            ),
+                            ft.Column(
+                                controls=[
+                                    imagen_frame,
+                                ],
+                                expand=False,  # Hace que las imágenes ocupen solo el espacio requerido
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.START,  # Alineación horizontal
+                        vertical_alignment=ft.CrossAxisAlignment.START,  # Alineación vertical
+                        spacing=15,  # Espaciado entre columnas
+                    )
+                ),
             ],
             
             
