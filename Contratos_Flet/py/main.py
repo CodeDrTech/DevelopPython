@@ -10,6 +10,115 @@ from reportlab.lib.units import inch
 import os
 
 
+# Definición de variables globales para la interfaz
+lista_equipos = ft.ListView(expand=True)  # Esta línea se eliminará
+imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.CENTER, width=300, expand=True)
+
+# Función para obtener equipos con imágenes
+def obtener_informacion_equipos():
+    conn = connect_to_db()  # Conectar a la base de datos
+    cursor = conn.cursor()
+    
+    query = """
+    SELECT
+        e.idEquipo AS id,  -- Reincluir el idEquipo
+        c.numeroContrato AS Contrato,
+        u.nombres AS nombre,
+        u.apellidos AS apellido,
+        e.marca AS marca,
+        e.modelo AS modelo,
+        e.condicion AS condicion
+    FROM 
+        EquipoImagen ei
+    JOIN 
+        Equipo e ON ei.idEquipo = e.idEquipo
+    JOIN 
+        Usuario u ON e.idUsuario = u.idUsuario
+    JOIN 
+        Contrato c ON e.idEquipo = c.idEquipo  -- Relaciona el equipo con el contrato
+    GROUP BY 
+        c.numeroContrato, u.nombres, u.apellidos, e.marca, e.modelo, e.condicion, e.idEquipo  -- Asegúrate de agrupar por idEquipo
+    ORDER BY 
+        c.numeroContrato;  -- Ordenar por el número del contrato
+    """
+    
+    cursor.execute(query)
+    resultados = cursor.fetchall()  # Obtener todos los resultados
+    conn.close()  # Cerrar la conexión
+    
+    # Convertir resultados a un formato adecuado (lista de diccionarios)
+    equipos_info = [{'id': row[0], 'Contrato': row[1], 'nombre': row[2], 
+                     'apellido': row[3], 'marca': row[4], 
+                     'modelo': row[5], 'condicion': row[6]} for row in resultados]
+    return equipos_info
+
+# Nueva función para crear un DataTable con la información de los equipos
+def crear_tabla_equipos(equipos_info):
+    columns = [
+        ft.DataColumn(ft.Text("Contrato")),
+        ft.DataColumn(ft.Text("Nombre")),
+        ft.DataColumn(ft.Text("Apellido")),
+        ft.DataColumn(ft.Text("Marca")),
+        ft.DataColumn(ft.Text("Modelo")),
+        ft.DataColumn(ft.Text("Condición")),
+    ]
+    
+    rows = []
+    for equipo in equipos_info:
+        rows.append(ft.DataRow(cells=[
+            ft.DataCell(ft.Text(equipo['Contrato'])),
+            ft.DataCell(ft.Text(equipo['nombre'])),
+            ft.DataCell(ft.Text(equipo['apellido'])),
+            ft.DataCell(ft.Text(equipo['marca'])),
+            ft.DataCell(ft.Text(equipo['modelo'])),
+            ft.DataCell(ft.Text(equipo['condicion'])),
+        ],
+        on_long_press=lambda e, equipo=equipo: mostrar_imagenes(equipo)
+                            ))
+    
+    data_table = ft.DataTable(
+        columns=columns,
+        rows=rows,
+        border=ft.border.all(width=1, color=ft.colors.BLUE_GREY_200),
+        border_radius=10,
+        vertical_lines=ft.border.BorderSide(width=1, color=ft.colors.BLUE_GREY_200),
+    )
+    
+    return data_table
+
+# Función para cargar equipos en el DataTable
+def cargar_equipos():
+    equipos_info = obtener_informacion_equipos()  # Obtener información de los equipos
+    data_table = crear_tabla_equipos(equipos_info)  # Crear el DataTable
+    return data_table  # Devolver el DataTable
+
+# Función para obtener imágenes por equipo
+def obtener_imagenes_por_equipo(equipo):
+    conn = connect_to_db()  # Conectar a la base de datos
+    cursor = conn.cursor()
+    
+    query = """
+    SELECT rutaImagen FROM EquipoImagen WHERE idEquipo = ?;
+    """
+    
+    cursor.execute(query, (equipo['id'],))
+    resultados = cursor.fetchall()  # Obtener todas las imágenes
+    conn.close()  # Cerrar la conexión
+    
+    # Convertir resultados a un formato adecuado (lista de diccionarios)
+    imagenes = [{'rutaImagen': row[0]} for row in resultados]
+    return imagenes
+
+def mostrar_imagenes(equipo):
+    imagenes = obtener_imagenes_por_equipo(equipo)  # Obtener imágenes por equipo
+    imagen_frame.controls.clear()  # Limpiar imágenes anteriores
+    for imagen in imagenes:
+        # Asegúrate de que la ruta de la imagen sea correcta
+        imagen_frame.controls.append(ft.Image(src=imagen['rutaImagen'], width=200, height=200))
+    imagen_frame.update()  # Actualiza el contenedor para mostrar las imágenes
+    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 # Función para obtener los datos de los contratos registrados
 def get_contract_list():
     conn = connect_to_db()
@@ -78,6 +187,9 @@ def main(page: ft.Page):
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
 
+    # Crear el DataTable y agregarlo a la interfaz
+    data_table = cargar_equipos()  # Cargar equipos y obtener el DataTable
+    
     #Funcion para generar los PDFs, guradarlos y abrirlos.
     def generar_pdf_contrato(e, ultimo_registro=None):
             try:
@@ -501,6 +613,32 @@ def main(page: ft.Page):
                     ],
                 ),
             ),
+            ft.Tab(
+                    icon=ft.icons.IMAGE,
+                    text="Equipos con Imágenes",
+                    content=ft.Row(
+                        controls=[
+                            ft.Column(
+                                controls=[
+                                    # TextField para ingresar el nombre
+                                    ft.TextField(label="Buscar Nombre", icon=ft.icons.SEARCH, width=200),
+                                    data_table,
+                                ],
+                                expand=True,  # Hace que el data_table ocupe el espacio necesario
+                            ),
+                            ft.Column(
+                                controls=[
+                                    imagen_frame,
+                                ],
+                                expand=False,  # Hace que las imágenes ocupen solo el espacio requerido
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.START,  # Alineación horizontal
+                        vertical_alignment=ft.CrossAxisAlignment.START,  # Alineación vertical
+                        spacing=15,  # Espaciado entre columnas
+                    )
+                ),
         ],
     )
     # Actualizar la tabla con los datos
