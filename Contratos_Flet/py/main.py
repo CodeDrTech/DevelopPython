@@ -13,6 +13,26 @@ import os
 # Definición de variables globales para la interfaz
 lista_equipos = ft.ListView(expand=True)  # Esta línea se eliminará
 imagen_frame = ft.Column(spacing=10, scroll=ft.ScrollMode.AUTO, alignment=ft.MainAxisAlignment.CENTER, width=300, expand=True)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def filtrar_equipos_por_nombre(equipos_info, nombre_busqueda):
+    # Filtrar equipos cuyo nombre contiene el criterio de búsqueda (insensible a mayúsculas)
+    return [
+        equipo for equipo in equipos_info
+        if nombre_busqueda.lower() in equipo['nombre'].lower()
+    ]
+
+def cargar_equipos_filtrados(nombre_busqueda=""):
+    equipos_info = obtener_informacion_equipos()  # Obtener información de los equipos
+    
+    # Filtrar los equipos si se proporcionó un criterio de búsqueda
+    if nombre_busqueda:
+        equipos_info = filtrar_equipos_por_nombre(equipos_info, nombre_busqueda)
+    
+    # Crear y devolver el DataTable con los equipos filtrados
+    return crear_tabla_equipos(equipos_info)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Función para obtener equipos con imágenes
 def obtener_informacion_equipos():
@@ -189,6 +209,27 @@ def main(page: ft.Page):
 
     # Crear el DataTable y agregarlo a la interfaz
     data_table = cargar_equipos()  # Cargar equipos y obtener el DataTable
+    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------- 
+    # Referencia para el campo de búsqueda
+    campo_busqueda = ft.Ref[ft.TextField]()
+    
+    # Contenedor dinámico para la tabla
+    contenedor_tabla = ft.Ref[ft.Column]()
+    
+    # Función para actualizar la tabla al buscar
+    def actualizar_tabla_imagenes(e):
+        criterio = campo_busqueda.current.value
+        tabla_actualizada = cargar_equipos_filtrados(criterio)
+        contenedor_tabla.current.controls.clear()
+        contenedor_tabla.current.controls.append(tabla_actualizada)
+        page.update()
+
+    # Inicialmente cargar todos los equipos
+    data_table = cargar_equipos_filtrados()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------- 
     
     #Funcion para generar los PDFs, guradarlos y abrirlos.
     def generar_pdf_contrato(e, ultimo_registro=None):
@@ -621,8 +662,8 @@ def main(page: ft.Page):
                             ft.Column(
                                 controls=[
                                     # TextField para ingresar el nombre
-                                    ft.TextField(label="Buscar Nombre", icon=ft.icons.SEARCH, width=200),
-                                    data_table,
+                                    ft.TextField(label="Buscar Nombre", icon=ft.icons.SEARCH, width=200, on_change=actualizar_tabla_imagenes, ref=campo_busqueda),
+                                    ft.Column(ref=contenedor_tabla, controls=[data_table]),  # Tabla inicial,
                                 ],
                                 expand=True,  # Hace que el data_table ocupe el espacio necesario
                             ),
