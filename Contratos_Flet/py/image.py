@@ -274,6 +274,8 @@ def image_panel(page: ft.Page):
     IMAGES_FOLDER = os.path.join(BASE_DIR, '..', 'static', 'images')  # Ruta a static/images
     os.makedirs(IMAGES_FOLDER, exist_ok=True)  # Crea la carpeta si no existe
     
+    PROYECTO = "Contratos_Flet"
+    
     txt_id_equipo = ft.Ref[ft.TextField]()
     ultimo_equipo_id = obtener_ultimo_equipo()
     def agregar_imagen(e):
@@ -301,8 +303,12 @@ def image_panel(page: ft.Page):
                     with open(ruta_destino, "wb") as out_file:  # Abre el archivo de destino
                         out_file.write(f.read())  # Guarda la imagen en el sistema de archivos
                 
+                
+                 # Construir la ruta relativa con el prefijo del proyecto
+                ruta_destino_con_prefijo = os.path.join(PROYECTO, 'static', 'images', nombre_imagen)
+                
                 # Inserta la imagen en la base de datos
-                insertar_nueva_imagen(id_equipo, ruta_destino)
+                insertar_nueva_imagen(id_equipo, ruta_destino_con_prefijo)
                 
                 tab_insertar_contrato(e)
     
