@@ -4,6 +4,10 @@ Contratos/Scripts/
 Contratos/Include/
 Contratos/pyvenv.cfg
 
+
+# Horas extras
+venv/
+
 # Archivos sensibles de Contratos_Flet
 Contratos_Flet/.env
 Contratos_Flet/env/
