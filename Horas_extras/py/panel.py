@@ -1,4 +1,5 @@
 import flet as ft
+from flet import ScrollMode
 
 
 #Funcion principal para iniciar la ventana con los controles.
@@ -9,6 +10,7 @@ def main(page: ft.Page):
     page.window.height = 800
     page.window.resizable = False
     page.padding = 20
+    page.scroll = ScrollMode.ADAPTIVE
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
