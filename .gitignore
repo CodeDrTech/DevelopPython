@@ -6,6 +6,7 @@ Contratos/pyvenv.cfg
 
 
 # Horas extras
+Horas_extras/HorasExtras.db
 venv/
 
 # Archivos sensibles de Contratos_Flet
