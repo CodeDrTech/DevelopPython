@@ -10,18 +10,25 @@ def main(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    ft.app(main)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    mainTab = ft.Tabs(
+        selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
+        animation_duration=300,
+        expand=True,    
+        
+        # Contenedor de tabs
+        tabs=[
+            #Tab con el listado de los contratos registraod.............................................
+            ft.Tab(
+                icon=ft.icons.HOUSE_ROUNDED,
+                text="Horas",
+            ),
+            ft.Tab(
+                icon=ft.icons.IMAGE,
+                text="Equipos con Imágenes",
+            ),
+        ],
+    )
+    page.add(mainTab)    
+ft.app(main)
