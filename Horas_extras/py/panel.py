@@ -21,13 +21,12 @@ def main(page: ft.Page):
         
         # Contenedor de tabs
         tabs=[
-            #Tab con el listado de los contratos registraod.............................................
             ft.Tab(
-                icon=ft.icons.HOUSE_ROUNDED,
+                icon=ft.Icons.HOUSE_ROUNDED,
                 text="Horas",
             ),
             ft.Tab(
-                icon=ft.icons.IMAGE,
+                icon=ft.Icons.IMAGE,
                 text="Equipos con Imágenes",
             ),
         ],
