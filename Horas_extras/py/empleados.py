@@ -6,8 +6,8 @@ from consultas import get_empleados
 def Empleados(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
-    page.window.width = 1250
-    page.window.height = 800
+    page.window.width = 700
+    page.window.height = 700
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE

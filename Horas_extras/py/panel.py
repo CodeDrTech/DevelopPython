@@ -8,8 +8,8 @@ from consultas import get_empleados
 def main(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
-    page.window.width = 1250
-    page.window.height = 800
+    page.window.width = 700
+    page.window.height = 700
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
@@ -32,6 +32,8 @@ def main(page: ft.Page):
     auto_complete_container = ft.Container(
         content=auto_complete,
         width=200,  # Establecer el ancho deseado
+        border=ft.border.all(2, ft.Colors.BLUE_500),
+        border_radius=10,
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -93,8 +95,8 @@ def main(page: ft.Page):
                         auto_complete_container,
                         ft.TextField(label="Hora 35%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ft.TextField(label="Hora 100%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
-                        ft.TextField(label="Destino/Comentario", width=200, border_radius=5),
-                        ft.ElevatedButton(text="Registrar", width=200, color=ft.Colors.BLUE_600),
+                        ft.TextField(label="Destino/Comentario", width=200),
+                        ft.ElevatedButton(text="Registrar", width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
