@@ -1,25 +1,8 @@
+from turtle import bgcolor
 import flet as ft
 from flet import ScrollMode
-import datetime, sqlite3
-from database import connect_to_database
-
-
-def get_empleados():
-    """Obtiene la lista de empleados de la base de datos."""
-    conn = connect_to_database()
-    empleados = []
-    if conn:
-        try:
-            cursor = conn.cursor()
-            cursor.execute("SELECT Nombre FROM Empleados")  # Solo obtener nombres
-            rows = cursor.fetchall()
-            for row in rows:
-                empleados.append(row[0])  # Agregar solo el nombre
-        except sqlite3.Error as e:
-            print(f"Error al obtener empleados: {e}")
-        finally:
-            conn.close()
-    return empleados
+import datetime
+from consultas import get_empleados
 
 #Funcion principal para iniciar la ventana con los controles.
 def main(page: ft.Page):
@@ -80,10 +63,16 @@ def main(page: ft.Page):
         on_change=seleccionar_fecha)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
+    def cambio_tab(e):
+        # El índice del tab seleccionado está en e.control.selected_index
+        indice_seleccionado = e.control.selected_index
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,    
+        expand=True,        
         
         # Contenedor de tabs
         tabs=[
@@ -104,8 +93,8 @@ def main(page: ft.Page):
                         auto_complete_container,
                         ft.TextField(label="Hora 35%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ft.TextField(label="Hora 100%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
-                        ft.TextField(label="Destino/Comentario",width=200),
-                        ft.ElevatedButton(text="Registrar", width=200),
+                        ft.TextField(label="Destino/Comentario", width=200, border_radius=5),
+                        ft.ElevatedButton(text="Registrar", width=200, color=ft.Colors.BLUE_600),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
@@ -121,7 +110,7 @@ def main(page: ft.Page):
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
-                )
+                ),
             ),
         ],
     )
