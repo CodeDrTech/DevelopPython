@@ -1,18 +1,49 @@
-import flet as ft
-import sys
+import sqlite3
+import os
+from dotenv import load_dotenv
 
-def main(page: ft.Page):
-    page.title = "Registro de Horas Extras"
-    
-    # Elementos de la interfaz
-    horas_input = ft.TextField(label="Horas Extras", keyboard_type=ft.KeyboardType.NUMBER)
-    registrar_btn = ft.ElevatedButton(text="Registrar", on_click=lambda e: registrar_horas(horas_input.value))
-    
-    page.add(horas_input, registrar_btn)
-    print("Ruta del intérprete:", sys.executable)
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
 
-def registrar_horas(horas):
-    print(f"Horas extra registradas: {horas}")
+# Obtener la URL de la base de datos desde las variables de entorno
+database_url = os.getenv("DATABASE_URL")
 
-if __name__ == "__main__":
-    ft.app(target=main)
+# Imprimir la URL de la base de datos para verificar
+print(f"Conectándose a la base de datos en: {database_url}")
+
+# Verificar si el archivo de la base de datos existe
+if not os.path.isfile(database_url):
+    print(f"El archivo de la base de datos '{database_url}' no existe.")
+else:
+    print(f"El archivo de la base de datos '{database_url}' existe.")
+
+def connect_to_database():
+    """Establece la conexión a la base de datos SQLite."""
+    try:
+        # Establecer la conexión a la base de datos
+        conn = sqlite3.connect(database_url)
+        print("Conexión a la base de datos establecida con éxito.")
+        return conn
+    except sqlite3.Error as e:
+        print(f"Error al conectar a la base de datos: {e}")
+
+def get_empleados():
+    """Obtiene la lista de empleados de la base de datos."""
+    conn = connect_to_database()
+    empleados = []
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT Codigo, Nombre FROM Empleados")
+            rows = cursor.fetchall()
+            for row in rows:
+                empleados.append({"codigo": row[0], "nombre": row[1]})
+        except sqlite3.Error as e:
+            print(f"Error al obtener empleados: {e}")
+        finally:
+            conn.close()
+    return empleados
+
+# Llamar a la función para verificar que funciona correctamente
+empleados = get_empleados()
+print(empleados)

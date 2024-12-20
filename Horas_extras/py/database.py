@@ -13,7 +13,7 @@ def connect_to_database():
     try:
         # Establecer la conexión a la base de datos
         conn = sqlite3.connect(database_url)
-        print("Conexión a la base de datos establecida con éxito.")
+
         return conn
     except sqlite3.Error as e:
         print(f"Error al conectar a la base de datos: {e}")

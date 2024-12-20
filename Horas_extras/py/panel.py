@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode
-import datetime
+import datetime, sqlite3
 from database import connect_to_database
 
 
@@ -11,10 +11,10 @@ def get_empleados():
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT codigo, nombre FROM Empleados")
+            cursor.execute("SELECT Nombre FROM Empleados")  # Solo obtener nombres
             rows = cursor.fetchall()
             for row in rows:
-                empleados.append({"codigo": row[0], "nombre": row[1]})
+                empleados.append(row[0])  # Agregar solo el nombre
         except sqlite3.Error as e:
             print(f"Error al obtener empleados: {e}")
         finally:
@@ -35,9 +35,21 @@ def main(page: ft.Page):
     # Cargar los empleados desde la base de datos
     empleados_data = get_empleados()  # Obtener la lista de empleados
 
-    # Crear opciones para el dropdown
-    dropdown_options = [ft.dropdown.Option(emp["nombre"]) for emp in empleados_data]
+    # Crear sugerencias para el AutoComplete
+    suggestions = [
+        ft.AutoCompleteSuggestion(key=emp, value=emp) for emp in empleados_data
+    ]
     
+    # Crear el AutoComplete
+    auto_complete = ft.AutoComplete(
+        suggestions=suggestions,
+    )
+    
+    # Usar un Container para establecer un ancho específico
+    auto_complete_container = ft.Container(
+        content=auto_complete,
+        width=200,  # Establecer el ancho deseado
+    )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def mostrar_datepicker(e):
@@ -89,7 +101,7 @@ def main(page: ft.Page):
                             width=          200
                         ),
                         ft.TextField(label="Codigo", width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ft.Dropdown(label="Nombre", width=200, options=[ft.dropdown.Option("Juan")]),
+                        auto_complete_container,
                         ft.TextField(label="Hora 35%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ft.TextField(label="Hora 100%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ft.TextField(label="Destino/Comentario",width=200),
@@ -105,7 +117,7 @@ def main(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.TextField(label="Codigo", width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ft.Dropdown(label="Nombre", width=200, options=dropdown_options),
+                        auto_complete_container,
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
