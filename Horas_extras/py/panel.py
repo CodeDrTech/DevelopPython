@@ -13,6 +13,8 @@ def main(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
+    page.bgcolor = "#e7e7e7"
+    page.theme_mode = ft.ThemeMode.LIGHT
     
     
     # Cargar los empleados desde la base de datos
@@ -32,7 +34,7 @@ def main(page: ft.Page):
     auto_complete_container = ft.Container(
         content=auto_complete,
         width=200,  # Establecer el ancho deseado
-        border=ft.border.all(2, ft.Colors.BLUE_500),
+        border=ft.border.all(1, ft.Colors.BLACK),
         border_radius=10,
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -83,19 +85,27 @@ def main(page: ft.Page):
                 text="Horas",
                 content=ft.Column(
                     [
-                        ft.Text("      Registrar Horas", size=20),
-                        fecha_texto,
-                        ft.ElevatedButton(
-                            text=           "Fecha",
-                            icon=           ft.Icons.CALENDAR_TODAY,
-                            on_click=       mostrar_datepicker,
-                            width=          200
-                        ),
-                        ft.TextField(label="Codigo", width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        auto_complete_container,
-                        ft.TextField(label="Hora 35%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
-                        ft.TextField(label="Hora 100%", width=200, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
-                        ft.TextField(label="Destino/Comentario", width=200),
+                        ft.Text("Registro de horas"),
+                        ft.Row([
+                            ft.Text("Código:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Nombre:", width=100),
+                            auto_complete_container,
+                        ]),
+                        ft.Row([
+                            ft.Text("Hora 35%:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Hora 100%:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Destino/Comentario:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
+                        ]),
                         ft.ElevatedButton(text="Registrar", width=200),
                     ],
                     alignment=ft.MainAxisAlignment.START,
@@ -107,8 +117,15 @@ def main(page: ft.Page):
                 text="Empleados",
                 content=ft.Column(
                     [
-                        ft.TextField(label="Codigo", width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        auto_complete_container,
+                        ft.Text("Cargar empleados"),
+                        ft.Row([
+                            ft.Text("Código:", width=100),
+                            ft.TextField(width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Nombre:", width=100),
+                            auto_complete_container,
+                        ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
