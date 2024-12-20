@@ -55,7 +55,7 @@ def main(page: ft.Page):
                 text="Horas",
                 content=ft.Column(
                     [
-                        ft.Text("Registrar Horas", size=20),
+                        ft.Text("      Registrar Horas", size=20),
                         fecha_texto,
                         ft.ElevatedButton(
                             text=           "Fecha",
