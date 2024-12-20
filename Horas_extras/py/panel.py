@@ -1,7 +1,25 @@
 import flet as ft
 from flet import ScrollMode
 import datetime
+from database import connect_to_database
 
+
+def get_empleados():
+    """Obtiene la lista de empleados de la base de datos."""
+    conn = connect_to_database()
+    empleados = []
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT codigo, nombre FROM Empleados")
+            rows = cursor.fetchall()
+            for row in rows:
+                empleados.append({"codigo": row[0], "nombre": row[1]})
+        except sqlite3.Error as e:
+            print(f"Error al obtener empleados: {e}")
+        finally:
+            conn.close()
+    return empleados
 
 #Funcion principal para iniciar la ventana con los controles.
 def main(page: ft.Page):
@@ -12,6 +30,13 @@ def main(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
+    
+    
+    # Cargar los empleados desde la base de datos
+    empleados_data = get_empleados()  # Obtener la lista de empleados
+
+    # Crear opciones para el dropdown
+    dropdown_options = [ft.dropdown.Option(emp["nombre"]) for emp in empleados_data]
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -77,6 +102,14 @@ def main(page: ft.Page):
             ft.Tab(
                 icon=ft.Icons.PEOPLE,
                 text="Empleados",
+                content=ft.Column(
+                    [
+                        ft.TextField(label="Codigo", width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ft.Dropdown(label="Nombre", width=200, options=dropdown_options),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=15,
+                )
             ),
         ],
     )
