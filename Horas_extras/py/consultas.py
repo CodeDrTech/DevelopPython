@@ -3,6 +3,8 @@ from database import connect_to_database
 import sqlite3
 import os
 from dotenv import load_dotenv
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def cargar_empleados_excel(ruta_excel):
     """Lee empleados desde Excel con rangos específicos C4:C* y H4:H*"""
     try:
@@ -20,7 +22,8 @@ def cargar_empleados_excel(ruta_excel):
     except Exception as e:
         print(f"Error leyendo Excel: {e}")
         return None
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def insertar_empleados(empleados_df):
     """Inserta o actualiza múltiples empleados"""
     conn = connect_to_database()
@@ -42,15 +45,16 @@ def insertar_empleados(empleados_df):
         finally:
             conn.close()
     return False
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def importar_empleados_desde_excel(ruta_archivo):
     """Función principal para importar empleados"""
     df = cargar_empleados_excel(ruta_archivo)
     if df is not None:
         return insertar_empleados(df)
     return False
-
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_empleados():
     """Obtiene la lista de empleados de la base de datos."""
     database_url = os.getenv("DATABASE_URL")
@@ -65,6 +69,22 @@ def get_empleados():
             cursor.execute("SELECT Nombre FROM Empleados") 
             rows = cursor.fetchall()
             empleados = [row[0] for row in rows]
+        except sqlite3.Error as e:
+            print(f"Error al obtener empleados: {e}")
+        finally:
+            conn.close()
+    return empleados
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_primeros_10_empleados():
+    """Obtiene los primeros 10 empleados de la base de datos."""
+    conn = connect_to_database()
+    empleados = []
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT Codigo, Nombre FROM Empleados ORDER BY Codigo DESC LIMIT 5") 
+            empleados = cursor.fetchall()
         except sqlite3.Error as e:
             print(f"Error al obtener empleados: {e}")
         finally:
