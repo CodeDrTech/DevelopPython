@@ -1,7 +1,8 @@
 import pandas as pd
 from database import connect_to_database
 import sqlite3
-
+import os
+from dotenv import load_dotenv
 def cargar_empleados_excel(ruta_excel):
     """Lee empleados desde Excel con rangos específicos C4:C* y H4:H*"""
     try:
@@ -52,15 +53,18 @@ def importar_empleados_desde_excel(ruta_archivo):
 
 def get_empleados():
     """Obtiene la lista de empleados de la base de datos."""
+    database_url = os.getenv("DATABASE_URL")
+    if not os.path.exists(database_url):
+        return []
+        
     conn = connect_to_database()
     empleados = []
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT Nombre FROM Empleados")  # Solo obtener nombres
+            cursor.execute("SELECT Nombre FROM Empleados") 
             rows = cursor.fetchall()
-            for row in rows:
-                empleados.append(row[0])  # Agregar solo el nombre
+            empleados = [row[0] for row in rows]
         except sqlite3.Error as e:
             print(f"Error al obtener empleados: {e}")
         finally:
