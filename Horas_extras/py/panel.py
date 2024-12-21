@@ -4,7 +4,7 @@ from flet import ScrollMode
 import datetime
 from consultas import get_empleados
 
-#Funcion principal para iniciar la ventana con los controles.
+#Funcion principal para iniciar la ventana con los controles
 def main(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
