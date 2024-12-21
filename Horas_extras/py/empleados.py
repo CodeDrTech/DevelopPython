@@ -1,6 +1,8 @@
 import flet as ft
 from flet import ScrollMode
-from consultas import get_empleados
+from consultas import get_empleados, importar_empleados_desde_excel
+from tkinter import filedialog
+import tkinter as tk
 
 
 
@@ -16,13 +18,34 @@ def Empleados(page: ft.Page):
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def regresar_a_main(e):
-        # En lugar de iniciar una nueva aplicación, limpiamos la página actual
-        page.clean()
-
-        # Importamos y ejecutamos la función y sus controles en la página actual
-        #from main import main
-        #main(page)
+    def importar_excel(e):
+        # Crear ventana temporal de tkinter
+        root = tk.Tk()
+        root.withdraw()
+        
+        # Abrir diálogo para seleccionar archivo
+        archivo = filedialog.askopenfilename(
+            title="Seleccionar archivo Excel",
+            filetypes=[("Excel files", "*.xlsm")]
+        )
+        
+        if archivo:
+            if importar_empleados_desde_excel(archivo):
+                # Actualizar la lista de empleados
+                empleados_data = get_empleados()
+                suggestions = [
+                    ft.AutoCompleteSuggestion(key=emp, value=emp) 
+                    for emp in empleados_data
+                ]
+                auto_complete.suggestions = suggestions
+                page.update()
+                page.show_snack_bar(
+                    ft.SnackBar(content=ft.Text("Empleados importados correctamente"))
+                )
+            else:
+                page.show_snack_bar(
+                    ft.SnackBar(content=ft.Text("Error al importar empleados"))
+                )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Cargar los empleados desde la base de datos
@@ -59,30 +82,69 @@ def Empleados(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
-        selected_index=1,  # Pestaña seleccionada por defecto al iniciar la ventana
+        selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,
-        #on_change=cambio_tab,
-        
+        expand=True,        
         
         # Contenedor de tabs
         tabs=[
             ft.Tab(
                 icon=ft.Icons.LOCK_CLOCK,
                 text="Horas",
+                content=ft.Column(
+                    [
+                        ft.Text("Registro de horas"),
+                        ft.Row([
+                            ft.Text("Código:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Nombre:", width=100),
+                            auto_complete_container,
+                        ]),
+                        ft.Row([
+                            ft.Text("Hora 35%:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Hora 100%:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Destino/Comentario:", width=100),
+                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
+                        ]),
+                        ft.Row([
+                        ft.ElevatedButton(text="Registrar", width=150),
+                        ft.ElevatedButton(text="Reportes", width=150),
+                        ]),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    spacing=15,
+                ),
             ),
-            
             ft.Tab(
                 icon=ft.Icons.PEOPLE,
                 text="Empleados",
                 content=ft.Column(
                     [
-                        ft.TextField(label="Codigo", width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        auto_complete_container,
+                        ft.Text("Cargar empleados"),
+                        ft.Row([
+                            ft.Text("Código:", width=100),
+                            ft.TextField(width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Nombre:", width=100),
+                            auto_complete_container,
+                        ]),
+                        ft.Row([
+                            ft.Text("Cargar:", width=100),
+                            ft.ElevatedButton(text="...", icon=ft.Icons.UPLOAD, width=150, on_click=importar_excel),
+                        ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
-                )
+                ),
             ),
         ],
     )

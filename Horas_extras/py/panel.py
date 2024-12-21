@@ -67,10 +67,12 @@ def main(page: ft.Page):
         on_change=seleccionar_fecha)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
-    def cambio_tab(e):
-        # El índice del tab seleccionado está en e.control.selected_index
-        indice_seleccionado = e.control.selected_index
+    def Empleados(e):
+        page.clean()
+
+        # Importamos y ejecutamos la función y sus controles en la página actual
+        from empleados import Empleados
+        Empleados(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
@@ -131,7 +133,7 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Cargar:", width=100),
-                            ft.ElevatedButton(text="...", icon=ft.Icons.UPLOAD, width=150),
+                            ft.ElevatedButton(text="...", icon=ft.Icons.UPLOAD, width=150, on_click=Empleados),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
