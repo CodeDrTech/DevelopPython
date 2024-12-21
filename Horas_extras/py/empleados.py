@@ -3,7 +3,7 @@ from flet import ScrollMode
 from consultas import get_empleados, importar_empleados_desde_excel
 from tkinter import filedialog
 import tkinter as tk
-
+import os
 
 
 #Funcion principal para iniciar la ventana con los controles.
@@ -18,18 +18,15 @@ def Empleados(page: ft.Page):
     
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
     def importar_excel(e):
-        # Crear ventana temporal de tkinter
-        root = tk.Tk()
-        root.withdraw()
-        
-        # Abrir diálogo para seleccionar archivo
-        archivo = filedialog.askopenfilename(
-            title="Seleccionar archivo Excel",
-            filetypes=[("Excel files", "*.xlsm")]
-        )
-        
-        if archivo:
+        """Importar empleados desde una ruta fija sin diálogo."""
+        # Obtener la ruta del directorio raíz del proyecto
+        ruta_proyecto = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        archivo = os.path.join(ruta_proyecto, "Empleados.xlsm")     # Ruta del archivo Excel
+
+        if os.path.exists(archivo):  # Verificar que el archivo exista
             if importar_empleados_desde_excel(archivo):
                 # Actualizar la lista de empleados
                 empleados_data = get_empleados()
@@ -40,12 +37,18 @@ def Empleados(page: ft.Page):
                 auto_complete.suggestions = suggestions
                 page.update()
                 page.show_snack_bar(
-                    ft.SnackBar(content=ft.Text("Empleados importados correctamente"))
+                    ft.SnackBar(content=ft.Text("Empleados importados correctamente"), duration=3000)
+
                 )
             else:
                 page.show_snack_bar(
-                    ft.SnackBar(content=ft.Text("Error al importar empleados"))
+                    ft.SnackBar(content=ft.Text("Error al importar empleados"), duration=3000)
                 )
+        else:
+            page.show_snack_bar(
+                ft.SnackBar(content=ft.Text("Archivo Excel no encontrado en la ruta predeterminada"), duration=3000)
+            )
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Cargar los empleados desde la base de datos
@@ -65,6 +68,8 @@ def Empleados(page: ft.Page):
     auto_complete_container = ft.Container(
         content=auto_complete,
         width=200,  # Establecer el ancho deseado
+        border=ft.border.all(1, ft.Colors.BLACK),
+        border_radius=10,
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
