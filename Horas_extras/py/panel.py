@@ -67,18 +67,19 @@ def main(page: ft.Page):
         on_change=seleccionar_fecha)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def Empleados(e):
-        page.clean()
+    def tab_empleados(e):
+            page.clean()
 
-        # Importamos y ejecutamos la función y sus controles en la página actual
-        from empleados import Empleados
-        Empleados(page)
+            # Importamos y ejecutamos la función y sus controles en la página actual
+            from empleados import Empleados
+            Empleados(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,        
+        expand=True,
+                
         
         # Contenedor de tabs
         tabs=[
@@ -110,7 +111,7 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                         ft.ElevatedButton(text="Registrar", width=150),
-                        ft.ElevatedButton(text="Reportes", width=150),
+                        ft.ElevatedButton(text="Reportes", width=150, on_click=tab_empleados),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
@@ -130,10 +131,6 @@ def main(page: ft.Page):
                         ft.Row([
                             ft.Text("Nombre:", width=100),
                             auto_complete_container,
-                        ]),
-                        ft.Row([
-                            ft.Text("Cargar:", width=100),
-                            ft.ElevatedButton(text="...", icon=ft.Icons.UPLOAD, width=150, on_click=Empleados),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,

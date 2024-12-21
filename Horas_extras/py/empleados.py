@@ -74,11 +74,7 @@ def Empleados(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
-    def cambio_tab(e):
-        # El índice del tab seleccionado está en e.control.selected_index
-        indice_seleccionado = e.control.selected_index
-        
-        if indice_seleccionado == 0:
+    def tab_panel(e):
             page.clean()
 
             # Importamos y ejecutamos la función y sus controles en la página actual
@@ -87,47 +83,12 @@ def Empleados(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
-        selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
+        selected_index=1,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
         expand=True,        
         
         # Contenedor de tabs
         tabs=[
-            ft.Tab(
-                icon=ft.Icons.LOCK_CLOCK,
-                text="Horas",
-                content=ft.Column(
-                    [
-                        ft.Text("Registro de horas"),
-                        ft.Row([
-                            ft.Text("Código:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ]),
-                        ft.Row([
-                            ft.Text("Nombre:", width=100),
-                            auto_complete_container,
-                        ]),
-                        ft.Row([
-                            ft.Text("Hora 35%:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
-                        ]),
-                        ft.Row([
-                            ft.Text("Hora 100%:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
-                        ]),
-                        ft.Row([
-                            ft.Text("Destino/Comentario:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
-                        ]),
-                        ft.Row([
-                        ft.ElevatedButton(text="Registrar", width=150),
-                        ft.ElevatedButton(text="Reportes", width=150),
-                        ]),
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    spacing=15,
-                ),
-            ),
             ft.Tab(
                 icon=ft.Icons.PEOPLE,
                 text="Empleados",
@@ -143,8 +104,9 @@ def Empleados(page: ft.Page):
                             auto_complete_container,
                         ]),
                         ft.Row([
-                            ft.Text("Cargar:", width=100),
-                            ft.ElevatedButton(text="...", icon=ft.Icons.UPLOAD, width=150, on_click=importar_excel),
+                            ft.Text("Cargar Empleados:", width=100),
+                            ft.ElevatedButton(text="Cargar", icon=ft.Icons.UPLOAD, width=100, on_click=importar_excel),
+                            ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=100, on_click=tab_panel),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
