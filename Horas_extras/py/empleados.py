@@ -2,6 +2,8 @@ import flet as ft
 from flet import ScrollMode
 from consultas import get_empleados
 
+
+
 #Funcion principal para iniciar la ventana con los controles.
 def Empleados(page: ft.Page):
     page.title = "Horas Extras"
@@ -12,6 +14,15 @@ def Empleados(page: ft.Page):
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
     
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def regresar_a_main(e):
+        # En lugar de iniciar una nueva aplicación, limpiamos la página actual
+        page.clean()
+
+        # Importamos y ejecutamos la función y sus controles en la página actual
+        #from main import main
+        #main(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Cargar los empleados desde la base de datos

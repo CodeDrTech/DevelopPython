@@ -106,7 +106,10 @@ def main(page: ft.Page):
                             ft.Text("Destino/Comentario:", width=100),
                             ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
                         ]),
-                        ft.ElevatedButton(text="Registrar", width=200),
+                        ft.Row([
+                        ft.ElevatedButton(text="Registrar", width=150),
+                        ft.ElevatedButton(text="Reportes", width=150),
+                        ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
@@ -125,6 +128,10 @@ def main(page: ft.Page):
                         ft.Row([
                             ft.Text("Nombre:", width=100),
                             auto_complete_container,
+                        ]),
+                        ft.Row([
+                            ft.Text("Cargar:", width=100),
+                            ft.ElevatedButton(text="...", icon=ft.Icons.UPLOAD, width=150),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
