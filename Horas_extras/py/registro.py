@@ -33,7 +33,7 @@ def registro(page: ft.Page):
     # Usar un Container para establecer un ancho específico
     auto_complete_container = ft.Container(
         content=auto_complete,
-        width=200,  # Establecer el ancho deseado
+        width=320,  # Establecer el ancho deseado
         border=ft.border.all(1, ft.Colors.BLACK),
         border_radius=10,
     )
@@ -90,8 +90,12 @@ def registro(page: ft.Page):
                     [
                         ft.Text("Registro de horas"),
                         ft.Row([
+                            ft.Text("Fecha:", width=100),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_texto.value),
+                        ]),
+                        ft.Row([
                             ft.Text("Código:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Nombre:", width=100),
@@ -99,38 +103,21 @@ def registro(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Hora 35%:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Hora 100%:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Destino/Comentario:", width=100),
-                            ft.TextField(width=200, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
                         ]),
                         ft.Row([
-                        ft.ElevatedButton(text="Registrar", width=150),
-                        ft.ElevatedButton(text="Reportes", width=150, on_click=tab_empleados),
-                        ]),
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    spacing=15,
-                ),
-            ),
-            ft.Tab(
-                icon=ft.Icons.PEOPLE,
-                text="Empleados",
-                content=ft.Column(
-                    [
-                        ft.Text("Cargar empleados"),
-                        ft.Row([
-                            ft.Text("Código:", width=100),
-                            ft.TextField(width=200, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ]),
-                        ft.Row([
-                            ft.Text("Nombre:", width=100),
-                            auto_complete_container,
+                        ft.Text(" ", width=100),
+                        ft.ElevatedButton(text="Registrar", width=100),
+                        ft.ElevatedButton(text="Empleados", width=100, on_click=tab_empleados),
+                        ft.ElevatedButton(text="Reportes", width=100),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
