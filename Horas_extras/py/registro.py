@@ -52,7 +52,7 @@ def registro(page: ft.Page):
             # Convierte a formato solo de fecha sin la hora.
             fecha_solo = fecha_actual.date()
             # Actualiza el texto para mostrar la fecha seleccionada.
-            fecha_texto.value = f"               {fecha_solo}"
+            fecha_texto.value = f"{fecha_solo}"
             # Cierra el diálogo configurando `open = False`.
             date_picker_dialog.open = False
             # Finalmente, actualiza la página para reflejar los cambios.
@@ -60,7 +60,7 @@ def registro(page: ft.Page):
 
     # Inicializa la fecha actual y crea un texto para mostrar la fecha seleccionada.
     fecha_actual = datetime.date.today()
-    fecha_texto = ft.Text(f"               {fecha_actual}")
+    fecha_texto = ft.Text(f"{fecha_actual}")
 
     # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
     date_picker_dialog = ft.DatePicker(
@@ -91,7 +91,7 @@ def registro(page: ft.Page):
                         ft.Text("Registro de horas"),
                         ft.Row([
                             ft.Text("Fecha:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_texto.value),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_texto.value, on_click=mostrar_datepicker),
                         ]),
                         ft.Row([
                             ft.Text("Código:", width=100),

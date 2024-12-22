@@ -146,8 +146,8 @@ def Empleados(page: ft.Page):
                             tabla_empleados,
                         ]),
                         ft.Row([
-                            ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=100, on_click=tab_registro),
-                            ft.ElevatedButton(text="Cargar", icon=ft.Icons.UPLOAD, width=100, on_click=importar_excel),
+                            ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=150, on_click=tab_registro),
+                            ft.ElevatedButton(text="Cargar", icon=ft.Icons.UPLOAD, width=150, on_click=importar_excel),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
