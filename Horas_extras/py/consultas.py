@@ -90,3 +90,45 @@ def get_primeros_10_empleados():
         finally:
             conn.close()
     return empleados
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def validar_formato_hora(hora_str):
+    """Valida que el formato de hora sea HH:MM"""
+    try:
+        if not hora_str:
+            return "0:00"
+        if ":" not in hora_str:
+            return False
+        horas, minutos = map(int, hora_str.split(":"))
+        if minutos >= 60:
+            return False
+        return f"{horas}:{minutos:02d}"
+    except ValueError:
+        return False
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def insertar_horas(fecha, codigo, nombre, horas_35, horas_100, destino):
+    """Inserta registro en tabla Horas"""
+    conn = connect_to_database()
+    if conn:
+        try:
+            # Validar formato de horas
+            h35 = validar_formato_hora(horas_35)
+            h100 = validar_formato_hora(horas_100)
+            if not h35 or not h100:
+                return False
+
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO Horas (Fecha, Codigo, Nombre, Horas_35, Horas_100, Destino_Comentario)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (fecha, codigo, nombre, h35, h100, destino))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error al insertar horas: {e}")
+            return False
+        finally:
+            conn.close()
+    return False

@@ -2,7 +2,7 @@ from turtle import bgcolor
 import flet as ft
 from flet import ScrollMode
 import datetime
-from consultas import get_empleados
+from consultas import get_empleados, insertar_horas
 
 #Funcion principal para iniciar la ventana con los controles
 def main(page: ft.Page):
@@ -20,6 +20,12 @@ def main(page: ft.Page):
     # Cargar los empleados desde la base de datos
     empleados_data = get_empleados()  # Obtener la lista de empleados
 
+    
+    nombre_seleccionado = None
+    def on_autocomplete_selected(e):
+        nonlocal nombre_seleccionado
+        nombre_seleccionado = e.selection.value
+        
     # Crear sugerencias para el AutoComplete
     suggestions = [
         ft.AutoCompleteSuggestion(key=emp, value=emp) for emp in empleados_data
@@ -28,6 +34,7 @@ def main(page: ft.Page):
     # Crear el AutoComplete
     auto_complete = ft.AutoComplete(
         suggestions=suggestions,
+        on_select=on_autocomplete_selected
     )
     
     # Usar un Container para establecer un ancho específico
@@ -36,6 +43,7 @@ def main(page: ft.Page):
         width=320,  # Establecer el ancho deseado
         border=ft.border.all(1, ft.Colors.BLACK),
         border_radius=10,
+        
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,6 +97,87 @@ def main(page: ft.Page):
         e.control.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def format_hour_for_db(hour_str):
+        """Formatea la entrada de hora para la base de datos para siempre incluya :00 en caso de no tenerlo."""
+        if not hour_str:
+            return "0:00"
+        
+        # Si es solo un número, añadir :00
+        if hour_str.isdigit():
+            return f"{hour_str}:00"
+        
+        return hour_str
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------    
+    # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
+    def open_dlg_modal(e):
+        e.control.page.overlay.append(dlg_modal)
+        dlg_modal.open = True
+        e.control.page.update()
+        
+    def close_dlg(e):
+        dlg_modal.open = False
+        e.control.page.update()
+
+    dlg_modal = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Falta información"),
+        content=ft.Text("Ha dejado algun campo vacío"),
+        actions=[
+                    ft.TextButton("Ok", on_click=close_dlg),
+                ],
+        actions_alignment=ft.MainAxisAlignment.END,
+        #on_dismiss=lambda e: print("Modal dialog dismissed!"),
+    )
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Codigo para insertar datos a la tabla usuario mediante los controles del tab Datos Usuario
+    # Referencias para los campos de texto del tab Datos de Usuario
+    txt_fecha = ft.Ref[ft.TextField]()
+    txt_codigo = ft.Ref[ft.TextField]()
+    #txt_nombre = ft.Ref[ft.TextField]()
+    txt_hora35 = ft.Ref[ft.TextField]()
+    txt_hora100 = ft.Ref[ft.TextField]()
+    txt_comentario = ft.Ref[ft.TextField]()
+    def agregar_horas(e):
+        try:
+            fecha = txt_fecha.current.value
+            codigo = txt_codigo.current.value
+            nombre = nombre_seleccionado
+            hora35 = format_hour_for_db(txt_hora35.current.value)
+            hora100 = format_hour_for_db(txt_hora100.current.value)
+            comentario = txt_comentario.current.value
+
+            if not fecha or not codigo or not nombre or (not hora35 and not hora100):
+                open_dlg_modal(e)
+
+            else:
+                # Llama a la función de queries
+                insertar_horas(fecha, codigo, nombre, hora35, hora100, comentario)
+
+                # Muestra un snack_bar al usuario
+                snack_bar = ft.SnackBar(ft.Text("¡Hora agregada exitosamente!"), duration=3000)
+                page.overlay.append(snack_bar)
+                snack_bar.open = True
+                page.update()
+
+
+                # Limpia los campos
+                txt_fecha.current.value = ""
+                txt_codigo.current.value = ""
+                auto_complete.value = ""
+                txt_hora35.current.value = ""
+                txt_hora100.current.value = ""
+                txt_comentario.current.value = ""
+                page.update()
+
+        except Exception as error:
+            # Muestra un error en snack_bar
+            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True, duration=3000)
+            page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def tab_empleados(e):
             page.clean()
 
@@ -112,11 +201,11 @@ def main(page: ft.Page):
                         ft.Text("Registro de horas"),
                         ft.Row([
                             ft.Text("Fecha:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_texto.value, on_click=mostrar_datepicker),
+                            ft.TextField(width=320, ref=txt_fecha, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_texto.value, on_click=mostrar_datepicker),
                         ]),
                         ft.Row([
                             ft.Text("Código:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_codigo, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Nombre:", width=100),
@@ -124,19 +213,19 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Hora 35%:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_hora35, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Hora 100%:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_hora100, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Destino/Comentario:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
+                            ft.TextField(width=320, ref=txt_comentario, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.CHARACTERS),
                         ]),
                         ft.Row([
                         ft.Text(" ", width=100),
-                        ft.ElevatedButton(text="Registrar", width=100),
+                        ft.ElevatedButton(text="Registrar", width=100, on_click=agregar_horas),
                         ft.ElevatedButton(text="Empleados", width=100, on_click=tab_empleados),
                         ft.ElevatedButton(text="Reportes", width=100),
                         ]),
