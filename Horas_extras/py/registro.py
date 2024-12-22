@@ -65,6 +65,29 @@ def registro(page: ft.Page):
     # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
     date_picker_dialog = ft.DatePicker(
         on_change=seleccionar_fecha)
+    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def format_hora(e):
+        """
+        Función para formatear entrada de hora en formato H:MM o HH:MM
+        """
+        # Quitar caracteres no numéricos
+        raw = ''.join(filter(str.isdigit, e.control.value))
+        
+        # Limitar a 4 dígitos máximo (2 para hora, 2 para minutos)
+        raw = raw[:4]
+        
+        # Aplicar formato HH:MM
+        formatted = ''
+        for i, char in enumerate(raw):
+            if i == 1:  # Añadir ":" después del primer o segundo dígito
+                formatted += ':'
+            formatted += char
+        
+        # Actualizar el campo de texto
+        e.control.value = formatted
+        e.control.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def tab_empleados(e):
@@ -103,11 +126,11 @@ def registro(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Hora 35%:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Hora 100%:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Destino/Comentario:", width=100),
