@@ -129,6 +129,23 @@ def main(page: ft.Page):
         actions_alignment=ft.MainAxisAlignment.END,
         #on_dismiss=lambda e: print("Modal dialog dismissed!"),
     )
+    
+    # Initialize SnackBar at start
+    page.snack_bar = ft.SnackBar(
+        content=ft.Text(""),
+        action="OK"
+    )
+    
+    # Make nombre_seleccionado accessible
+    nombre_seleccionado = None
+    
+    def show_snackbar(mensaje):
+        if not page.snack_bar:
+            page.snack_bar = ft.SnackBar(content=ft.Text(mensaje))
+        else:
+            page.snack_bar.content.value = mensaje
+        page.snack_bar.open = True
+        page.update()
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -142,6 +159,7 @@ def main(page: ft.Page):
     txt_comentario = ft.Ref[ft.TextField]()
     def agregar_horas(e):
         try:
+            nonlocal nombre_seleccionado
             fecha = txt_fecha.current.value
             codigo = txt_codigo.current.value
             nombre = nombre_seleccionado
@@ -156,26 +174,25 @@ def main(page: ft.Page):
                 # Llama a la función de queries
                 insertar_horas(fecha, codigo, nombre, hora35, hora100, comentario)
 
-                # Muestra un snack_bar al usuario
-                snack_bar = ft.SnackBar(ft.Text("¡Hora agregada exitosamente!"), duration=3000)
-                page.overlay.append(snack_bar)
-                snack_bar.open = True
-                page.update()
+                # Mostrar mensaje de éxito
+                show_snackbar("¡Hora agregada exitosamente!")
 
 
                 # Limpia los campos
                 txt_fecha.current.value = ""
                 txt_codigo.current.value = ""
+                nombre_seleccionado = None
                 auto_complete.value = ""
+                auto_complete.update()
                 txt_hora35.current.value = ""
                 txt_hora100.current.value = ""
                 txt_comentario.current.value = ""
+                txt_codigo.current.focus()
                 page.update()
 
         except Exception as error:
             # Muestra un error en snack_bar
-            page.snack_bar = ft.SnackBar(ft.Text(f"Error: {error}"), open=True, duration=3000)
-            page.update()
+            show_snackbar(f"Error: {error}")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def tab_empleados(e):
@@ -236,5 +253,6 @@ def main(page: ft.Page):
             ),
         ],
     )
-    page.add(mainTab)    
+    page.add(mainTab)
+    txt_codigo.current.focus()
 ft.app(main)
