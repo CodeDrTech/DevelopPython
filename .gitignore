@@ -54,9 +54,12 @@ Ventas\ Selact/ventas_selact3.py
 # Archivos específicos de Ventas Selact
 Ventas\ Selact/6-Send_mail_no_dev*
 Ventas\ Selact/*.xlsx
+Ventas\ Selact/*.xlsm
+Ventas\ Selact/*.db
 
 # Carpetas de sistema y configuración
 .vscode/
 .idx/
+
 
 .windsurfrules
