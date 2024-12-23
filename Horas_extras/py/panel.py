@@ -19,13 +19,12 @@ def main(page: ft.Page):
     
     # Cargar los empleados desde la base de datos
     empleados_data = get_empleados()  # Obtener la lista de empleados
-
     
     nombre_seleccionado = None
     def on_autocomplete_selected(e):
         nonlocal nombre_seleccionado
         nombre_seleccionado = e.selection.value
-        
+    
     # Crear sugerencias para el AutoComplete
     suggestions = [
         ft.AutoCompleteSuggestion(key=emp, value=emp) for emp in empleados_data
@@ -34,7 +33,7 @@ def main(page: ft.Page):
     # Crear el AutoComplete
     auto_complete = ft.AutoComplete(
         suggestions=suggestions,
-        on_select=on_autocomplete_selected
+        on_select=on_autocomplete_selected,
     )
     
     # Usar un Container para establecer un ancho específico
@@ -100,7 +99,7 @@ def main(page: ft.Page):
     def format_hour_for_db(hour_str):
         """Formatea la entrada de hora para la base de datos para siempre incluya :00 en caso de no tenerlo."""
         if not hour_str:
-            return "0:00"
+            return ""
         
         # Si es solo un número, añadir :00
         if hour_str.isdigit():
@@ -181,9 +180,6 @@ def main(page: ft.Page):
                 # Limpia los campos
                 txt_fecha.current.value = ""
                 txt_codigo.current.value = ""
-                nombre_seleccionado = None
-                auto_complete.value = ""
-                auto_complete.update()
                 txt_hora35.current.value = ""
                 txt_hora100.current.value = ""
                 txt_comentario.current.value = ""
