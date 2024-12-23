@@ -99,6 +99,8 @@ def main(page: ft.Page):
     def limpiar_auto_complete():
         # Crea un nuevo AutoComplete con sugerencias vacías
         nuevo_auto_complete = ft.AutoComplete(suggestions=[])
+        
+        
 
 
 
