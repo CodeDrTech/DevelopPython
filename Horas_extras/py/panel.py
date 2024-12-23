@@ -96,6 +96,16 @@ def main(page: ft.Page):
         e.control.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def limpiar_auto_complete():
+        # Crea un nuevo AutoComplete con sugerencias vacías
+        nuevo_auto_complete = ft.AutoComplete(suggestions=[])
+
+
+
+
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def format_hour_for_db(hour_str):
         """Formatea la entrada de hora para la base de datos para siempre incluya :00 en caso de no tenerlo."""
         if not hour_str:
@@ -180,6 +190,11 @@ def main(page: ft.Page):
                 # Limpia los campos
                 txt_fecha.current.value = ""
                 txt_codigo.current.value = ""
+                
+                nombre_seleccionado = None
+
+                limpiar_auto_complete()
+            
                 txt_hora35.current.value = ""
                 txt_hora100.current.value = ""
                 txt_comentario.current.value = ""
