@@ -59,6 +59,8 @@ def Empleados(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
+    page.bgcolor = "#00033d"
+    #page.theme_mode = ft.ThemeMode.LIGHT
     
     
     # Crear tabla inicialmente

@@ -2,7 +2,7 @@ from turtle import bgcolor
 import flet as ft
 from flet import ScrollMode, AppView
 import datetime
-from consultas import get_empleados, insertar_horas
+from consultas import get_empleados, insertar_horas, get_codigo_por_nombre
 
 #Funcion principal para iniciar la ventana con los controles
 def main(page: ft.Page):
@@ -13,8 +13,8 @@ def main(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
-    page.bgcolor = "#e7e7e7"
-    page.theme_mode = ft.ThemeMode.LIGHT
+    page.bgcolor = "#00033d" #e7e7e7
+    #page.theme_mode = ft.ThemeMode.LIGHT
     
     
     # Cargar los empleados desde la base de datos
@@ -23,7 +23,14 @@ def main(page: ft.Page):
     nombre_seleccionado = None
     def on_autocomplete_selected(e):
         nonlocal nombre_seleccionado
-        nombre_seleccionado = e.selection.value
+        nombre_seleccionado = e.selection.value        
+
+        # Busca el código del empleado seleccionado en la base de datos
+        # y lo muestra en el campo de texto "Código"
+        codigo_db = get_codigo_por_nombre(nombre_seleccionado)
+        if codigo_db:
+            txt_codigo.current.value = str(codigo_db)
+            page.update()
     
     # Crear sugerencias para el AutoComplete
     suggestions = [
@@ -96,10 +103,6 @@ def main(page: ft.Page):
         e.control.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #nombre_seleccionado = None
-    #def on_autocomplete_selected2(e):
-    #    nonlocal nombre_seleccionado
-    #    nombre_seleccionado = e.selection.value
     
     def limpiar_y_recrear_auto_complete(auto_complete_container, empleados_data):
         nonlocal nombre_seleccionado
@@ -178,7 +181,6 @@ def main(page: ft.Page):
     # Referencias para los campos de texto del tab Datos de Usuario
     txt_fecha = ft.Ref[ft.TextField]()
     txt_codigo = ft.Ref[ft.TextField]()
-    #txt_nombre = ft.Ref[ft.TextField]()
     txt_hora35 = ft.Ref[ft.TextField]()
     txt_hora100 = ft.Ref[ft.TextField]()
     txt_comentario = ft.Ref[ft.TextField]()
@@ -192,6 +194,7 @@ def main(page: ft.Page):
             hora100 = format_hour_for_db(txt_hora100.current.value)
             comentario = txt_comentario.current.value
 
+            # Llama a la función de queries 
             if not fecha or not codigo or not nombre or (not hora35 and not hora100):
                 open_dlg_modal(e)
 
@@ -204,7 +207,6 @@ def main(page: ft.Page):
 
 
                 # Limpia los campos
-                #txt_fecha.current.value = ""
                 txt_codigo.current.value = ""
 
                 limpiar_y_recrear_auto_complete(auto_complete_container, empleados_data)
@@ -212,7 +214,6 @@ def main(page: ft.Page):
                 txt_hora35.current.value = ""
                 txt_hora100.current.value = ""
                 txt_comentario.current.value = ""
-                txt_codigo.current.focus()
                 page.update()
 
         except Exception as error:
@@ -247,7 +248,7 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Código:", width=100),
-                            ft.TextField(width=320, ref=txt_codigo, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_codigo, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, max_length=3, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Nombre:", width=100),
@@ -279,6 +280,5 @@ def main(page: ft.Page):
         ],
     )
     page.add(mainTab)
-    txt_codigo.current.focus()
 ft.app(main)
 #ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)

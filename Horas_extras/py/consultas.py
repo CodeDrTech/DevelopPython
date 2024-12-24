@@ -132,3 +132,20 @@ def insertar_horas(fecha, codigo, nombre, horas_35, horas_100, destino):
         finally:
             conn.close()
     return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_codigo_por_nombre(nombre):
+    """Obtiene el código de un empleado por su nombre"""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT Codigo FROM Empleados WHERE Nombre = ?", (nombre,))
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else None
+        except sqlite3.Error as e:
+            print(f"Error al obtener código: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
