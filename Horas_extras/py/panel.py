@@ -1,6 +1,6 @@
 from turtle import bgcolor
 import flet as ft
-from flet import ScrollMode
+from flet import ScrollMode, AppView
 import datetime
 from consultas import get_empleados, insertar_horas
 
@@ -96,16 +96,30 @@ def main(page: ft.Page):
         e.control.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def limpiar_auto_complete():
-        # Crea un nuevo AutoComplete con sugerencias vacías
-        nuevo_auto_complete = ft.AutoComplete(suggestions=[])
-        
-        
+    nombre_seleccionado = None
+    def on_autocomplete_selected2(e):
+        nonlocal nombre_seleccionado
+        nombre_seleccionado = e.selection.value
+    
+    def limpiar_y_recrear_auto_complete(auto_complete_container, empleados_data):
+        nonlocal nombre_seleccionado
+        nombre_seleccionado = None  # Limpia la selección previa
 
+        # Borra el contenido actual
+        auto_complete_container.content = None
+        auto_complete_container.update()
 
+        # Crea un nuevo AutoComplete
+        auto_complete = ft.AutoComplete(
+            suggestions=[
+                ft.AutoCompleteSuggestion(key=emp, value=emp) for emp in empleados_data
+            ],
+            on_select=on_autocomplete_selected2  # Reconectar el manejador de eventos
+        )
 
-
-
+        # Agrega el nuevo AutoComplete al contenedor
+        auto_complete_container.content = auto_complete
+        auto_complete_container.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def format_hour_for_db(hour_str):
@@ -170,7 +184,7 @@ def main(page: ft.Page):
     txt_comentario = ft.Ref[ft.TextField]()
     def agregar_horas(e):
         try:
-            nonlocal nombre_seleccionado
+            #nonlocal nombre_seleccionado
             fecha = txt_fecha.current.value
             codigo = txt_codigo.current.value
             nombre = nombre_seleccionado
@@ -190,12 +204,10 @@ def main(page: ft.Page):
 
 
                 # Limpia los campos
-                txt_fecha.current.value = ""
+                #txt_fecha.current.value = ""
                 txt_codigo.current.value = ""
-                
-                nombre_seleccionado = None
 
-                limpiar_auto_complete()
+                limpiar_y_recrear_auto_complete(auto_complete_container, empleados_data)
             
                 txt_hora35.current.value = ""
                 txt_hora100.current.value = ""
@@ -269,3 +281,4 @@ def main(page: ft.Page):
     page.add(mainTab)
     txt_codigo.current.focus()
 ft.app(main)
+#ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
