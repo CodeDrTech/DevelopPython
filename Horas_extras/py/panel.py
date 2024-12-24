@@ -96,10 +96,10 @@ def main(page: ft.Page):
         e.control.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    nombre_seleccionado = None
-    def on_autocomplete_selected2(e):
-        nonlocal nombre_seleccionado
-        nombre_seleccionado = e.selection.value
+    #nombre_seleccionado = None
+    #def on_autocomplete_selected2(e):
+    #    nonlocal nombre_seleccionado
+    #    nombre_seleccionado = e.selection.value
     
     def limpiar_y_recrear_auto_complete(auto_complete_container, empleados_data):
         nonlocal nombre_seleccionado
@@ -114,7 +114,7 @@ def main(page: ft.Page):
             suggestions=[
                 ft.AutoCompleteSuggestion(key=emp, value=emp) for emp in empleados_data
             ],
-            on_select=on_autocomplete_selected2  # Reconectar el manejador de eventos
+            on_select=on_autocomplete_selected  # Reconectar el manejador de eventos
         )
 
         # Agrega el nuevo AutoComplete al contenedor
