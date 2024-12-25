@@ -13,8 +13,8 @@ def registro(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
-    page.bgcolor = "#00033d" #e7e7e7
-    #page.theme_mode = ft.ThemeMode.LIGHT
+    page.bgcolor = "#e7e7e7"
+    page.theme_mode = ft.ThemeMode.LIGHT
     
     
     # Cargar los empleados desde la base de datos

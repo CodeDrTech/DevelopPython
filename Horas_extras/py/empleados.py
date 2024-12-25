@@ -59,22 +59,37 @@ def Empleados(page: ft.Page):
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
-    page.bgcolor = "#00033d"
-    #page.theme_mode = ft.ThemeMode.LIGHT
+    page.bgcolor = "#e7e7e7"
+    page.theme_mode = ft.ThemeMode.LIGHT
     
     
     # Crear tabla inicialmente
     tabla_empleados = crear_tabla_empleados()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
+    # Función para ejecutar si seleccionas "No"
+    def on_cancel(e):
+        carga_modal.open = False  # Cierra el diálogo
+        # Mostrar SnackBar
+        snackbar = ft.SnackBar(
+            content=ft.Text("No se importaron empleados"),
+            duration=3000,
+        )
+        page.snack_bar = snackbar
+        snackbar.open = True
+        page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def importar_excel(e):
         """Importar empleados desde una ruta fija sin diálogo."""
+        
+        carga_modal.open = False  # Cierra el diálogo
+        page.update()  # Actualiza la UI para cerrar el diálogo
+        
         # Obtener la ruta del directorio raíz del proyecto
         ruta_proyecto = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        archivo = os.path.join(ruta_proyecto, "Empleados.xlsm")     # Ruta del archivo Excel
-
+        archivo = os.path.join(ruta_proyecto, "Empleados.xlsm") # Ruta del archivo Excel
+        
         if os.path.exists(archivo):  # Verificar que el archivo exista
             if importar_empleados_desde_excel(archivo):
                 # Actualizar la lista de empleados
@@ -97,7 +112,24 @@ def Empleados(page: ft.Page):
             page.show_snack_bar(
                 ft.SnackBar(content=ft.Text("Archivo Excel no encontrado en la ruta predeterminada"), duration=3000)
             )
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Crear el diálogo de confirmación
+    carga_modal = ft.AlertDialog(
+        title=ft.Text("¿Estás seguro?"),
+        content=ft.Text("Esta acción no se puede deshacer."),
+        actions=[
+            ft.TextButton("Sí", on_click=importar_excel),
+            ft.TextButton("No", on_click=on_cancel),
+        ],
+        modal=True,
+    )
 
+    # Botón para mostrar el diálogo
+    def show_carga_modal(e):
+        page.dialog = carga_modal
+        carga_modal.open = True
+        page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Cargar los empleados desde la base de datos
@@ -149,7 +181,7 @@ def Empleados(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=150, on_click=tab_registro),
-                            ft.ElevatedButton(text="Cargar", icon=ft.Icons.UPLOAD, width=150, on_click=importar_excel),
+                            ft.ElevatedButton(text="Cargar", icon=ft.Icons.UPLOAD, width=150, on_click=show_carga_modal),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,

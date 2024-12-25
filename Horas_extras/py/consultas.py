@@ -37,7 +37,6 @@ def insertar_empleados(empleados_df):
                 ''', (int(row['Codigo']), row['Nombre']))
             
             conn.commit()
-            print(f"Se cargaron {len(empleados_df)} empleados")
             return True
         except sqlite3.Error as e:
             print(f"Error en base de datos: {e}")
