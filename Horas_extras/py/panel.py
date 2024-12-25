@@ -55,7 +55,7 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Inicializa la fecha actual y crea un texto para mostrar la fecha seleccionada.
     fecha_actual = datetime.date.today()
-    fecha_texto = ft.Text(f"{fecha_actual}")
+    
     def mostrar_datepicker(e):
         # Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
         page.overlay.append(date_picker_dialog)
@@ -63,17 +63,12 @@ def main(page: ft.Page):
         page.update()
     
     def seleccionar_fecha(e):
-        # Obtiene la fecha seleccionada del DatePicker.
         fecha_actual = date_picker_dialog.value
         if fecha_actual:
-            # Convierte a formato solo de fecha sin la hora.
             fecha_solo = fecha_actual.date()
-            # Actualiza el texto para mostrar la fecha seleccionada.
-            fecha_texto.value = f"{fecha_solo}"
-            # Cierra el diálogo configurando `open = False`.
+            txt_fecha.current.value = fecha_solo.strftime("%Y-%m-%d")
             date_picker_dialog.open = False
-            # Finalmente, actualiza la página para reflejar los cambios.
-            page.update()   
+            page.update()  
 
     # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
     date_picker_dialog = ft.DatePicker(
@@ -246,7 +241,7 @@ def main(page: ft.Page):
                         ft.Text("Registro de horas"),
                         ft.Row([
                             ft.Text("Fecha:", width=100),
-                            ft.TextField(width=320, ref=txt_fecha, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_texto.value, on_click=mostrar_datepicker, icon=ft.Icons.CALENDAR_MONTH),
+                            ft.TextField(width=320, ref=txt_fecha, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_actual.strftime("%Y-%m-%d"), on_click=mostrar_datepicker, icon=ft.Icons.CALENDAR_MONTH),
                         ]),
                         ft.Row([
                             ft.Text("Código:", width=100),
