@@ -226,6 +226,15 @@ def main(page: ft.Page):
             Empleados(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
+    def tab_reporte(e):
+            page.clean()
+
+            # Importamos y ejecutamos la función y sus controles en la página actual
+            from reporte import reporte
+            reporte(page)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
@@ -267,7 +276,7 @@ def main(page: ft.Page):
                         ft.Text(" ", width=100),
                         ft.ElevatedButton(text="Registrar", width=100, on_click=agregar_horas),
                         ft.ElevatedButton(text="Empleados", width=100, on_click=tab_empleados),
-                        ft.ElevatedButton(text="Reportes", width=100),
+                        ft.ElevatedButton(text="Reportes", width=100, on_click=tab_reporte),
                         ]),
                     ],
                     alignment=ft.MainAxisAlignment.START,
