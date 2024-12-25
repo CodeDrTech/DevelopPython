@@ -148,3 +148,24 @@ def get_codigo_por_nombre(nombre):
         finally:
             conn.close()
     return None
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_horas_por_fecha(fecha_inicio, fecha_fin):
+    """Obtiene registros de horas entre dos fechas ordenados del más reciente al más antiguo."""
+    conn = connect_to_database()
+    registros = []
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Destino_Comentario 
+                FROM Horas 
+                WHERE Fecha BETWEEN ? AND ? 
+                ORDER BY Fecha DESC, Codigo ASC
+            """, (fecha_inicio, fecha_fin))
+            registros = cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error al obtener registros: {e}")
+        finally:
+            conn.close()
+    return registros
