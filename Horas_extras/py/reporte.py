@@ -26,43 +26,116 @@ def reporte(page: ft.Page):
             from registro import registro
             registro(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Inicializa la fecha actual y crea un texto para mostrar la fecha seleccionada.
-    fecha_actual = datetime.date.today()
-    # Referencias para los campos de texto del tab Datos de Usuario
-    txt_fecha = ft.Ref[ft.TextField]()
-    
-    # Traer el numero del dia actual como un entero
-    hoy = fecha_actual.today()
-    num_dia_actual = int(hoy.strftime("%d"))
-    
-    # Si el dia actual es menor a 15, se establece la fecha actual al primer dia del mes
-    if num_dia_actual < 15:
-        fecha_actual = fecha_actual.replace(day=1)
-    else:
-        # Si el dia actual es mayor o igual a 15, se establece la fecha_inicio en el dia 15
-        fecha_actual = fecha_actual.replace(day=15)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------    
+    # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
+    def open_dlg_modal(e):
+        e.control.page.overlay.append(dlg_modal)
+        dlg_modal.open = True
+        e.control.page.update()
         
-    def mostrar_datepicker(e):
-        # Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
-        page.overlay.append(date_picker_dialog)
-        date_picker_dialog.open = True
-        page.update()
-    
-    def seleccionar_fecha(e):
-        fecha_actual = date_picker_dialog.value
-        if fecha_actual:
-            fecha_solo = fecha_actual.date()
-            txt_fecha.current.value = fecha_solo.strftime("%Y-%m-%d")
-            date_picker_dialog.open = False
-            page.update()  
+    def close_dlg(e):
+        dlg_modal.open = False
+        e.control.page.update()
 
-    # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
-    date_picker_dialog = ft.DatePicker(
-        first_date=fecha_actual.replace(day=1),
-        last_date=fecha_actual.replace(day=calendar.monthrange(fecha_actual.year, fecha_actual.month)[1]),
+    dlg_modal = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Falta información"),
+        content=ft.Text("Ha dejado algun campo vacío"),
+        actions=[
+                    ft.TextButton("Ok", on_click=close_dlg),
+                ],
+        actions_alignment=ft.MainAxisAlignment.END,
+        #on_dismiss=lambda e: print("Modal dialog dismissed!"),
+    )
+    
+    # Initialize SnackBar at start
+    page.snack_bar = ft.SnackBar(
+        content=ft.Text(""),
+        action="OK"
+    )
+    
+    # Make nombre_seleccionado accessible
+    nombre_seleccionado = None
+    
+    def show_snackbar(mensaje):
+        if not page.snack_bar:
+            page.snack_bar = ft.SnackBar(content=ft.Text(mensaje))
+        else:
+            page.snack_bar.content.value = mensaje
+        page.snack_bar.open = True
+        page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Inicializa las fechas actuales para ambos TextField
+    fecha_actual1 = datetime.date.today()
+    fecha_actual2 = datetime.date.today()
+
+    # Referencias para los campos de texto
+    txt_fecha1 = ft.Ref[ft.TextField]()
+    txt_fecha2 = ft.Ref[ft.TextField]()
+
+    # Traer el número del día actual como un entero
+    hoy = datetime.date.today()
+    num_dia_actual = int(hoy.strftime("%d"))
+
+    # Configuración de `fecha_actual1`
+    if num_dia_actual < 15:
+        fecha_actual1 = fecha_actual1.replace(day=1)
+    else:
+        fecha_actual1 = fecha_actual1.replace(day=15)
+
+    # Configuración de `fecha_actual2`
+    if num_dia_actual < 15:
+        fecha_actual2 = fecha_actual2.replace(day=1)
+    else:
+        fecha_actual2 = fecha_actual2.replace(day=15)
+
+    # Función para mostrar el DatePicker del primer TextField
+    def mostrar_datepicker(e):
+        page.overlay.append(date_picker_dialog1)
+        date_picker_dialog1.open = True
+        page.update()
+
+    # Función para mostrar el DatePicker del segundo TextField
+    def mostrar_datepicker2(e):
+        page.overlay.append(date_picker_dialog2)
+        date_picker_dialog2.open = True
+        page.update()
+
+    # Función para seleccionar la fecha del primer TextField
+    def seleccionar_fecha1(e):
+        fecha_seleccionada = date_picker_dialog1.value
+        if fecha_seleccionada:
+            fecha_solo = fecha_seleccionada.date()
+            txt_fecha1.current.value = fecha_solo.strftime("%Y-%m-%d")
+            date_picker_dialog1.open = False
+            page.update()
+
+    # Función para seleccionar la fecha del segundo TextField
+    def seleccionar_fecha2(e):
+        fecha_seleccionada = date_picker_dialog2.value
+        if fecha_seleccionada:
+            fecha_solo = fecha_seleccionada.date()
+            txt_fecha2.current.value = fecha_solo.strftime("%Y-%m-%d")
+            date_picker_dialog2.open = False
+            page.update()
+
+    # DatePicker para el primer TextField
+    date_picker_dialog1 = ft.DatePicker(
+        first_date=fecha_actual1.replace(day=1),
+        last_date=fecha_actual1.replace(day=calendar.monthrange(fecha_actual1.year, fecha_actual1.month)[1]),
         current_date=datetime.datetime.now(),
-        on_change=seleccionar_fecha)
+        on_change=seleccionar_fecha1
+    )
+
+    # DatePicker para el segundo TextField
+    date_picker_dialog2 = ft.DatePicker(
+        first_date=fecha_actual2.replace(day=1),
+        last_date=fecha_actual2.replace(day=calendar.monthrange(fecha_actual2.year, fecha_actual2.month)[1]),
+        current_date=datetime.datetime.now(),
+        on_change=seleccionar_fecha2
+    )
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_horas(registros):
@@ -100,12 +173,20 @@ def reporte(page: ft.Page):
     # Contenedor para la tabla
     tabla_container = ft.Container(content=crear_tabla_horas([]))
     def actualizar_tabla(e):
-        fecha_inicio = txt_fecha.current.value
-        fecha_fin = txt_fecha.current.value
+        fecha_inicio = txt_fecha1.current.value
+        fecha_fin = txt_fecha2.current.value
+
+        # Validar si la fecha inicial es mayor a la fecha final
+        if fecha_inicio > fecha_fin:
+            show_snackbar("La fecha inicial no puede ser mayor que la fecha final.")
+            return  # Salir de la función si las fechas no son válidas
+
+        # Obtener los registros y actualizar la tabla
         registros = get_horas_por_fecha(fecha_inicio, fecha_fin)
         nueva_tabla = crear_tabla_horas(registros)
         tabla_container.content = nueva_tabla
         page.update()
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
@@ -122,9 +203,9 @@ def reporte(page: ft.Page):
                     [
                         ft.Row([
                             ft.Text("Fecha inicial"),
-                            ft.TextField(ref=txt_fecha, value=fecha_actual.strftime("%Y-%m-%d"), width=200),
+                            ft.TextField(ref=txt_fecha1, value=fecha_actual1.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker),
                             ft.Text("Fecha final"),
-                            ft.TextField(ref=txt_fecha, value=fecha_actual.strftime("%Y-%m-%d"), width=200),
+                            ft.TextField(ref=txt_fecha2, value=fecha_actual2.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker2),
                         ]),
                         ft.Row([
                             ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=150, on_click=tab_registro),
