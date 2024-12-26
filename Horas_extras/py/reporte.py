@@ -79,16 +79,16 @@ def reporte(page: ft.Page):
     num_dia_actual = int(hoy.strftime("%d"))
 
     # Configuración de `fecha_actual1`
-    if num_dia_actual < 15:
+    if num_dia_actual <= 15:
         fecha_actual1 = fecha_actual1.replace(day=1)
     else:
         fecha_actual1 = fecha_actual1.replace(day=15)
 
     # Configuración de `fecha_actual2`
-    if num_dia_actual < 15:
-        fecha_actual2 = fecha_actual2.replace(day=1)
-    else:
+    if num_dia_actual <= 15:
         fecha_actual2 = fecha_actual2.replace(day=15)
+    else:
+        fecha_actual2 = fecha_actual2.replace(day=30)
 
     # Función para mostrar el DatePicker del primer TextField
     def mostrar_datepicker(e):
