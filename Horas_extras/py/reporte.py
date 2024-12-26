@@ -2,6 +2,7 @@ import flet as ft
 from flet import ScrollMode
 from consultas import get_horas_por_fecha
 import os, datetime, calendar
+from datetime import date
 
 
 #Funcion principal para iniciar la ventana con los controles.
@@ -30,6 +31,18 @@ def reporte(page: ft.Page):
     fecha_actual = datetime.date.today()
     # Referencias para los campos de texto del tab Datos de Usuario
     txt_fecha = ft.Ref[ft.TextField]()
+    
+    # Traer el numero del dia actual como un entero
+    hoy = fecha_actual.today()
+    num_dia_actual = int(hoy.strftime("%d"))
+    
+    # Si el dia actual es menor a 15, se establece la fecha actual al primer dia del mes
+    if num_dia_actual < 15:
+        fecha_actual = fecha_actual.replace(day=1)
+    else:
+        # Si el dia actual es mayor o igual a 15, se establece la fecha_inicio en el dia 15
+        fecha_actual = fecha_actual.replace(day=15)
+        
     def mostrar_datepicker(e):
         # Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
         page.overlay.append(date_picker_dialog)
