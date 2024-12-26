@@ -2,20 +2,28 @@ import flet as ft
 from flet import ScrollMode
 from consultas import get_horas_por_fecha
 import os, datetime, calendar
+
 from datetime import date
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, PageTemplate, Frame
+from reportlab.lib.units import inch
+from itertools import groupby
+from operator import itemgetter
 
 
 #Funcion principal para iniciar la ventana con los controles.
 def reporte(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
-    page.window.width = 900
+    page.window.width = 950
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
@@ -169,6 +177,8 @@ def reporte(page: ft.Page):
             border_radius=10,
             vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
             horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
+            column_spacing=10,
+            
         )
     # Contenedor para la tabla
     tabla_container = ft.Container(content=crear_tabla_horas([]))
@@ -186,13 +196,144 @@ def reporte(page: ft.Page):
         nueva_tabla = crear_tabla_horas(registros)
         tabla_container.content = nueva_tabla
         page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def tiempo_a_decimal(tiempo_str):
+        """Convierte tiempo formato HH:MM a decimal"""
+        try:
+            if ':' in tiempo_str:
+                horas, minutos = tiempo_str.split(':')
+                return float(horas) + float(minutos)/60
+            return float(tiempo_str)
+        except ValueError:
+            return 0.0
+    def exportar_pdf(registros, fecha_inicio, fecha_fin):
+        """Exporta los registros a PDF agrupados por empleado"""
+        try:
+            # Obtener directorio actual y construir ruta
+            directorio_actual = os.path.dirname(os.path.abspath(__file__))
+            directorio_reportes = os.path.join(os.path.dirname(directorio_actual), "reportes")
+            
+            # Crear directorio si no existe
+            if not os.path.exists(directorio_reportes):
+                os.makedirs(directorio_reportes)
+            
+            pdf_path = os.path.join(directorio_reportes, f'Reporte_{fecha_inicio}_{fecha_fin}.pdf')
+            doc = SimpleDocTemplate(pdf_path, pagesize=letter)
+            elements = []
+            
+            # Agrupar por empleado
+            registros.sort(key=itemgetter(2))
+            for nombre, grupo in groupby(registros, key=itemgetter(2)):
+                datos_empleado = list(grupo)
+                
+                # Calcular totales
+                total_horas_35 = sum(tiempo_a_decimal(reg[3]) for reg in datos_empleado)
+                total_horas_100 = sum(tiempo_a_decimal(reg[4]) for reg in datos_empleado)
+                
+                # Encabezados
+                encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Comentario']]
+                
+                # Datos + fila de totales
+                datos = [[reg[0], reg[1], reg[2], reg[3], reg[4], reg[5]] for reg in datos_empleado]
+                datos.append(['TOTAL', '', '', f'{total_horas_35:.2f}', f'{total_horas_100:.2f}', ''])
+                
+                tabla_data = encabezados + datos
+                # Después de crear tabla_data, definir anchos de columna
+                tabla = Table(
+                    tabla_data,
+                    colWidths=[
+                        1*inch,     # Fecha
+                        1*inch,   # Código
+                        2*inch,     # Nombre
+                        1*inch,     # Horas 35%
+                        1*inch,     # Horas 100%
+                        2.7*inch    # Comentario
+                    ])
+
+                
+                # Estilo tabla
+                estilo = TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 12),
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 12),  # Padding inferior
+                    ('TOPPADDING', (0, 0), (-1, -1), 12),     # Padding superior
+                    ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),
+                    ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
+                    ('WORDWRAP', (0, 0), (-1, -1), True),     # Wrap automático
+                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),   # Alineación vertical
+                ])
+                tabla.setStyle(estilo)
+                
+                elements.append(tabla)
+                elements.append(Spacer(1, 30))
+                
+            def convertir_formato_fecha(fecha_str):
+                """Convierte fecha de YYYY-MM-DD a DD-mes-YYYY"""
+                try:
+                    fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
+                    meses = {
+                        1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
+                        5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
+                        9: 'SPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+                    }
+                    return f"{fecha.day}-{meses[fecha.month]}-{fecha.year}"
+                except ValueError:
+                    return fecha_str
+            
+            # Definir encabezado con logo y título
+            def encabezado(canvas, doc):
+                logo_path = os.path.join(os.path.dirname(directorio_actual), "imagenes", "Logo.png")
+                canvas.saveState()
+                canvas.setFont("Helvetica-Bold", 14)
+                
+                # Título alineado a la derecha
+                fecha_inicio_formato = convertir_formato_fecha(fecha_inicio)
+                fecha_fin_formato = convertir_formato_fecha(fecha_fin)
+                canvas.drawRightString(550, 750, f"Reporte del: {fecha_inicio_formato} al {fecha_fin_formato}")
+                
+                # Logo alineado a la izquierda
+                if os.path.exists(logo_path):
+                    canvas.drawImage(logo_path, 50, 685, width=1.5*inch, height=2*inch)
+                
+                canvas.restoreState()
+        
+            # Crear template de página con encabezado
+            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 2 * inch, id='normal')
+            template = PageTemplate(id='encabezado', frames=frame, onPage=encabezado)
+            doc.addPageTemplates([template])
+            
+            # Generar PDF
+            doc.build(elements)
+            show_snackbar("Reporte PDF generado exitosamente")
+            return True
+            
+        except Exception as e:
+            show_snackbar(f"Error al exportar PDF: {str(e)}")
+            return False
+    # Agregar botón para exportar en la interfaz
+    boton_exportar = ft.ElevatedButton(
+        "Exportar a PDF",
+        icon=ft.icons.PICTURE_AS_PDF,
+        on_click=lambda e: exportar_pdf(
+            get_horas_por_fecha(txt_fecha1.current.value, txt_fecha2.current.value),
+            txt_fecha1.current.value,
+            txt_fecha2.current.value
+        )
+    )
+
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     mainTab = ft.Tabs(
         selected_index=1,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,        
+        expand=True,
+
         
         # Contenedor de tabs
         tabs=[
@@ -202,15 +343,16 @@ def reporte(page: ft.Page):
                 content=ft.Column(
                     [
                         ft.Row([
-                            ft.Text("Fecha inicial"),
+                            ft.Text("Desde"),
                             ft.TextField(ref=txt_fecha1, value=fecha_actual1.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker),
-                            ft.Text("Fecha final"),
+                            ft.Text("Hasta"),
                             ft.TextField(ref=txt_fecha2, value=fecha_actual2.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker2),
-                        ]),
-                        ft.Row([
                             ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=150, on_click=tab_registro),
                             ft.ElevatedButton(text="Buscar", icon=ft.Icons.UPLOAD, width=150, on_click=actualizar_tabla),
                         ]),
+                        ft.Row([
+                            boton_exportar,
+                                ]),
                         tabla_container,
                     ],
                     alignment=ft.MainAxisAlignment.START,

@@ -8,6 +8,7 @@ Contratos/pyvenv.cfg
 # Horas extras
 Horas_extras/HorasExtras.db
 Horas_extras/Empleados.xlsm
+Horas_extras/imagenes/Logo.png
 venv/
 .env
 
