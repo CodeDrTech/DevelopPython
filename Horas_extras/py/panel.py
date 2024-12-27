@@ -192,7 +192,7 @@ def main(page: ft.Page):
             comentario = txt_comentario.current.value
 
             # Llama a la función de queries 
-            if not fecha or not codigo or not nombre or (not hora35 and not hora100):
+            if not fecha or not codigo or not nombre or not comentario or (not hora35 and not hora100):
                 open_dlg_modal(e)
 
             else:

@@ -1,9 +1,9 @@
 import flet as ft
 from flet import ScrollMode
-from consultas import get_horas_por_fecha
+from consultas import get_horas_por_fecha_pdf, get_horas_por_fecha_tabla
 import os, datetime, calendar
 
-from datetime import date
+from datetime import timedelta
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter, landscape
@@ -18,7 +18,7 @@ from operator import itemgetter
 def reporte(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
-    page.window.width = 950
+    page.window.width = 1200
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
@@ -151,23 +151,23 @@ def reporte(page: ft.Page):
     def crear_tabla_horas(registros):
         """Crea DataTable con registros de horas"""
         columns = [
-            ft.DataColumn(ft.Text("Fecha")),
-            ft.DataColumn(ft.Text("Código")),
-            ft.DataColumn(ft.Text("Nombre")),
+            ft.DataColumn(ft.Text("Fecha", text_align=ft.TextAlign.CENTER)),
+            ft.DataColumn(ft.Text("Código", text_align=ft.TextAlign.CENTER)),
+            ft.DataColumn(ft.Text("Nombre", text_align=ft.TextAlign.CENTER)),
             ft.DataColumn(ft.Text("Horas 35%")),
             ft.DataColumn(ft.Text("Horas 100%")),
-            ft.DataColumn(ft.Text("Comentario")),
+            ft.DataColumn(ft.Text("Comentario", text_align=ft.TextAlign.CENTER)),
         ]
         
         rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(reg[0])),  # Fecha
-                    ft.DataCell(ft.Text(str(reg[1]))),  # Código
+                    ft.DataCell(ft.Text(reg[0], text_align=ft.TextAlign.CENTER)),  # Fecha
+                    ft.DataCell(ft.Text(str(reg[1]), text_align=ft.TextAlign.CENTER)),  # Código
                     ft.DataCell(ft.Text(reg[2])),  # Nombre
                     ft.DataCell(ft.Text(reg[3])),  # Horas 35
                     ft.DataCell(ft.Text(reg[4])),  # Horas 100
-                    ft.DataCell(ft.Text(reg[5])),  # Comentario
+                    ft.DataCell(ft.Text(reg[5], text_align=ft.TextAlign.CENTER)),  # Comentario
                 ],
             ) for reg in registros
         ]
@@ -177,9 +177,9 @@ def reporte(page: ft.Page):
             rows=rows,
             border=ft.border.all(1, ft.colors.GREY_400),
             border_radius=10,
-            vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
+            vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_400, 1.0),
             horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
-            column_spacing=10,
+            
             
         )
     # Contenedor para la tabla
@@ -194,21 +194,29 @@ def reporte(page: ft.Page):
             return  # Salir de la función si las fechas no son válidas
 
         # Obtener los registros y actualizar la tabla
-        registros = get_horas_por_fecha(fecha_inicio, fecha_fin)
+        registros = get_horas_por_fecha_tabla(fecha_inicio, fecha_fin)
         nueva_tabla = crear_tabla_horas(registros)
         tabla_container.content = nueva_tabla
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def tiempo_a_decimal(tiempo_str):
-        """Convierte tiempo formato HH:MM a decimal"""
-        try:
-            if ':' in tiempo_str:
-                horas, minutos = tiempo_str.split(':')
-                return float(horas) + float(minutos)/60
-            return float(tiempo_str)
-        except ValueError:
-            return 0.0
+    def sumar_tiempo(horas):
+        """Suma una lista de tiempos en formato HH:MM y devuelve el resultado como HH:MM."""
+        total_horas = 0
+        total_minutos = 0
+
+        for hora in horas:
+            if isinstance(hora, str):
+                partes = list(map(int, hora.split(":")))
+                total_horas += partes[0]
+                total_minutos += partes[1]
+
+        # Convertir minutos sobrantes a horas
+        total_horas += total_minutos // 60
+        total_minutos = total_minutos % 60
+
+        return f"{total_horas:02}:{total_minutos:02}"
+
     def exportar_pdf(registros, fecha_inicio, fecha_fin):
         """Exporta los registros a PDF agrupados por empleado"""
         try:
@@ -234,8 +242,8 @@ def reporte(page: ft.Page):
             # Estilo de párrafos para comentarios
             estilos = getSampleStyleSheet()
             estilo_comentarios = estilos["BodyText"]
-            estilo_comentarios.wordWrap = 'CJK'  # Permite ajuste de texto comentario
-            estilo_comentarios.alignment = TA_CENTER  # Centra el texto comentario
+            estilo_comentarios.wordWrap = 'CJK'  # Permite ajuste de texto
+            estilo_comentarios.alignment = TA_CENTER  # Centra el texto
             
             # Agrupar por empleado
             registros.sort(key=itemgetter(2))
@@ -243,11 +251,14 @@ def reporte(page: ft.Page):
                 datos_empleado = list(grupo)
                 
                 # Calcular totales
-                total_horas_35 = sum(tiempo_a_decimal(reg[3]) for reg in datos_empleado)
-                total_horas_100 = sum(tiempo_a_decimal(reg[4]) for reg in datos_empleado)
+                total_horas_35 = sumar_tiempo([reg[3] for reg in datos_empleado])
+                total_horas_100 = sumar_tiempo([reg[4] for reg in datos_empleado])
+                
+                # Nombre para mostrar en la fila de totales
+                Nombre_total = datos_empleado[0][2]
                 
                 # Encabezados
-                encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Comentario']]
+                encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Destino/Comentario']]
                 
                 # Datos + fila de totales
                 datos = [
@@ -261,7 +272,7 @@ def reporte(page: ft.Page):
                     ]
                     for reg in datos_empleado
                 ]
-                datos.append(['TOTAL', '', '', f'{total_horas_35:.2f}', f'{total_horas_100:.2f}', ''])
+                datos.append(['TOTAL', '', Nombre_total, total_horas_35, total_horas_100, ''])
                 
                 tabla_data = encabezados + datos
                 # Después de crear tabla_data, definir anchos de columna
@@ -284,8 +295,9 @@ def reporte(page: ft.Page):
                     ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
                     ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                     ('FONTSIZE', (0, 0), (-1, 0), 12),
-                    ('BOTTOMPADDING', (0, 0), (-1, -1), 12),  # Padding inferior
-                    ('TOPPADDING', (0, 0), (-1, -1), 12),     # Padding superior
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 8),  # Padding inferior
+                    ('TOPPADDING', (0, 0), (-1, -1), 8),     # Padding superior
+                    ('ROWHEIGHT', (0, 0), (-1, -1), 5),  # Define altura mínima de las filas
                     ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),
                     ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
                     ('WORDWRAP', (0, 0), (-1, -1), True),     # Wrap automático
@@ -344,7 +356,7 @@ def reporte(page: ft.Page):
         "Exportar a PDF",
         icon=ft.icons.PICTURE_AS_PDF,
         on_click=lambda e: exportar_pdf(
-            get_horas_por_fecha(txt_fecha1.current.value, txt_fecha2.current.value),
+            get_horas_por_fecha_pdf(txt_fecha1.current.value, txt_fecha2.current.value),
             txt_fecha1.current.value,
             txt_fecha2.current.value
         )
@@ -365,19 +377,17 @@ def reporte(page: ft.Page):
             ft.Tab(
                 icon=ft.Icons.LIST_ALT_OUTLINED,
                 text="Reportes",
-                content=ft.Column(
+                content=ft.Column(                    
                     [
+                        ft.Text("Reportes de Horas Extras"),
                         ft.Row([
                             ft.Text("Desde"),
                             ft.TextField(ref=txt_fecha1, value=fecha_actual1.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker),
                             ft.Text("Hasta"),
                             ft.TextField(ref=txt_fecha2, value=fecha_actual2.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker2),
                             ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=150, on_click=tab_registro),
-                            ft.ElevatedButton(text="Buscar", icon=ft.Icons.UPLOAD, width=150, on_click=actualizar_tabla),
-                        ]),
-                        ft.Row([
                             boton_exportar,
-                                ]),
+                        ]),
                         tabla_container,
                     ],
                     alignment=ft.MainAxisAlignment.START,
@@ -386,5 +396,6 @@ def reporte(page: ft.Page):
             ),
         ],
     )
+    actualizar_tabla(e=None)
     page.add(mainTab)
     page.update()
