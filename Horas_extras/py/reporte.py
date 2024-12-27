@@ -5,8 +5,10 @@ import os, datetime, calendar
 
 from datetime import date
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, PageTemplate, Frame
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.enums import TA_CENTER
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, PageTemplate, Frame, Paragraph
 from reportlab.lib.units import inch
 from itertools import groupby
 from operator import itemgetter
@@ -219,8 +221,21 @@ def reporte(page: ft.Page):
                 os.makedirs(directorio_reportes)
             
             pdf_path = os.path.join(directorio_reportes, f'Reporte_{fecha_inicio}_{fecha_fin}.pdf')
-            doc = SimpleDocTemplate(pdf_path, pagesize=letter)
+            doc = SimpleDocTemplate(
+                    pdf_path, 
+                    pagesize=landscape(letter),  # Cambia orientación a horizontal
+                    topMargin=0.5*inch,
+                    bottomMargin=0.5*inch,
+                    leftMargin=0.5*inch,
+                    rightMargin=0.5*inch
+                )
             elements = []
+            
+            # Estilo de párrafos para comentarios
+            estilos = getSampleStyleSheet()
+            estilo_comentarios = estilos["BodyText"]
+            estilo_comentarios.wordWrap = 'CJK'  # Permite ajuste de texto comentario
+            estilo_comentarios.alignment = TA_CENTER  # Centra el texto comentario
             
             # Agrupar por empleado
             registros.sort(key=itemgetter(2))
@@ -235,7 +250,17 @@ def reporte(page: ft.Page):
                 encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Comentario']]
                 
                 # Datos + fila de totales
-                datos = [[reg[0], reg[1], reg[2], reg[3], reg[4], reg[5]] for reg in datos_empleado]
+                datos = [
+                    [
+                        reg[0],  # Fecha
+                        reg[1],  # Código
+                        reg[2],  # Nombre
+                        reg[3],  # Horas 35%
+                        reg[4],  # Horas 100%
+                        Paragraph(reg[5], estilo_comentarios),  # Comentario como párrafo
+                    ]
+                    for reg in datos_empleado
+                ]
                 datos.append(['TOTAL', '', '', f'{total_horas_35:.2f}', f'{total_horas_100:.2f}', ''])
                 
                 tabla_data = encabezados + datos
@@ -243,12 +268,12 @@ def reporte(page: ft.Page):
                 tabla = Table(
                     tabla_data,
                     colWidths=[
-                        1*inch,     # Fecha
-                        1*inch,   # Código
-                        2*inch,     # Nombre
-                        1*inch,     # Horas 35%
-                        1*inch,     # Horas 100%
-                        2.7*inch    # Comentario
+                        0.8*inch,     # Fecha
+                        0.5*inch,     # Código
+                        3*inch,       # Nombre
+                        0.8*inch,     # Horas 35%
+                        1.2*inch,     # Horas 100%
+                        3.5*inch      # Comentario
                     ])
 
                 
@@ -293,16 +318,16 @@ def reporte(page: ft.Page):
                 # Título alineado a la derecha
                 fecha_inicio_formato = convertir_formato_fecha(fecha_inicio)
                 fecha_fin_formato = convertir_formato_fecha(fecha_fin)
-                canvas.drawRightString(550, 750, f"Reporte del: {fecha_inicio_formato} al {fecha_fin_formato}")
+                canvas.drawRightString(750, 580, f"Reporte del: {fecha_inicio_formato} al {fecha_fin_formato}")
                 
                 # Logo alineado a la izquierda
                 if os.path.exists(logo_path):
-                    canvas.drawImage(logo_path, 50, 685, width=1.5*inch, height=2*inch)
+                    canvas.drawImage(logo_path, 50, 520, width=1.5*inch, height=1.8*inch)
                 
                 canvas.restoreState()
         
             # Crear template de página con encabezado
-            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 2 * inch, id='normal')
+            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 0.5 * inch, id='normal')
             template = PageTemplate(id='encabezado', frames=frame, onPage=encabezado)
             doc.addPageTemplates([template])
             

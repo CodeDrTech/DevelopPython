@@ -270,7 +270,7 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Destino/Comentario:", width=100),
-                            ft.TextField(width=320, ref=txt_comentario, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.CHARACTERS),
+                            ft.TextField(width=320, multiline=True, max_length=90, ref=txt_comentario, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.CHARACTERS),
                         ]),
                         ft.Row([
                         ft.Text(" ", width=100),
