@@ -260,10 +260,23 @@ def reporte(page: ft.Page):
                 # Encabezados
                 encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Destino/Comentario']]
                 
+                def convertir_formato_fecha_para_tablas(fecha_str):
+                    """Convierte fecha de YYYY-MM-DD a YYYYMMM-DD"""
+                    try:
+                        fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
+                        meses_abrev = {
+                            1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
+                            5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
+                            9: 'SEPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+                        }
+                        return f"{fecha.day:02d}-{meses_abrev[fecha.month]}-{fecha.year}"
+                    except ValueError:
+                        return fecha_str
+                
                 # Datos + fila de totales
                 datos = [
                     [
-                        reg[0],  # Fecha
+                        convertir_formato_fecha_para_tablas(reg[0]),  # Fecha
                         reg[1],  # Código
                         reg[2],  # Nombre
                         reg[3],  # Horas 35%
@@ -315,7 +328,7 @@ def reporte(page: ft.Page):
                     meses = {
                         1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
                         5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
-                        9: 'SPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+                        9: 'SEPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
                     }
                     return f"{fecha.day}-{meses[fecha.month]}-{fecha.year}"
                 except ValueError:
@@ -339,7 +352,7 @@ def reporte(page: ft.Page):
                 canvas.restoreState()
         
             # Crear template de página con encabezado
-            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 0.5 * inch, id='normal')
+            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 0.25 * inch, id='normal')
             template = PageTemplate(id='encabezado', frames=frame, onPage=encabezado)
             doc.addPageTemplates([template])
             
