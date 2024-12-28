@@ -151,23 +151,23 @@ def reporte(page: ft.Page):
     def crear_tabla_horas(registros):
         """Crea DataTable con registros de horas"""
         columns = [
-            ft.DataColumn(ft.Text("Fecha", text_align=ft.TextAlign.CENTER)),
-            ft.DataColumn(ft.Text("Código", text_align=ft.TextAlign.CENTER)),
-            ft.DataColumn(ft.Text("Nombre", text_align=ft.TextAlign.CENTER)),
+            ft.DataColumn(ft.Text("Fecha")),
+            ft.DataColumn(ft.Text("Código")),
+            ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Horas 35%")),
             ft.DataColumn(ft.Text("Horas 100%")),
-            ft.DataColumn(ft.Text("Comentario", text_align=ft.TextAlign.CENTER)),
+            ft.DataColumn(ft.Text("Comentario")),
         ]
         
         rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(reg[0], text_align=ft.TextAlign.CENTER)),  # Fecha
-                    ft.DataCell(ft.Text(str(reg[1]), text_align=ft.TextAlign.CENTER)),  # Código
+                    ft.DataCell(ft.Text(reg[0])),  # Fecha
+                    ft.DataCell(ft.Text(str(reg[1]))),  # Código
                     ft.DataCell(ft.Text(reg[2])),  # Nombre
                     ft.DataCell(ft.Text(reg[3])),  # Horas 35
                     ft.DataCell(ft.Text(reg[4])),  # Horas 100
-                    ft.DataCell(ft.Text(reg[5], text_align=ft.TextAlign.CENTER)),  # Comentario
+                    ft.DataCell(ft.Text(reg[5])),  # Comentario
                 ],
             ) for reg in registros
         ]
@@ -178,9 +178,7 @@ def reporte(page: ft.Page):
             border=ft.border.all(1, ft.colors.GREY_400),
             border_radius=10,
             vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_400, 1.0),
-            horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
-            
-            
+            horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),            
         )
     # Contenedor para la tabla
     tabla_container = ft.Container(content=crear_tabla_horas([]))

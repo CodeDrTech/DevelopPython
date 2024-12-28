@@ -2,13 +2,13 @@ from turtle import bgcolor
 import flet as ft
 from flet import ScrollMode, AppView
 import datetime, calendar
-from consultas import get_empleados, insertar_horas, get_codigo_por_nombre
+from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_ultimos_registros, actualizar_registro, validar_entrada_hora
 
 #Funcion principal para iniciar la ventana con los controles
 def registro(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
-    page.window.width = 700
+    page.window.width = 1250
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
@@ -16,7 +16,52 @@ def registro(page: ft.Page):
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
     
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     
+    def crear_tabla_edicion(registros, on_edit_click):
+        columns = [
+            ft.DataColumn(ft.Text("Fecha")),
+            ft.DataColumn(ft.Text("Código")),
+            ft.DataColumn(ft.Text("Nombre")),
+            ft.DataColumn(ft.Text("Horas 35%     ")),
+            ft.DataColumn(ft.Text("Horas 100%     ")),
+            ft.DataColumn(ft.Text("Comentario")),
+            ft.DataColumn(ft.Text("Editar")),
+        ]
+        
+        rows = [
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(reg[0])),
+                    ft.DataCell(ft.Text(str(reg[1]))),
+                    ft.DataCell(ft.Text(reg[2])),
+                    ft.DataCell(ft.Text(reg[3])),
+                    ft.DataCell(ft.Text(reg[4])),
+                    ft.DataCell(ft.Text(reg[5] if reg[5] else "")),
+                    ft.DataCell(
+                        ft.IconButton(
+                            icon=ft.Icons.EDIT,
+                            icon_color="blue",
+                            tooltip="Editar",
+                            data=reg,  # Store record data
+                            on_click=lambda e: on_edit_click(e.control.data)
+                        )
+                    ),
+                ],
+            ) for reg in registros
+        ]
+        
+        return ft.DataTable(
+            columns=columns,
+            rows=rows,
+            border=ft.border.all(1, ft.Colors.GREY_400),
+            border_radius=10,
+            vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+            horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+        )
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Cargar los empleados desde la base de datos
     empleados_data = get_empleados()  # Obtener la lista de empleados
     
@@ -135,7 +180,8 @@ def registro(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
     # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
-    def open_dlg_modal(e):
+    def open_dlg_modal(e, mensaje="Ha dejado algun campo vacío"):
+        dlg_modal.content = ft.Text(mensaje)  # Update dialog content
         e.control.page.overlay.append(dlg_modal)
         dlg_modal.open = True
         e.control.page.update()
@@ -187,13 +233,23 @@ def registro(page: ft.Page):
             fecha = txt_fecha.current.value
             codigo = txt_codigo.current.value
             nombre = nombre_seleccionado
-            hora35 = format_hour_for_db(txt_hora35.current.value)
-            hora100 = format_hour_for_db(txt_hora100.current.value)
+            hora35 = txt_hora35.current.value
+            hora100 = txt_hora100.current.value
             comentario = txt_comentario.current.value
 
-            # Llama a la función de queries 
-            if not fecha or not codigo or not nombre or not comentario or (not hora35 and not hora100):
-                open_dlg_modal(e)
+            # Validate hours format
+            valido35, mensaje35 = validar_entrada_hora(hora35)
+            if not valido35:
+                open_dlg_modal(e, f"Error en Hora 35%: {mensaje35}")
+                return
+                
+            valido100, mensaje100 = validar_entrada_hora(hora100)
+            if not valido100:
+                open_dlg_modal(e, f"Error en Hora 100%: {mensaje100}")
+                return
+
+            if not fecha or not codigo or not nombre or (not hora35 and not hora100):
+                open_dlg_modal(e, "Complete los campos obligatorios")
 
             else:
                 # Llama a la función de queries
@@ -235,11 +291,110 @@ def registro(page: ft.Page):
             reporte(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+    def on_edit_click(registro_data):
+        def close_dlg(e):
+            edit_dialog.open = False
+            page.update()
+
+        def save_changes(e):
+            try:
+                nueva_fecha = txt_edit_fecha.current.value
+                nuevas_horas35 = format_hour_for_db(txt_edit_horas35.current.value)
+                nuevas_horas100 = format_hour_for_db(txt_edit_horas100.current.value)
+                nuevo_comentario = txt_edit_comentario.current.value
+                
+                # Obtenemos valores originales de registro_data
+                horas_35_original = registro_data[3]  # Índice 3 para Horas_35
+                horas_100_original = registro_data[4]  # Índice 4 para Horas_100
+
+                if actualizar_registro(
+                    registro_data[0],  # fecha original
+                    registro_data[1],  # código
+                    nueva_fecha,
+                    nuevas_horas35,
+                    nuevas_horas100,
+                    nuevo_comentario,
+                    horas_35_original,
+                    horas_100_original
+                ):
+                    # Actualizar tabla
+                    registros = get_ultimos_registros()
+                    tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado"), duration=3000))
+                    close_dlg(e)
+                else:
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar"), duration=3000))
+            except Exception as error:
+                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}"), duration=3000))
+
+        txt_edit_fecha = ft.Ref[ft.TextField]()
+        txt_edit_horas35 = ft.Ref[ft.TextField]()
+        txt_edit_horas100 = ft.Ref[ft.TextField]()
+        txt_edit_comentario = ft.Ref[ft.TextField]()
+
+        edit_dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Editar Registro"),
+            content=ft.Column([
+                ft.TextField(
+                    ref=txt_edit_fecha,
+                    label="Fecha",
+                    value=registro_data[0],
+                    width=320
+                ),
+                ft.TextField(
+                    ref=txt_edit_horas35,
+                    label="Horas 35%",
+                    value=registro_data[3],
+                    width=320,
+                    max_length=4,
+                    input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
+                    on_change=format_hora
+                ),
+                ft.TextField(
+                    ref=txt_edit_horas100,
+                    label="Horas 100%",
+                    value=registro_data[4],
+                    width=320,
+                    max_length=4,
+                    input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
+                    on_change=format_hora
+                ),
+                ft.TextField(
+                    ref=txt_edit_comentario,
+                    label="Comentario",
+                    value=registro_data[5],
+                    multiline=True,
+                    max_length=90,
+                    capitalization=ft.TextCapitalization.CHARACTERS,
+                    width=320
+                ),
+            ]),
+            actions=[
+                ft.TextButton("Cancelar", on_click=close_dlg),
+                ft.TextButton("Guardar", on_click=save_changes),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+
+        page.dialog = edit_dialog
+        edit_dialog.open = True
+        page.update()
+    
+    # Get initial data for table
+    registros = get_ultimos_registros()
+    
+    # Create table with data
+    tabla_edicion = crear_tabla_edicion(registros, on_edit_click)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,
-        
+        expand=True,        
         # Contenedor de tabs
         tabs=[
             ft.Tab(
@@ -283,6 +438,14 @@ def registro(page: ft.Page):
                     spacing=15,
                 ),
             ),
+            ft.Tab(
+                icon=ft.Icons.EDIT,
+                text="Edicion",
+                content=ft.Column([
+                    ft.Text("Editar registro de horas"),
+                    tabla_edicion,
+                ])
+            )
         ],
     )
     page.add(mainTab)

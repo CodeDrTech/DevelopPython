@@ -2,7 +2,7 @@ from turtle import bgcolor
 import flet as ft
 from flet import ScrollMode, AppView
 import datetime, calendar
-from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_ultimos_registros, actualizar_registro
+from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_ultimos_registros, actualizar_registro, validar_entrada_hora
 
 #Funcion principal para iniciar la ventana con los controles
 def main(page: ft.Page):
@@ -24,10 +24,10 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Fecha")),
             ft.DataColumn(ft.Text("Código")),
             ft.DataColumn(ft.Text("Nombre")),
-            ft.DataColumn(ft.Text("Horas 35%")),
-            ft.DataColumn(ft.Text("Horas 100%")),
+            ft.DataColumn(ft.Text("Horas 35%     ")),
+            ft.DataColumn(ft.Text("Horas 100%     ")),
             ft.DataColumn(ft.Text("Comentario")),
-            ft.DataColumn(ft.Text("Acciones")),
+            ft.DataColumn(ft.Text("Editar")),
         ]
         
         rows = [
@@ -180,7 +180,8 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
     # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
-    def open_dlg_modal(e):
+    def open_dlg_modal(e, mensaje="Ha dejado algun campo vacío"):
+        dlg_modal.content = ft.Text(mensaje)  # Update dialog content
         e.control.page.overlay.append(dlg_modal)
         dlg_modal.open = True
         e.control.page.update()
@@ -232,13 +233,23 @@ def main(page: ft.Page):
             fecha = txt_fecha.current.value
             codigo = txt_codigo.current.value
             nombre = nombre_seleccionado
-            hora35 = format_hour_for_db(txt_hora35.current.value)
-            hora100 = format_hour_for_db(txt_hora100.current.value)
+            hora35 = txt_hora35.current.value
+            hora100 = txt_hora100.current.value
             comentario = txt_comentario.current.value
 
-            # Llama a la función de queries 
-            if not fecha or not codigo or not nombre or not comentario or (not hora35 and not hora100):
-                open_dlg_modal(e)
+            # Validate hours format
+            valido35, mensaje35 = validar_entrada_hora(hora35)
+            if not valido35:
+                open_dlg_modal(e, f"Error en Hora 35%: {mensaje35}")
+                return
+                
+            valido100, mensaje100 = validar_entrada_hora(hora100)
+            if not valido100:
+                open_dlg_modal(e, f"Error en Hora 100%: {mensaje100}")
+                return
+
+            if not fecha or not codigo or not nombre or (not hora35 and not hora100):
+                open_dlg_modal(e, "Complete los campos obligatorios")
 
             else:
                 # Llama a la función de queries
@@ -383,8 +394,7 @@ def main(page: ft.Page):
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,
-        
+        expand=True,        
         # Contenedor de tabs
         tabs=[
             ft.Tab(
@@ -432,7 +442,7 @@ def main(page: ft.Page):
                 icon=ft.Icons.EDIT,
                 text="Edicion",
                 content=ft.Column([
-                    ft.Text("Registro de horas"),
+                    ft.Text("Editar registro de horas"),
                     tabla_edicion,
                 ])
             )

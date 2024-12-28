@@ -237,3 +237,23 @@ def actualizar_registro(fecha_original, codigo, nueva_fecha, horas_35, horas_100
         finally:
             conn.close()
     return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def validar_entrada_hora(hora_str):
+    """Valida el formato y valor de la hora introducida"""
+    if not hora_str:
+        return True, ""
+    
+    if len(hora_str) < 4:
+        return False, "Formato inválido. Use H:MM o HH:MM"
+        
+    if ":" not in hora_str:
+        return False, "Formato inválido. Falta ':'"
+        
+    try:
+        horas, minutos = map(int, hora_str.split(":"))
+        if minutos >= 60:
+            return False, "Los minutos no pueden ser mayores o iguales a 60"
+        return True, ""
+    except ValueError:
+        return False, "Formato inválido"
