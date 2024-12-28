@@ -191,3 +191,49 @@ def get_horas_por_fecha_pdf(fecha_inicio, fecha_fin):
         finally:
             conn.close()
     return registros
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_ultimos_registros():
+    """Obtiene los últimos 15 registros de horas"""
+    conn = connect_to_database()
+    registros = []
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Destino_Comentario 
+                FROM Horas 
+                ORDER BY Fecha DESC, Codigo ASC 
+                LIMIT 15
+            """)
+            registros = cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error al obtener registros: {e}")
+        finally:
+            conn.close()
+    return registros
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def actualizar_registro(fecha_original, codigo, nueva_fecha, horas_35, horas_100, comentario, horas_35_original, horas_100_original):
+    """Actualiza un registro específico de horas"""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                UPDATE Horas 
+                SET Fecha = ?, Horas_35 = ?, Horas_100 = ?, Destino_Comentario = ?
+                WHERE Fecha = ? 
+                AND Codigo = ? 
+                AND Horas_35 = ?
+                AND Horas_100 = ?
+            """, (nueva_fecha, horas_35, horas_100, comentario, 
+                  fecha_original, codigo, horas_35_original, horas_100_original))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error al actualizar registro: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
