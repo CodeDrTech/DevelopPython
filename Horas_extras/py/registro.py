@@ -248,7 +248,7 @@ def registro(page: ft.Page):
                 open_dlg_modal(e, f"Error en Hora 100%: {mensaje100}")
                 return
 
-            if not fecha or not codigo or not nombre or (not hora35 and not hora100):
+            if not fecha or not codigo or not nombre or not comentario or (not hora35 and not hora100):
                 open_dlg_modal(e, "Complete los campos obligatorios")
 
             else:

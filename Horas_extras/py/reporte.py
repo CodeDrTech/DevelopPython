@@ -214,7 +214,20 @@ def reporte(page: ft.Page):
         total_minutos = total_minutos % 60
 
         return f"{total_horas:02}:{total_minutos:02}"
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def abrir_carpeta_reporte():
+        # Ruta donde se guarda el PDF
+        ruta_reporte = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reportes")
+        
+        # Asegurar que la carpeta existe
+        if not os.path.exists(ruta_reporte):
+            os.makedirs(ruta_reporte)
+        
+        # Abrir la carpeta en el explorador de Windows
+        os.startfile(ruta_reporte)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def exportar_pdf(registros, fecha_inicio, fecha_fin):
         """Exporta los registros a PDF agrupados por empleado"""
         try:
@@ -290,7 +303,7 @@ def reporte(page: ft.Page):
                 tabla = Table(
                     tabla_data,
                     colWidths=[
-                        0.8*inch,     # Fecha
+                        0.9*inch,     # Fecha
                         0.5*inch,     # Código
                         3*inch,       # Nombre
                         0.8*inch,     # Horas 35%
@@ -357,6 +370,7 @@ def reporte(page: ft.Page):
             # Generar PDF
             doc.build(elements)
             show_snackbar("Reporte PDF generado exitosamente")
+            abrir_carpeta_reporte()  # Abre la carpeta
             return True
             
         except Exception as e:
