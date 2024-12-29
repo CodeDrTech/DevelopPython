@@ -358,12 +358,12 @@ def reporte(page: ft.Page):
                 
                 # Logo alineado a la izquierda
                 if os.path.exists(logo_path):
-                    canvas.drawImage(logo_path, 50, 520, width=1.5*inch, height=1.8*inch)
+                    canvas.drawImage(logo_path, 50, 520, width=1.5*inch, height=1*inch)
                 
                 canvas.restoreState()
         
             # Crear template de página con encabezado
-            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 0.25 * inch, id='normal')
+            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 0.7 * inch, id='normal')
             template = PageTemplate(id='encabezado', frames=frame, onPage=encabezado)
             doc.addPageTemplates([template])
             
