@@ -156,7 +156,7 @@ def reporte(page: ft.Page):
             ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Horas 35%")),
             ft.DataColumn(ft.Text("Horas 100%")),
-            ft.DataColumn(ft.Text("Comentario")),
+            ft.DataColumn(ft.Text("Nocturnas")),
         ]
         
         rows = [
@@ -167,7 +167,7 @@ def reporte(page: ft.Page):
                     ft.DataCell(ft.Text(reg[2])),  # Nombre
                     ft.DataCell(ft.Text(reg[3])),  # Horas 35
                     ft.DataCell(ft.Text(reg[4])),  # Horas 100
-                    ft.DataCell(ft.Text(reg[5])),  # Comentario
+                    ft.DataCell(ft.Text(reg[5])),  # Nocturnas
                 ],
             ) for reg in registros
         ]
@@ -250,11 +250,9 @@ def reporte(page: ft.Page):
                 )
             elements = []
             
-            # Estilo de párrafos para comentarios
+            # Estilo de párrafos
             estilos = getSampleStyleSheet()
-            estilo_comentarios = estilos["BodyText"]
-            estilo_comentarios.wordWrap = 'CJK'  # Permite ajuste de texto
-            estilo_comentarios.alignment = TA_CENTER  # Centra el texto
+            
             
             # Agrupar por empleado
             registros.sort(key=itemgetter(2))
@@ -264,12 +262,13 @@ def reporte(page: ft.Page):
                 # Calcular totales
                 total_horas_35 = sumar_tiempo([reg[3] for reg in datos_empleado])
                 total_horas_100 = sumar_tiempo([reg[4] for reg in datos_empleado])
+                total_horas_noc = sumar_tiempo([reg[5] for reg in datos_empleado])
                 
                 # Nombre para mostrar en la fila de totales
                 Nombre_total = datos_empleado[0][2]
                 
                 # Encabezados
-                encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Destino/Comentario']]
+                encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Nocturnas']]
                 
                 def convertir_formato_fecha_para_tablas(fecha_str):
                     """Convierte fecha de YYYY-MM-DD a YYYYMMM-DD"""
@@ -292,11 +291,11 @@ def reporte(page: ft.Page):
                         reg[2],  # Nombre
                         reg[3],  # Horas 35%
                         reg[4],  # Horas 100%
-                        Paragraph(reg[5], estilo_comentarios),  # Comentario como párrafo
+                        reg[5],  # Nocturnas
                     ]
                     for reg in datos_empleado
                 ]
-                datos.append(['TOTAL', '', Nombre_total, total_horas_35, total_horas_100, ''])
+                datos.append(['TOTAL', '', Nombre_total, total_horas_35, total_horas_100, total_horas_noc])
                 
                 tabla_data = encabezados + datos
                 # Después de crear tabla_data, definir anchos de columna
@@ -314,18 +313,14 @@ def reporte(page: ft.Page):
                 
                 # Estilo tabla
                 estilo = TableStyle([
-                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                    ('FONTSIZE', (0, 0), (-1, 0), 12),
-                    ('BOTTOMPADDING', (0, 0), (-1, -1), 8),  # Padding inferior
-                    ('TOPPADDING', (0, 0), (-1, -1), 8),     # Padding superior
-                    ('ROWHEIGHT', (0, 0), (-1, -1), 5),  # Define altura mínima de las filas
-                    ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),
-                    ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
-                    ('WORDWRAP', (0, 0), (-1, -1), True),     # Wrap automático
-                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),   # Alineación vertical
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Encabezados en negrita
+                ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),  # Totales en negrita
+                ('FONTSIZE', (0, 0), (-1, -1), 10),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # Fondo gris para encabezados
+                ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),  # Fondo gris para totales
+                
                 ])
                 tabla.setStyle(estilo)
                 

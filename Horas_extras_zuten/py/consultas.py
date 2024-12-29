@@ -107,7 +107,7 @@ def validar_formato_hora(hora_str):
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-def insertar_horas(fecha, codigo, nombre, horas_35, horas_100, destino):
+def insertar_horas(fecha, codigo, nombre, horas_35, horas_100, nocturnas):
     """Inserta registro en tabla Horas"""
     conn = connect_to_database()
     if conn:
@@ -115,14 +115,15 @@ def insertar_horas(fecha, codigo, nombre, horas_35, horas_100, destino):
             # Validar formato de horas
             h35 = validar_formato_hora(horas_35)
             h100 = validar_formato_hora(horas_100)
-            if not h35 or not h100:
+            hnoc = validar_formato_hora(nocturnas)
+            if not h35 or not h100 or not hnoc:
                 return False
 
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO Horas (Fecha, Codigo, Nombre, Horas_35, Horas_100, Destino_Comentario)
+                INSERT INTO Horas (Fecha, Codigo, Nombre, Horas_35, Horas_100, Nocturnas)
                 VALUES (?, ?, ?, ?, ?, ?)
-            """, (fecha, codigo, nombre, h35, h100, destino))
+            """, (fecha, codigo, nombre, h35, h100, hnoc))
             conn.commit()
             return True
         except sqlite3.Error as e:
@@ -130,7 +131,6 @@ def insertar_horas(fecha, codigo, nombre, horas_35, horas_100, destino):
             return False
         finally:
             conn.close()
-    return False
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_codigo_por_nombre(nombre):
@@ -158,7 +158,7 @@ def get_horas_por_fecha_tabla(fecha_inicio, fecha_fin):
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Destino_Comentario 
+                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Nocturnas 
                 FROM Horas 
                 WHERE Fecha BETWEEN ? AND ? 
                 ORDER BY Fecha DESC, Codigo ASC
@@ -180,7 +180,7 @@ def get_horas_por_fecha_pdf(fecha_inicio, fecha_fin):
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Destino_Comentario 
+                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Nocturnas 
                 FROM Horas 
                 WHERE Fecha BETWEEN ? AND ? 
                 ORDER BY Fecha DESC, Codigo ASC
@@ -201,7 +201,7 @@ def get_ultimos_registros():
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Destino_Comentario 
+                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Nocturnas 
                 FROM Horas 
                 ORDER BY Fecha DESC, Codigo ASC 
                 LIMIT 15
@@ -214,7 +214,7 @@ def get_ultimos_registros():
     return registros
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-def actualizar_registro(fecha_original, codigo, nueva_fecha, horas_35, horas_100, comentario, horas_35_original, horas_100_original):
+def actualizar_registro(fecha_original, codigo, nueva_fecha, horas_35, horas_100, nocturnas, horas_35_original, horas_100_original, nocturnas_original):
     """Actualiza un registro específico de horas"""
     conn = connect_to_database()
     if conn:
@@ -222,13 +222,18 @@ def actualizar_registro(fecha_original, codigo, nueva_fecha, horas_35, horas_100
             cursor = conn.cursor()
             cursor.execute("""
                 UPDATE Horas 
-                SET Fecha = ?, Horas_35 = ?, Horas_100 = ?, Destino_Comentario = ?
+                SET Fecha = ?, 
+                    Horas_35 = ?, 
+                    Horas_100 = ?, 
+                    Nocturnas = ?
                 WHERE Fecha = ? 
                 AND Codigo = ? 
                 AND Horas_35 = ?
                 AND Horas_100 = ?
-            """, (nueva_fecha, horas_35, horas_100, comentario, 
-                  fecha_original, codigo, horas_35_original, horas_100_original))
+                AND Nocturnas = ?
+            """, (nueva_fecha, horas_35, horas_100, nocturnas, 
+                  fecha_original, codigo, horas_35_original, 
+                  horas_100_original, nocturnas_original))
             conn.commit()
             return True
         except sqlite3.Error as e:

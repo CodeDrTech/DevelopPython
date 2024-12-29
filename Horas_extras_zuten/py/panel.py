@@ -26,7 +26,7 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Horas 35%     ")),
             ft.DataColumn(ft.Text("Horas 100%     ")),
-            ft.DataColumn(ft.Text("Comentario")),
+            ft.DataColumn(ft.Text("Nocturnas")),
             ft.DataColumn(ft.Text("Editar")),
         ]
         
@@ -226,7 +226,7 @@ def main(page: ft.Page):
     txt_codigo = ft.Ref[ft.TextField]()
     txt_hora35 = ft.Ref[ft.TextField]()
     txt_hora100 = ft.Ref[ft.TextField]()
-    txt_comentario = ft.Ref[ft.TextField]()
+    txt_nocturnas = ft.Ref[ft.TextField]()
     def agregar_horas(e):
         try:
             #nonlocal nombre_seleccionado
@@ -235,7 +235,7 @@ def main(page: ft.Page):
             nombre = nombre_seleccionado
             hora35 = txt_hora35.current.value
             hora100 = txt_hora100.current.value
-            comentario = txt_comentario.current.value
+            nocturnas = txt_nocturnas.current.value
 
             # Validate hours format
             valido35, mensaje35 = validar_entrada_hora(hora35)
@@ -247,13 +247,18 @@ def main(page: ft.Page):
             if not valido100:
                 open_dlg_modal(e, f"Error en Hora 100%: {mensaje100}")
                 return
+            
+            validonoc, mensajenoc = validar_entrada_hora(nocturnas)
+            if not validonoc:
+                open_dlg_modal(e, f"Error en Hora nocturnas: {mensajenoc}")
+                return
 
-            if not fecha or not codigo or not nombre or not comentario or (not hora35 and not hora100):
+            if not fecha or not codigo or not nombre or (not hora35 and not hora100 and not nocturnas):
                 open_dlg_modal(e, "Complete los campos obligatorios")
 
             else:
                 # Llama a la función de queries
-                insertar_horas(fecha, codigo, nombre, hora35, hora100, comentario)
+                insertar_horas(fecha, codigo, nombre, hora35, hora100, nocturnas)
 
                 # Mostrar mensaje de éxito
                 show_snackbar("¡Hora agregada exitosamente!")
@@ -266,7 +271,7 @@ def main(page: ft.Page):
             
                 txt_hora35.current.value = ""
                 txt_hora100.current.value = ""
-                txt_comentario.current.value = ""
+                txt_nocturnas.current.value = ""
                 page.update()
 
         except Exception as error:
@@ -301,13 +306,25 @@ def main(page: ft.Page):
         def save_changes(e):
             try:
                 nueva_fecha = txt_edit_fecha.current.value
-                nuevas_horas35 = format_hour_for_db(txt_edit_horas35.current.value)
-                nuevas_horas100 = format_hour_for_db(txt_edit_horas100.current.value)
-                nuevo_comentario = txt_edit_comentario.current.value
-                
-                # Obtenemos valores originales de registro_data
-                horas_35_original = registro_data[3]  # Índice 3 para Horas_35
-                horas_100_original = registro_data[4]  # Índice 4 para Horas_100
+                nuevas_horas35 = txt_edit_horas35.current.value
+                nuevas_horas100 = txt_edit_horas100.current.value
+                nuevas_nocturnas = txt_edit_nocturnas.current.value
+
+                # Validate all hour fields
+                valido35, mensaje35 = validar_entrada_hora(nuevas_horas35)
+                if not valido35:
+                    open_dlg_modal(e, f"Hora 35%: {mensaje35}")
+                    return
+                    
+                valido100, mensaje100 = validar_entrada_hora(nuevas_horas100)
+                if not valido100:
+                    open_dlg_modal(e, f"Hora 100%: {mensaje100}")
+                    return
+                    
+                validonoc, mensajenoc = validar_entrada_hora(nuevas_nocturnas)
+                if not validonoc:
+                    open_dlg_modal(e, f"Horas Nocturnas: {mensajenoc}")
+                    return
 
                 if actualizar_registro(
                     registro_data[0],  # fecha original
@@ -315,24 +332,26 @@ def main(page: ft.Page):
                     nueva_fecha,
                     nuevas_horas35,
                     nuevas_horas100,
-                    nuevo_comentario,
-                    horas_35_original,
-                    horas_100_original
+                    nuevas_nocturnas,
+                    registro_data[3],  # horas_35 original
+                    registro_data[4],  # horas_100 original
+                    registro_data[5]   # nocturnas original
                 ):
                     # Actualizar tabla
                     registros = get_ultimos_registros()
                     tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado"), duration=3000))
-                    close_dlg(e)
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado")))
+                    edit_dialog.open = False
+                    page.update()
                 else:
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar"), duration=3000))
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar")))
             except Exception as error:
-                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}"), duration=3000))
+                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}")))
 
         txt_edit_fecha = ft.Ref[ft.TextField]()
         txt_edit_horas35 = ft.Ref[ft.TextField]()
         txt_edit_horas100 = ft.Ref[ft.TextField]()
-        txt_edit_comentario = ft.Ref[ft.TextField]()
+        txt_edit_nocturnas = ft.Ref[ft.TextField]()
 
         edit_dialog = ft.AlertDialog(
             modal=True,
@@ -346,6 +365,15 @@ def main(page: ft.Page):
                 ),
                 ft.TextField(
                     ref=txt_edit_horas35,
+                    label="Nocturnas",
+                    value=registro_data[5],
+                    width=320,
+                    max_length=4,
+                    input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
+                    on_change=format_hora
+                ),
+                ft.TextField(
+                    ref=txt_edit_horas100,
                     label="Horas 35%",
                     value=registro_data[3],
                     width=320,
@@ -354,22 +382,13 @@ def main(page: ft.Page):
                     on_change=format_hora
                 ),
                 ft.TextField(
-                    ref=txt_edit_horas100,
+                    ref=txt_edit_nocturnas,
                     label="Horas 100%",
                     value=registro_data[4],
                     width=320,
                     max_length=4,
                     input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
-                    on_change=format_hora
-                ),
-                ft.TextField(
-                    ref=txt_edit_comentario,
-                    label="Comentario",
-                    value=registro_data[5],
-                    multiline=True,
-                    max_length=90,
-                    capitalization=ft.TextCapitalization.CHARACTERS,
-                    width=320
+                    on_change=format_hora                    
                 ),
             ]),
             actions=[
@@ -416,16 +435,16 @@ def main(page: ft.Page):
                             auto_complete_container,
                         ]),
                         ft.Row([
+                            ft.Text("Nocturna:", width=100),
+                            ft.TextField(width=320, ref=txt_nocturnas, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
                             ft.Text("Hora 35%:", width=100),
                             ft.TextField(width=320, ref=txt_hora35, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Hora 100%:", width=100),
                             ft.TextField(width=320, ref=txt_hora100, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
-                        ]),
-                        ft.Row([
-                            ft.Text("Destino/Comentario:", width=100),
-                            ft.TextField(width=320, multiline=True, max_length=90, ref=txt_comentario, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.CHARACTERS),
                         ]),
                         ft.Row([
                         ft.Text(" ", width=100),
