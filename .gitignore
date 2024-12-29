@@ -9,8 +9,18 @@ Contratos/pyvenv.cfg
 Horas_extras/HorasExtras.db
 Horas_extras/Empleados.xlsm
 Horas_extras/imagenes/Logo.png
+Horas_extras/*.txt
+Horas_extras/*.pyc
 venv/
 .env
+
+# Horas extras zuten
+Horas_extras_zuten/HorasExtras_zuten.db
+Horas_extras_zuten/Empleados.xlsm
+Horas_extras_zuten/imagenes/Logo.png
+Horas_extras_zuten/*.txt
+Horas_extras_zuten/*.pyc
+
 
 
 # Archivos sensibles de Contratos_Flet
