@@ -304,7 +304,7 @@ def reporte(page: ft.Page):
                     tabla_data,
                     colWidths=[
                         0.9*inch,     # Fecha
-                        0.5*inch,     # Código
+                        0.6*inch,     # Código
                         3*inch,       # Nombre
                         0.8*inch,     # Horas 35%
                         1.2*inch,     # Horas 100%
@@ -318,7 +318,7 @@ def reporte(page: ft.Page):
                     ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
                     ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
                     ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                    ('FONTSIZE', (0, 0), (-1, 0), 12),
+                    ('FONTSIZE', (0, 0), (-1, 0), 10),
                     ('BOTTOMPADDING', (0, 0), (-1, -1), 8),  # Padding inferior
                     ('TOPPADDING', (0, 0), (-1, -1), 8),     # Padding superior
                     ('ROWHEIGHT', (0, 0), (-1, -1), 5),  # Define altura mínima de las filas
@@ -326,6 +326,7 @@ def reporte(page: ft.Page):
                     ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
                     ('WORDWRAP', (0, 0), (-1, -1), True),     # Wrap automático
                     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),   # Alineación vertical
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Add grid lines
                 ])
                 tabla.setStyle(estilo)
                 
