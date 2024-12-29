@@ -301,13 +301,23 @@ def main(page: ft.Page):
         def save_changes(e):
             try:
                 nueva_fecha = txt_edit_fecha.current.value
-                nuevas_horas35 = format_hour_for_db(txt_edit_horas35.current.value)
-                nuevas_horas100 = format_hour_for_db(txt_edit_horas100.current.value)
+                nuevas_horas35 = txt_edit_horas35.current.value
+                nuevas_horas100 = txt_edit_horas100.current.value
                 nuevo_comentario = txt_edit_comentario.current.value
                 
                 # Obtenemos valores originales de registro_data
                 horas_35_original = registro_data[3]  # Índice 3 para Horas_35
                 horas_100_original = registro_data[4]  # Índice 4 para Horas_100
+                
+                valido35, mensaje35 = validar_entrada_hora(nuevas_horas35)
+                if not valido35:
+                    open_dlg_modal(e, f"Hora 35%: {mensaje35}")
+                    return
+                    
+                valido100, mensaje100 = validar_entrada_hora(nuevas_horas100)
+                if not valido100:
+                    open_dlg_modal(e, f"Hora 100%: {mensaje100}")
+                    return
 
                 if actualizar_registro(
                     registro_data[0],  # fecha original
