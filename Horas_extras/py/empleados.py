@@ -3,7 +3,7 @@ from flet import ScrollMode
 from consultas import get_empleados, importar_empleados_desde_excel, get_primeros_10_empleados
 from tkinter import filedialog
 import tkinter as tk
-import os
+import os, sys
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def crear_tabla_empleados():
@@ -86,31 +86,52 @@ def Empleados(page: ft.Page):
         carga_modal.open = False  # Cierra el diálogo
         page.update()  # Actualiza la UI para cerrar el diálogo
         
-        # Obtener la ruta del directorio raíz del proyecto
-        ruta_proyecto = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        archivo = os.path.join(ruta_proyecto, "Empleados.xlsm") # Ruta del archivo Excel
-        
-        if os.path.exists(archivo):  # Verificar que el archivo exista
-            if importar_empleados_desde_excel(archivo):
-                # Actualizar la lista de empleados
-                empleados_data = get_empleados()
-                suggestions = [
-                    ft.AutoCompleteSuggestion(key=emp, value=emp) 
-                    for emp in empleados_data
-                ]
-                auto_complete.suggestions = suggestions
-                page.update()
-                page.show_snack_bar(
-                    ft.SnackBar(content=ft.Text("Empleados importados correctamente"), duration=3000)
+        try:
+            # Obtener la ruta base según el contexto (ejecutable o script)
+            if hasattr(sys, "_MEIPASS"):
+                base_path = sys._MEIPASS # type: ignore
+            else:
+                base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            
+            # Ruta al archivo Excel en carpeta data
+            archivo = os.path.join(base_path, "data", "Empleados.xlsm")
 
-                )
+            if os.path.exists(archivo):
+                if importar_empleados_desde_excel(archivo):
+                    # Actualizar la lista de empleados
+                    empleados_data = get_empleados()
+                    suggestions = [
+                        ft.AutoCompleteSuggestion(key=emp, value=emp) 
+                        for emp in empleados_data
+                    ]
+                    auto_complete.suggestions = suggestions
+                    page.update()
+                    page.show_snack_bar(
+                        ft.SnackBar(
+                            content=ft.Text("Empleados importados correctamente"), 
+                            duration=3000
+                        )
+                    )
+                else:
+                    page.show_snack_bar(
+                        ft.SnackBar(
+                            content=ft.Text("Error al importar empleados"), 
+                            duration=3000
+                        )
+                    )
             else:
                 page.show_snack_bar(
-                    ft.SnackBar(content=ft.Text("Error al importar empleados"), duration=3000)
+                    ft.SnackBar(
+                        content=ft.Text("Archivo Excel no encontrado"), 
+                        duration=3000
+                    )
                 )
-        else:
+        except Exception as e:
             page.show_snack_bar(
-                ft.SnackBar(content=ft.Text("Archivo Excel no encontrado en la ruta predeterminada"), duration=3000)
+                ft.SnackBar(
+                    content=ft.Text(f"Error: {str(e)}"), 
+                    duration=3000
+                )
             )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

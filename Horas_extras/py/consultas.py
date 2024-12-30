@@ -1,5 +1,5 @@
 import pandas as pd
-from database import connect_to_database
+from database import connect_to_database, DATABASE_URL
 import sqlite3
 import os
 from dotenv import load_dotenv
@@ -55,24 +55,23 @@ def importar_empleados_desde_excel(ruta_archivo):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_empleados():
-    """Obtiene la lista de empleados de la base de datos."""
-    database_url = os.getenv("DATABASE_URL")
-    if not os.path.exists(database_url):
+    """Obtiene lista de empleados desde la base de datos"""
+    if not os.path.exists(DATABASE_URL):
+        print(f"Base de datos no encontrada en: {DATABASE_URL}")
         return []
         
     conn = connect_to_database()
-    empleados = []
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT Nombre FROM Empleados") 
-            rows = cursor.fetchall()
-            empleados = [row[0] for row in rows]
+            cursor.execute('SELECT Nombre FROM Empleados ORDER BY Nombre')
+            return [row[0] for row in cursor.fetchall()]
         except sqlite3.Error as e:
-            print(f"Error al obtener empleados: {e}")
+            print(f"Error consultando empleados: {e}")
+            return []
         finally:
             conn.close()
-    return empleados
+    return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_primeros_10_empleados():
