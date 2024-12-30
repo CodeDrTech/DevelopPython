@@ -1,8 +1,6 @@
 import flet as ft
 from flet import ScrollMode
 from consultas import get_empleados, importar_empleados_desde_excel, get_primeros_10_empleados
-from tkinter import filedialog
-import tkinter as tk
 import os
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

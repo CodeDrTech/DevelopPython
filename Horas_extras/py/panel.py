@@ -1,4 +1,3 @@
-from turtle import bgcolor
 import flet as ft
 from flet import ScrollMode, AppView
 import datetime, calendar
