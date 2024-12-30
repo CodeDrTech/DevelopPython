@@ -302,12 +302,12 @@ def reporte(page: ft.Page):
                 tabla = Table(
                     tabla_data,
                     colWidths=[
-                        0.9*inch,     # Fecha
+                        1*inch,     # Fecha
                         0.6*inch,     # Código
-                        3*inch,       # Nombre
+                        3.5*inch,       # Nombre
                         0.8*inch,     # Horas 35%
                         1.2*inch,     # Horas 100%
-                        3.4*inch      # Comentario
+                        1.5*inch      # Comentario
                     ])
 
                 
@@ -349,16 +349,16 @@ def reporte(page: ft.Page):
                 # Título alineado a la derecha
                 fecha_inicio_formato = convertir_formato_fecha(fecha_inicio)
                 fecha_fin_formato = convertir_formato_fecha(fecha_fin)
-                canvas.drawRightString(750, 580, f"Reporte del: {fecha_inicio_formato} al {fecha_fin_formato}")
+                canvas.drawRightString(700, 550, f"Reporte del: {fecha_inicio_formato} al {fecha_fin_formato}")
                 
                 # Logo alineado a la izquierda
                 if os.path.exists(logo_path):
-                    canvas.drawImage(logo_path, 50, 520, width=1.5*inch, height=1*inch)
+                    canvas.drawImage(logo_path, 100, 520, width=2.5*inch, height=2*inch)
                 
                 canvas.restoreState()
         
             # Crear template de página con encabezado
-            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 0.7 * inch, id='normal')
+            frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 0.6 * inch, id='normal')
             template = PageTemplate(id='encabezado', frames=frame, onPage=encabezado)
             doc.addPageTemplates([template])
             
