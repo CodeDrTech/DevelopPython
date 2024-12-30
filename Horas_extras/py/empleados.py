@@ -87,11 +87,10 @@ def Empleados(page: ft.Page):
         page.update()  # Actualiza la UI para cerrar el diálogo
         
         try:
-            # Obtener la ruta base según el contexto (ejecutable o script)
-            if hasattr(sys, "_MEIPASS"):
-                base_path = sys._MEIPASS # type: ignore
-            else:
-                base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            # Obtener ruta al directorio data
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            archivo = os.path.join(base_path, "data", "Empleados.xlsm")
+
             
             # Ruta al archivo Excel en carpeta data
             archivo = os.path.join(base_path, "data", "Empleados.xlsm")
