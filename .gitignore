@@ -11,9 +11,11 @@ Horas_extras/data/Empleados.xlsm
 Horas_extras/imagenes/Logo.png
 Horas_extras/*.txt
 Horas_extras/*.pyc
-Horas_extras/Ejecutable/
+Horas_extras/build/
+Horas_extras/dist/
 venv/
 .env
+panel.spec
 
 # Horas extras zuten
 Horas_extras_zuten/HorasExtras_zuten.db
