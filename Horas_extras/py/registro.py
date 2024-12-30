@@ -8,7 +8,7 @@ from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_
 def registro(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
-    page.window.width = 1250
+    page.window.width = 700
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
@@ -291,6 +291,18 @@ def registro(page: ft.Page):
             reporte(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Cambiar tamaño de ventana según tab seleccionado
+    def cambio_tamano(e):
+        if mainTab.selected_index == 0:
+            page.window.width = 700
+            page.window.height = 700
+            page.update()
+        else:
+            page.window.width = 1250
+            page.window.height = 700
+            page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
     def on_edit_click(registro_data):
@@ -404,7 +416,8 @@ def registro(page: ft.Page):
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,        
+        expand=True,
+        on_change=cambio_tamano,        
         # Contenedor de tabs
         tabs=[
             ft.Tab(
