@@ -305,10 +305,10 @@ def reporte(page: ft.Page):
                     colWidths=[
                         0.9*inch,     # Fecha
                         0.6*inch,     # Código
-                        3*inch,       # Nombre
+                        3.5*inch,       # Nombre
                         0.8*inch,     # Horas 35%
                         1.2*inch,     # Horas 100%
-                        3.5*inch      # Comentario
+                        3*inch      # Comentario
                     ])
 
                 
