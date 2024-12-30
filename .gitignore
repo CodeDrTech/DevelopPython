@@ -67,6 +67,7 @@ Ventas\ Selact/6-Send_mail_no_dev*
 Ventas\ Selact/*.xlsx
 Ventas\ Selact/*.xlsm
 Ventas\ Selact/*.db
+Ventas\ Selact/*.png
 
 # Carpetas de sistema y configuración
 .vscode/
