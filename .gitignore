@@ -11,6 +11,7 @@ Horas_extras/Empleados.xlsm
 Horas_extras/imagenes/Logo.png
 Horas_extras/*.txt
 Horas_extras/*.pyc
+Horas_extras/Ejecutable/
 venv/
 .env
 
@@ -20,6 +21,7 @@ Horas_extras_zuten/Empleados_zuten.xlsm
 Horas_extras_zuten/imagenes/Logo.png
 Horas_extras_zuten/*.txt
 Horas_extras_zuten/*.pyc
+Horas_extras_zuten/Ejecutable/
 
 
 
