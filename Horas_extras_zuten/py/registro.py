@@ -8,8 +8,8 @@ from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_
 def registro(page: ft.Page):
     page.title = "Horas Extras"
     page.window.alignment = ft.alignment.center
-    page.window.width = 700
-    page.window.height = 700
+    page.window.width = 600
+    page.window.height = 650
     page.window.resizable = False
     page.padding = 20
     page.scroll = ScrollMode.ADAPTIVE
@@ -299,8 +299,8 @@ def registro(page: ft.Page):
     # Cambiar tamaño de ventana según tab seleccionado
     def cambio_tamano(e):
         if mainTab.selected_index == 0:
-            page.window.width = 700
-            page.window.height = 700
+            page.window.width = 600
+            page.window.height = 650
             page.update()
         else:
             page.window.width = 1250
