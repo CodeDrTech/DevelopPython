@@ -6,6 +6,17 @@ import os, sys
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def crear_tabla_empleados():
+    """
+    Crea y retorna un DataTable con los primeros 10 empleados.
+    La tabla contiene las siguientes columnas:
+    - Código: El código del empleado.
+    - Nombre: El nombre del empleado.
+    Las filas de la tabla se generan a partir de los datos de los primeros 10 empleados obtenidos 
+    mediante la función `get_primeros_10_empleados`.
+    Returns:
+        ft.DataTable: Un objeto DataTable con las columnas y filas definidas, y con estilos de borde 
+        y líneas verticales y horizontales.
+    """
     """Crea y retorna un DataTable con los primeros 10 empleados"""
     empleados = get_primeros_10_empleados()
     
@@ -34,8 +45,16 @@ def crear_tabla_empleados():
         horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
         show_checkbox_column=True,
     )
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def actualizar_tabla(tabla_empleados):
+    """
+    Actualiza los datos de la tabla de empleados.
+    Args:
+        tabla_empleados (ft.DataTable): La tabla de empleados que se actualizará.
+    Returns:
+        None
+    """
     """Actualiza los datos de la tabla de empleados"""
     empleados = get_primeros_10_empleados()
     
@@ -66,8 +85,14 @@ def Empleados(page: ft.Page):
     tabla_empleados = crear_tabla_empleados()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Función para ejecutar si seleccionas "No"
+    
     def on_cancel(e):
+        """
+        Función para ejecutar si se cancela la importación de empleados.
+        
+        Cierra el diálogo de carga y muestra un SnackBar con un mensaje 
+        indicando que no se importaron empleados.
+        """
         carga_modal.open = False  # Cierra el diálogo
         # Mostrar SnackBar
         snackbar = ft.SnackBar(
@@ -80,6 +105,26 @@ def Empleados(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def importar_excel(e):
+        """
+        Importar empleados desde un archivo Excel ubicado en una ruta fija y mostrar mensajes de SnackBar durante el proceso.
+        Args:
+            e: Evento que dispara la función (no utilizado en el cuerpo de la función).
+        Funcionalidad:
+            - Cierra el diálogo modal de carga.
+            - Muestra un mensaje inicial indicando el inicio de la importación.
+            - Verifica la existencia del archivo Excel en la ruta especificada.
+            - Si el archivo existe:
+                - Muestra un mensaje indicando que el archivo fue encontrado.
+                - Intenta importar los empleados desde el archivo Excel.
+                - Si la importación es exitosa:
+                    - Actualiza la lista de empleados y las sugerencias de autocompletado.
+                    - Muestra un mensaje de éxito.
+                - Si la importación falla:
+                    - Muestra un mensaje de error.
+            - Si el archivo no existe:
+                - Muestra un mensaje indicando que el archivo no fue encontrado.
+            - Captura y muestra cualquier excepción que ocurra durante el proceso.
+        """
         """Importar empleados desde una ruta fija con mensajes de SnackBar."""
         carga_modal.open = False  # Cierra el diálogo
         page.update()  # Actualiza la UI para cerrar el diálogo
@@ -148,8 +193,6 @@ def Empleados(page: ft.Page):
                     duration=3000
                 )
             )
-
-
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Crear el diálogo de confirmación
@@ -165,6 +208,12 @@ def Empleados(page: ft.Page):
 
     # Botón para mostrar el diálogo
     def show_carga_modal(e):
+        """
+        Muestra el diálogo de confirmación para importar empleados desde Excel.
+        
+        Args:
+            e: Evento que dispara la función (no utilizado en el cuerpo de la función).
+        """
         page.dialog = carga_modal
         carga_modal.open = True
         page.update()
@@ -192,8 +241,14 @@ def Empleados(page: ft.Page):
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
+    
     def tab_registro(e):
+            """
+            Maneja el evento de cambio de tab a "Registro".
+
+            Limpia la página actual y llama a la función registro desde el módulo registro.py, la
+            cual imprime los controles y la tabla de registro en la página actual.
+            """
             page.clean()
 
             # Importamos y ejecutamos la función y sus controles en la página actual

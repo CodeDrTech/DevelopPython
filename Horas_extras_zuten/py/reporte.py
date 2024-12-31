@@ -2,6 +2,7 @@ import flet as ft
 from flet import ScrollMode
 from consultas import get_horas_por_fecha_pdf, get_horas_por_fecha_tabla
 import os, datetime, calendar
+from database import get_base_dir
 
 from datetime import timedelta
 from reportlab.lib import colors
@@ -28,8 +29,14 @@ def reporte(page: ft.Page):
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
+    
     def tab_registro(e):
+            """
+            Maneja el evento de cambio de tab a "Registro".
+
+            Limpia la página actual y llama a la función registro desde el módulo registro.py, la
+            cual imprime los controles y la tabla de registro en la página actual.
+            """
             page.clean()
 
             # Importamos y ejecutamos la función y sus controles en la página actual
@@ -37,13 +44,24 @@ def reporte(page: ft.Page):
             registro(page)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
-    # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
+    
     def open_dlg_modal(e):
+        """
+        Opens a modal dialog by appending it to the page overlay and setting its open attribute to True.
+
+        Args:
+            e: The event object that contains the control and page information.
+        """
         e.control.page.overlay.append(dlg_modal)
         dlg_modal.open = True
         e.control.page.update()
         
     def close_dlg(e):
+        """
+        Cierra el diálogo modal.
+
+        :param e: Instancia de la clase Principal.
+        """
         dlg_modal.open = False
         e.control.page.update()
 
@@ -68,6 +86,11 @@ def reporte(page: ft.Page):
     nombre_seleccionado = None
     
     def show_snackbar(mensaje):
+        """
+        Muestra un mensaje en una SnackBar en la parte inferior de la pantalla.
+
+        :param mensaje: El mensaje a mostrar en la SnackBar.
+        """
         if not page.snack_bar:
             page.snack_bar = ft.SnackBar(content=ft.Text(mensaje))
         else:
@@ -99,21 +122,39 @@ def reporte(page: ft.Page):
         fecha_actual2 = fecha_actual2.replace(day=15)
     else:
         fecha_actual2 = fecha_actual2.replace(day=30)
-
-    # Función para mostrar el DatePicker del primer TextField
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     def mostrar_datepicker(e):
+        """
+        Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
+        """
         page.overlay.append(date_picker_dialog1)
         date_picker_dialog1.open = True
         page.update()
 
-    # Función para mostrar el DatePicker del segundo TextField
+    
     def mostrar_datepicker2(e):
+        """
+        Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
+
+        Es llamada cuando se hace clic en el icono de calendario del segundo
+        TextField.
+        """
         page.overlay.append(date_picker_dialog2)
         date_picker_dialog2.open = True
         page.update()
 
-    # Función para seleccionar la fecha del primer TextField
+    
     def seleccionar_fecha1(e):
+        """
+        Selecciona una fecha desde el DatePicker y actualiza el texto en el primer
+        campo de texto con la fecha seleccionada en formato "YYYY-MM-DD".
+        Luego cierra el diálogo del DatePicker.
+
+        Args:
+            e: El evento que contiene la información del control asociado.
+        """
         fecha_seleccionada = date_picker_dialog1.value
         if fecha_seleccionada:
             fecha_solo = fecha_seleccionada.date()
@@ -121,8 +162,16 @@ def reporte(page: ft.Page):
             date_picker_dialog1.open = False
             page.update()
 
-    # Función para seleccionar la fecha del segundo TextField
+    
     def seleccionar_fecha2(e):
+        """
+        Selecciona una fecha desde el DatePicker y actualiza el texto en el segundo
+        campo de texto con la fecha seleccionada en formato "YYYY-MM-DD".
+        Luego cierra el diálogo del DatePicker.
+
+        Args:
+            e: El evento que contiene la información del control asociado.
+        """
         fecha_seleccionada = date_picker_dialog2.value
         if fecha_seleccionada:
             fecha_solo = fecha_seleccionada.date()
@@ -149,6 +198,19 @@ def reporte(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_horas(registros):
+        """
+        Crea una tabla de datos con registros de horas extras.
+        Args:
+            registros (list of tuple): Una lista de tuplas, donde cada tupla contiene los siguientes elementos:
+                - Fecha (str): La fecha del registro.
+                - Código (int): El código del empleado.
+                - Nombre (str): El nombre del empleado.
+                - Horas 35% (str): Las horas trabajadas al 35%.
+                - Horas 100% (str): Las horas trabajadas al 100%.
+                - Comentario (str): Comentarios adicionales.
+        Returns:
+            ft.DataTable: Un objeto DataTable que contiene los registros de horas extras.
+        """
         """Crea DataTable con registros de horas"""
         columns = [
             ft.DataColumn(ft.Text("Fecha")),
@@ -180,9 +242,22 @@ def reporte(page: ft.Page):
             vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_400, 1.0),
             horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),            
         )
-    # Contenedor para la tabla
+    
+    
     tabla_container = ft.Container(content=crear_tabla_horas([]))
     def actualizar_tabla(e):
+        """
+        Actualiza la tabla de registros de horas extras según el rango de fechas seleccionado.
+
+        Args:
+            e: El evento que desencadena la actualización.
+
+        La función obtiene las fechas de inicio y fin seleccionadas por el usuario. 
+        Si la fecha de inicio es mayor que la fecha de fin, muestra un mensaje de error 
+        y sale de la función. Si las fechas son válidas, obtiene los registros de horas 
+        extras correspondientes al rango de fechas y actualiza el contenido de la tabla 
+        en la interfaz de usuario.
+        """
         fecha_inicio = txt_fecha1.current.value
         fecha_fin = txt_fecha2.current.value
 
@@ -199,6 +274,13 @@ def reporte(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def sumar_tiempo(horas):
+        """
+        Suma una lista de tiempos en formato HH:MM y devuelve el resultado como HH:MM.
+        Args:
+            horas (list of str): Lista de tiempos en formato HH:MM.
+        Returns:
+            str: El tiempo total sumado en formato HH:MM.
+        """
         """Suma una lista de tiempos en formato HH:MM y devuelve el resultado como HH:MM."""
         total_horas = 0
         total_minutos = 0
@@ -216,28 +298,68 @@ def reporte(page: ft.Page):
         return f"{total_horas:02}:{total_minutos:02}"
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def abrir_carpeta_reporte():
-        # Ruta donde se guarda el PDF
-        ruta_reporte = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reportes")
-        
-        # Asegurar que la carpeta existe
-        if not os.path.exists(ruta_reporte):
-            os.makedirs(ruta_reporte)
-        
-        # Abrir la carpeta en el explorador de Windows
-        os.startfile(ruta_reporte)
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def exportar_pdf(registros, fecha_inicio, fecha_fin):
-        """Exporta los registros a PDF agrupados por empleado"""
+    def abrir_carpeta_reporte(e):
+        """
+        Abre la carpeta de reportes en el explorador de Windows.
+        Este método intenta abrir una carpeta específica llamada "reportes" dentro del directorio base
+        obtenido por la función `get_base_dir()`. Si la carpeta no existe, se crea automáticamente.
+        Luego, se abre la carpeta en el explorador de archivos de Windows.
+        Args:
+            e: Evento que desencadena la acción (puede ser un evento de interfaz de usuario).
+        Raises:
+            Exception: Si ocurre un error al intentar abrir la carpeta, se captura y muestra un mensaje
+            de error en una snackbar.
+        """
+        """Abre la carpeta de reportes en el explorador"""
         try:
-            # Obtener directorio actual y construir ruta
-            directorio_actual = os.path.dirname(os.path.abspath(__file__))
-            directorio_reportes = os.path.join(os.path.dirname(directorio_actual), "reportes")
+            # Obtener directorio base y construir ruta
+            base_dir = get_base_dir()
+            directorio_reportes = os.path.join(base_dir, "reportes")
             
             # Crear directorio si no existe
             if not os.path.exists(directorio_reportes):
                 os.makedirs(directorio_reportes)
+                show_snackbar("Carpeta de reportes creada")
+            
+            # Abrir la carpeta en el explorador de Windows
+            os.startfile(directorio_reportes)
+            show_snackbar("Abriendo carpeta de reportes...")
+            
+        except Exception as error:
+            show_snackbar(f"Error al abrir carpeta: {str(error)}")
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def exportar_pdf(registros, fecha_inicio, fecha_fin):
+        """
+        Exporta los registros a un archivo PDF agrupados por empleado.
+        Args:
+            registros (list): Lista de registros donde cada registro es una lista con los siguientes elementos:
+                [fecha (str), código (str), nombre (str), horas_35 (str), horas_100 (str), comentario (str)].
+            fecha_inicio (str): Fecha de inicio del reporte en formato 'YYYY-MM-DD'.
+            fecha_fin (str): Fecha de fin del reporte en formato 'YYYY-MM-DD'.
+        Returns:
+            bool: True si el PDF se generó exitosamente, False en caso contrario.
+        Raises:
+            FileNotFoundError: Si el logo no se encuentra en la ruta especificada.
+            Exception: Cualquier otra excepción que ocurra durante la generación del PDF.
+        """
+        """Exporta los registros a PDF agrupados por empleado"""
+        try:
+            # Obtener directorio base y construir rutas
+            base_dir = get_base_dir()
+            directorio_reportes = os.path.join(base_dir, "reportes")
+            directorio_imagenes = os.path.join(base_dir, "imagenes")
+            
+            # Crear directorio si no existe
+            if not os.path.exists(directorio_reportes):
+                os.makedirs(directorio_reportes)
+                
+            # Ruta del logo
+            logo_path = os.path.join(directorio_imagenes, "Logo.png")
+            
+            # Verificar que existe el logo
+            if not os.path.exists(logo_path):
+                raise FileNotFoundError(f"Logo no encontrado en: {logo_path}")
             
             pdf_path = os.path.join(directorio_reportes, f'Reporte_{fecha_inicio}_{fecha_fin}.pdf')
             doc = SimpleDocTemplate(
@@ -271,6 +393,16 @@ def reporte(page: ft.Page):
                 encabezados = [['Fecha', 'Código', 'Nombre', 'Horas 35%', 'Horas 100%', 'Nocturnas']]
                 
                 def convertir_formato_fecha_para_tablas(fecha_str):
+                    """
+                    Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-MMM-YYYY'.
+
+                    Args:
+                        fecha_str (str): Fecha en formato 'YYYY-MM-DD'.
+
+                    Returns:
+                        str: Fecha en formato 'DD-MMM-YYYY' si la conversión es exitosa, 
+                             de lo contrario, devuelve la cadena original.
+                    """
                     """Convierte fecha de YYYY-MM-DD a YYYYMMM-DD"""
                     try:
                         fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
@@ -328,6 +460,16 @@ def reporte(page: ft.Page):
                 elements.append(Spacer(1, 30))
                 
             def convertir_formato_fecha(fecha_str):
+                """
+                Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-mes-YYYY'.
+
+                Args:
+                    fecha_str (str): Fecha en formato 'YYYY-MM-DD'.
+
+                Returns:
+                    str: Fecha en formato 'DD-mes-YYYY' con el mes en abreviatura de tres letras en español.
+                          Si la fecha no es válida, se devuelve el string original.
+                """
                 """Convierte fecha de YYYY-MM-DD a DD-mes-YYYY"""
                 try:
                     fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
@@ -340,9 +482,24 @@ def reporte(page: ft.Page):
                 except ValueError:
                     return fecha_str
             
-            # Definir encabezado con logo y título
+            
             def encabezado(canvas, doc):
-                logo_path = os.path.join(os.path.dirname(directorio_actual), "imagenes", "Logo.png")
+                """
+                Genera el encabezado para el reporte PDF.
+                Esta función agrega un título con el rango de fechas del reporte alineado a la derecha y un logo alineado a la izquierda.
+                Args:
+                    canvas (Canvas): El objeto canvas para dibujar.
+                    doc (Document): El objeto documento.
+                Variables:
+                    logo_path (str): La ruta del archivo de la imagen del logo.
+                    fecha_inicio_formato (str): La fecha de inicio del reporte formateada.
+                    fecha_fin_formato (str): La fecha de fin del reporte formateada.
+                Funciones:
+                    convertir_formato_fecha (function): Función para convertir el formato de la fecha.
+                Notas:
+                    Se espera que la imagen del logo esté ubicada en el directorio "imagenes" relativo al directorio de imágenes.
+                """
+                logo_path = os.path.join(os.path.dirname(directorio_imagenes), "imagenes", "Logo.png")
                 canvas.saveState()
                 canvas.setFont("Helvetica-Bold", 14)
                 
@@ -365,7 +522,7 @@ def reporte(page: ft.Page):
             # Generar PDF
             doc.build(elements)
             show_snackbar("Reporte PDF generado exitosamente")
-            abrir_carpeta_reporte()  # Abre la carpeta
+            abrir_carpeta_reporte(e=None)  # Abre la carpeta
             return True
             
         except Exception as e:
@@ -389,9 +546,7 @@ def reporte(page: ft.Page):
     mainTab = ft.Tabs(
         selected_index=1,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,
-
-        
+        expand=True,        
         # Contenedor de tabs
         tabs=[
             ft.Tab(

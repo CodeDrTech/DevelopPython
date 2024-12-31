@@ -18,7 +18,21 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
-    def crear_tabla_edicion(registros, on_edit_click):
+    def crear_tabla_edicion(registros, on_edit_click):        
+        """
+        Crea una tabla para editar los registros de horas
+        
+        Parameters
+        ----------
+        registros : list
+            Registros de horas a editar
+        on_edit_click : function
+            Función a llamar al hacer clic en el botón de editar
+        Returns
+        -------
+        ft.DataTable
+            Tabla con los registros de horas
+        """        
         columns = [
             ft.DataColumn(ft.Text("Fecha")),
             ft.DataColumn(ft.Text("Código")),
@@ -66,6 +80,19 @@ def main(page: ft.Page):
     
     nombre_seleccionado = None
     def on_autocomplete_selected(e):
+        """
+        Manejador de eventos para el AutoComplete
+        
+        Parameters
+        ----------
+        e : flet.event.Event
+            Evento lanzado al seleccionar un empleado en el AutoComplete
+        
+        Notes
+        -----
+        Este manejador cambia el valor del campo de texto "Código" con el código
+        correspondiente al empleado seleccionado en la base de datos.
+        """
         nonlocal nombre_seleccionado
         nombre_seleccionado = e.selection.value        
 
@@ -100,13 +127,20 @@ def main(page: ft.Page):
     # Inicializa la fecha actual y crea un texto para mostrar la fecha seleccionada.
     fecha_actual = datetime.date.today()
     
-    def mostrar_datepicker(e):
-        # Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
+    def mostrar_datepicker(e):        
+        """
+        Abre el diálogo del DatePicker para que el usuario seleccione una fecha.
+        """    
         page.overlay.append(date_picker_dialog)
         date_picker_dialog.open = True
         page.update()
     
     def seleccionar_fecha(e):
+        """
+        Selecciona una fecha desde el DatePicker y actualiza el texto en el campo
+        de texto "Fecha" con la fecha seleccionada en formato "YYYY-MM-DD".
+        Luego cierra el diálogo del DatePicker.
+        """
         fecha_actual = date_picker_dialog.value
         if fecha_actual:
             fecha_solo = fecha_actual.date()
@@ -146,6 +180,12 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
     def limpiar_y_recrear_auto_complete(auto_complete_container, empleados_data):
+        """
+        Limpia el AutoComplete actual y crea uno nuevo con las sugerencias proporcionadas.
+
+        :param auto_complete_container: Contenedor donde se encuentra el AutoComplete actual.
+        :param empleados_data: Lista de empleados para establecer como sugerencias.
+        """
         nonlocal nombre_seleccionado
         nombre_seleccionado = None  # Limpia la selección previa
 
@@ -178,14 +218,24 @@ def main(page: ft.Page):
         return hour_str
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------    
-    # funciones y control para abrir cuadro de dialogo para avisar al usuario que faltan datos en tab Registrar Usuario.
     def open_dlg_modal(e, mensaje="Ha dejado algun campo vacío"):
+        """
+        Abre un diálogo modal con un mensaje de error.
+
+        :param e: Instancia de la clase Principal.
+        :param mensaje: Mensaje a mostrar en el diálogo. Por defecto, "Ha dejado algun campo vacío".
+        """
         dlg_modal.content = ft.Text(mensaje)  # Update dialog content
         e.control.page.overlay.append(dlg_modal)
         dlg_modal.open = True
         e.control.page.update()
         
     def close_dlg(e):
+        """
+        Cierra el diálogo modal.
+        
+        :param e: Instancia de la clase Principal.
+        """
         dlg_modal.open = False
         e.control.page.update()
 
@@ -210,6 +260,11 @@ def main(page: ft.Page):
     nombre_seleccionado = None
     
     def show_snackbar(mensaje):
+        """
+        Muestra un mensaje en una SnackBar en la parte inferior de la pantalla.
+
+        :param mensaje: El mensaje a mostrar en la SnackBar.
+        """
         if not page.snack_bar:
             page.snack_bar = ft.SnackBar(content=ft.Text(mensaje))
         else:
@@ -227,6 +282,13 @@ def main(page: ft.Page):
     txt_hora100 = ft.Ref[ft.TextField]()
     txt_comentario = ft.Ref[ft.TextField]()
     def agregar_horas(e):
+        """
+        Agrega un registro a la tabla Horas en la base de datos, validando que los campos obligatorios estén completos y
+        que el formato de las horas sea correcto.
+
+        :param e: El evento del botón "Agregar".
+        :return: None
+        """
         try:
             #nonlocal nombre_seleccionado
             fecha = txt_fecha.current.value
@@ -274,6 +336,12 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def tab_empleados(e):
+            """
+            Maneja el evento de cambio de tab a "Empleados".
+
+            Limpia la página actual y llama a la función Empleados desde el módulo empleados.py, la
+            cual imprime los controles y la tabla de empleados en la página actual.
+            """
             page.clean()
 
             # Importamos y ejecutamos la función y sus controles en la página actual
@@ -283,6 +351,12 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     #Funcion para manejar diferentes eventos al seleccionar algunos de los tab
     def tab_reporte(e):
+            """
+            Maneja el evento de cambio de tab a "Reporte".
+
+            Limpia la página actual y llama a la función reporte desde el módulo reporte.py, la
+            cual imprime los controles y la tabla de reporte en la página actual.
+            """
             page.clean()
 
             # Importamos y ejecutamos la función y sus controles en la página actual
@@ -292,6 +366,12 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Cambiar tamaño de ventana según tab seleccionado
     def cambio_tamano(e):
+        """
+        Cambia el tamaño de la ventana según la pestaña seleccionada en mainTab.
+
+        Si se selecciona la pestaña de "Registro", el tamaño de la ventana es de 600x650.
+        Si se selecciona la pestaña de "Empleados" o "Reporte", el tamaño de la ventana es de 1250x700.
+        """
         if mainTab.selected_index == 0:
             page.window.width = 600
             page.window.height = 650
@@ -305,11 +385,31 @@ def main(page: ft.Page):
     
     
     def on_edit_click(registro_data):
+        """
+        Maneja el evento de click en el botón "Editar" de una fila de la tabla de edición.
+
+        Abre un cuadro de diálogo con los campos de la fila seleccionada, permitiendo al usuario editar
+        la fecha, horas 35% y 100%, y comentario. Si el usuario hace clic en "Guardar", se actualizarán
+        los campos en la tabla y se mostrará un mensaje de confirmación. Si se produce un error, se
+        mostrará un mensaje de error.
+
+        :param registro_data: lista con los datos de la fila seleccionada. La lista debe tener al menos
+                              5 elementos: fecha original, código, horas 35% original, horas 100% original,
+                              y comentario original.
+        """
         def close_dlg(e):
             edit_dialog.open = False
             page.update()
 
         def save_changes(e):
+            """
+            Maneja el evento de click en el botón "Guardar" del cuadro de diálogo de edición.
+
+            Valida los campos de la fila seleccionada, y si son válidos, actualiza la tabla y muestra un
+            mensaje de confirmación. Si se produce un error, se muestra un mensaje de error.
+
+            :param e: evento de click en el botón "Guardar"
+            """
             try:
                 nueva_fecha = txt_edit_fecha.current.value
                 nuevas_horas35 = txt_edit_horas35.current.value
