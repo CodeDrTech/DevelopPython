@@ -260,7 +260,7 @@ def get_horas_por_fecha_tabla(fecha_inicio, fecha_fin):
                 FROM Horas 
                 WHERE Fecha BETWEEN ? AND ? 
                 ORDER BY Fecha DESC, Codigo ASC
-                LIMIT 15
+                LIMIT 10
             """, (fecha_inicio, fecha_fin))
             registros = cursor.fetchall()
         except sqlite3.Error as e:

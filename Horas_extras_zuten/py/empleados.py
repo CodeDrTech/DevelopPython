@@ -77,7 +77,7 @@ def Empleados(page: ft.Page):
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
-    page.scroll = ScrollMode.ADAPTIVE
+    page.scroll = False
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
     
