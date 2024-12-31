@@ -18,12 +18,13 @@ venv/
 panel.spec
 
 # Horas extras zuten
-Horas_extras_zuten/HorasExtras_zuten.db
-Horas_extras_zuten/Empleados_zuten.xlsm
+Horas_extras_zuten/data/HorasExtras_zuten.db
+Horas_extras_zuten/data/Empleados_zuten.xlsm
 Horas_extras_zuten/imagenes/Logo.png
 Horas_extras_zuten/*.txt
 Horas_extras_zuten/*.pyc
-Horas_extras_zuten/Ejecutable/
+Horas_extras_zuten/build/
+Horas_extras/dist/
 
 
 
