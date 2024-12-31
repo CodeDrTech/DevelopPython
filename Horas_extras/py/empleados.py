@@ -1,7 +1,7 @@
 import flet as ft
 from flet import ScrollMode
 from consultas import get_empleados, importar_empleados_desde_excel, get_primeros_10_empleados
-from database import connect_to_database, DATABASE_URL, obtener_ruta_recurso
+from database import connect_to_database, DATABASE_URL, get_base_dir
 import os, sys
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -79,52 +79,77 @@ def Empleados(page: ft.Page):
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def importar_excel(e): 
-        """Importar empleados desde una ruta fija sin diálogo."""
+    def importar_excel(e):
+        """Importar empleados desde una ruta fija con mensajes de SnackBar."""
         carga_modal.open = False  # Cierra el diálogo
         page.update()  # Actualiza la UI para cerrar el diálogo
 
         try:
-            # Ruta al archivo Excel en carpeta data
-            archivo = obtener_ruta_recurso(os.path.join("data", "Empleados.xlsm"))
+            # Mostrar mensaje inicial
+            page.show_snack_bar(
+                ft.SnackBar(
+                    content=ft.Text("Iniciando la importación desde Excel..."),
+                    duration=3000
+                )
+            )
+
+            # Obtener la ruta al archivo Excel en la carpeta 'data'
+            archivo = os.path.join(get_base_dir(), "data", "Empleados.xlsm")
 
             if os.path.exists(archivo):
+                # Mensaje de archivo encontrado
+                page.show_snack_bar(
+                    ft.SnackBar(
+                        content=ft.Text("Archivo Excel encontrado. Cargando datos..."),
+                        duration=3000
+                    )
+                )
+                page.update()
+
+                # Importar empleados desde Excel
                 if importar_empleados_desde_excel(archivo):
                     # Actualizar la lista de empleados
                     empleados_data = get_empleados()
                     suggestions = [
-                        ft.AutoCompleteSuggestion(key=emp, value=emp) 
+                        ft.AutoCompleteSuggestion(key=emp, value=emp)
                         for emp in empleados_data
                     ]
                     auto_complete.suggestions = suggestions
                     page.update()
+
+                    # Mensaje de éxito
                     page.show_snack_bar(
                         ft.SnackBar(
-                            content=ft.Text("Empleados importados correctamente"), 
+                            content=ft.Text("Empleados importados correctamente."),
                             duration=3000
                         )
                     )
                 else:
+                    # Mensaje de error en la importación
                     page.show_snack_bar(
                         ft.SnackBar(
-                            content=ft.Text("Error al importar empleados"), 
+                            content=ft.Text("Error al importar empleados."),
                             duration=3000
                         )
                     )
             else:
+                # Mensaje de archivo no encontrado
                 page.show_snack_bar(
                     ft.SnackBar(
-                        content=ft.Text("Archivo Excel no encontrado"), 
+                        content=ft.Text("Archivo Excel no encontrado."),
                         duration=3000
                     )
                 )
         except Exception as e:
+            # Mensaje de error general
             page.show_snack_bar(
                 ft.SnackBar(
-                    content=ft.Text(f"Error: {str(e)}"), 
+                    content=ft.Text(f"Error: {str(e)}"),
                     duration=3000
                 )
             )
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Crear el diálogo de confirmación

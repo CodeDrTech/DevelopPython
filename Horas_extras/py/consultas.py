@@ -1,5 +1,5 @@
 import pandas as pd
-from database import connect_to_database, DATABASE_URL, obtener_ruta_recurso
+from database import connect_to_database, DATABASE_URL
 import sqlite3
 import os
 from dotenv import load_dotenv
