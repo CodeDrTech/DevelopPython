@@ -21,7 +21,7 @@ def get_base_dir():
 # Rutas dinámicas
 BASE_DIR = get_base_dir()
 DATA_DIR = os.path.join(BASE_DIR, "data")
-DATABASE_URL = os.path.join(DATA_DIR, "HorasExtras.db")
+DATABASE_URL = os.path.join(DATA_DIR, "HorasExtras_zuten.db")
 
 def connect_to_database():
     """

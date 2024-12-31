@@ -510,7 +510,7 @@ def reporte(page: ft.Page):
                 
                 # Logo alineado a la izquierda
                 if os.path.exists(logo_path):
-                    canvas.drawImage(logo_path, 100, 520, width=2.5*inch, height=2*inch)
+                    canvas.drawImage(logo_path, 100, 520, width=3*inch, height=1.6*inch)
                 
                 canvas.restoreState()
         
