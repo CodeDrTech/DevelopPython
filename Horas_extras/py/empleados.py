@@ -89,7 +89,7 @@ def Empleados(page: ft.Page):
             page.show_snack_bar(
                 ft.SnackBar(
                     content=ft.Text("Iniciando la importación desde Excel..."),
-                    duration=3000
+                    duration=300
                 )
             )
 

@@ -388,7 +388,7 @@ def reporte(page: ft.Page):
             # Generar PDF
             doc.build(elements)
             show_snackbar("Reporte PDF generado exitosamente")
-            abrir_carpeta_reporte()  # Abre la carpeta
+            abrir_carpeta_reporte(e=None)  # Abre la carpeta
             return True
             
         except Exception as e:
