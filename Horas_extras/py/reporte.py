@@ -2,6 +2,7 @@ import flet as ft
 from flet import ScrollMode
 from consultas import get_horas_por_fecha_pdf, get_horas_por_fecha_tabla
 import os, datetime, calendar
+from database import get_base_dir
 
 from datetime import timedelta
 from reportlab.lib import colors
@@ -216,28 +217,44 @@ def reporte(page: ft.Page):
         return f"{total_horas:02}:{total_minutos:02}"
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def abrir_carpeta_reporte():
-        # Ruta donde se guarda el PDF
-        ruta_reporte = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reportes")
-        
-        # Asegurar que la carpeta existe
-        if not os.path.exists(ruta_reporte):
-            os.makedirs(ruta_reporte)
-        
-        # Abrir la carpeta en el explorador de Windows
-        os.startfile(ruta_reporte)
+    def abrir_carpeta_reporte(e):
+        """Abre la carpeta de reportes en el explorador"""
+        try:
+            # Obtener directorio base y construir ruta
+            base_dir = get_base_dir()
+            directorio_reportes = os.path.join(base_dir, "reportes")
+            
+            # Crear directorio si no existe
+            if not os.path.exists(directorio_reportes):
+                os.makedirs(directorio_reportes)
+                show_snackbar("Carpeta de reportes creada")
+            
+            # Abrir la carpeta en el explorador de Windows
+            os.startfile(directorio_reportes)
+            show_snackbar("Abriendo carpeta de reportes...")
+            
+        except Exception as error:
+            show_snackbar(f"Error al abrir carpeta: {str(error)}")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def exportar_pdf(registros, fecha_inicio, fecha_fin):
         """Exporta los registros a PDF agrupados por empleado"""
         try:
-            # Obtener directorio actual y construir ruta
-            directorio_actual = os.path.dirname(os.path.abspath(__file__))
-            directorio_reportes = os.path.join(os.path.dirname(directorio_actual), "reportes")
+            # Obtener directorio base y construir rutas
+            base_dir = get_base_dir()
+            directorio_reportes = os.path.join(base_dir, "reportes")
+            directorio_imagenes = os.path.join(base_dir, "imagenes")
             
             # Crear directorio si no existe
             if not os.path.exists(directorio_reportes):
                 os.makedirs(directorio_reportes)
+                
+            # Ruta del logo
+            logo_path = os.path.join(directorio_imagenes, "Logo.png")
+            
+            # Verificar que existe el logo
+            if not os.path.exists(logo_path):
+                raise FileNotFoundError(f"Logo no encontrado en: {logo_path}")
             
             pdf_path = os.path.join(directorio_reportes, f'Reporte_{fecha_inicio}_{fecha_fin}.pdf')
             doc = SimpleDocTemplate(
@@ -348,7 +365,7 @@ def reporte(page: ft.Page):
             
             # Definir encabezado con logo y título
             def encabezado(canvas, doc):
-                logo_path = os.path.join(os.path.dirname(directorio_actual), "imagenes", "Logo.png")
+                logo_path = os.path.join(os.path.dirname(directorio_imagenes), "imagenes", "Logo.png")
                 canvas.saveState()
                 canvas.setFont("Helvetica-Bold", 14)
                 
