@@ -1,6 +1,7 @@
 import flet as ft
 from flet import ScrollMode
 from consultas import get_empleados, importar_empleados_desde_excel, get_primeros_10_empleados
+from database import connect_to_database, DATABASE_URL, obtener_ruta_recurso
 import os, sys
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -78,20 +79,14 @@ def Empleados(page: ft.Page):
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def importar_excel(e):
+    def importar_excel(e): 
         """Importar empleados desde una ruta fija sin diálogo."""
-        
         carga_modal.open = False  # Cierra el diálogo
         page.update()  # Actualiza la UI para cerrar el diálogo
-        
-        try:
-            # Obtener ruta al directorio data
-            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            archivo = os.path.join(base_path, "data", "Empleados.xlsm")
 
-            
+        try:
             # Ruta al archivo Excel en carpeta data
-            archivo = os.path.join(base_path, "data", "Empleados.xlsm")
+            archivo = obtener_ruta_recurso(os.path.join("data", "Empleados.xlsm"))
 
             if os.path.exists(archivo):
                 if importar_empleados_desde_excel(archivo):
