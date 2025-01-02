@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes
+from consultas import get_clientes, actualizar_cliente
 
 
 
@@ -8,7 +8,7 @@ from consultas import get_clientes
 def main(page: ft.Page):
     page.title = "TV en casa"
     page.window.alignment = ft.alignment.center
-    page.window.width = 900
+    page.window.width = 1000
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
@@ -17,13 +17,55 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     def crear_tabla_clientes():
         """
-        Crea y retorna una tabla DataTable con los clientes.
-        
-        Returns:
-            ft.DataTable: Tabla con columnas y filas de datos de clientes.
+        Crea una tabla DataTable con los clientes y botones de edición.
+        Permite editar los datos de cada cliente mediante un diálogo modal.
         """
+        def editar_cliente(e, cliente_id):
+            """Abre diálogo modal para editar cliente"""
+            dlg_modal.client_id = cliente_id
+            nombre_edit.value = e.control.data["nombre"]
+            whatsapp_edit.value = e.control.data["whatsapp"]
+            estado_edit.value = e.control.data["estado"]
+            frecuencia_edit.value = str(e.control.data["frecuencia"])
+            dlg_modal.open = True
+            page.update()
+
+        def mostrar_mensaje(mensaje: str):
+            """
+            Muestra mensaje en SnackBar usando nueva API.
+            
+            Args:
+                mensaje (str): Texto a mostrar
+            """
+            snack = ft.SnackBar(content=ft.Text(mensaje))
+            page.overlay.append(snack)
+            page.open = snack # type: ignore
+
+        def guardar_cambios(e):
+            """Guarda cambios y actualiza tabla"""
+            try:
+                if actualizar_cliente(
+                    dlg_modal.client_id,
+                    nombre_edit.value,
+                    whatsapp_edit.value,
+                    estado_edit.value,
+                    int(frecuencia_edit.value)
+                ):
+                    dlg_modal.open = False
+                    actualizar_tabla()
+                    mostrar_mensaje("Cliente actualizado")
+                else:
+                    mostrar_mensaje("Error al actualizar cliente")
+            except Exception as ex:
+                mostrar_mensaje(f"Error: {str(ex)}")
+            page.update()
+
         clientes = get_clientes()
         
         columns = [
@@ -33,7 +75,8 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("WhatsApp")),
             ft.DataColumn(ft.Text("Estado")),
             ft.DataColumn(ft.Text("Último Pago")),
-            ft.DataColumn(ft.Text("Frecuencia"))
+            ft.DataColumn(ft.Text("Frecuencia")),
+            ft.DataColumn(ft.Text("Acciones"))
         ]
         
         rows = [
@@ -46,9 +89,59 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(cliente[4])),
                     ft.DataCell(ft.Text(cliente[5])),
                     ft.DataCell(ft.Text(f"{cliente[6]} días")),
-                ],
+                    ft.DataCell(
+                        ft.IconButton(
+                            icon=ft.Icons.EDIT,
+                            data={
+                                "nombre": cliente[1],
+                                "whatsapp": cliente[3],
+                                "estado": cliente[4],
+                                "frecuencia": cliente[6]
+                            },
+                            on_click=lambda e, id=cliente[0]: editar_cliente(e, id)
+                        )
+                    )
+                ]
             ) for cliente in clientes
         ]
+
+        # Campos del diálogo de edición
+        nombre_edit = ft.TextField(label="Nombre")
+        whatsapp_edit = ft.TextField(label="WhatsApp")
+        estado_edit = ft.Dropdown(
+            label="Estado",
+            options=[
+                ft.dropdown.Option("Activo"),
+                ft.dropdown.Option("Inactivo")
+            ]
+        )
+        frecuencia_edit = ft.TextField(
+            label="Frecuencia (días)",
+            input_filter=ft.InputFilter(regex_string=r"[0-9]")
+        )
+        
+        def close_dlg(e):
+            """Cierra el diálogo modal"""
+            dlg_modal.open = False
+            page.update()
+
+        dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Editar Cliente"),
+            content=ft.Column([
+                nombre_edit,
+                whatsapp_edit,
+                estado_edit,
+                frecuencia_edit
+            ], tight=True),
+            actions=[
+                ft.TextButton("Cancelar", on_click=close_dlg),
+                ft.TextButton("Guardar", on_click=guardar_cambios)
+            ]
+        )
+
+        # Agregar diálogo a overlay en lugar de page.dialog
+        page.overlay.append(dlg_modal)
         
         return ft.DataTable(
             columns=columns,
@@ -56,8 +149,23 @@ def main(page: ft.Page):
             border=ft.border.all(1, ft.Colors.GREY_400),
             border_radius=10,
             vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
-            horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+            horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400)
         )
+
+    def actualizar_tabla():
+        """
+        Actualiza el contenido de la tabla de clientes 
+        después de modificar datos.
+        """
+        # Obtener tab de listado
+        listado_tab = mainTab.tabs[1]
+        # Obtener columna dentro del tab
+        column = listado_tab.content
+        # Actualizar tabla en segunda posición
+        column.controls[1] = crear_tabla_clientes()
+        page.update()
+    # Contenedor principal de la tabla
+    tabla_container = ft.Container(content=crear_tabla_clientes(), expand=True)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
@@ -67,16 +175,23 @@ def main(page: ft.Page):
         # Contenedor de tabs
         tabs=[
             ft.Tab(
-                icon=ft.Icons.LIST,
-                text="Listado",
+                icon=ft.Icons.HOME,
+                text="Vencimientos",
                 content=ft.Column([
-                    ft.Text("Listado de clientes", size=20),
+                    ft.Text("Listado de servicios", size=20),
+                ])
+            ),
+            ft.Tab(
+                icon=ft.Icons.LIST,
+                text="Listado de clientes",
+                content=ft.Column([
+                    ft.Text("Clientes", size=20),
                     crear_tabla_clientes(),
                 ])
             ),
             ft.Tab(
                 icon=ft.Icons.SUPERVISED_USER_CIRCLE_SHARP,
-                text="Clientes",
+                text="Agregar clientes",
                 content=ft.Column(
                     [
                         ft.Text("Registrar clientes", size=20),
