@@ -80,6 +80,7 @@ Ventas\ Selact/*.xlsx
 Ventas\ Selact/*.xlsm
 Ventas\ Selact/*.db
 Ventas\ Selact/*.png
+Ventas\ Selact/*.txt
 
 # Carpetas de sistema y configuración
 .vscode/
