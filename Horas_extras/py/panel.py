@@ -573,6 +573,5 @@ def main(page: ft.Page):
         ],
     )
     page.add(mainTab)
-
 ft.app(main)
 #ft.app(target=main, port=8080, view=AppView.WEB_BROWSER)
