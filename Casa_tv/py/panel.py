@@ -1,5 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
+from consultas import get_clientes
 
 
 
@@ -7,18 +8,56 @@ from flet import ScrollMode, AppView
 def main(page: ft.Page):
     page.title = "TV en casa"
     page.window.alignment = ft.alignment.center
-    page.window.width = 600
+    page.window.width = 900
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
-    page.scroll = False
+    page.scroll = False # type: ignore
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
+    def crear_tabla_clientes():
+        """
+        Crea y retorna una tabla DataTable con los clientes.
+        
+        Returns:
+            ft.DataTable: Tabla con columnas y filas de datos de clientes.
+        """
+        clientes = get_clientes()
+        
+        columns = [
+            ft.DataColumn(ft.Text("ID")),
+            ft.DataColumn(ft.Text("Nombre")),
+            ft.DataColumn(ft.Text("Inicio")),
+            ft.DataColumn(ft.Text("WhatsApp")),
+            ft.DataColumn(ft.Text("Estado")),
+            ft.DataColumn(ft.Text("Último Pago")),
+            ft.DataColumn(ft.Text("Frecuencia"))
+        ]
+        
+        rows = [
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(str(cliente[0]))),
+                    ft.DataCell(ft.Text(cliente[1])),
+                    ft.DataCell(ft.Text(cliente[2])),
+                    ft.DataCell(ft.Text(cliente[3])),
+                    ft.DataCell(ft.Text(cliente[4])),
+                    ft.DataCell(ft.Text(cliente[5])),
+                    ft.DataCell(ft.Text(f"{cliente[6]} días")),
+                ],
+            ) for cliente in clientes
+        ]
+        
+        return ft.DataTable(
+            columns=columns,
+            rows=rows,
+            border=ft.border.all(1, ft.Colors.GREY_400),
+            border_radius=10,
+            vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+            horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+        )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
@@ -32,6 +71,7 @@ def main(page: ft.Page):
                 text="Listado",
                 content=ft.Column([
                     ft.Text("Listado de clientes", size=20),
+                    crear_tabla_clientes(),
                 ])
             ),
             ft.Tab(
