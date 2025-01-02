@@ -74,7 +74,6 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Inicio")),
             ft.DataColumn(ft.Text("WhatsApp")),
             ft.DataColumn(ft.Text("Estado")),
-            ft.DataColumn(ft.Text("Último Pago")),
             ft.DataColumn(ft.Text("Frecuencia")),
             ft.DataColumn(ft.Text("Acciones"))
         ]
@@ -87,8 +86,7 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(cliente[2])),
                     ft.DataCell(ft.Text(cliente[3])),
                     ft.DataCell(ft.Text(cliente[4])),
-                    ft.DataCell(ft.Text(cliente[5])),
-                    ft.DataCell(ft.Text(f"{cliente[6]} días")),
+                    ft.DataCell(ft.Text(f"{cliente[5]} días")),
                     ft.DataCell(
                         ft.IconButton(
                             icon=ft.Icons.EDIT,
@@ -96,7 +94,7 @@ def main(page: ft.Page):
                                 "nombre": cliente[1],
                                 "whatsapp": cliente[3],
                                 "estado": cliente[4],
-                                "frecuencia": cliente[6]
+                                "frecuencia": cliente[5]
                             },
                             on_click=lambda e, id=cliente[0]: editar_cliente(e, id)
                         )
@@ -106,8 +104,8 @@ def main(page: ft.Page):
         ]
 
         # Campos del diálogo de edición
-        nombre_edit = ft.TextField(label="Nombre")
-        whatsapp_edit = ft.TextField(label="WhatsApp")
+        nombre_edit = ft.TextField(label="Nombre", capitalization=ft.TextCapitalization.WORDS)
+        whatsapp_edit = ft.TextField(label="WhatsApp", max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
         estado_edit = ft.Dropdown(
             label="Estado",
             options=[
@@ -117,7 +115,8 @@ def main(page: ft.Page):
         )
         frecuencia_edit = ft.TextField(
             label="Frecuencia (días)",
-            input_filter=ft.InputFilter(regex_string=r"[0-9]")
+            input_filter=ft.InputFilter(regex_string=r"[0-9]"),
+            max_length=2
         )
         
         def close_dlg(e):
@@ -165,7 +164,7 @@ def main(page: ft.Page):
         column.controls[1] = crear_tabla_clientes()
         page.update()
     # Contenedor principal de la tabla
-    tabla_container = ft.Container(content=crear_tabla_clientes(), expand=True)
+    #tabla_container = ft.Container(content=crear_tabla_clientes(), expand=True)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
@@ -210,7 +209,7 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Whatsapp:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=12, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9-]*$", replacement_string="")),
+                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Estado:", width=100),
@@ -224,10 +223,6 @@ def main(page: ft.Page):
                             border=ft.border.all(2, ft.Colors.BLACK),
                             border_radius=10,
                         ),
-                        ]),
-                        ft.Row([
-                            ft.Text("Ultimo pago:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, icon=ft.Icons.CALENDAR_MONTH),
                         ]),
                         ft.Row([
                         ft.Text("Frecuencia de pago:", width=100),
