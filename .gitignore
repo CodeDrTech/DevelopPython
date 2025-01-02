@@ -5,6 +5,13 @@ Contratos/Include/
 Contratos/pyvenv.cfg
 
 
+# Entornos virtuales
+Casa_tv/Lib/
+Casa_tv/Scripts/
+Casa_tv/Include/
+Casa_tv/pyvenv.cfg
+
+
 # Horas extras
 Horas_extras/data/HorasExtras.db
 Horas_extras/data/Empleados.xlsm
