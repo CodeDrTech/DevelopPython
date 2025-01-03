@@ -88,3 +88,47 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, estado: str,
         finally:
             conn.close()
     return False
+
+
+def get_estado_pagos():
+    """Obtiene el estado detallado de pagos de todos los clientes"""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                WITH ultimo_pago AS (
+                    SELECT
+                        cliente_id,
+                        MAX(fecha_pago) AS ultima_fecha_pago
+                    FROM pagos
+                    GROUP BY cliente_id
+                )
+                SELECT 
+                    c.id AS cliente_id,
+                    c.nombre AS nombre_cliente,
+                    c.inicio AS fecha_inicio,
+                    COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,
+                    c.frecuencia,
+                    DATE(COALESCE(up.ultima_fecha_pago, c.inicio), '+' || c.frecuencia || ' days') AS proximo_pago,
+                    JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) AS dias_transcurridos,
+                    CASE 
+                        WHEN JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) > c.frecuencia THEN 'Pendiente'
+                        ELSE 'Al día'
+                    END AS estado_pago
+                FROM 
+                    clientes c
+                LEFT JOIN 
+                    ultimo_pago up
+                ON 
+                    c.id = up.cliente_id
+                ORDER BY 
+                    estado_pago DESC, dias_transcurridos DESC
+            """)
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo estado de pagos: {e}")
+            return []
+        finally:
+            conn.close()
+    return []

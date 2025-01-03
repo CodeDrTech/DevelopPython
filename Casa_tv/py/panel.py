@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos
 
 
 
@@ -8,7 +8,7 @@ from consultas import get_clientes, actualizar_cliente
 def main(page: ft.Page):
     page.title = "TV en casa"
     page.window.alignment = ft.alignment.center
-    page.window.width = 1000
+    page.window.width = 1050
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
@@ -17,7 +17,45 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    
+    def crear_tabla_vencimientos():
+        """Crea tabla de vencimientos de pagos"""
+        registros = get_estado_pagos()
+        
+        columns = [
+            ft.DataColumn(ft.Text("Numero cliente")),
+            ft.DataColumn(ft.Text("Nombre")),
+            ft.DataColumn(ft.Text("Inicio")),
+            ft.DataColumn(ft.Text("Último Pago")),
+            ft.DataColumn(ft.Text("Paga cada")),
+            ft.DataColumn(ft.Text("Próximo Pago")),
+            ft.DataColumn(ft.Text("Días")),
+            ft.DataColumn(ft.Text("Estado")),
+        ]
+        
+        rows = [
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(reg[0])),  # ID
+                    ft.DataCell(ft.Text(reg[1])),  # Nombre
+                    ft.DataCell(ft.Text(reg[2])),  # Fecha inicio
+                    ft.DataCell(ft.Text(reg[3])),  # Fecha base
+                    ft.DataCell(ft.Text(f"{reg[4]} días")),  # Frecuencia
+                    ft.DataCell(ft.Text(reg[5])),  # Próximo pago
+                    ft.DataCell(ft.Text(f"{int(reg[6])}")),  # Días transcurridos
+                    ft.DataCell(ft.Text(reg[7],  # Estado
+                        color="red" if reg[7] == "Pendiente" else "green")),
+                ],
+            ) for reg in registros
+        ]
+        
+        return ft.DataTable(
+            columns=columns,
+            rows=rows,
+            border=ft.border.all(1, ft.colors.GREY_400),
+            border_radius=10,
+            vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
+            horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
+        )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -69,7 +107,7 @@ def main(page: ft.Page):
         clientes = get_clientes()
         
         columns = [
-            ft.DataColumn(ft.Text("ID")),
+            ft.DataColumn(ft.Text("Numero cliente")),
             ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Inicio")),
             ft.DataColumn(ft.Text("WhatsApp")),
@@ -177,7 +215,8 @@ def main(page: ft.Page):
                 icon=ft.Icons.HOME,
                 text="Vencimientos",
                 content=ft.Column([
-                    ft.Text("Listado de servicios", size=20),
+                    ft.Text("Listado de venvimientos", size=20),
+                    crear_tabla_vencimientos(),
                 ])
             ),
             ft.Tab(
@@ -248,6 +287,14 @@ def main(page: ft.Page):
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
                 ),
+            ),
+            ft.Tab(
+                icon=ft.Icons.PAYMENTS,
+                text="Aplicar pagos",
+                content=ft.Column([
+                    ft.Text("Aplica los pagos", size=20),
+                    crear_tabla_vencimientos(),
+                ])
             ),
         ],
     )
