@@ -18,39 +18,57 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_vencimientos():
-        """Crea tabla de vencimientos de pagos"""
+        """
+        Crea tabla de vencimientos de pagos con estado y días transcurridos.
+        
+        Returns:
+            ft.DataTable: Tabla con columnas:
+                - ID Cliente
+                - Nombre
+                - Fecha Inicio
+                - Base (último pago)
+                - Próximo Pago
+                - Frecuencia
+                - Días Transcurridos
+                - Estado
+        """
         registros = get_estado_pagos()
         
         columns = [
-            ft.DataColumn(ft.Text("Numero cliente")),
+            ft.DataColumn(ft.Text("ID")),
             ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Inicio")),
-            ft.DataColumn(ft.Text("Último Pago")),
-            ft.DataColumn(ft.Text("Próximo Pago")),
-            ft.DataColumn(ft.Text("Paga cada")),
-            ft.DataColumn(ft.Text("Lleva")),
-            ft.DataColumn(ft.Text("Estado")),
+            ft.DataColumn(ft.Text("Ultimo pago")),
+            ft.DataColumn(ft.Text("Dia de pago")),
+            ft.DataColumn(ft.Text("Frecuencia")),
+            ft.DataColumn(ft.Text("Días")),
+            ft.DataColumn(ft.Text("Estado"))
         ]
         
         def get_estado_color(estado):
-            if estado == "Pendiente":
-                return "red"
+            """Define color según estado de pago"""
+            if estado == "En corte":
+                return ft.Colors.RED_600
+            elif estado == "Pago pendiente":
+                return ft.Colors.ORANGE_700
             elif estado == "Cerca":
-                return "orange"
-            return "green"
+                return ft.Colors.YELLOW_700
+            return ft.Colors.GREEN
         
         rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(reg[0])),  # ID
-                    ft.DataCell(ft.Text(reg[1])),  # Nombre
-                    ft.DataCell(ft.Text(reg[2])),  # Fecha inicio
-                    ft.DataCell(ft.Text(reg[3])),  # Fecha base
-                    ft.DataCell(ft.Text(reg[4])),  # Próximo pago
-                    ft.DataCell(ft.Text(f"{reg[5]} días")),  # Frecuencia
-                    ft.DataCell(ft.Text(f"{int(reg[6])} dias")),  # Días transcurridos
-                    ft.DataCell(ft.Text(reg[7],  # Estado
-                        color=get_estado_color(reg[7]))),
+                    ft.DataCell(ft.Text(str(reg[0]))),      # ID
+                    ft.DataCell(ft.Text(reg[1])),           # Nombre
+                    ft.DataCell(ft.Text(reg[2])),           # Fecha inicio
+                    ft.DataCell(ft.Text(reg[3])),           # Fecha base
+                    ft.DataCell(ft.Text(reg[4])),           # Próximo pago
+                    ft.DataCell(ft.Text(f"{reg[5]} días")), # Frecuencia
+                    ft.DataCell(ft.Text(str(reg[6]))),      # Días transcurridos
+                    ft.DataCell(ft.Text(                    # Estado
+                        reg[7],
+                        color=get_estado_color(reg[7])
+                    )),
                 ],
             ) for reg in registros
         ]

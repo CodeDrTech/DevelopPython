@@ -91,12 +91,25 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, estado: str,
 
 
 def get_estado_pagos():
-    """Obtiene el estado detallado de pagos de todos los clientes"""
-    conn = connect_to_database()
+    """
+    Obtiene el estado de pagos de todos los clientes.
+
+    Returns:
+        list: Lista de tuplas con:
+            - cliente_id (int)
+            - nombre_cliente (str)
+            - fecha_inicio (str)
+            - fecha_base (str): Último pago o fecha inicio
+            - proximo_pago (str)
+            - frecuencia (int)
+            - dias_transcurridos (int)
+            - estado_pago (str): En corte/Pendiente/Cerca/Al día
+    """
+    conn = connect_to_database()  # Reemplazar con tu función de conexión
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("""
+            cursor.execute('''
                 WITH ultimo_pago AS (
                     SELECT
                         cliente_id,
@@ -109,27 +122,30 @@ def get_estado_pagos():
                     c.nombre AS nombre_cliente,
                     c.inicio AS fecha_inicio,
                     COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,
-                    DATE(COALESCE(up.ultima_fecha_pago, c.inicio), '+' || c.frecuencia || ' days') AS proximo_pago,
+                    DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
+                         '+' || c.frecuencia || ' days') AS proximo_pago,
                     c.frecuencia,
-                    ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) AS dias_transcurridos,
+                    ROUND(JULIANDAY('now') - 
+                          JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) AS dias_transcurridos,
                     CASE 
-                        WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia THEN 'Pendiente'
-                        WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) THEN 'Cerca'
+                        WHEN ROUND(JULIANDAY('now') - 
+                                   JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                        THEN 'En corte'
+                        WHEN ROUND(JULIANDAY('now') - 
+                                   JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                        THEN 'Pago pendiente'
+                        WHEN ROUND(JULIANDAY('now') - 
+                                   JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                        THEN 'Cerca'
                         ELSE 'Al día'
                     END AS estado_pago
-                FROM 
-                    clientes c
-                LEFT JOIN 
-                    ultimo_pago up
-                ON 
-                    c.id = up.cliente_id
-                ORDER BY 
-                    estado_pago DESC,
-                    dias_transcurridos DESC
-            """)
+                FROM clientes c
+                LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+                ORDER BY dias_transcurridos DESC;
+            ''')
             return cursor.fetchall()
         except sqlite3.Error as e:
-            print(f"Error obteniendo estado de pagos: {e}")
+            print(f"Error consultando estados de pago: {e}")
             return []
         finally:
             conn.close()
