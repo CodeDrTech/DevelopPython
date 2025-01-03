@@ -90,21 +90,30 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_vencimientos():
         """
-        Crea tabla de vencimientos de pagos con estado y días transcurridos.
-        
-        Returns:
-            ft.DataTable: Tabla con columnas:
-                - ID Cliente
-                - Nombre
-                - Fecha Inicio
-                - Base (último pago)
-                - Próximo Pago
-                - Frecuencia
-                - Días Transcurridos
-                - Estado
+        Crea tabla de vencimientos con filtro por nombre cliente.
+        Permite filtrar usando AutoComplete con nombres de la BD.
         """
+        # Variables globales
         registros = get_estado_pagos()
+        nombre_seleccionado = None
+        tabla_container = ft.Container()
         
+        def on_autocomplete_selected(e):
+            """Maneja selección en AutoComplete."""
+            nonlocal nombre_seleccionado
+            nombre_seleccionado = e.selection.value
+            
+            # Filtrar registros por nombre
+            if nombre_seleccionado:
+                registros_filtrados = [
+                    reg for reg in registros 
+                    if reg[1].lower() == nombre_seleccionado.lower()
+                ]
+                actualizar_tabla(registros_filtrados)
+            else:
+                actualizar_tabla(registros)
+        
+        # Mantener columnas existentes
         columns = [
             ft.DataColumn(ft.Text("ID")),
             ft.DataColumn(ft.Text("Nombre")),
@@ -125,33 +134,69 @@ def main(page: ft.Page):
             elif estado == "Cerca":
                 return ft.Colors.YELLOW_700
             return ft.Colors.GREEN
-        
-        rows = [
-            ft.DataRow(
-                cells=[
-                    ft.DataCell(ft.Text(str(reg[0]))),      # ID
-                    ft.DataCell(ft.Text(reg[1])),           # Nombre
-                    ft.DataCell(ft.Text(reg[2])),           # Fecha inicio
-                    ft.DataCell(ft.Text(reg[3])),           # Fecha base
-                    ft.DataCell(ft.Text(reg[4])),           # Próximo pago
-                    ft.DataCell(ft.Text(f"{reg[5]} días")), # Frecuencia
-                    ft.DataCell(ft.Text(str(reg[6]))),      # Días transcurridos
-                    ft.DataCell(ft.Text(                    # Estado
-                        reg[7],
-                        color=get_estado_color(reg[7])
-                    )),
+
+        def actualizar_tabla(registros_filtrados):
+            """Actualiza contenido de la tabla."""
+            tabla_container.content = ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("ID")),
+                    ft.DataColumn(ft.Text("Nombre")),
+                    ft.DataColumn(ft.Text("Inicio")),
+                    ft.DataColumn(ft.Text("Ultimo pago")),
+                    ft.DataColumn(ft.Text("Proximo pago")),
+                    ft.DataColumn(ft.Text("Frecuencia")),
+                    ft.DataColumn(ft.Text("Días")),
+                    ft.DataColumn(ft.Text("Estado"))
                 ],
-            ) for reg in registros
-        ]
-        
-        return ft.DataTable(
-            columns=columns,
-            rows=rows,
-            border=ft.border.all(1, ft.Colors.GREY_400),
-            border_radius=10,
-            vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
-            horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+                rows=[
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(reg[0]))),
+                            ft.DataCell(ft.Text(reg[1])),
+                            ft.DataCell(ft.Text(reg[2])),
+                            ft.DataCell(ft.Text(reg[3])),
+                            ft.DataCell(ft.Text(reg[4])),
+                            ft.DataCell(ft.Text(f"{reg[5]} días")),
+                            ft.DataCell(ft.Text(str(reg[6]))),
+                            ft.DataCell(ft.Text(
+                                reg[7],
+                                color=get_estado_color(reg[7])
+                            )),
+                        ],
+                    ) for reg in registros_filtrados
+                ],
+                border=ft.border.all(1, ft.Colors.GREY_400),
+                border_radius=10,
+                vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+                horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400)
+            )
+            page.update()
+
+        # Crear AutoComplete
+        nombres = sorted(set(reg[1] for reg in registros))
+        auto_complete = ft.AutoComplete(
+            suggestions=[
+                ft.AutoCompleteSuggestion(key=nombre, value=nombre) 
+                for nombre in nombres
+            ],
+            on_select=on_autocomplete_selected
         )
+
+        # Contenedor para AutoComplete
+        auto_complete_container = ft.Container(
+            content=auto_complete,
+            width=320,
+            border=ft.border.all(1, ft.Colors.BLACK),
+            border_radius=10
+        )
+
+        # Mostrar todos inicialmente
+        actualizar_tabla(registros)
+
+        return ft.Column([
+        auto_complete_container,
+        tabla_container
+        ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -456,7 +501,7 @@ def main(page: ft.Page):
                 icon=ft.Icons.HOME,
                 text="Vencimientos",
                 content=ft.Column([
-                    ft.Text("Listado de venvimientos", size=20),
+                    ft.Text("Busqueda por nombre", size=20),
                     crear_tabla_vencimientos(),
                 ])
             ),
