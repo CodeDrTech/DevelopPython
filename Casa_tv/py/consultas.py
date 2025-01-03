@@ -157,6 +157,9 @@ def get_estado_pagos():
     return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+import datetime
+import sqlite3
+
 def insertar_pago(cliente_id: int, fecha_pago: str) -> bool:
     """
     Inserta un nuevo pago manteniendo la secuencia de fechas original del cliente.
@@ -185,14 +188,20 @@ def insertar_pago(cliente_id: int, fecha_pago: str) -> bool:
                 raise ValueError("Cliente no encontrado")
                 
             nombre_cliente, fecha_inicio, frecuencia = cliente
+            # Validar que frecuencia sea un número positivo
+            if frecuencia <= 0:
+                raise ValueError("La frecuencia debe ser mayor a cero")
             
-            # Calcular próxima fecha manteniendo el día original
+            # Convertir fechas a objetos datetime
             fecha_inicio_obj = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d')
             fecha_pago_obj = datetime.datetime.strptime(fecha_pago, '%Y-%m-%d')
             
-            # Calcular cuántos períodos han pasado
+            # Calcular cuántos períodos han pasado (en días)
             dias_transcurridos = (fecha_pago_obj - fecha_inicio_obj).days
-            periodos = dias_transcurridos // frecuencia
+            
+            # Verificar si la fecha de pago está alineada con la frecuencia
+            if dias_transcurridos % frecuencia != 0:
+                raise ValueError("La fecha de pago no está alineada con la frecuencia del cliente")
             
             # Insertar el pago
             cursor.execute('''
@@ -212,4 +221,61 @@ def insertar_pago(cliente_id: int, fecha_pago: str) -> bool:
         finally:
             conn.close()
     return False
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_estado_pago_cliente(cliente_id: int):
+    """
+    Obtiene estado de pago para un cliente específico.
+    
+    Args:
+        cliente_id (int): ID del cliente
+
+    Returns:
+        tuple: Datos del cliente o None si no existe
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                WITH ultimo_pago AS (
+                    SELECT cliente_id, MAX(fecha_pago) AS ultima_fecha_pago
+                    FROM pagos WHERE cliente_id = ?
+                    GROUP BY cliente_id
+                )
+                SELECT 
+                    c.id,
+                    c.nombre,
+                    c.inicio,
+                    COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,
+                    DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
+                         '+' || c.frecuencia || ' days') AS proximo_pago,
+                    c.frecuencia,
+                    ROUND(JULIANDAY('now') - 
+                          JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) 
+                          AS dias_transcurridos,
+                    CASE 
+                        WHEN ROUND(JULIANDAY('now') - 
+                                 JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                        THEN 'En corte'
+                        WHEN ROUND(JULIANDAY('now') - 
+                                 JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                        THEN 'Pendiente'
+                        WHEN ROUND(JULIANDAY('now') - 
+                                 JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                        THEN 'Cerca'
+                        ELSE 'Al día'
+                    END AS estado_pago
+                FROM clientes c
+                LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+                WHERE c.id = ?
+            ''', (cliente_id, cliente_id))
+            return cursor.fetchone()
+        except sqlite3.Error as e:
+            print(f"Error consultando cliente: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
 
