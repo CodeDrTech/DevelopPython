@@ -179,22 +179,45 @@ def reporte(page: ft.Page):
             date_picker_dialog2.open = False
             page.update()
 
-    # DatePicker para el primer TextField
+    # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
+    def get_rango_fechas():
+        """
+        Calcula rango de fechas desde primer día mes anterior hasta último día mes actual.
+        
+        Returns:
+            tuple: (fecha_inicio, fecha_fin)
+        """
+        fecha_actual = datetime.datetime.now()
+        
+        # Primer día del mes anterior
+        if fecha_actual.month == 1:
+            primer_dia = datetime.datetime(fecha_actual.year - 1, 12, 1)
+        else:
+            primer_dia = datetime.datetime(fecha_actual.year, fecha_actual.month - 1, 1)
+        
+        # Último día del mes actual
+        ultimo_dia = fecha_actual.replace(
+            day=calendar.monthrange(fecha_actual.year, fecha_actual.month)[1]
+        )
+        
+        return primer_dia, ultimo_dia
+
+    # En la creación del DatePicker
+    fecha_inicio, fecha_fin = get_rango_fechas()
+
     date_picker_dialog1 = ft.DatePicker(
-        first_date=fecha_actual1.replace(day=1),
-        last_date=fecha_actual1.replace(day=calendar.monthrange(fecha_actual1.year, fecha_actual1.month)[1]),
+        first_date=fecha_inicio,
+        last_date=fecha_fin,
         current_date=datetime.datetime.now(),
         on_change=seleccionar_fecha1
     )
-
-    # DatePicker para el segundo TextField
+    
     date_picker_dialog2 = ft.DatePicker(
-        first_date=fecha_actual2.replace(day=1),
-        last_date=fecha_actual2.replace(day=calendar.monthrange(fecha_actual2.year, fecha_actual2.month)[1]),
+        first_date=fecha_inicio,
+        last_date=fecha_fin,
         current_date=datetime.datetime.now(),
         on_change=seleccionar_fecha2
     )
-
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_horas(registros):

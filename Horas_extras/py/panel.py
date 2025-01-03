@@ -149,11 +149,37 @@ def main(page: ft.Page):
             page.update()  
 
     # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
+    def get_rango_fechas():
+        """
+        Calcula rango de fechas desde primer día mes anterior hasta último día mes actual.
+        
+        Returns:
+            tuple: (fecha_inicio, fecha_fin)
+        """
+        fecha_actual = datetime.datetime.now()
+        
+        # Primer día del mes anterior
+        if fecha_actual.month == 1:
+            primer_dia = datetime.datetime(fecha_actual.year - 1, 12, 1)
+        else:
+            primer_dia = datetime.datetime(fecha_actual.year, fecha_actual.month - 1, 1)
+        
+        # Último día del mes actual
+        ultimo_dia = fecha_actual.replace(
+            day=calendar.monthrange(fecha_actual.year, fecha_actual.month)[1]
+        )
+        
+        return primer_dia, ultimo_dia
+
+    # En la creación del DatePicker
+    fecha_inicio, fecha_fin = get_rango_fechas()
+
     date_picker_dialog = ft.DatePicker(
-        first_date=fecha_actual.replace(day=1),
-        last_date=fecha_actual.replace(day=calendar.monthrange(fecha_actual.year, fecha_actual.month)[1]),
+        first_date=fecha_inicio,
+        last_date=fecha_fin,
         current_date=datetime.datetime.now(),
-        on_change=seleccionar_fecha)
+        on_change=seleccionar_fecha
+    )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def format_hora(e):
@@ -452,6 +478,30 @@ def main(page: ft.Page):
             except Exception as error:
                 page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}"), duration=3000))
 
+        def mostrar_datepicker_edit(e):
+            """Abre DatePicker para edición"""
+            page.overlay.append(date_picker_edit)
+            date_picker_edit.open = True
+            page.update()
+    
+        def seleccionar_fecha_edit(e):
+            """Actualiza fecha en TextField de edición"""
+            fecha_seleccionada = date_picker_edit.value
+            if fecha_seleccionada:
+                fecha_solo = fecha_seleccionada.date()
+                txt_edit_fecha.current.value = fecha_solo.strftime("%Y-%m-%d")
+                date_picker_edit.open = False
+                page.update()
+
+        # DatePicker específico para edición
+        date_picker_edit = ft.DatePicker(
+            first_date=fecha_inicio,
+            last_date=fecha_fin,
+            current_date=datetime.datetime.strptime(registro_data[0], "%Y-%m-%d"),
+            on_change=seleccionar_fecha_edit
+        )
+        
+        
         txt_edit_fecha = ft.Ref[ft.TextField]()
         txt_edit_horas35 = ft.Ref[ft.TextField]()
         txt_edit_horas100 = ft.Ref[ft.TextField]()
@@ -465,7 +515,9 @@ def main(page: ft.Page):
                     ref=txt_edit_fecha,
                     label="Fecha",
                     value=registro_data[0],
-                    width=320
+                    width=320,
+                    on_click=mostrar_datepicker_edit,
+                    read_only=True,
                 ),
                 ft.TextField(
                     ref=txt_edit_horas35,
