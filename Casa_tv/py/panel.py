@@ -318,7 +318,7 @@ def main(page: ft.Page):
                 text="Aplicar pagos",
                 content=ft.Column([
                     ft.Text("Aplica los pagos", size=20),
-                    crear_tabla_vencimientos(),
+                    
                 ])
             ),
         ],

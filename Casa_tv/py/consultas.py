@@ -1,5 +1,6 @@
 from database import connect_to_database
 import sqlite3
+import datetime
 
 def get_clientes():
     """
@@ -37,6 +38,8 @@ def get_clientes():
         finally:
             conn.close()
     return []
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, estado: str, frecuencia: int) -> bool:
     """
@@ -88,7 +91,8 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, estado: str,
         finally:
             conn.close()
     return False
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def get_estado_pagos():
     """
@@ -151,4 +155,61 @@ def get_estado_pagos():
         finally:
             conn.close()
     return []
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def insertar_pago(cliente_id: int, fecha_pago: str) -> bool:
+    """
+    Inserta un nuevo pago manteniendo la secuencia de fechas original del cliente.
+
+    Args:
+        cliente_id (int): ID del cliente que realiza el pago
+        fecha_pago (str): Fecha del pago actual en formato 'YYYY-MM-DD'
+
+    Returns:
+        bool: True si la inserción fue exitosa, False en caso contrario
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            
+            # Obtener datos del cliente
+            cursor.execute('''
+                SELECT nombre, inicio, frecuencia 
+                FROM clientes 
+                WHERE id = ?
+            ''', (cliente_id,))
+            
+            cliente = cursor.fetchone()
+            if not cliente:
+                raise ValueError("Cliente no encontrado")
+                
+            nombre_cliente, fecha_inicio, frecuencia = cliente
+            
+            # Calcular próxima fecha manteniendo el día original
+            fecha_inicio_obj = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d')
+            fecha_pago_obj = datetime.datetime.strptime(fecha_pago, '%Y-%m-%d')
+            
+            # Calcular cuántos períodos han pasado
+            dias_transcurridos = (fecha_pago_obj - fecha_inicio_obj).days
+            periodos = dias_transcurridos // frecuencia
+            
+            # Insertar el pago
+            cursor.execute('''
+                INSERT INTO pagos (cliente_id, nombre_cliente, fecha_pago)
+                VALUES (?, ?, ?)
+            ''', (cliente_id, nombre_cliente, fecha_pago))
+            
+            conn.commit()
+            return True
+            
+        except sqlite3.Error as e:
+            print(f"Error insertando pago: {e}")
+            return False
+        except ValueError as e:
+            print(f"Error de validación: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
 
