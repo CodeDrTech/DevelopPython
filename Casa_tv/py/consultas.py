@@ -278,4 +278,35 @@ def get_estado_pago_cliente(cliente_id: int):
         finally:
             conn.close()
     return None
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def insertar_cliente(nombre: str, whatsapp: str, fecha_inicio: str, estado: str, frecuencia: int) -> bool:
+    """
+    Inserta un nuevo cliente en la base de datos.
 
+    Args:
+        nombre (str): Nombre del cliente
+        whatsapp (str): Número de WhatsApp
+        fecha_inicio (str): Fecha de inicio (YYYY-MM-DD)
+        estado (str): Estado del cliente (Activo/Inactivo)
+        frecuencia (int): Frecuencia de pago en días
+
+    Returns:
+        bool: True si la inserción fue exitosa, False en caso contrario
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO clientes (nombre, whatsapp, inicio, estado, frecuencia)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error insertando cliente: {e}")
+            return False
+        finally:
+            conn.close()
+    return False

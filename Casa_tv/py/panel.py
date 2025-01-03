@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente
 import datetime
 
 
@@ -20,6 +20,72 @@ def main(page: ft.Page):
     
     # Referencias globales
     txt_fecha_pago = ft.Ref[ft.TextField]()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Referencias para controles
+    txt_nombre = ft.Ref[ft.TextField]()
+    txt_whatsapp = ft.Ref[ft.TextField]()
+    txt_fecha_inicio = ft.Ref[ft.TextField]()
+    dd_estado = ft.Ref[ft.Dropdown]()
+    txt_frecuencia = ft.Ref[ft.TextField]()
+
+    def mostrar_datepicker_inicio(e):
+        """Muestra DatePicker para fecha inicio"""
+        date_picker = ft.DatePicker(
+            first_date=datetime.datetime.now(),
+            last_date=datetime.datetime.now() + datetime.timedelta(days=30),
+            on_change=lambda e: seleccionar_fecha_inicio(e)
+        )
+        page.overlay.append(date_picker)
+        date_picker.open = True
+        page.update()
+
+    def seleccionar_fecha_inicio(e):
+        """Actualiza TextField con fecha seleccionada"""
+        if e.control.value:
+            fecha = e.control.value.date()
+            txt_fecha_inicio.current.value = fecha.strftime("%Y-%m-%d")
+            e.control.open = False
+            page.update()
+
+    def limpiar_campos():
+        """Limpia todos los campos del formulario"""
+        txt_nombre.current.value = ""
+        txt_whatsapp.current.value = ""
+        txt_fecha_inicio.current.value = ""
+        dd_estado.current.value = "Activo"
+        txt_frecuencia.current.value = ""
+        page.update()
+
+    def guardar_cliente(e):
+        """Valida y guarda nuevo cliente"""
+        try:
+            # Validar campos requeridos
+            if not all([
+                txt_nombre.current.value,
+                txt_whatsapp.current.value,
+                txt_fecha_inicio.current.value,
+                dd_estado.current.value,
+                txt_frecuencia.current.value
+            ]):
+                raise ValueError("Todos los campos son requeridos")
+
+            # Insertar cliente
+            if insertar_cliente(
+                txt_nombre.current.value,
+                txt_whatsapp.current.value,
+                txt_fecha_inicio.current.value,
+                dd_estado.current.value,
+                int(txt_frecuencia.current.value)
+            ):
+                mostrar_mensaje("Cliente guardado correctamente")
+                limpiar_campos()
+            else:
+                mostrar_mensaje("Error al guardar cliente")
+        except ValueError as e:
+            mostrar_mensaje(f"Error: {str(e)}")
+        except Exception as e:
+            mostrar_mensaje(f"Error inesperado: {str(e)}")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_vencimientos():
@@ -403,32 +469,29 @@ def main(page: ft.Page):
                 ])
             ),
             ft.Tab(
-                icon=ft.Icons.SUPERVISED_USER_CIRCLE_SHARP,
+                icon=ft.Icons.PERSON_ADD,
                 text="Agregar clientes",
                 content=ft.Column(
                     [
                         ft.Text("Registrar clientes", size=20),
                         ft.Row([
-                            ft.Text("No.:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True),
-                        ]),
-                        ft.Row([
                             ft.Text("Nombre:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.WORDS),
+                            ft.TextField(width=320, ref=txt_nombre, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.WORDS),
                         ]),
                         ft.Row([
                             ft.Text("Fecha de inicio:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, icon=ft.Icons.CALENDAR_MONTH),
+                            ft.TextField(width=320, ref=txt_fecha_inicio, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, icon=ft.Icons.CALENDAR_MONTH, on_click=mostrar_datepicker_inicio),
                             
                         ]),
                         ft.Row([
                             ft.Text("Whatsapp:", width=100),
-                            ft.TextField(width=320, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_whatsapp, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Estado:", width=100),
                             ft.Dropdown(
                             width=320,
+                            ref=dd_estado,
                             value="Activo",
                             options=[
                                 ft.dropdown.Option("Activo"),
@@ -442,6 +505,7 @@ def main(page: ft.Page):
                         ft.Text("Frecuencia de pago:", width=100),
                         ft.Dropdown(
                             width=320,
+                            ref=txt_frecuencia,
                             value="30",
                             options=[
                                 ft.dropdown.Option("1"),
@@ -454,7 +518,7 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                         ft.Text(" ", width=100),
-                        ft.ElevatedButton(text="Registrar", width=100),
+                        ft.ElevatedButton(text="Registrar", width=100, on_click=guardar_cliente),
                         ft.ElevatedButton(text="Empleados", width=100),
                         ft.ElevatedButton(text="Reportes", width=100),
                         ]),
