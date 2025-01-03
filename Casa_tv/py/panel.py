@@ -274,7 +274,7 @@ def main(page: ft.Page):
             e: Evento del botón
         """
         date_picker = ft.DatePicker(
-            first_date=datetime.datetime.now(),
+            first_date=datetime.datetime.now() - + datetime.timedelta(days=60),
             last_date=datetime.datetime.now() + datetime.timedelta(days=60),
             on_change=lambda e: seleccionar_fecha_pago(e),
         )
