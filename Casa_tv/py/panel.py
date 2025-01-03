@@ -303,6 +303,11 @@ def main(page: ft.Page):
                     mostrar_mensaje(f"Error: {str(ex)}")
                 page.update()
 
+            def close_dlg(e):
+                """Cierra el diálogo modal"""
+                dlg_modal.open = False
+                e.control.page.update()
+            
             dlg_modal = ft.AlertDialog(
                 modal=True,
                 title=ft.Text("Editar Cliente"),
@@ -315,12 +320,11 @@ def main(page: ft.Page):
                 ]),
                 actions=[
                     ft.TextButton("Cancelar", 
-                        on_click=lambda e: setattr(dlg_modal, 'open', False)),
+                        on_click=close_dlg),
                     ft.TextButton("Guardar", 
                         on_click=guardar_cambios)
                 ]
-            )
-            
+            )            
             page.overlay.append(dlg_modal)
             dlg_modal.open = True
             page.update()
@@ -357,7 +361,11 @@ def main(page: ft.Page):
                             )
                         ]
                     ) for cliente in registros_filtrados
-                ]
+                ],
+                border=ft.border.all(1, ft.Colors.GREY_400),
+                border_radius=10,
+                vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+                horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400)
             )
             page.update()
 
