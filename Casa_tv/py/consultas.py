@@ -92,7 +92,7 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, estado: str,
 
 def get_estado_pagos():
     """
-    Obtiene el estado de pagos de todos los clientes.
+    Obtiene el estado de pagos de todos los clientes activos.
 
     Returns:
         list: Lista de tuplas con:
@@ -141,6 +141,7 @@ def get_estado_pagos():
                     END AS estado_pago
                 FROM clientes c
                 LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+                WHERE c.estado = 'Activo'
                 ORDER BY dias_transcurridos DESC;
             ''')
             return cursor.fetchall()
@@ -150,3 +151,4 @@ def get_estado_pagos():
         finally:
             conn.close()
     return []
+

@@ -39,7 +39,7 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Inicio")),
             ft.DataColumn(ft.Text("Ultimo pago")),
-            ft.DataColumn(ft.Text("Dia de pago")),
+            ft.DataColumn(ft.Text("Proximo pago")),
             ft.DataColumn(ft.Text("Frecuencia")),
             ft.DataColumn(ft.Text("Días")),
             ft.DataColumn(ft.Text("Estado"))
