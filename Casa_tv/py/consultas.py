@@ -109,11 +109,12 @@ def get_estado_pagos():
                     c.nombre AS nombre_cliente,
                     c.inicio AS fecha_inicio,
                     COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,
-                    c.frecuencia,
                     DATE(COALESCE(up.ultima_fecha_pago, c.inicio), '+' || c.frecuencia || ' days') AS proximo_pago,
-                    JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) AS dias_transcurridos,
+                    c.frecuencia,
+                    ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) AS dias_transcurridos,
                     CASE 
-                        WHEN JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) > c.frecuencia THEN 'Pendiente'
+                        WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia THEN 'Pendiente'
+                        WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) THEN 'Cerca'
                         ELSE 'Al día'
                     END AS estado_pago
                 FROM 
@@ -123,7 +124,8 @@ def get_estado_pagos():
                 ON 
                     c.id = up.cliente_id
                 ORDER BY 
-                    estado_pago DESC, dias_transcurridos DESC
+                    estado_pago DESC,
+                    dias_transcurridos DESC
             """)
             return cursor.fetchall()
         except sqlite3.Error as e:

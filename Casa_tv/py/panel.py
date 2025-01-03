@@ -26,11 +26,18 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Inicio")),
             ft.DataColumn(ft.Text("Último Pago")),
-            ft.DataColumn(ft.Text("Paga cada")),
             ft.DataColumn(ft.Text("Próximo Pago")),
-            ft.DataColumn(ft.Text("Días")),
+            ft.DataColumn(ft.Text("Paga cada")),
+            ft.DataColumn(ft.Text("Lleva")),
             ft.DataColumn(ft.Text("Estado")),
         ]
+        
+        def get_estado_color(estado):
+            if estado == "Pendiente":
+                return "red"
+            elif estado == "Cerca":
+                return "orange"
+            return "green"
         
         rows = [
             ft.DataRow(
@@ -39,11 +46,11 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(reg[1])),  # Nombre
                     ft.DataCell(ft.Text(reg[2])),  # Fecha inicio
                     ft.DataCell(ft.Text(reg[3])),  # Fecha base
-                    ft.DataCell(ft.Text(f"{reg[4]} días")),  # Frecuencia
-                    ft.DataCell(ft.Text(reg[5])),  # Próximo pago
-                    ft.DataCell(ft.Text(f"{int(reg[6])}")),  # Días transcurridos
+                    ft.DataCell(ft.Text(reg[4])),  # Próximo pago
+                    ft.DataCell(ft.Text(f"{reg[5]} días")),  # Frecuencia
+                    ft.DataCell(ft.Text(f"{int(reg[6])} dias")),  # Días transcurridos
                     ft.DataCell(ft.Text(reg[7],  # Estado
-                        color="red" if reg[7] == "Pendiente" else "green")),
+                        color=get_estado_color(reg[7]))),
                 ],
             ) for reg in registros
         ]
@@ -51,10 +58,10 @@ def main(page: ft.Page):
         return ft.DataTable(
             columns=columns,
             rows=rows,
-            border=ft.border.all(1, ft.colors.GREY_400),
+            border=ft.border.all(1, ft.Colors.GREY_400),
             border_radius=10,
-            vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
-            horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_400),
+            vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+            horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
         )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
