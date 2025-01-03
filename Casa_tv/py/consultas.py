@@ -41,46 +41,37 @@ def get_clientes():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, estado: str, frecuencia: int) -> bool:
+def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio: str, estado: str, frecuencia: int) -> bool:
     """
     Actualiza los datos de un cliente en la base de datos.
 
     Args:
-        cliente_id (int): ID del cliente a modificar
+        cliente_id (int): ID del cliente a actualizar
         nombre (str): Nombre del cliente
         whatsapp (str): Número de WhatsApp
+        fecha_inicio (str): Fecha de inicio en formato YYYY-MM-DD
         estado (str): Estado del cliente (Activo/Inactivo)
         frecuencia (int): Frecuencia de pago en días
 
     Returns:
-        bool: True si la actualización fue exitosa, False si hubo error
-
-    Raises:
-        ValueError: Si los datos no son válidos
-        sqlite3.Error: Si hay error en la base de datos
+        bool: True si la actualización fue exitosa, False en caso contrario
     """
-    # Validar datos
-    if not all([cliente_id, nombre, whatsapp, estado, frecuencia]):
+    if not all([cliente_id, nombre, whatsapp, fecha_inicio, estado, frecuencia]):
         raise ValueError("Todos los campos son requeridos")
     
-    if estado not in ['Activo', 'Inactivo']:
-        raise ValueError("Estado debe ser 'Activo' o 'Inactivo'")
-    
-    if frecuencia <= 0:
-        raise ValueError("Frecuencia debe ser mayor a 0")
-
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                UPDATE Clientes 
-                SET nombre = ?,
+                UPDATE clientes 
+                SET nombre = ?, 
                     whatsapp = ?,
+                    inicio = ?,
                     estado = ?,
                     frecuencia = ?
                 WHERE id = ?
-            ''', (nombre, whatsapp, estado, frecuencia, cliente_id))
+            ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia, cliente_id))
             
             conn.commit()
             return cursor.rowcount > 0

@@ -199,151 +199,263 @@ def main(page: ft.Page):
         ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    
     def crear_tabla_clientes():
         """
-        Crea una tabla DataTable con los clientes y botones de edición.
-        Permite editar los datos de cada cliente mediante un diálogo modal.
+        Crea tabla de clientes con:
+        - Filtro por nombre con AutoComplete
+        - Edición completa de datos incluyendo fecha
+        - Actualización en tiempo real
         """
+        # Variables globales
+        clientes = get_clientes()
+        nombre_seleccionado = None
+        tabla_container = ft.Container()
+        auto_complete = None
+        auto_complete_container = None
+
         def editar_cliente(e, cliente_id):
-            """Abre diálogo modal para editar cliente"""
-            dlg_modal.client_id = cliente_id
-            nombre_edit.value = e.control.data["nombre"]
-            whatsapp_edit.value = e.control.data["whatsapp"]
-            estado_edit.value = e.control.data["estado"]
-            frecuencia_edit.value = str(e.control.data["frecuencia"])
+            """Abre diálogo para editar cliente"""
+            cliente = next(c for c in clientes if c[0] == cliente_id)
+            
+            nombre_edit = ft.TextField(label="Nombre", value=cliente[1])
+            whatsapp_edit = ft.TextField(label="WhatsApp", value=cliente[3])
+            fecha_edit = ft.TextField(
+                label="Fecha inicio",
+                value=cliente[2],
+                read_only=True,
+                icon=ft.Icons.CALENDAR_MONTH,
+                on_click=lambda _: mostrar_datepicker_edit()
+            )
+            estado_edit = ft.Dropdown(
+                label="Estado",
+                options=[
+                    ft.dropdown.Option("Activo"),
+                    ft.dropdown.Option("Inactivo")
+                ],
+                value=cliente[4]
+            )
+            frecuencia_edit = ft.TextField(
+                label="Frecuencia",
+                value=str(cliente[5]),
+                input_filter=ft.InputFilter(regex_string=r"[0-9]")
+            )
+
+            def seleccionar_fecha_edit(e, txt_field):
+                """
+                Actualiza TextField con la fecha seleccionada en el DatePicker.
+                
+                Args:
+                    e: Evento del DatePicker con la fecha seleccionada
+                    txt_field: TextField a actualizar con la nueva fecha
+                """
+                if e.control.value:
+                    fecha = e.control.value.date()
+                    txt_field.value = fecha.strftime("%Y-%m-%d")
+                    e.control.open = False
+                    page.update()
+            
+            def mostrar_datepicker_edit():
+                """Muestra DatePicker para editar fecha"""
+                date_picker = ft.DatePicker(
+                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+                    last_date=datetime.datetime.now() + datetime.timedelta(days=365),
+                    on_change=lambda e: seleccionar_fecha_edit(e, fecha_edit)
+                )
+                page.overlay.append(date_picker)
+                date_picker.open = True
+                page.update()
+                
+            # Usar en el diálogo de edición:
+            fecha_edit = ft.TextField(
+                label="Fecha inicio",
+                value=cliente[2],
+                read_only=True,
+                icon=ft.Icons.CALENDAR_MONTH,
+                on_click=lambda _: mostrar_datepicker_edit()
+            )
+
+            def guardar_cambios(e):
+                """Guarda cambios del cliente"""
+                try:
+                    if actualizar_cliente(
+                        cliente_id,
+                        nombre_edit.value,
+                        whatsapp_edit.value,
+                        fecha_edit.value,
+                        estado_edit.value,
+                        int(frecuencia_edit.value)
+                    ):
+                        dlg_modal.open = False
+                        # Actualizar datos
+                        nonlocal clientes
+                        clientes = get_clientes()
+                        actualizar_tabla(clientes)
+                        actualizar_autocomplete()
+                        
+                        # Limpia y recrea el AutoComplete
+                        limpiar_y_recrear_auto_complete(auto_complete_container, clientes)
+                        
+                        
+                        mostrar_mensaje("Cliente actualizado")
+                    else:
+                        mostrar_mensaje("Error al actualizar")
+                except Exception as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}")
+                page.update()
+
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Editar Cliente"),
+                content=ft.Column([
+                    nombre_edit,
+                    whatsapp_edit,
+                    fecha_edit,
+                    estado_edit,
+                    frecuencia_edit
+                ]),
+                actions=[
+                    ft.TextButton("Cancelar", 
+                        on_click=lambda e: setattr(dlg_modal, 'open', False)),
+                    ft.TextButton("Guardar", 
+                        on_click=guardar_cambios)
+                ]
+            )
+            
+            page.overlay.append(dlg_modal)
             dlg_modal.open = True
             page.update()
-
-        def mostrar_mensaje(mensaje: str):
-            """
-            Muestra mensaje en SnackBar usando nueva API.
-            
-            Args:
-                mensaje (str): Texto a mostrar
-            """
-            snack = ft.SnackBar(content=ft.Text(mensaje))
-            page.overlay.append(snack)
-            page.open = snack # type: ignore
-
-        def guardar_cambios(e):
-            """Guarda cambios y actualiza tabla"""
-            try:
-                if actualizar_cliente(
-                    dlg_modal.client_id,
-                    nombre_edit.value,
-                    whatsapp_edit.value,
-                    estado_edit.value,
-                    int(frecuencia_edit.value)
-                ):
-                    dlg_modal.open = False
-                    actualizar_tabla()
-                    mostrar_mensaje("Cliente actualizado")
-                else:
-                    mostrar_mensaje("Error al actualizar cliente")
-            except Exception as ex:
-                mostrar_mensaje(f"Error: {str(ex)}")
+        
+        
+        def actualizar_tabla(registros_filtrados):
+            """Actualiza contenido de la tabla"""
+            tabla_container.content = ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("ID")),
+                    ft.DataColumn(ft.Text("Nombre")),
+                    ft.DataColumn(ft.Text("Inicio")),
+                    ft.DataColumn(ft.Text("WhatsApp")),
+                    ft.DataColumn(ft.Text("Estado")),
+                    ft.DataColumn(ft.Text("Frecuencia")),
+                    ft.DataColumn(ft.Text("Acciones"))
+                ],
+                rows=[
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(cliente[0]))),
+                            ft.DataCell(ft.Text(cliente[1])),
+                            ft.DataCell(ft.Text(cliente[2])),
+                            ft.DataCell(ft.Text(cliente[3])),
+                            ft.DataCell(ft.Text(cliente[4])),
+                            ft.DataCell(ft.Text(f"{cliente[5]} días")),
+                            ft.DataCell(
+                                ft.IconButton(
+                                    icon=ft.Icons.EDIT,
+                                    data=cliente,
+                                    on_click=lambda e, id=cliente[0]: 
+                                        editar_cliente(e, id)
+                                )
+                            )
+                        ]
+                    ) for cliente in registros_filtrados
+                ]
+            )
             page.update()
 
-        clientes = get_clientes()
+        def on_autocomplete_selected(e):
+            """Filtra tabla por nombre seleccionado"""
+            nonlocal nombre_seleccionado
+            nombre_seleccionado = e.selection.value
+            if nombre_seleccionado:
+                filtrados = [c for c in clientes 
+                            if c[1].lower() == nombre_seleccionado.lower()]
+                actualizar_tabla(filtrados)
+            else:
+                actualizar_tabla(clientes)
+
+        # Crear AutoComplete
+        nombres = sorted(set(c[1] for c in clientes))
+        auto_complete = ft.AutoComplete(
+            suggestions=[
+                ft.AutoCompleteSuggestion(key=nombre, value=nombre) 
+                for nombre in nombres
+            ],
+            on_select=on_autocomplete_selected
+        )
+
+        auto_complete_container = ft.Container(
+            content=auto_complete,
+            width=320,
+            border=ft.border.all(1, ft.Colors.BLACK),
+            border_radius=10
+        )
         
-        columns = [
-            ft.DataColumn(ft.Text("Numero cliente")),
-            ft.DataColumn(ft.Text("Nombre")),
-            ft.DataColumn(ft.Text("Inicio")),
-            ft.DataColumn(ft.Text("WhatsApp")),
-            ft.DataColumn(ft.Text("Estado")),
-            ft.DataColumn(ft.Text("Frecuencia")),
-            ft.DataColumn(ft.Text("Acciones"))
-        ]
-        
-        rows = [
-            ft.DataRow(
-                cells=[
-                    ft.DataCell(ft.Text(str(cliente[0]))),
-                    ft.DataCell(ft.Text(cliente[1])),
-                    ft.DataCell(ft.Text(cliente[2])),
-                    ft.DataCell(ft.Text(cliente[3])),
-                    ft.DataCell(ft.Text(cliente[4])),
-                    ft.DataCell(ft.Text(f"{cliente[5]} días")),
-                    ft.DataCell(
-                        ft.IconButton(
-                            icon=ft.Icons.EDIT,
-                            data={
-                                "nombre": cliente[1],
-                                "whatsapp": cliente[3],
-                                "estado": cliente[4],
-                                "frecuencia": cliente[5]
-                            },
-                            on_click=lambda e, id=cliente[0]: editar_cliente(e, id)
-                        )
+        def actualizar_autocomplete():
+            """Actualiza sugerencias del AutoComplete."""
+            if auto_complete and auto_complete_container:
+                nombres = sorted(set(c[1] for c in clientes))
+                auto_complete.suggestions = [
+                    ft.AutoCompleteSuggestion(key=nombre, value=nombre) 
+                    for nombre in nombres
+                ]
+                auto_complete_container.content = auto_complete
+                auto_complete_container.update()
+            
+        # Inicializar componentes
+        def limpiar_y_recrear_auto_complete(auto_complete_container, clientes):
+            """
+            Limpia y recrea el AutoComplete después de actualizar cliente.
+            Mantiene el filtro por nombre y actualiza la tabla.
+
+            Args:
+                auto_complete_container: Contenedor del AutoComplete
+                clientes: Lista actualizada de clientes
+            """
+            nonlocal nombre_seleccionado
+
+            # Obtener cliente actualizado
+            cliente_actualizado = next(
+                (c for c in clientes if c[1].lower() == nombre_seleccionado.lower()),
+                None
+            ) if nombre_seleccionado else None
+
+            # Crear sugerencias
+            if cliente_actualizado:
+                # Mostrar solo el cliente actualizado
+                sugerencias = [
+                    ft.AutoCompleteSuggestion(
+                        key=cliente_actualizado[1],
+                        value=cliente_actualizado[1]
                     )
                 ]
-            ) for cliente in clientes
-        ]
+                # Actualizar tabla filtrada
+                actualizar_tabla([cliente_actualizado])
+            else:
+                # Mostrar todos los clientes
+                nombres = sorted(set(c[1] for c in clientes))
+                sugerencias = [
+                    ft.AutoCompleteSuggestion(key=nombre, value=nombre)
+                    for nombre in nombres
+                ]
+                # Actualizar tabla completa
+                actualizar_tabla(clientes)
 
-        # Campos del diálogo de edición
-        nombre_edit = ft.TextField(label="Nombre", capitalization=ft.TextCapitalization.WORDS)
-        whatsapp_edit = ft.TextField(label="WhatsApp", max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
-        estado_edit = ft.Dropdown(
-            label="Estado",
-            options=[
-                ft.dropdown.Option("Activo"),
-                ft.dropdown.Option("Inactivo")
-            ]
-        )
-        frecuencia_edit = ft.TextField(
-            label="Frecuencia (días)",
-            input_filter=ft.InputFilter(regex_string=r"[0-9]"),
-            max_length=2
-        )
+            # Recrear AutoComplete
+            auto_complete = ft.AutoComplete(
+                suggestions=sugerencias,
+                on_select=on_autocomplete_selected,
+                suggestions_max_height=150
+            )
+
+            # Actualizar contenedor
+            auto_complete_container.content = auto_complete
+            auto_complete_container.update()
+
+        actualizar_tabla(clientes)       
         
-        def close_dlg(e):
-            """Cierra el diálogo modal"""
-            dlg_modal.open = False
-            page.update()
-
-        dlg_modal = ft.AlertDialog(
-            modal=True,
-            title=ft.Text("Editar Cliente"),
-            content=ft.Column([
-                nombre_edit,
-                whatsapp_edit,
-                estado_edit,
-                frecuencia_edit
-            ], tight=True),
-            actions=[
-                ft.TextButton("Cancelar", on_click=close_dlg),
-                ft.TextButton("Guardar", on_click=guardar_cambios)
-            ]
-        )
-
-        # Agregar diálogo a overlay en lugar de page.dialog
-        page.overlay.append(dlg_modal)
-        
-        return ft.DataTable(
-            columns=columns,
-            rows=rows,
-            border=ft.border.all(1, ft.Colors.GREY_400),
-            border_radius=10,
-            vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
-            horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400)
-        )
-
-    def actualizar_tabla():
-        """
-        Actualiza el contenido de la tabla de clientes 
-        después de modificar datos.
-        """
-        # Obtener tab de listado
-        listado_tab = mainTab.tabs[1]
-        # Obtener columna dentro del tab
-        column = listado_tab.content
-        # Actualizar tabla en segunda posición
-        column.controls[1] = crear_tabla_clientes()
-        page.update()
-    # Contenedor principal de la tabla
-    #tabla_container = ft.Container(content=crear_tabla_clientes(), expand=True)
+        return ft.Column([
+            auto_complete_container,
+            tabla_container
+        ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def get_estado_color(estado: str) -> str:
