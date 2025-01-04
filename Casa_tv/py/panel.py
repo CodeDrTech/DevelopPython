@@ -586,7 +586,7 @@ def main(page: ft.Page):
             try:
                 if not cliente_seleccionado:
                     raise ValueError("Seleccione un cliente")
-                if not txt_fecha_pago.value:
+                if not txt_fecha_pago.current.value:
                     raise ValueError("Seleccione fecha de pago")
 
                 cliente_id = next(
@@ -594,7 +594,7 @@ def main(page: ft.Page):
                     None
                 )
                 
-                if insertar_pago(cliente_id, txt_fecha_pago.value):
+                if insertar_pago(cliente_id, txt_fecha_pago.current.value):
                     mostrar_mensaje("Pago registrado correctamente")
                     limpiar_seleccion()
                     txt_fecha_pago.value = ""
