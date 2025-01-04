@@ -509,6 +509,38 @@ def main(page: ft.Page):
         clientes = get_clientes()
         txt_fecha_pago = ft.Ref[ft.TextField]()
         tabla_vencimientos = None  # Referencia a tabla_vencimientos
+        
+        def limpiar_y_recrear_auto_complete_pago(auto_complete_container, clientes):
+            """
+            Limpia y recrea el AutoComplete después de aplicar un pago.
+            
+            Args:
+                auto_complete_container: Contenedor del AutoComplete
+                clientes: Lista actualizada de clientes
+            """
+            nonlocal cliente_seleccionado
+            cliente_seleccionado = None
+            
+            # Obtener nombres actualizados
+            nombres = sorted(set(c[1] for c in clientes))
+            
+            # Recrear AutoComplete limpio
+            auto_complete = ft.AutoComplete(
+                suggestions=[
+                    ft.AutoCompleteSuggestion(key=nombre, value=nombre)
+                    for nombre in nombres
+                ],
+                on_select=on_cliente_selected
+            )
+
+            # Actualizar contenedor
+            auto_complete_container.content = auto_complete
+            auto_complete_container.update()
+
+            # Limpiar otros campos
+            info_container.content = None
+            txt_fecha_pago.current.value = ""
+            page.update()
 
         def mostrar_datepicker_pago(e):
             """
@@ -597,7 +629,7 @@ def main(page: ft.Page):
                 
                 if insertar_pago(cliente_id, txt_fecha_pago.current.value):
                     mostrar_mensaje("Pago registrado correctamente")
-                    limpiar_seleccion()
+                    limpiar_y_recrear_auto_complete_pago(auto_complete_container, get_clientes())
                     txt_fecha_pago.current.value = ""
                     
                     # Actualizar tabla de vencimientos
