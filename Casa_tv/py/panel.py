@@ -11,7 +11,7 @@ def main(page: ft.Page):
     page.window.alignment = ft.alignment.center
     page.window.width = 1050
     page.window.height = 700
-    page.window.resizable = False
+    page.window.resizable = True
     page.padding = 20
     page.scroll = False # type: ignore
     page.bgcolor = "#e7e7e7"
@@ -109,10 +109,19 @@ def main(page: ft.Page):
         estado_seleccionado = "Todos"
         tabla_container = ft.Container()
         
+        
+        
+        
         def filtrar_registros():
-            """Aplica filtros combinados de nombre y estado"""
+            """
+            Aplica filtros combinados y actualiza tabla.
+            Recarga datos frescos de la BD antes de filtrar.
+            """
+            # Recargar datos frescos
+            nonlocal registros
+            registros = get_estado_pagos()
             filtrados = registros
-            
+
             # Filtrar por nombre si hay selección
             if nombre_seleccionado:
                 filtrados = [
@@ -126,9 +135,18 @@ def main(page: ft.Page):
                     reg for reg in filtrados 
                     if reg[7] == estado_seleccionado
                 ]
-                
+            
+            # Actualizar tabla con resultados
             actualizar_tabla(filtrados)
+            page.update()
 
+        # Botón refresh
+        btn_refresh = ft.IconButton(
+            icon=ft.Icons.REFRESH,
+            tooltip="Actualizar tabla",
+            on_click=lambda _: filtrar_registros()
+        )
+        
         def on_estado_change(e):
             """Maneja cambio en dropdown de estado"""
             nonlocal estado_seleccionado
@@ -249,7 +267,8 @@ def main(page: ft.Page):
         return ft.Column([
             ft.Row([
                 auto_complete_container,
-                dropdown_estado
+                dropdown_estado,
+                btn_refresh,
             ]),
             tabla_container
         ])
@@ -745,6 +764,7 @@ def main(page: ft.Page):
                 content=ft.Column([
                     ft.Text("Busqueda por nombre", size=20),
                     crear_tabla_vencimientos(),
+                    
                 ])
             ),
             ft.Tab(
@@ -753,7 +773,7 @@ def main(page: ft.Page):
                 content=ft.Column([
                     ft.Text("Clientes", size=20),
                     crear_tabla_clientes(),
-                ])
+                ]),
             ),
             ft.Tab(
                 icon=ft.Icons.PERSON_ADD,
