@@ -486,7 +486,7 @@ def main(page: ft.Page):
 
     def mostrar_mensaje(mensaje: str):
         """
-        Muestra un mensaje en SnackBar.
+        Muestra un mensaje en SnackBar..
         
         Args:
             mensaje (str): Texto a mostrar
