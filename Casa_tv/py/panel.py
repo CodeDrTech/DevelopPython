@@ -494,113 +494,140 @@ def main(page: ft.Page):
         snack = ft.SnackBar(content=ft.Text(mensaje))
         page.overlay.append(snack)
         snack.open = True
-        page.update()
+        page.update()    
 
     
-    def mostrar_datepicker_pago(e):
-        """
-        Muestra el DatePicker para seleccionar fecha de pago.
-        
-        Args:
-            e: Evento del botón
-        """
-        date_picker = ft.DatePicker(
-            first_date=datetime.datetime.now() - + datetime.timedelta(days=60),
-            last_date=datetime.datetime.now() + datetime.timedelta(days=60),
-            on_change=lambda e: seleccionar_fecha_pago(e),
-        )
-        page.overlay.append(date_picker)
-        date_picker.open = True
-        page.update()
-
-    def seleccionar_fecha_pago(e):
-        """
-        Actualiza TextField con fecha seleccionada.
-        
-        Args:
-            e: Evento del DatePicker
-            txt_field: TextField a actualizar
-        """
-        if e.control.value:
-            fecha = e.control.value.date()
-            txt_fecha_pago.current.value = fecha.strftime("%Y-%m-%d")
-            e.control.open = False
-            page.update()
     
     def crear_tab_pagos():
         """
-        Crea tab para aplicar pagos individuales a clientes.
-        Permite seleccionar cliente, fecha de pago y muestra información relevante.
+        Crea tab para aplicar pagos con AutoComplete y fecha.
+        Permite seleccionar cliente, establecer fecha y registrar pago.
         """
-        # Contenedor para info del cliente
+        # Variables de estado
         info_container = ft.Container()
-        
-        def on_cliente_change(e):
-            """Actualiza información cuando se selecciona un cliente"""
-            cliente_id = e.control.value
-            if cliente_id:
-                cliente = get_estado_pago_cliente(int(cliente_id))
-                if cliente:
-                    info_container.content = ft.Column([
-                        ft.Text(f"Último pago: {cliente[3]}"),
-                        ft.Text(f"Próximo pago: {cliente[4]}"),
-                        ft.Text(f"Días transcurridos: {cliente[6]}"),
-                        ft.Text(f"Estado: {cliente[7]}", 
-                            color=get_estado_color(cliente[7]))
-                    ])
-                    page.update()
-
-        def aplicar_pago(e):
-            """Registra el pago del cliente"""
-            try:
-                if not cliente_dropdown.value:
-                    raise ValueError("Seleccione un cliente")
-                if not txt_fecha_pago.current.value:
-                    raise ValueError("Seleccione fecha de pago")
-
-                if insertar_pago(
-                    int(cliente_dropdown.value),
-                    txt_fecha_pago.current.value
-                ):
-                    mostrar_mensaje("Pago registrado correctamente")
-                    on_cliente_change(e)  # Actualizar info
-                else:
-                    mostrar_mensaje("Error registrando pago")
-            except Exception as ex:
-                mostrar_mensaje(f"Error: {str(ex)}")
-
-        # Obtener clientes para dropdown
+        cliente_seleccionado = None
         clientes = get_clientes()
-        cliente_dropdown = ft.Dropdown(
-            label="Seleccionar cliente",
-            width=320,
-            options=[
-                ft.dropdown.Option(key=str(c[0]), text=c[1])
-                for c in clientes
-            ],
-            on_change=on_cliente_change,
-            border=ft.border.all(2, ft.Colors.BLACK),
-            border_radius=10
-        )
+        txt_fecha_pago = ft.Ref[ft.TextField]()
 
-        fecha_pago = ft.TextField(
+        def mostrar_datepicker_pago(e):
+            """
+            Muestra el DatePicker para seleccionar fecha de pago.
+            
+            Args:
+                e: Evento del botón
+            """
+            date_picker = ft.DatePicker(
+                first_date=datetime.datetime.now() - + datetime.timedelta(days=60),
+                last_date=datetime.datetime.now() + datetime.timedelta(days=60),
+                on_change=lambda e: seleccionar_fecha_pago(e),
+            )
+            page.overlay.append(date_picker)
+            date_picker.open = True
+            page.update()
+            
+        def seleccionar_fecha_pago(e):
+            """
+            Actualiza TextField con fecha seleccionada.
+            
+            Args:
+                e: Evento del DatePicker
+                txt_field: TextField a actualizar
+            """
+            if e.control.value:
+                fecha = e.control.value.date()
+                txt_fecha_pago.current.value = fecha.strftime("%Y-%m-%d")
+                e.control.open = False
+                page.update()
+        
+        def limpiar_seleccion():
+            """Limpia selección y campos"""
+            nonlocal cliente_seleccionado
+            cliente_seleccionado = None
+            info_container.content = None
+            txt_fecha_pago.value = ""
+            page.update()
+            
+            
+        # Crear controles
+        campo_fecha = ft.TextField(
             ref=txt_fecha_pago,
             label="Fecha de pago",
             width=320,
             read_only=True,
             icon=ft.Icons.CALENDAR_MONTH,
-            on_click = mostrar_datepicker_pago,
-            border=ft.border.all(2, ft.Colors.BLACK),
+            on_click=mostrar_datepicker_pago
+        )
+        def on_cliente_selected(e):
+            """Actualiza información cuando se selecciona cliente"""
+            nonlocal cliente_seleccionado
+            cliente_seleccionado = e.selection.value
+            
+            if cliente_seleccionado:
+                cliente_id = next(
+                    (c[0] for c in clientes if c[1] == cliente_seleccionado), 
+                    None
+                )
+                if cliente_id:
+                    cliente = get_estado_pago_cliente(cliente_id)
+                    if cliente:
+                        info_container.content = ft.Column([
+                            ft.Text(f"Último pago: {cliente[3]}"),
+                            ft.Text(f"Próximo pago: {cliente[4]}"),
+                            ft.Text(f"Días transcurridos: {cliente[6]}"),
+                            ft.Text(
+                                f"Estado: {cliente[7]}", 
+                                color=get_estado_color(cliente[7])
+                            )
+                        ])
+                        page.update()
+        
+        def aplicar_pago(e):
+            """Registra pago y limpia selección"""
+            try:
+                if not cliente_seleccionado:
+                    raise ValueError("Seleccione un cliente")
+                if not txt_fecha_pago.value:
+                    raise ValueError("Seleccione fecha de pago")
+
+                cliente_id = next(
+                    (c[0] for c in clientes if c[1] == cliente_seleccionado), 
+                    None
+                )
+                
+                if insertar_pago(cliente_id, txt_fecha_pago.value):
+                    mostrar_mensaje("Pago registrado correctamente")
+                    limpiar_seleccion()
+                    txt_fecha_pago.value = ""
+                else:
+                    mostrar_mensaje("Error registrando pago")
+            except Exception as ex:
+                mostrar_mensaje(f"Error: {str(ex)}")
+
+        # AutoComplete para selección de cliente
+        nombres = sorted(set(c[1] for c in clientes))
+        auto_complete = ft.AutoComplete(
+            suggestions=[
+                ft.AutoCompleteSuggestion(key=nombre, value=nombre)
+                for nombre in nombres
+            ],
+            on_select=on_cliente_selected
+        )
+        
+        # Contenedor para AutoComplete
+        auto_complete_container = ft.Container(
+            content=auto_complete,
+            width=320,
+            border=ft.border.all(1, ft.Colors.BLACK),
             border_radius=10
         )
 
         return ft.Tab(
             text="Aplicar Pagos",
-            icon=ft.Icons.PAYMENTS,
+            icon=ft.Icons.PAYMENT,
             content=ft.Column([
                 ft.Text("Registrar Pago", size=20),
-                cliente_dropdown,
-                fecha_pago,
+                auto_complete_container,
+                campo_fecha,
                 info_container,
                 ft.ElevatedButton(
                     "Aplicar Pago",
