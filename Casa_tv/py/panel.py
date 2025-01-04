@@ -28,6 +28,8 @@ def main(page: ft.Page):
     txt_fecha_inicio = ft.Ref[ft.TextField]()
     dd_estado = ft.Ref[ft.Dropdown]()
     txt_frecuencia = ft.Ref[ft.TextField]()
+    
+    tabla_vencimientos = None  # Referencia a tabla_vencimientos
 
     def mostrar_datepicker_inicio(e):
         """Muestra DatePicker para fecha inicio"""
@@ -80,6 +82,13 @@ def main(page: ft.Page):
             ):
                 mostrar_mensaje("Cliente guardado correctamente")
                 limpiar_campos()
+                
+                # Actualizar tabla de vencimientos
+                nonlocal tabla_vencimientos
+                tabla_vencimientos = crear_tabla_vencimientos()
+                mainTab.tabs[0].content = tabla_vencimientos
+                page.update()
+                
             else:
                 mostrar_mensaje("Error al guardar cliente")
         except ValueError as e:
@@ -90,18 +99,47 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_vencimientos():
         """
-        Crea tabla de vencimientos con filtro por nombre cliente.
-        Permite filtrar usando AutoComplete con nombres de la BD.
+        Crea tabla de vencimientos con filtros combinados:
+        - AutoComplete para filtrar por nombre
+        - Dropdown para filtrar por estado (En corte/Pendiente/Cerca/Todos)
         """
         # Variables globales
         registros = get_estado_pagos()
         nombre_seleccionado = None
+        estado_seleccionado = "Todos"
         tabla_container = ft.Container()
+        
+        def filtrar_registros():
+            """Aplica filtros combinados de nombre y estado"""
+            filtrados = registros
+            
+            # Filtrar por nombre si hay selección
+            if nombre_seleccionado:
+                filtrados = [
+                    reg for reg in filtrados 
+                    if reg[1].lower() == nombre_seleccionado.lower()
+                ]
+            
+            # Filtrar por estado si no es "Todos"
+            if estado_seleccionado != "Todos":
+                filtrados = [
+                    reg for reg in filtrados 
+                    if reg[7] == estado_seleccionado
+                ]
+                
+            actualizar_tabla(filtrados)
+
+        def on_estado_change(e):
+            """Maneja cambio en dropdown de estado"""
+            nonlocal estado_seleccionado
+            estado_seleccionado = e.control.value
+            filtrar_registros()
         
         def on_autocomplete_selected(e):
             """Maneja selección en AutoComplete."""
             nonlocal nombre_seleccionado
             nombre_seleccionado = e.selection.value
+            filtrar_registros()
             
             # Filtrar registros por nombre
             if nombre_seleccionado:
@@ -172,6 +210,21 @@ def main(page: ft.Page):
             )
             page.update()
 
+        # Crear Dropdown estados
+        dropdown_estado = ft.Dropdown(
+            width=200,
+            label="Filtrar por estado",
+            options=[
+                ft.dropdown.Option("Todos"),
+                ft.dropdown.Option("En corte"),
+                ft.dropdown.Option("Pendiente"),
+                ft.dropdown.Option("Cerca")
+            ],
+            value="Todos",
+            on_change=on_estado_change
+        )
+        
+        
         # Crear AutoComplete
         nombres = sorted(set(reg[1] for reg in registros))
         auto_complete = ft.AutoComplete(
@@ -194,8 +247,11 @@ def main(page: ft.Page):
         actualizar_tabla(registros)
 
         return ft.Column([
-        auto_complete_container,
-        tabla_container
+            ft.Row([
+                auto_complete_container,
+                dropdown_estado
+            ]),
+            tabla_container
         ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
