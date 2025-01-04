@@ -1,7 +1,8 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, get_whatsapp_by_id
 import datetime
+import requests
 
 
 
@@ -110,6 +111,93 @@ def main(page: ft.Page):
         tabla_container = ft.Container()
         
         
+    
+
+        def enviar_whatsapp(e):
+            """
+            Envía mensajes de WhatsApp a clientes con su estado de servicio utilizando la API de WhatsApp Business.
+            
+            Args:
+                e: Evento del botón
+                
+            Note:
+                Estructura del registro:
+                - reg[0]: ID
+                - reg[1]: Nombre
+                - reg[2]: Fecha inicio
+                - reg[3]: Último pago
+                - reg[4]: Próximo pago
+                - reg[5]: Frecuencia
+                - reg[6]: Días transcurridos
+                - reg[7]: Estado
+            """
+            try:
+                # Obtener registros de pagos
+                registros = get_estado_pagos()
+                if not registros:
+                    mostrar_mensaje("No hay registros para enviar")
+                    return
+
+                # Token de autenticación y número de teléfono registrado en la API de WhatsApp
+                API_URL = "https://graph.facebook.com/v16.0/<YOUR_PHONE_NUMBER_ID>/messages"
+                TOKEN = "<YOUR_ACCESS_TOKEN>"
+
+                headers = {
+                    "Authorization": f"Bearer {TOKEN}",
+                    "Content-Type": "application/json"
+                }
+
+                for reg in registros:
+                    # Validar longitud del registro
+                    if len(reg) < 8:
+                        mostrar_mensaje("Formato de registro inválido")
+                        continue
+
+                    nombre = reg[1]
+                    ultimo_pago = reg[3]
+                    proximo_pago = reg[4]
+                    estado = reg[7]
+                    
+                    # Obtener WhatsApp de otra consulta usando el ID
+                    whatsapp = get_whatsapp_by_id(reg[0])
+                    if not whatsapp:
+                        mostrar_mensaje(f"No hay WhatsApp registrado para {nombre}")
+                        continue
+
+                    # Formatear el número de WhatsApp
+                    whatsapp_clean = ''.join(filter(str.isdigit, whatsapp))
+                    if not whatsapp_clean.startswith('1'):
+                        whatsapp_clean = '1' + whatsapp_clean
+
+                    # Crear el mensaje
+                    mensaje = f"""*Estado de Servicio TV*\n
+                    Cliente: {nombre}\n
+                    Último pago: {ultimo_pago}\n
+                    Próximo pago: {proximo_pago}\n
+                    Estado: {estado}"""
+
+                    # Enviar el mensaje mediante la API de WhatsApp
+                    payload = {
+                        "messaging_product": "whatsapp",
+                        "to": whatsapp_clean,
+                        "type": "text",
+                        "text": {
+                            "body": mensaje
+                        }
+                    }
+
+                    response = requests.post(API_URL, headers=headers, json=payload)
+                    
+                    if response.status_code == 200:
+                        mostrar_mensaje(f"Mensaje enviado a {nombre}")
+                    else:
+                        mostrar_mensaje(f"Error enviando mensaje a {nombre}: {response.json().get('error', {}).get('message', 'Desconocido')}")
+
+                mostrar_mensaje("Mensajes enviados exitosamente")
+            except Exception as error:
+                mostrar_mensaje(f"Error enviando mensajes: {str(error)}")
+
+        
         
         
         def filtrar_registros():
@@ -145,6 +233,13 @@ def main(page: ft.Page):
             icon=ft.Icons.REFRESH,
             tooltip="Actualizar tabla",
             on_click=lambda _: filtrar_registros()
+        )
+        
+        # Botón refresh
+        btn_whatsapp = ft.IconButton(
+            icon=ft.Icons.MESSAGE_ROUNDED,
+            tooltip="Enviar mensaje de whatsapp",
+            on_click=enviar_whatsapp,
         )
         
         def on_estado_change(e):
@@ -269,6 +364,7 @@ def main(page: ft.Page):
                 auto_complete_container,
                 dropdown_estado,
                 btn_refresh,
+                btn_whatsapp,
             ]),
             tabla_container
         ])

@@ -301,3 +301,32 @@ def insertar_cliente(nombre: str, whatsapp: str, fecha_inicio: str, estado: str,
         finally:
             conn.close()
     return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_whatsapp_by_id(cliente_id: int) -> str:
+    """
+    Obtiene el número de WhatsApp de un cliente por su ID.
+    
+    Args:
+        cliente_id (int): ID del cliente en la base de datos
+        
+    Returns:
+        str: Número de WhatsApp del cliente o None si no existe
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT whatsapp 
+                FROM clientes 
+                WHERE id = ?
+            """, (cliente_id,))
+            result = cursor.fetchone()
+            return result[0] if result else None
+        except sqlite3.Error as e:
+            print(f"Error consultando WhatsApp: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
