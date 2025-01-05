@@ -465,3 +465,68 @@ def obtener_todos_los_clientes():
         finally:
             conn.close()
     return []
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def obtener_credenciales():
+    """
+    Obtiene las credenciales de correo desde la base de datos utilizando connect_to_database.
+
+    Returns:
+        tuple: Una tupla con (sender_email, sender_password, receiver_email), o None si falla.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT sender_email, sender_password, receiver_email FROM correo LIMIT 1")
+            credenciales = cursor.fetchone()
+            return credenciales  # Devuelve una tupla (sender_email, sender_password, receiver_email)
+        except sqlite3.Error as e:
+            print(f"Error al obtener credenciales: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def actualizar_credenciales(sender_email: str, sender_password: str, receiver_email: str) -> bool:
+    """
+    Actualiza las credenciales de correo en la base de datos utilizando connect_to_database.
+
+    Args:
+        sender_email (str): Correo del remitente.
+        sender_password (str): Contraseña del remitente.
+        receiver_email (str): Correo del destinatario.
+
+    Returns:
+        bool: True si la actualización fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            # Verifica si ya existen credenciales
+            cursor.execute("SELECT COUNT(*) FROM correo")
+            existe = cursor.fetchone()[0]
+
+            if existe:
+                # Actualiza las credenciales existentes
+                cursor.execute("""
+                    UPDATE correo
+                    SET sender_email = ?, sender_password = ?, receiver_email = ?
+                """, (sender_email, sender_password, receiver_email))
+            else:
+                # Inserta nuevas credenciales si no existen
+                cursor.execute("""
+                    INSERT INTO correo (sender_email, sender_password, receiver_email)
+                    VALUES (?, ?, ?)
+                """, (sender_email, sender_password, receiver_email))
+            
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error al actualizar credenciales: {e}")
+            return False
+        finally:
+            conn.close()
+    return False

@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales
 import datetime
 import smtplib
 from email.mime.text import MIMEText
@@ -23,6 +23,48 @@ def main(page: ft.Page):
     
     # Referencias globales
     txt_fecha_pago = ft.Ref[ft.TextField]()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def abrir_dialogo_credenciales(e):
+        """Abre un diálogo para editar las credenciales de correo."""
+        credenciales = obtener_credenciales()
+        sender_email_edit = ft.TextField(label="Correo Emisor", value=credenciales[0])
+        sender_password_edit = ft.TextField(label="Contraseña", value=credenciales[1], password=True)
+        receiver_email_edit = ft.TextField(label="Correo Receptor", value=credenciales[2])
+
+        def guardar_cambios_credenciales(e):
+            """Guarda los cambios en las credenciales."""
+            actualizar_credenciales(
+                sender_email_edit.value,
+                sender_password_edit.value,
+                receiver_email_edit.value
+            )
+            dlg_modal.open = False
+            page.update()
+            mostrar_mensaje("Credenciales actualizadas con éxito")
+
+        def cerrar_dialogo(e):
+            """Cierra el diálogo sin guardar cambios."""
+            dlg_modal.open = False
+            page.update()
+
+        dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Actualizar Credenciales"),
+            content=ft.Column([
+                sender_email_edit,
+                sender_password_edit,
+                receiver_email_edit
+            ]),
+            actions=[
+                ft.TextButton("Cancelar", on_click=cerrar_dialogo),
+                ft.TextButton("Guardar", on_click=guardar_cambios_credenciales)
+            ]
+        )
+        page.overlay.append(dlg_modal)
+        dlg_modal.open = True
+        page.update()
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def envio_estados():        
@@ -117,6 +159,12 @@ def main(page: ft.Page):
                 No se utiliza en esta función, se incluye solo para mantener la consistencia con las funciones de los botones.
             
             """
+            credenciales = obtener_credenciales()
+            sender_email = credenciales[0]
+            sender_password = credenciales[1]
+            receiver_email = credenciales[2]
+            
+            
             mostrar_mensaje_correo("Enviando correo...")  # Mostrar mensaje de envío
             estado_seleccionado = dropdown.value  # Obtener el estado seleccionado en el momento del envío
             if estado_seleccionado == "Todos":
@@ -130,17 +178,12 @@ def main(page: ft.Page):
                 numero_limpio = ''.join(filter(str.isdigit, cliente[1]))
                 enlace_whatsapp = f"https://wa.me/{numero_limpio}"
                 body += (
-                        f"Nombre: {cliente[0]}<br>"
+                        f"Nombre: {cliente[0]}<br><br>"
                         f"WhatsApp: <a href='{enlace_whatsapp}'>{cliente[1]}</a><br>"
                         f"Último pago: {cliente[2]}<br>"
                         f"Próximo pago: {cliente[3]}<br>"
                         f"Estado: {cliente[4]}<br><br>"
                     )
-            
-            # Configuración del correo
-            sender_email = ""  # Cambia esto por tu correo
-            receiver_email = ""  # Cambia esto por el correo del destinatario
-            password = ''  # Usa una contraseña de app si es Gmail
 
             message = MIMEMultipart()
             message['From'] = sender_email
@@ -151,7 +194,7 @@ def main(page: ft.Page):
             try:
                 server = smtplib.SMTP('smtp.gmail.com', 587)
                 server.starttls()
-                server.login(sender_email, password)
+                server.login(sender_email, sender_password)
                 text = message.as_string()
                 server.sendmail(sender_email, receiver_email, text)
                 server.quit()
@@ -184,11 +227,18 @@ def main(page: ft.Page):
         )
 
         # Botón para enviar correo
-        enviar_correo_button = ft.ElevatedButton("Enviar correo", on_click=enviar_correo)
+        enviar_correo_button = ft.ElevatedButton("Enviar correo estado", icon=ft.Icons.EMAIL, on_click=enviar_correo)
+        
+        # Botón para actializar los datos de las credenciales de correo para enviar el correo
+        btn_actualizar_credenciales = ft.ElevatedButton("Actualizar credenciales", icon=ft.Icons.UPDATE, on_click=abrir_dialogo_credenciales)
 
         content = ft.Column([
-            dropdown,
-            enviar_correo_button,  
+            ft.Row(
+                [
+                dropdown,
+                enviar_correo_button,
+                btn_actualizar_credenciales,
+                ]),              
             tabla_container
         ])
         
