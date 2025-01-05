@@ -2,7 +2,9 @@ import flet as ft
 from flet import ScrollMode, AppView
 from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado
 import datetime
-import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 
 
@@ -23,45 +25,175 @@ def main(page: ft.Page):
     txt_fecha_pago = ft.Ref[ft.TextField]()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def envio_estados():
-        def actualizar_estados(e):
+    def envio_estados():        
+        """
+        Función principal del panel de TV en casa.
+        
+        Genera el contenido principal de la aplicación, que incluye un dropdown con los estados de los clientes,
+        un botón para enviar un correo electrónico con la lista de clientes filtrados por el estado actualmente seleccionado
+        y una tabla que muestra la información de los clientes.
+        
+        Parameters
+        ----------
+        page: ft.Page
+            Página principal de la aplicación.
+        
+        Returns
+        -------
+        ft.Column
+            Contenedor que contiene todos los elementos de la interfaz de usuario.
+        """
+        def mostrar_mensaje_correo(mensaje: str):
+            """
+            Muestra un mensaje en SnackBar..
+            
+            Args:
+                mensaje (str): Texto a mostrar
+            """
+            snack = ft.SnackBar(content=ft.Text(mensaje), duration=5000)
+            page.overlay.append(snack)
+            snack.open = True
+            page.update()
+            
+        def actualizar_estados(e=None):
+            """
+            Actualiza la tabla de clientes según el estado actualmente seleccionado en el dropdown.
+            
+            Parameters
+            ----------
+            e: Optional[Event]
+                Evento que lo desencadena. No se utiliza en este caso.
+            
+            Notes
+            -----
+            La función utiliza el valor actual del dropdown para determinar qué clientes mostrar.
+            Si el valor es "Todos", se muestran todos los clientes.
+            Si el valor es distinto de "Todos", se muestran solo los clientes con ese estado.
+            La función utiliza la función obtener_clientes_por_estado para obtener la lista de clientes.
+            La función utiliza la función obtener_todos_los_clientes para obtener la lista de todos los clientes.
+            La función crea una tabla con las columnas "Nombre", "WhatsApp", "Último Pago", "Próximo Pago" y "Estado".
+            La función llena la tabla con los clientes correspondientes al estado seleccionado.
+            La función actualiza la página para que los cambios sean visibles.
+            """
             estado_seleccionado = dropdown.value
             if estado_seleccionado == "Todos":
-                # Aquí podrías definir una función que obtenga todos los clientes sin filtro de estado
-                # Para este ejemplo, asumiremos que obtendrás todos los clientes activos
-                clientes = obtener_todos_los_clientes()  # Necesitas implementar esta función
+                clientes = obtener_todos_los_clientes()
             else:
                 clientes = obtener_clientes_por_estado(estado_seleccionado)
             
-            # Limpiar la vista actual de resultados
-            resultados.controls.clear()
-            
-            # Añadir nuevos resultados
-            for cliente in clientes:
-                resultados.controls.append(ft.Text(f"Nombre: {cliente[0]}, WhatsApp: {cliente[1]}, Último Pago: {cliente[2]}, Próximo Pago: {cliente[3]}, Estado: {cliente[4]}"))
-            
+            tabla_container.content = ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("Nombre")),
+                    ft.DataColumn(ft.Text("WhatsApp")),
+                    ft.DataColumn(ft.Text("Último Pago")),
+                    ft.DataColumn(ft.Text("Próximo Pago")),
+                    ft.DataColumn(ft.Text("Estado"))
+                ],
+                rows=[
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(cliente[0])),
+                            ft.DataCell(ft.Text(cliente[1])),
+                            ft.DataCell(ft.Text(cliente[2])),
+                            ft.DataCell(ft.Text(cliente[3])),
+                            ft.DataCell(ft.Text(cliente[4]))
+                        ]
+                    ) for cliente in clientes
+                ],
+                border=ft.border.all(1, ft.Colors.GREY_400),
+                border_radius=10,
+                vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+                horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400)
+            )
             page.update()
 
-        # Lista de estados posibles, incluyendo "Todos"
-        estados = ['Todos', 'En corte', 'Pago pendiente', 'Cerca']
+        def enviar_correo(e):
+            """
+            Envia un correo electrónico con la lista de clientes filtrados por el estado actualmente seleccionado.
+            
+            Parameters
+            ----------
+            e: Event
+                No se utiliza en esta función, se incluye solo para mantener la consistencia con las funciones de los botones.
+            
+            """
+            mostrar_mensaje_correo("Enviando correo...")  # Mostrar mensaje de envío
+            estado_seleccionado = dropdown.value  # Obtener el estado seleccionado en el momento del envío
+            if estado_seleccionado == "Todos":
+                clientes = obtener_todos_los_clientes()
+            else:
+                clientes = obtener_clientes_por_estado(estado_seleccionado)
+            
+            # Formatear los datos para el correo
+            body = "Lista de clientes:<br><br>"
+            for cliente in clientes:
+                numero_limpio = ''.join(filter(str.isdigit, cliente[1]))
+                enlace_whatsapp = f"https://wa.me/{numero_limpio}"
+                body += (
+                        f"Nombre: {cliente[0]}<br>"
+                        f"WhatsApp: <a href='{enlace_whatsapp}'>{cliente[1]}</a><br>"
+                        f"Último pago: {cliente[2]}<br>"
+                        f"Próximo pago: {cliente[3]}<br>"
+                        f"Estado: {cliente[4]}<br><br>"
+                    )
+            
+            # Configuración del correo
+            sender_email = ""  # Cambia esto por tu correo
+            receiver_email = ""  # Cambia esto por el correo del destinatario
+            password = ''  # Usa una contraseña de app si es Gmail
+
+            message = MIMEMultipart()
+            message['From'] = sender_email
+            message['To'] = receiver_email
+            message['Subject'] = "Estado de clientes"
+            message.attach(MIMEText(body, 'html'))  # Especificamos 'html' para que los enlaces funcionen
+
+            try:
+                server = smtplib.SMTP('smtp.gmail.com', 587)
+                server.starttls()
+                server.login(sender_email, password)
+                text = message.as_string()
+                server.sendmail(sender_email, receiver_email, text)
+                server.quit()
+                mostrar_mensaje_correo("Correo enviado con éxito")
+            except Exception as ex:
+                mostrar_mensaje_correo("Error al enviar el correo:", ex)
+
+        estados = ['Todos', 'En corte', 'Pago pendiente', 'Cerca', 'Al día']
         
-        # Dropdown para seleccionar estado
         dropdown = ft.Dropdown(
-            label="Selecciona el estado",
-            options=[ft.dropdown.Option(text=estado) for estado in estados]
+            value="Todos",
+            options=[ft.dropdown.Option(text=estado) for estado in estados],
+            on_change=actualizar_estados,
+            width=200
         )
 
-        # Botón para filtrar y actualizar
-        boton_filtrar = ft.ElevatedButton("Filtrar", on_click=actualizar_estados)
+        columns = [
+            ft.DataColumn(ft.Text("Nombre")),
+            ft.DataColumn(ft.Text("WhatsApp")),
+            ft.DataColumn(ft.Text("Último Pago")),
+            ft.DataColumn(ft.Text("Próximo Pago")),
+            ft.DataColumn(ft.Text("Estado")),
+        ]
 
-        # Columna para mostrar los resultados
-        resultados = ft.Column()
+        tabla_container = ft.Container(
+            content=ft.DataTable(
+                columns=columns,  
+                rows=[]
+            )
+        )
 
-        return ft.Column([
+        # Botón para enviar correo
+        enviar_correo_button = ft.ElevatedButton("Enviar correo", on_click=enviar_correo)
+
+        content = ft.Column([
             dropdown,
-            boton_filtrar,
-            resultados
+            enviar_correo_button,  
+            tabla_container
         ])
+        
+        actualizar_estados()  # Mostrar los datos de "Todos" al cargar
+        return content
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Referencias para controles
