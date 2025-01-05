@@ -331,3 +331,137 @@ def get_whatsapp_by_id(cliente_id: int) -> str:
         finally:
             conn.close()
     return None
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def obtener_clientes_por_estado(estado):
+    """
+    Obtiene los clientes activos filtrados por el estado de pago especificado.
+
+    Args:
+        estado (str): Estado de pago para filtrar ('En corte', 'Pago pendiente', 'Cerca', 'Al día').
+
+    Returns:
+        list: Lista de listas con:
+            - nombre (str)
+            - whatsapp (str)
+            - ultimo_pago (str)
+            - proximo_pago (str)
+            - estado (str): Estado de pago según los criterios definidos
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            query = """
+            WITH ultimo_pago AS (
+                SELECT
+                    cliente_id,
+                    MAX(fecha_pago) AS ultima_fecha_pago
+                FROM pagos
+                GROUP BY cliente_id
+            )
+            SELECT 
+                c.nombre,
+                c.whatsapp,
+                COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
+                DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
+                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
+                CASE 
+                    WHEN ROUND(JULIANDAY('now') - 
+                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                    THEN 'En corte'
+                    WHEN ROUND(JULIANDAY('now') - 
+                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                    THEN 'Pago pendiente'
+                    WHEN ROUND(JULIANDAY('now') - 
+                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                    THEN 'Cerca'
+                    ELSE 'Al día'
+                END AS estado
+            FROM clientes c
+            LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+            WHERE c.estado = 'Activo' AND (
+            CASE 
+                WHEN ROUND(JULIANDAY('now') - 
+                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                THEN 'En corte'
+                WHEN ROUND(JULIANDAY('now') - 
+                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                THEN 'Pago pendiente'
+                WHEN ROUND(JULIANDAY('now') - 
+                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                THEN 'Cerca'
+                ELSE 'Al día'
+            END = ?)
+            ORDER BY CASE estado 
+                WHEN 'En corte' THEN 1
+                WHEN 'Pago pendiente' THEN 2
+                WHEN 'Cerca' THEN 3
+                ELSE 4
+            END;
+            """
+            cursor.execute(query, (estado,))
+            clientes = cursor.fetchall()
+            # Convertir tupla a lista para devolver como lista
+            return [list(cliente) for cliente in clientes]
+        except sqlite3.Error as e:
+            print(f"Error consultando estados de pago: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def obtener_todos_los_clientes():
+    """
+    Obtiene todos los clientes activos sin filtro de estado.
+
+    Returns:
+        list: Lista de listas con la información de todos los clientes activos.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT 
+                    c.nombre,
+                    c.whatsapp,
+                    COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
+                    DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
+                        '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
+                    CASE 
+                        WHEN ROUND(JULIANDAY('now') - 
+                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                        THEN 'En corte'
+                        WHEN ROUND(JULIANDAY('now') - 
+                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                        THEN 'Pago pendiente'
+                        WHEN ROUND(JULIANDAY('now') - 
+                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                        THEN 'Cerca'
+                        ELSE 'Al día'
+                    END AS estado
+                FROM clientes c
+                LEFT JOIN (
+                    SELECT
+                        cliente_id,
+                        MAX(fecha_pago) AS ultima_fecha_pago
+                    FROM pagos
+                    GROUP BY cliente_id
+                ) up ON c.id = up.cliente_id
+                WHERE c.estado = 'Activo'
+                ORDER BY CASE estado 
+                    WHEN 'En corte' THEN 1
+                    WHEN 'Pago pendiente' THEN 2
+                    WHEN 'Cerca' THEN 3
+                    ELSE 4
+                END;
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo todos los clientes: {e}")
+            return []
+        finally:
+            conn.close()
+    return []

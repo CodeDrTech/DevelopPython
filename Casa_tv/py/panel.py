@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, get_whatsapp_by_id
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado
 import datetime
 import requests
 
@@ -21,6 +21,47 @@ def main(page: ft.Page):
     
     # Referencias globales
     txt_fecha_pago = ft.Ref[ft.TextField]()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def envio_estados():
+        def actualizar_estados(e):
+            estado_seleccionado = dropdown.value
+            if estado_seleccionado == "Todos":
+                # Aquí podrías definir una función que obtenga todos los clientes sin filtro de estado
+                # Para este ejemplo, asumiremos que obtendrás todos los clientes activos
+                clientes = obtener_todos_los_clientes()  # Necesitas implementar esta función
+            else:
+                clientes = obtener_clientes_por_estado(estado_seleccionado)
+            
+            # Limpiar la vista actual de resultados
+            resultados.controls.clear()
+            
+            # Añadir nuevos resultados
+            for cliente in clientes:
+                resultados.controls.append(ft.Text(f"Nombre: {cliente[0]}, WhatsApp: {cliente[1]}, Último Pago: {cliente[2]}, Próximo Pago: {cliente[3]}, Estado: {cliente[4]}"))
+            
+            page.update()
+
+        # Lista de estados posibles, incluyendo "Todos"
+        estados = ['Todos', 'En corte', 'Pago pendiente', 'Cerca']
+        
+        # Dropdown para seleccionar estado
+        dropdown = ft.Dropdown(
+            label="Selecciona el estado",
+            options=[ft.dropdown.Option(text=estado) for estado in estados]
+        )
+
+        # Botón para filtrar y actualizar
+        boton_filtrar = ft.ElevatedButton("Filtrar", on_click=actualizar_estados)
+
+        # Columna para mostrar los resultados
+        resultados = ft.Column()
+
+        return ft.Column([
+            dropdown,
+            boton_filtrar,
+            resultados
+        ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Referencias para controles
@@ -152,12 +193,6 @@ def main(page: ft.Page):
             on_click=lambda _: filtrar_registros()
         )
         
-        # Botón refresh
-        btn_mail = ft.IconButton(
-            icon=ft.Icons.MAIL,
-            tooltip="Enviar correo",
-        )
-        
         def on_estado_change(e):
             """Maneja cambio en dropdown de estado"""
             nonlocal estado_seleccionado
@@ -280,7 +315,7 @@ def main(page: ft.Page):
                 auto_complete_container,
                 dropdown_estado,
                 btn_refresh,
-                btn_mail,
+                
             ]),
             tabla_container
         ])
@@ -854,6 +889,15 @@ def main(page: ft.Page):
                 ),
             ),
             crear_tab_pagos(),
+            ft.Tab(
+                icon=ft.Icons.MAIL,
+                text="Envio de estados",
+                content=ft.Column([
+                    ft.Text("Envio de estados", size=20),
+                    envio_estados(),
+                    
+                ])
+            ),
         ],
     )
     page.add(mainTab)
