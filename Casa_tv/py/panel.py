@@ -153,7 +153,7 @@ def main(page: ft.Page):
         )
         
         # Botón refresh
-        btn_whatsapp = ft.IconButton(
+        btn_mail = ft.IconButton(
             icon=ft.Icons.MAIL,
             tooltip="Enviar correo",
         )
@@ -280,7 +280,7 @@ def main(page: ft.Page):
                 auto_complete_container,
                 dropdown_estado,
                 btn_refresh,
-                btn_whatsapp,
+                btn_mail,
             ]),
             tabla_container
         ])
