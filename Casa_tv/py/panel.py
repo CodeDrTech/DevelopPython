@@ -178,7 +178,8 @@ def main(page: ft.Page):
                 numero_limpio = ''.join(filter(str.isdigit, cliente[1]))
                 enlace_whatsapp = f"https://wa.me/{numero_limpio}"
                 body += (
-                        f"Nombre: {cliente[0]}<br><br>"
+                        f"<b>Nombre: {cliente[0]}</b><br><br>"
+                        
                         f"WhatsApp: <a href='{enlace_whatsapp}'>{cliente[1]}</a><br>"
                         f"Último pago: {cliente[2]}<br>"
                         f"Próximo pago: {cliente[3]}<br>"
