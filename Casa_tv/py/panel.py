@@ -195,11 +195,11 @@ def main(page: ft.Page):
         def get_estado_color(estado):
             """Define color según estado de pago"""
             if estado == "En corte":
-                return ft.Colors.RED_600
+                return ft.Colors.RED
             elif estado == "Pago pendiente":
                 return ft.Colors.ORANGE_700
             elif estado == "Cerca":
-                return ft.Colors.YELLOW_700
+                return ft.Colors.BLUE_700
             return ft.Colors.GREEN
 
         def actualizar_tabla(registros_filtrados):
@@ -571,11 +571,11 @@ def main(page: ft.Page):
             str: Color en formato flet para el estado
         """
         if estado == "En corte":
-            return ft.Colors.RED_600
+            return ft.Colors.RED
         elif estado == "Pendiente":
-            return ft.Colors.ORANGE
+            return ft.Colors.ORANGE_700
         elif estado == "Cerca":
-            return ft.Colors.YELLOW_700
+            return ft.Colors.BLUE_700
         return ft.Colors.GREEN
 
     def mostrar_mensaje(mensaje: str):
@@ -644,8 +644,8 @@ def main(page: ft.Page):
                 e: Evento del botón
             """
             date_picker = ft.DatePicker(
-                first_date=datetime.datetime.now() - + datetime.timedelta(days=60),
-                last_date=datetime.datetime.now() + datetime.timedelta(days=60),
+                first_date=datetime.datetime.now() - + datetime.timedelta(days=365),
+                last_date=datetime.datetime.now() + datetime.timedelta(days=365),
                 on_change=lambda e: seleccionar_fecha_pago(e),
             )
             page.overlay.append(date_picker)
