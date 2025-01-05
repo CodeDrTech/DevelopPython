@@ -12,9 +12,9 @@ def main(page: ft.Page):
     page.window.alignment = ft.alignment.center
     page.window.width = 1050
     page.window.height = 700
-    page.window.resizable = True
+    page.window.resizable = False
     page.padding = 20
-    page.scroll = False # type: ignore
+    page.scroll = True # type: ignore
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
     
@@ -31,12 +31,13 @@ def main(page: ft.Page):
     txt_frecuencia = ft.Ref[ft.TextField]()
     
     tabla_vencimientos = None  # Referencia a tabla_vencimientos
+    clientes = None  # Referencia a clientes
 
     def mostrar_datepicker_inicio(e):
         """Muestra DatePicker para fecha inicio"""
         date_picker = ft.DatePicker(
-            first_date=datetime.datetime.now(),
-            last_date=datetime.datetime.now() + datetime.timedelta(days=30),
+            first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+            last_date=datetime.datetime.now() + datetime.timedelta(days=365),
             on_change=lambda e: seleccionar_fecha_inicio(e)
         )
         page.overlay.append(date_picker)
@@ -57,7 +58,7 @@ def main(page: ft.Page):
         txt_whatsapp.current.value = ""
         txt_fecha_inicio.current.value = ""
         dd_estado.current.value = "Activo"
-        txt_frecuencia.current.value = ""
+        #txt_frecuencia.current.value = ""
         page.update()
 
     def guardar_cliente(e):
@@ -88,6 +89,12 @@ def main(page: ft.Page):
                 nonlocal tabla_vencimientos
                 tabla_vencimientos = crear_tabla_vencimientos()
                 mainTab.tabs[0].content = tabla_vencimientos
+                
+                
+                # Actualizar datos
+                nonlocal clientes
+                clientes = crear_tabla_clientes()
+                mainTab.tabs[1].content = clientes
                 page.update()
                 
             else:
@@ -109,97 +116,7 @@ def main(page: ft.Page):
         nombre_seleccionado = None
         estado_seleccionado = "Todos"
         tabla_container = ft.Container()
-        
-        
-    
-
-        def enviar_whatsapp(e):
-            """
-            Envía mensajes de WhatsApp a clientes con su estado de servicio utilizando la API de WhatsApp Business.
-            
-            Args:
-                e: Evento del botón
                 
-            Note:
-                Estructura del registro:
-                - reg[0]: ID
-                - reg[1]: Nombre
-                - reg[2]: Fecha inicio
-                - reg[3]: Último pago
-                - reg[4]: Próximo pago
-                - reg[5]: Frecuencia
-                - reg[6]: Días transcurridos
-                - reg[7]: Estado
-            """
-            try:
-                # Obtener registros de pagos
-                registros = get_estado_pagos()
-                if not registros:
-                    mostrar_mensaje("No hay registros para enviar")
-                    return
-
-                # Token de autenticación y número de teléfono registrado en la API de WhatsApp
-                API_URL = "https://graph.facebook.com/v16.0/<YOUR_PHONE_NUMBER_ID>/messages"
-                TOKEN = "<YOUR_ACCESS_TOKEN>"
-
-                headers = {
-                    "Authorization": f"Bearer {TOKEN}",
-                    "Content-Type": "application/json"
-                }
-
-                for reg in registros:
-                    # Validar longitud del registro
-                    if len(reg) < 8:
-                        mostrar_mensaje("Formato de registro inválido")
-                        continue
-
-                    nombre = reg[1]
-                    ultimo_pago = reg[3]
-                    proximo_pago = reg[4]
-                    estado = reg[7]
-                    
-                    # Obtener WhatsApp de otra consulta usando el ID
-                    whatsapp = get_whatsapp_by_id(reg[0])
-                    if not whatsapp:
-                        mostrar_mensaje(f"No hay WhatsApp registrado para {nombre}")
-                        continue
-
-                    # Formatear el número de WhatsApp
-                    whatsapp_clean = ''.join(filter(str.isdigit, whatsapp))
-                    if not whatsapp_clean.startswith('1'):
-                        whatsapp_clean = '1' + whatsapp_clean
-
-                    # Crear el mensaje
-                    mensaje = f"""*Estado de Servicio TV*\n
-                    Cliente: {nombre}\n
-                    Último pago: {ultimo_pago}\n
-                    Próximo pago: {proximo_pago}\n
-                    Estado: {estado}"""
-
-                    # Enviar el mensaje mediante la API de WhatsApp
-                    payload = {
-                        "messaging_product": "whatsapp",
-                        "to": whatsapp_clean,
-                        "type": "text",
-                        "text": {
-                            "body": mensaje
-                        }
-                    }
-
-                    response = requests.post(API_URL, headers=headers, json=payload)
-                    
-                    if response.status_code == 200:
-                        mostrar_mensaje(f"Mensaje enviado a {nombre}")
-                    else:
-                        mostrar_mensaje(f"Error enviando mensaje a {nombre}: {response.json().get('error', {}).get('message', 'Desconocido')}")
-
-                mostrar_mensaje("Mensajes enviados exitosamente")
-            except Exception as error:
-                mostrar_mensaje(f"Error enviando mensajes: {str(error)}")
-
-        
-        
-        
         def filtrar_registros():
             """
             Aplica filtros combinados y actualiza tabla.
@@ -237,9 +154,8 @@ def main(page: ft.Page):
         
         # Botón refresh
         btn_whatsapp = ft.IconButton(
-            icon=ft.Icons.MESSAGE_ROUNDED,
-            tooltip="Enviar mensaje de whatsapp",
-            on_click=enviar_whatsapp,
+            icon=ft.Icons.MAIL,
+            tooltip="Enviar correo",
         )
         
         def on_estado_change(e):
@@ -330,7 +246,7 @@ def main(page: ft.Page):
             options=[
                 ft.dropdown.Option("Todos"),
                 ft.dropdown.Option("En corte"),
-                ft.dropdown.Option("Pendiente"),
+                ft.dropdown.Option("Pago pendiente"),
                 ft.dropdown.Option("Cerca")
             ],
             value="Todos",
@@ -457,6 +373,7 @@ def main(page: ft.Page):
                         int(frecuencia_edit.value)
                     ):
                         dlg_modal.open = False
+                        
                         # Actualizar datos
                         nonlocal clientes
                         clientes = get_clientes()
@@ -465,6 +382,12 @@ def main(page: ft.Page):
                         
                         # Limpia y recrea el AutoComplete
                         limpiar_y_recrear_auto_complete(auto_complete_container, clientes)
+                        
+                        # Actualizar tabla de vencimientos
+                        nonlocal tabla_vencimientos
+                        tabla_vencimientos = crear_tabla_vencimientos()
+                        mainTab.tabs[0].content = tabla_vencimientos
+                        page.update()
                         
                         
                         mostrar_mensaje("Cliente actualizado")
@@ -502,7 +425,7 @@ def main(page: ft.Page):
         
         
         def actualizar_tabla(registros_filtrados):
-            """Actualiza contenido de la tabla"""
+            """Actualiza contenido de la tabla."""
             tabla_container.content = ft.DataTable(
                 columns=[
                     ft.DataColumn(ft.Text("ID")),
@@ -662,7 +585,7 @@ def main(page: ft.Page):
         Args:
             mensaje (str): Texto a mostrar
         """
-        snack = ft.SnackBar(content=ft.Text(mensaje), duration=3000)
+        snack = ft.SnackBar(content=ft.Text(mensaje), duration=5000)
         page.overlay.append(snack)
         snack.open = True
         page.update()    
