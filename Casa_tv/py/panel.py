@@ -176,7 +176,7 @@ def main(page: ft.Page):
             body = "Lista de clientes:<br><br>"
             for cliente in clientes:
                 numero_limpio = ''.join(filter(str.isdigit, cliente[1]))
-                enlace_whatsapp = f"https://wa.me/{numero_limpio}"
+                enlace_whatsapp = f"https://wa.me/1{numero_limpio}"
                 body += (
                         f"<b>Nombre: {cliente[0]}</b><br><br>"
                         
@@ -388,6 +388,8 @@ def main(page: ft.Page):
             nombre_seleccionado = e.selection.value
             filtrar_registros()
             
+        
+            
             # Filtrar registros por nombre
             if nombre_seleccionado:
                 registros_filtrados = [
@@ -463,6 +465,7 @@ def main(page: ft.Page):
             label="Filtrar por estado",
             options=[
                 ft.dropdown.Option("Todos"),
+                ft.dropdown.Option("Al día"),
                 ft.dropdown.Option("En corte"),
                 ft.dropdown.Option("Pago pendiente"),
                 ft.dropdown.Option("Cerca")
