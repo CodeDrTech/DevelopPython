@@ -187,7 +187,7 @@ def main(page: ft.Page):
                     )
 
             message = MIMEMultipart()
-            message['From'] = sender_email
+            message['From'] = f'Notificacion de estado <{sender_email}>'
             message['To'] = receiver_email
             message['Subject'] = "Estado de clientes"
             message.attach(MIMEText(body, 'html'))  # Especificamos 'html' para que los enlaces funcionen
