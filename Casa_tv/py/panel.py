@@ -386,9 +386,7 @@ def main(page: ft.Page):
             """Maneja selección en AutoComplete."""
             nonlocal nombre_seleccionado
             nombre_seleccionado = e.selection.value
-            filtrar_registros()
-            
-        
+            filtrar_registros()        
             
             # Filtrar registros por nombre
             if nombre_seleccionado:
@@ -482,7 +480,8 @@ def main(page: ft.Page):
                 ft.AutoCompleteSuggestion(key=nombre, value=nombre) 
                 for nombre in nombres
             ],
-            on_select=on_autocomplete_selected
+            on_select=on_autocomplete_selected,
+            
         )
 
         # Contenedor para AutoComplete
@@ -526,7 +525,7 @@ def main(page: ft.Page):
             cliente = next(c for c in clientes if c[0] == cliente_id)
             
             nombre_edit = ft.TextField(label="Nombre", value=cliente[1])
-            whatsapp_edit = ft.TextField(label="WhatsApp", value=cliente[3])
+            whatsapp_edit = ft.TextField(label="WhatsApp", value=cliente[3], max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
             fecha_edit = ft.TextField(
                 label="Fecha inicio",
                 value=cliente[2],
@@ -545,7 +544,7 @@ def main(page: ft.Page):
             frecuencia_edit = ft.TextField(
                 label="Frecuencia",
                 value=str(cliente[5]),
-                input_filter=ft.InputFilter(regex_string=r"[0-9]")
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
 
             def seleccionar_fecha_edit(e, txt_field):
