@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales, obtener_total_montos
 import datetime
 import smtplib
 from email.mime.text import MIMEText
@@ -396,11 +396,18 @@ def main(page: ft.Page):
         - AutoComplete para filtrar por nombre
         - Dropdown para filtrar por estado (En corte/Pendiente/Cerca/Todos)
         """
+        
+        
+        
         # Variables globales
         registros = get_estado_pagos()
         nombre_seleccionado = None
         estado_seleccionado = "Todos"
         tabla_container = ft.Container()
+        
+        # Suma de los montos
+        total_montos = sum(reg[8] for reg in registros)
+        total_montos_format = "{:,}".format(total_montos)
                 
         def filtrar_registros():
             """
@@ -425,6 +432,8 @@ def main(page: ft.Page):
                     reg for reg in filtrados 
                     if reg[7] == estado_seleccionado
                 ]
+            
+            
             
             # Actualizar tabla con resultados
             actualizar_tabla(filtrados)
@@ -570,8 +579,8 @@ def main(page: ft.Page):
                 auto_complete_container,
                 dropdown_estado,
                 btn_refresh,
-                
-            ]),
+            ft.Row([ft.Text(f"Monto total: ${total_montos_format}", size=20, color=ft.Colors.GREEN)]),
+            ]),            
             tabla_container
         ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
