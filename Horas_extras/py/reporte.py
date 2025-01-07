@@ -160,6 +160,10 @@ def reporte(page: ft.Page):
             fecha_solo = fecha_seleccionada.date()
             txt_fecha1.current.value = fecha_solo.strftime("%Y-%m-%d")
             date_picker_dialog1.open = False
+            
+            # Actualizar tabla al cambiar de fechas
+            actualizar_tabla(e=None)
+            
             page.update()
 
     
@@ -177,6 +181,10 @@ def reporte(page: ft.Page):
             fecha_solo = fecha_seleccionada.date()
             txt_fecha2.current.value = fecha_solo.strftime("%Y-%m-%d")
             date_picker_dialog2.open = False
+            
+            # Actualizar tabla al cambiar de fechas
+            actualizar_tabla(e=None)
+            
             page.update()
 
     # Crea el DatePicker y establece que `seleccionar_fecha` se ejecutará cuando cambie la fecha seleccionada.
