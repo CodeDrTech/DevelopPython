@@ -10,10 +10,10 @@ from email.mime.multipart import MIMEMultipart
 
 
 def main(page: ft.Page):
-    page.title = "TV en casa"
+    page.title = "TV en casa  Ver.20250107"
     page.window.alignment = ft.alignment.center
-    page.window.width = 1050
-    page.window.height = 700
+    page.window.width = 1300
+    page.window.height = 800
     page.window.resizable = False
     page.padding = 20
     page.scroll = True # type: ignore
@@ -21,8 +21,28 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     
     
-    # Referencias globales
-    txt_fecha_pago = ft.Ref[ft.TextField]()
+    def convertir_formato_fecha(fecha_str):
+        """
+        Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-mes-YYYY'.
+
+        Args:
+            fecha_str (str): Fecha en formato 'YYYY-MM-DD'.
+
+        Returns:
+            str: Fecha en formato 'DD-mes-YYYY' con el mes en abreviatura de tres letras en español.
+                    Si la fecha no es válida, se devuelve el string original.
+        """
+        """Convierte fecha de YYYY-MM-DD a DD-mes-YYYY"""
+        try:
+            fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
+            meses = {
+                1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
+                5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
+                9: 'SEPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+            }
+            return f"{fecha.day}-{meses[fecha.month]}-{fecha.year}"
+        except ValueError:
+            return fecha_str
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def abrir_dialogo_credenciales(e):
@@ -85,6 +105,25 @@ def main(page: ft.Page):
         ft.Column
             Contenedor que contiene todos los elementos de la interfaz de usuario.
         """
+        
+        def get_estado_color_css(estado: str) -> str:
+                """
+                Retorna el color correspondiente al estado del pago en formato CSS.
+                
+                Args:
+                    estado (str): Estado del pago (En corte/Pendiente/Cerca/Al día)
+                
+                Returns:
+                    str: Color en formato CSS (hexadecimal) para el estado.
+                """
+                estado_colores = {
+                    "En corte": "#FF0000",     # Rojo
+                    "Pendiente": "#FF8C00",   # Naranja oscuro
+                    "Cerca": "#007FFF",       # Azul
+                    "Al día": "#008000"       # Verde
+                }
+                return estado_colores.get(estado, "#000000")  # Negro como predeterminado
+
         def mostrar_mensaje_correo(mensaje: str):
             """
             Muestra un mensaje en SnackBar..
@@ -129,16 +168,22 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("WhatsApp")),
                     ft.DataColumn(ft.Text("Último Pago")),
                     ft.DataColumn(ft.Text("Próximo Pago")),
-                    ft.DataColumn(ft.Text("Estado"))
+                    ft.DataColumn(ft.Text("Estado")),
+                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Correo")),
+                    ft.DataColumn(ft.Text("Comentario")),
                 ],
                 rows=[
                     ft.DataRow(
                         cells=[
                             ft.DataCell(ft.Text(cliente[0])),
                             ft.DataCell(ft.Text(cliente[1])),
-                            ft.DataCell(ft.Text(cliente[2])),
+                            ft.DataCell(ft.Text(convertir_formato_fecha(cliente[5]))),
+                            ft.DataCell(ft.Text(convertir_formato_fecha(cliente[6]))),
+                            ft.DataCell(ft.Text(cliente[7])),
+                            ft.DataCell(ft.Text(f"${cliente[2]}")),
                             ft.DataCell(ft.Text(cliente[3])),
-                            ft.DataCell(ft.Text(cliente[4]))
+                            ft.DataCell(ft.Text(cliente[4])),
                         ]
                     ) for cliente in clientes
                 ],
@@ -172,24 +217,28 @@ def main(page: ft.Page):
             else:
                 clientes = obtener_clientes_por_estado(estado_seleccionado)
             
+            
+            asunto = 'Estados de clientes'
             # Formatear los datos para el correo
             body = "Lista de clientes:<br><br>"
             for cliente in clientes:
                 numero_limpio = ''.join(filter(str.isdigit, cliente[1]))
                 enlace_whatsapp = f"https://wa.me/1{numero_limpio}"
                 body += (
-                        f"<b>Nombre: {cliente[0]}</b><br><br>"
-                        
+                        f"<b>Nombre: {cliente[0]}</b><br>"                        
+                        f"Correo: {cliente[3]}<br>"
                         f"WhatsApp: <a href='{enlace_whatsapp}'>{cliente[1]}</a><br>"
-                        f"Último pago: {cliente[2]}<br>"
-                        f"Próximo pago: {cliente[3]}<br>"
-                        f"Estado: {cliente[4]}<br><br>"
+                        f"Último pago: {convertir_formato_fecha(cliente[5])}<br>"
+                        f"Próximo pago: {convertir_formato_fecha(cliente[6])}<br>"
+                        f"Monto: ${cliente[2]}<br>"
+                        f"Estado: <span style='color: {get_estado_color_css(cliente[7])}'>{cliente[7]}</span><br>"
+                        f"Comentario: {cliente[4]}<br><br>"                        
                     )
 
             message = MIMEMultipart()
             message['From'] = f'Notificacion de estado <{sender_email}>'
             message['To'] = receiver_email
-            message['Subject'] = "Estado de clientes"
+            message['Subject'] = asunto
             message.attach(MIMEText(body, 'html'))  # Especificamos 'html' para que los enlaces funcionen
 
             try:
@@ -218,6 +267,9 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Último Pago")),
             ft.DataColumn(ft.Text("Próximo Pago")),
             ft.DataColumn(ft.Text("Estado")),
+            ft.DataColumn(ft.Text("Monto")),
+            ft.DataColumn(ft.Text("Correo")),
+            ft.DataColumn(ft.Text("Comentario")),
         ]
 
         tabla_container = ft.Container(
@@ -253,16 +305,19 @@ def main(page: ft.Page):
     txt_fecha_inicio = ft.Ref[ft.TextField]()
     dd_estado = ft.Ref[ft.Dropdown]()
     txt_frecuencia = ft.Ref[ft.TextField]()
+    txt_monto = ft.Ref[ft.TextField]()
+    txt_correo = ft.Ref[ft.TextField]()
+    txt_comentario = ft.Ref[ft.TextField]()    
     
     tabla_vencimientos = None  # Referencia a tabla_vencimientos
     clientes = None  # Referencia a clientes
-
+    
     def mostrar_datepicker_inicio(e):
         """Muestra DatePicker para fecha inicio"""
         date_picker = ft.DatePicker(
             first_date=datetime.datetime.now() - datetime.timedelta(days=365),
             last_date=datetime.datetime.now() + datetime.timedelta(days=365),
-            on_change=lambda e: seleccionar_fecha_inicio(e)
+            on_change=lambda e: seleccionar_fecha_inicio(e),            
         )
         page.overlay.append(date_picker)
         date_picker.open = True
@@ -282,7 +337,9 @@ def main(page: ft.Page):
         txt_whatsapp.current.value = ""
         txt_fecha_inicio.current.value = ""
         dd_estado.current.value = "Activo"
-        #txt_frecuencia.current.value = ""
+        txt_monto.current.value = ""
+        txt_correo.current.value = ""
+        txt_comentario.current.value = ""
         page.update()
 
     def guardar_cliente(e):
@@ -294,9 +351,11 @@ def main(page: ft.Page):
                 txt_whatsapp.current.value,
                 txt_fecha_inicio.current.value,
                 dd_estado.current.value,
-                txt_frecuencia.current.value
+                txt_frecuencia.current.value,
+                txt_monto.current.value,
+                txt_correo.current.value
             ]):
-                raise ValueError("Todos los campos son requeridos")
+                raise ValueError("Algunos campos son requeridos")
 
             # Insertar cliente
             if insertar_cliente(
@@ -304,7 +363,10 @@ def main(page: ft.Page):
                 txt_whatsapp.current.value,
                 txt_fecha_inicio.current.value,
                 dd_estado.current.value,
-                int(txt_frecuencia.current.value)
+                int(txt_frecuencia.current.value),
+                int(txt_monto.current.value),
+                txt_correo.current.value,
+                txt_comentario.current.value
             ):
                 mostrar_mensaje("Cliente guardado correctamente")
                 limpiar_campos()
@@ -312,8 +374,7 @@ def main(page: ft.Page):
                 # Actualizar tabla de vencimientos
                 nonlocal tabla_vencimientos
                 tabla_vencimientos = crear_tabla_vencimientos()
-                mainTab.tabs[0].content = tabla_vencimientos
-                
+                mainTab.tabs[0].content = tabla_vencimientos                
                 
                 # Actualizar datos
                 nonlocal clientes
@@ -407,7 +468,10 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Proximo pago")),
             ft.DataColumn(ft.Text("Frecuencia")),
             ft.DataColumn(ft.Text("Días")),
-            ft.DataColumn(ft.Text("Estado"))
+            ft.DataColumn(ft.Text("Estado")),
+            ft.DataColumn(ft.Text("Monto")),
+            ft.DataColumn(ft.Text("Correo")),
+            ft.DataColumn(ft.Text("Comentario"))
         ]
         
         def get_estado_color(estado):
@@ -431,22 +495,28 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Proximo pago")),
                     ft.DataColumn(ft.Text("Frecuencia")),
                     ft.DataColumn(ft.Text("Días")),
-                    ft.DataColumn(ft.Text("Estado"))
+                    ft.DataColumn(ft.Text("Estado")),
+                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Correo")),
+                    ft.DataColumn(ft.Text("Comentario"))
                 ],
                 rows=[
                     ft.DataRow(
                         cells=[
                             ft.DataCell(ft.Text(str(reg[0]))),
                             ft.DataCell(ft.Text(reg[1])),
-                            ft.DataCell(ft.Text(reg[2])),
-                            ft.DataCell(ft.Text(reg[3])),
-                            ft.DataCell(ft.Text(reg[4])),
+                            ft.DataCell(ft.Text(convertir_formato_fecha(reg[2]))),
+                            ft.DataCell(ft.Text(convertir_formato_fecha(reg[3]))),
+                            ft.DataCell(ft.Text(convertir_formato_fecha(reg[4]))),
                             ft.DataCell(ft.Text(f"{reg[5]} días")),
                             ft.DataCell(ft.Text(str(reg[6]))),
                             ft.DataCell(ft.Text(
                                 reg[7],
                                 color=get_estado_color(reg[7])
                             )),
+                            ft.DataCell(ft.Text(str(f"${reg[8]}"))),
+                            ft.DataCell(ft.Text(reg[9])),
+                            ft.DataCell(ft.Text(reg[10]))
                         ],
                     ) for reg in registros_filtrados
                 ],
@@ -533,8 +603,8 @@ def main(page: ft.Page):
                 icon=ft.Icons.CALENDAR_MONTH,
                 on_click=lambda _: mostrar_datepicker_edit()
             )
-            estado_edit = ft.Dropdown(
-                label="Estado",
+            condicion_edit = ft.Dropdown(
+                label="Condicion",
                 options=[
                     ft.dropdown.Option("Activo"),
                     ft.dropdown.Option("Inactivo")
@@ -546,6 +616,9 @@ def main(page: ft.Page):
                 value=str(cliente[5]),
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
+            monto_edit = ft.TextField(label="Monto", value=str(cliente[6]))
+            correo_edit = ft.TextField(label="Correo", value=cliente[7])
+            comentario_edit = ft.TextField(label="Comentario", value=cliente[8])
 
             def seleccionar_fecha_edit(e, txt_field):
                 """
@@ -589,8 +662,11 @@ def main(page: ft.Page):
                         nombre_edit.value,
                         whatsapp_edit.value,
                         fecha_edit.value,
-                        estado_edit.value,
-                        int(frecuencia_edit.value)
+                        condicion_edit.value,
+                        int(frecuencia_edit.value),
+                        int(monto_edit.value),
+                        correo_edit.value,
+                        comentario_edit.value
                     ):
                         dlg_modal.open = False
                         
@@ -607,6 +683,7 @@ def main(page: ft.Page):
                         nonlocal tabla_vencimientos
                         tabla_vencimientos = crear_tabla_vencimientos()
                         mainTab.tabs[0].content = tabla_vencimientos
+                        
                         page.update()
                         
                         
@@ -629,8 +706,11 @@ def main(page: ft.Page):
                     nombre_edit,
                     whatsapp_edit,
                     fecha_edit,
-                    estado_edit,
-                    frecuencia_edit
+                    condicion_edit,
+                    frecuencia_edit,
+                    monto_edit,
+                    correo_edit,
+                    comentario_edit
                 ]),
                 actions=[
                     ft.TextButton("Cancelar", 
@@ -652,8 +732,11 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Nombre")),
                     ft.DataColumn(ft.Text("Inicio")),
                     ft.DataColumn(ft.Text("WhatsApp")),
-                    ft.DataColumn(ft.Text("Estado")),
+                    ft.DataColumn(ft.Text("Condicion")),
                     ft.DataColumn(ft.Text("Frecuencia")),
+                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Correo")),
+                    ft.DataColumn(ft.Text("Comentario")),
                     ft.DataColumn(ft.Text("Acciones"))
                 ],
                 rows=[
@@ -661,10 +744,13 @@ def main(page: ft.Page):
                         cells=[
                             ft.DataCell(ft.Text(str(cliente[0]))),
                             ft.DataCell(ft.Text(cliente[1])),
-                            ft.DataCell(ft.Text(cliente[2])),
+                            ft.DataCell(ft.Text(convertir_formato_fecha(cliente[2]))),
                             ft.DataCell(ft.Text(cliente[3])),
                             ft.DataCell(ft.Text(cliente[4])),
                             ft.DataCell(ft.Text(f"{cliente[5]} días")),
+                            ft.DataCell(ft.Text(str(f"${cliente[6]}"))),
+                            ft.DataCell(ft.Text(cliente[7])),
+                            ft.DataCell(ft.Text(cliente[8])),
                             ft.DataCell(
                                 ft.IconButton(
                                     icon=ft.Icons.EDIT,
@@ -918,12 +1004,12 @@ def main(page: ft.Page):
                     cliente = get_estado_pago_cliente(cliente_id)
                     if cliente:
                         info_container.content = ft.Column([
-                            ft.Text(f"Último pago: {cliente[3]}"),
-                            ft.Text(f"Próximo pago: {cliente[4]}"),
-                            ft.Text(f"Días transcurridos: {cliente[6]}"),
+                            ft.Text(f"Último pago: {convertir_formato_fecha(cliente[9])}"),
+                            ft.Text(f"Próximo pago: {convertir_formato_fecha(cliente[10])}"),
+                            ft.Text(f"Días transcurridos: {cliente[11]}"),
                             ft.Text(
-                                f"Estado: {cliente[7]}", 
-                                color=get_estado_color(cliente[7])
+                                f"Estado: {cliente[12]}", 
+                                color=get_estado_color(cliente[12])
                             )
                         ])
                         page.update()
@@ -1034,7 +1120,7 @@ def main(page: ft.Page):
                             ft.TextField(width=320, ref=txt_whatsapp, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
                         ]),
                         ft.Row([
-                            ft.Text("Estado:", width=100),
+                            ft.Text("Condicion:", width=100),
                             ft.Dropdown(
                             width=320,
                             ref=dd_estado,
@@ -1063,6 +1149,18 @@ def main(page: ft.Page):
                         ),
                         ]),
                         ft.Row([
+                            ft.Text("Monto:", width=100),
+                            ft.TextField(width=320, ref=txt_monto, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+                        ]),
+                        ft.Row([
+                            ft.Text("Correo:", width=100),
+                            ft.TextField(width=320, ref=txt_correo, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
+                        ]),
+                        ft.Row([
+                            ft.Text("Comentario:", width=100),
+                            ft.TextField(width=320, ref=txt_comentario, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=100, capitalization=ft.TextCapitalization.WORDS),
+                        ]),
+                        ft.Row([
                         ft.Text(" ", width=100),
                         ft.ElevatedButton(text="Registrar", width=100, on_click=guardar_cliente),
                         ft.ElevatedButton(text="Empleados", width=100),
@@ -1079,8 +1177,7 @@ def main(page: ft.Page):
                 text="Envio de estados",
                 content=ft.Column([
                     ft.Text("Envio de estados", size=20),
-                    envio_estados(),
-                    
+                    envio_estados(),                    
                 ])
             ),
         ],
