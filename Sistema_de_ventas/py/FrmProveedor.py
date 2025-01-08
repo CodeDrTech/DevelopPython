@@ -11,14 +11,14 @@ class VentanaProveedor(QMainWindow):
     ventana_abierta = False    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Sistema de ventas/ui/FrmProveedor.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmProveedor.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Proveedores .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
         
         
         # Crear un efecto de sombra        

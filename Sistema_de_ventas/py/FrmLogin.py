@@ -14,13 +14,13 @@ class VentanaLogin(QMainWindow):
     
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Sistema de ventas/ui/FrmLogin.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmLogin.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         # Configuracion de la ventana
-        self.setWindowTitle('.:. Acceso al sistema de ventas .:.')
+        self.setWindowTitle('.:. Acceso al Sistema_de_ventas .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
         
         # crea efecto de sombra en la fecha hora, groupBox y graphicsView.
         txtFecha_shadow = QGraphicsDropShadowEffect()
@@ -55,7 +55,7 @@ class VentanaLogin(QMainWindow):
         scene = QGraphicsScene()
 
         # Carga una imagen en la escena
-        pixmap = QPixmap('Sistema de ventas/imagenes/login.jpg')  # Ruta de la imagen
+        pixmap = QPixmap('Sistema_de_ventas/imagenes/login.jpg')  # Ruta de la imagen
         scene.addPixmap(pixmap)
 
         # Establece la escala de la vista para que se ajuste automáticamente al tamaño de la ventana

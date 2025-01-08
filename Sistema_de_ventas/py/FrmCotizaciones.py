@@ -32,14 +32,14 @@ class VentanaCotizaciones(QMainWindow):
     def __init__(self):
         self.se_llamo_activar_botones = False
         super().__init__()        
-        uic.loadUi('Sistema de ventas/ui/FrmCotizacion.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmCotizacion.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Cotizaciones .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------   
         # Establece las fechas en los txtFechas que estan en el formulario
@@ -303,10 +303,10 @@ class VentanaCotizaciones(QMainWindow):
                     # Si el usuario hace clic en el botón "Sí", convierte la cotizacion en pdf
                     if confirmacion == QMessageBox.Yes:
                         
-                        c = canvas.Canvas(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
+                        c = canvas.Canvas(f"Sistema_de_ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf", pagesize=letter)
 
                         # Agregar el logo de la empresa
-                        c.drawImage("Sistema de ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
+                        c.drawImage("Sistema_de_ventas/imagenes/Logo.jpg", 400, 700, width=150, height=75)
 
                         # Datos de la empresa
                         data = [
@@ -416,7 +416,7 @@ class VentanaCotizaciones(QMainWindow):
                         c.save()
 
                         # Ruta completa del archivo PDF para ser usada para imprimir el pdf creado.
-                        pdf_file_name = os.path.abspath(f"Sistema de ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
+                        pdf_file_name = os.path.abspath(f"Sistema_de_ventas/pdf/Cotizaciones/Cotizacion {self.bd_serie}.pdf")
 
                         # Abrir el cuadro de diálogo de impresión de Windows, open crea y abre el pdf, print
                         # imprime el archivo por la impresora predeterminada.
@@ -589,7 +589,7 @@ class VentanaCotizaciones(QMainWindow):
                                 painter.drawText(300, 300 + i * 250, row[0])
 
                             # Carga la imagen del logo
-                            logo_image = QImage("Sistema de ventas/imagenes/Logo.jpg")
+                            logo_image = QImage("Sistema_de_ventas/imagenes/Logo.jpg")
 
                             # Redimensiona el tamaño de la imagen del logo al deseado
                             logo_image = logo_image.scaled(1500, 750)

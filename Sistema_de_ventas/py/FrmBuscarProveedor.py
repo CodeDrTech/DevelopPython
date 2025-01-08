@@ -12,14 +12,14 @@ class VentanaBuscarproveedor(QMainWindow):
     def __init__(self,ventana_ingreso):
         super().__init__()
         self.ventana_ingreso = ventana_ingreso        
-        uic.loadUi('Sistema de ventas/ui/FrmBuscarProveedor.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmBuscarProveedor.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Buscar Proveedores .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
         
         # Botones del formulario y sus funciones
         self.btnBuscar.clicked.connect(self.buscar_proveedores)

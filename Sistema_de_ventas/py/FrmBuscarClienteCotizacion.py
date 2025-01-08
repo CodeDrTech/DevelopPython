@@ -12,14 +12,14 @@ class VentanaBuscarClienteCotizacion(QMainWindow):
     def __init__(self, ventana_cotizaciones):
         super().__init__()
         self.ventana_cotizaciones = ventana_cotizaciones        
-        uic.loadUi('Sistema de ventas/ui/FrmBuscarClienteCotizacion.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmBuscarClienteCotizacion.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Buscar Clientes .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
         
         # Botones del formulario y sus funciones
         self.btnBuscar.clicked.connect(self.buscar_clientes)

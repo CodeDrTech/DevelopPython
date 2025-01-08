@@ -11,14 +11,14 @@ class VentanaBuscarArticuloVentas(QMainWindow):
     def __init__(self, ventana_Ventas):
         super().__init__()
         self.ventana_Ventas = ventana_Ventas        
-        uic.loadUi('Sistema de ventas/ui/FrmBuscarArticuloVentas.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmBuscarArticuloVentas.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Buscar Articulos .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
         
         # Botones del formulario y sus funciones
         self.btnBuscar.clicked.connect(self.buscar_articulo)

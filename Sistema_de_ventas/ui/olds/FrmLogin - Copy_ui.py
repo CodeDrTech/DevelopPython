@@ -350,7 +350,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Sistema de Ventas", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Sistema_de_ventas", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Acceso al Sistema", None))
         self.btnIngresar.setText(QCoreApplication.translate("MainWindow", u"Ingresar", None))
 #if QT_CONFIG(shortcut)

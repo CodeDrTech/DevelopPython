@@ -12,14 +12,14 @@ class VentanaEmpleado(QMainWindow):
     ventana_abierta = False    
     def __init__(self):
         super().__init__()        
-        uic.loadUi('Sistema de ventas/ui/FrmEmpleado.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmEmpleado.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
                 
         # Configuraiones de la ventana principal.
         self.setWindowTitle('.:. Mantenimiento de Empleados .:.')
         self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
         
         
         # Crear un efecto de sombra        
@@ -76,7 +76,7 @@ class VentanaEmpleado(QMainWindow):
         data = pd.DataFrame(data_list, columns=column_names)
 
         # Cargar la plantilla HTML
-        env = Environment(loader=FileSystemLoader('Sistema de ventas/pdf/'))
+        env = Environment(loader=FileSystemLoader('Sistema_de_ventas/pdf/'))
         template = env.get_template('plantilla.html')
 
 

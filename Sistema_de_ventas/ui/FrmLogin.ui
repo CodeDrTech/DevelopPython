@@ -62,7 +62,7 @@ QLabel {
 }</string>
     </property>
     <property name="text">
-     <string>Sistema de Ventas</string>
+     <string>Sistema_de_ventas</string>
     </property>
    </widget>
    <widget class="QGraphicsView" name="graphicsView">

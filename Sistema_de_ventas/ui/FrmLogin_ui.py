@@ -238,7 +238,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "Sistema de Ventas"))
+        self.label.setText(_translate("MainWindow", "Sistema_de_ventas"))
         self.btnIngresar.setText(_translate("MainWindow", "Ingresar"))
         self.btnIngresar.setShortcut(_translate("MainWindow", "Return"))
         self.btnSalir.setText(_translate("MainWindow", "Salir"))

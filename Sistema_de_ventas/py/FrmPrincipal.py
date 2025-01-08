@@ -18,16 +18,16 @@ from Consultas_db import backup_database
 class VentanaPrincipal(QMainWindow):      
     def __init__(self,):
         super().__init__()        
-        uic.loadUi('Sistema de ventas/ui/FrmPrincipal.ui',self)
+        uic.loadUi('Sistema_de_ventas/ui/FrmPrincipal.ui',self)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------        
         
         
                 
         # Configuraiones de la ventana principal.
-        self.setWindowTitle('.:. Sistema de Ventas .:.')
+        self.setWindowTitle('.:. Sistema_de_ventas .:.')
         #self.setFixedSize(self.size())
-        self.setWindowIcon(QtGui.QIcon('Sistema de ventas/imagenes/login.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Sistema_de_ventas/imagenes/login.jpg'))
         
     # Obtiene nombre s=de usuario y rol del inicio de sesion y los mustra en los label
     # del formulario principal para identificar el usuario que esta trabajando.
