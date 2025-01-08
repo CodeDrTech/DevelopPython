@@ -13,6 +13,16 @@ Casa_tv/data/database.db
 Casa_tv/pyvenv.cfg
 
 
+# Entornos QT Design
+QT Design/Lib/
+QT Design/Scripts/
+QT Design/Include/
+QT Design/data/database.db
+QT Design/pyvenv.cfg
+QT Design/py/
+QT Design/ui/
+
+
 # Horas extras
 Horas_extras/data/HorasExtras.db
 Horas_extras/data/Empleados.xlsm
