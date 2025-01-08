@@ -49,7 +49,7 @@ class VentanaArticulo(QMainWindow):
         tabWidget_shadow = QGraphicsDropShadowEffect()
         tabWidget_shadow.setBlurRadius(20)
         tabWidget_shadow.setColor(Qt.black)# type: ignore #QColor(200, 200, 200))        
-        self.tabWidget.setGraphicsEffect(tabWidget_shadow)
+        self.centralwidget.setGraphicsEffect(tabWidget_shadow)
         
         groupBox_shadow = QGraphicsDropShadowEffect()
         groupBox_shadow.setBlurRadius(20)

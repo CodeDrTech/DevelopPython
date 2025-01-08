@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setWindowModality(QtCore.Qt.Qt::WindowModality::NonModal)
+        MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.resize(1019, 658)
         MainWindow.setStyleSheet("QWidget {\n"
 "    background-color: #deede3;\n"
