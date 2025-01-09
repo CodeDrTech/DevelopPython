@@ -10,7 +10,7 @@ from email.mime.multipart import MIMEMultipart
 
 
 def main(page: ft.Page):
-    page.title = "TV en casa  Ver.20250107"
+    page.title = "TV en casa  Ver.20250109"
     page.window.alignment = ft.alignment.center
     page.window.width = 1300
     page.window.height = 800
