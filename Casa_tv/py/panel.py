@@ -626,8 +626,8 @@ def main(page: ft.Page):
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
             monto_edit = ft.TextField(label="Monto", value=str(cliente[6]))
-            correo_edit = ft.TextField(label="Correo", value=cliente[7])
-            comentario_edit = ft.TextField(label="Comentario", value=cliente[8])
+            correo_edit = ft.TextField(label="Correo", multiline=True, value=cliente[7])
+            comentario_edit = ft.TextField(label="Comentario", multiline=True, value=cliente[8])
 
             def seleccionar_fecha_edit(e, txt_field):
                 """
@@ -1163,11 +1163,11 @@ def main(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Correo:", width=100),
-                            ft.TextField(width=320, ref=txt_correo, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
+                            ft.TextField(width=320, ref=txt_correo, multiline=True, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
                         ]),
                         ft.Row([
                             ft.Text("Comentario:", width=100),
-                            ft.TextField(width=320, ref=txt_comentario, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=100, capitalization=ft.TextCapitalization.WORDS),
+                            ft.TextField(width=320, ref=txt_comentario, multiline=True, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=100, capitalization=ft.TextCapitalization.WORDS),
                         ]),
                         ft.Row([
                         ft.Text(" ", width=100),
