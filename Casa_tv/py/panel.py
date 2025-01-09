@@ -220,11 +220,13 @@ def main(page: ft.Page):
             
             
             asunto = 'Estados de clientes'
+            
             # Formatear los datos para el correo
             body = "Lista de clientes:<br><br>"
             for cliente in clientes:
+                primer_nombre = cliente[0].split()[0]
                 numero_limpio = ''.join(filter(str.isdigit, cliente[1]))
-                enlace_whatsapp = f"https://wa.me/1{numero_limpio}"
+                enlace_whatsapp = f"https://wa.me/1{numero_limpio}?text=Hola%20{primer_nombre}%20tienes%20un%20pago%20pendiente.%20Fecha%20limite%20{convertir_formato_fecha(cliente[6])}.%20Gracias."
                 body += (
                         f"<b>Nombre: {cliente[0]}</b><br>"                        
                         f"Correo: {cliente[3]}<br>"
