@@ -211,7 +211,7 @@ def main(page: ft.Page):
             receiver_email = credenciales[2]
             
             
-            mostrar_mensaje_correo("Enviando correo...")  # Mostrar mensaje de envío
+            #mostrar_mensaje_correo("Enviando correo...")  # Mostrar mensaje de envío
             estado_seleccionado = dropdown.value  # Obtener el estado seleccionado en el momento del envío
             if estado_seleccionado == "Todos":
                 clientes = obtener_todos_los_clientes()
@@ -237,7 +237,7 @@ def main(page: ft.Page):
                     )
 
             message = MIMEMultipart()
-            message['From'] = f'Notificacion de estado <{sender_email}>'
+            message['From'] = sender_email
             message['To'] = receiver_email
             message['Subject'] = asunto
             message.attach(MIMEText(body, 'html'))  # Especificamos 'html' para que los enlaces funcionen
