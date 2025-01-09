@@ -21,6 +21,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     
     
+    
     def convertir_formato_fecha(fecha_str):
         """
         Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-mes-YYYY'.
