@@ -16,9 +16,10 @@ def main(page: ft.Page):
     page.window.height = 800
     page.window.resizable = False
     page.padding = 20
-    page.scroll = True # type: ignore
+    page.scroll = "adaptive" # type: ignore
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
+    
     
     
     
@@ -1092,7 +1093,8 @@ def main(page: ft.Page):
     mainTab = ft.Tabs(
         selected_index=0,  # Pestaña seleccionada por defecto al iniciar la ventana
         animation_duration=300,
-        expand=True,        
+        expand=True,
+        
         # Contenedor de tabs
         tabs=[
             ft.Tab(
