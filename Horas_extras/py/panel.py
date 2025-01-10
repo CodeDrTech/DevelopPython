@@ -5,7 +5,7 @@ from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_
 
 #Funcion principal para iniciar la ventana con los controles
 def main(page: ft.Page):
-    page.title = "Horas Extras"
+    page.title = "Horas Extras Ver. 20250110"
     page.window.alignment = ft.alignment.center
     page.window.width = 600
     page.window.height = 650
@@ -398,13 +398,13 @@ def main(page: ft.Page):
         Si se selecciona la pestaña de "Registro", el tamaño de la ventana es de 600x650.
         Si se selecciona la pestaña de "Empleados" o "Reporte", el tamaño de la ventana es de 1250x700.
         """
-        if mainTab.selected_index == 0:
-            page.window.width = 600
-            page.window.height = 650
-            page.update()
-        else:
+        if mainTab.selected_index == 1:
             page.window.width = 1250
             page.window.height = 700
+            page.update()
+        else:
+            #page.window.width = 1250
+            #page.window.height = 700
             registros = get_ultimos_registros()
             tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
             page.update()

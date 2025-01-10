@@ -403,13 +403,13 @@ def registro(page: ft.Page):
         Si se selecciona la pestaña de "Registro", el tamaño de la ventana es de 600x650.
         Si se selecciona la pestaña de "Empleados" o "Reporte", el tamaño de la ventana es de 1250x700.
         """
-        if mainTab.selected_index == 0:
-            page.window.width = 600
+        if mainTab.selected_index == 1:
+            page.window.width = 1250
             page.window.height = 650
             page.update()
         else:
-            page.window.width = 1250
-            page.window.height = 650
+            #page.window.width = 1250
+            #page.window.height = 650
             registros = get_ultimos_registros()
             tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
             page.update()
