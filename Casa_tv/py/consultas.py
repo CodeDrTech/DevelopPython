@@ -568,4 +568,18 @@ def actualizar_credenciales(sender_email: str, sender_password: str, receiver_em
     return False
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-
+def obtener_numeros_whatsapp():
+    """Obtiene la lista de números de WhatsApp de la base de datos."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT whatsapp FROM clientes WHERE whatsapp IS NOT NULL")
+            numeros = [row[0] for row in cursor.fetchall()]
+            return numeros
+        except sqlite3.Error as e:
+            print(f"Error obteniendo números de WhatsApp: {e}")
+            return []
+        finally:
+            conn.close()
+    return []

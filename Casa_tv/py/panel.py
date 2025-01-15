@@ -1,13 +1,52 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales, obtener_numeros_whatsapp
 import datetime
+import time
+import pywhatkit
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 
+def mostrar_mensaje_whatsapp(mensaje: str, page: ft.Page):
+    """
+    Muestra un mensaje en SnackBar.
 
+    Args:
+        mensaje (str): Texto a mostrar.
+        page (ft.Page): Página de la aplicación.
+    """
+    snack = ft.SnackBar(content=ft.Text(mensaje), duration=5000)
+    page.overlay.append(snack)
+    snack.open = True
+    page.update()
+
+def enviar_mensajes(numeros, mensaje, page, intervalo=10):
+    """
+    Envía mensajes de WhatsApp a una lista de números.
+
+    Args:
+        numeros (list): Lista de números de WhatsApp.
+        mensaje (str): Mensaje a enviar.
+        page (ft.Page): Página de la aplicación.
+        intervalo (int): Tiempo en segundos entre mensajes (por defecto, 10 segundos).
+    """
+    if not mensaje.strip():
+        mostrar_mensaje_whatsapp("El mensaje no puede estar vacío.", page)
+        return
+    
+    if not numeros:
+        mostrar_mensaje_whatsapp("No se encontraron números para enviar mensajes.", page)
+        return
+
+    for numero in numeros:
+        try:
+            pywhatkit.sendwhatmsg_instantly(f"+{numero}", mensaje)
+            mostrar_mensaje_whatsapp(f"Mensaje enviado a {numero}.", page)
+            time.sleep(intervalo)  # Esperar antes de enviar el siguiente mensaje
+        except Exception as e:
+            mostrar_mensaje_whatsapp(f"Error enviando mensaje a {numero}: {e}", page)
 
 def main(page: ft.Page):
     page.title = "TV en casa  Ver.20250109"
@@ -20,9 +59,23 @@ def main(page: ft.Page):
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
     
-    
-    
-    
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+    def enviar_click(e):
+        mensaje = mensaje_textbox.value
+        numeros = obtener_numeros_whatsapp()
+        enviar_mensajes(numeros, mensaje, page)
+
+    mensaje_textbox = ft.TextField(
+        width=320,
+        multiline=True,
+        border=ft.border.all(2, ft.Colors.BLACK),
+        border_radius=10,
+        max_length=200,
+        capitalization=ft.TextCapitalization.SENTENCES,
+    )
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def convertir_formato_fecha(fecha_str):
         """
         Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-mes-YYYY'.
@@ -1192,6 +1245,18 @@ def main(page: ft.Page):
                 content=ft.Column([
                     ft.Text("Envio de estados", size=20),
                     envio_estados(),                    
+                ])
+            ),
+            ft.Tab(
+                icon=ft.Icons.MESSAGE,
+                text="Whatsapp",
+                content=ft.Column([
+                    ft.Text("Envio de mensajes por whatsapp", size=20),
+                    ft.Row([
+                            ft.Text("Mensaje:", width=100),
+                            mensaje_textbox,
+                        ]),
+                    ft.ElevatedButton(text="Enviar", width=100, on_click=enviar_click),
                 ])
             ),
         ],
