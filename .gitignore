@@ -13,6 +13,14 @@ Casa_tv/data/database.db
 Casa_tv/pyvenv.cfg
 
 
+# Entornos virtuales
+App_android/Lib/
+App_android/Scripts/
+App_android/Include/
+App_android/data/database.db
+App_android/pyvenv.cfg
+
+
 # Entornos QT Design
 QT Design/Lib/
 QT Design/Scripts/
