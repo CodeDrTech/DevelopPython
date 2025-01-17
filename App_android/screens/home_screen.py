@@ -3,7 +3,7 @@ from kivymd.uix.tab import MDTabsBase, MDTabs
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDRaisedButton  # Importar desde kivymd.uix.button
+
 
 class Tab(MDBoxLayout, MDTabsBase):
     """Clase para crear el contenido de cada pestaña."""
@@ -18,29 +18,44 @@ class MainApp(MDApp):
         # Pantalla principal
         screen = MDScreen()
 
+        # Layout principal con las pestañas al final
+        layout = MDBoxLayout(orientation="vertical")
+
+        # Contenido principal (parte superior)
+        content = MDBoxLayout(size_hint=(1, 0.88))  # Ajuste dinámico para contenido
+        content.add_widget(MDLabel(text="Contenido principal", halign="center"))
+
         # Pestañas
-        tabs = MDTabs()
-        tabs.add_widget(self.create_tab("Vencimientos", "Busqueda por nombre.", "home"))
+        tabs = MDTabs(size_hint=(1, 0.12))  # Altura de pestañas ajustada para pantallas móviles
+        tabs.add_widget(self.create_tab("Vencimientos", "Muestra los vencimientos de pagos.", "home"))
         tabs.add_widget(self.create_tab("Clientes", "Lista de clientes registrados.", "account"))
         tabs.add_widget(self.create_tab("Agregar clientes", "Formulario para añadir clientes nuevos.", "account-plus"))
         tabs.add_widget(self.create_tab("Aplicar pagos", "Registrar pagos de clientes.", "cash"))
-        tabs.add_widget(self.create_tab("Envio estado", "Enviar estados por WhatsApp.", "send"))
+        tabs.add_widget(self.create_tab("Envio estado", "Enviar estados por mail.", "gmail"))
 
-        # Agregar las pestañas a la pantalla
-        screen.add_widget(tabs)
+        # Agregar contenido y pestañas al layout principal
+        layout.add_widget(content)
+        layout.add_widget(tabs)
+
+        # Agregar el layout principal a la pantalla
+        screen.add_widget(layout)
         return screen
 
     def create_tab(self, name, text, icon):
         """Crea una pestaña con un nombre y texto descriptivo."""
-        tab = Tab(orientation='vertical')
+        tab = Tab(orientation='vertical', padding=10)  # Padding para mejor ajuste en móviles
         
-        # Contenedor para el texto alineado a la derecha en la parte superior
-        top_layout = MDBoxLayout(size_hint_y=None, height="48dp", padding=[0, 10, 10, 0])
-        label = MDLabel(text=text, halign="left", theme_text_color="Primary")
-        top_layout.add_widget(label)
+        # Texto alineado a la derecha
+        label = MDLabel(
+            text=text,
+            halign="left",
+            theme_text_color="Primary",
+            size_hint_y=1,
+            height="40dp",  # Ajuste para que no ocupe demasiado espacio
+        )
         
-        # Agregar el contenedor de texto y el icono
-        tab.add_widget(top_layout)
+        # Agregar texto al tab
+        tab.add_widget(label)
         tab.text = name
         tab.icon = icon
         return tab
