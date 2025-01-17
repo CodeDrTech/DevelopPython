@@ -27,7 +27,7 @@
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>81</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -49,10 +49,10 @@ QLabel {
 }</string>
     </property>
     <property name="text">
-     <string>Articulos</string>
+     <string>Contartos</string>
     </property>
    </widget>
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QTabWidget" name="tabs">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -90,7 +90,7 @@ QLineEdit::placeholder {
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="tabListado">
      <attribute name="title">
       <string>Listado</string>
      </attribute>
@@ -316,9 +316,24 @@ QTableView::item:focus {
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="tabUsuario">
      <attribute name="title">
-      <string>Mantenimiento</string>
+      <string>Datos de usuario</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabEquipo">
+     <attribute name="title">
+      <string>Datos del equipo</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabImagenEquipo">
+     <attribute name="title">
+      <string>Imagenes</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabContrato">
+     <attribute name="title">
+      <string>Contrato</string>
      </attribute>
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
@@ -749,7 +764,7 @@ QPushButton:pressed {
       <widget class="QComboBox" name="cmbPresentacion">
        <property name="geometry">
         <rect>
-         <x>580</x>
+         <x>410</x>
          <y>90</y>
          <width>100</width>
          <height>25</height>
@@ -783,7 +798,7 @@ QComboBox::placeholder {
       <widget class="QComboBox" name="cmbCategoria">
        <property name="geometry">
         <rect>
-         <x>580</x>
+         <x>410</x>
          <y>30</y>
          <width>100</width>
          <height>25</height>
@@ -817,7 +832,7 @@ QComboBox::placeholder {
       <widget class="QLabel" name="label_7">
        <property name="geometry">
         <rect>
-         <x>480</x>
+         <x>310</x>
          <y>30</y>
          <width>81</width>
          <height>21</height>
@@ -841,7 +856,7 @@ QLabel {
       <widget class="QLabel" name="label_9">
        <property name="geometry">
         <rect>
-         <x>460</x>
+         <x>290</x>
          <y>90</y>
          <width>111</width>
          <height>21</height>
@@ -860,6 +875,54 @@ QLabel {
        </property>
        <property name="text">
         <string>Presentacion</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_Categoria">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>30</y>
+         <width>191</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
+    color: var(--jade-500);
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+       </property>
+       <property name="text">
+        <string>Herramientas manuales</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_Presentacion">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>90</y>
+         <width>191</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+    background-color: var(--jade-50);
+}
+
+QLabel {
+    color: var(--jade-500);
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+       </property>
+       <property name="text">
+        <string>Unidad</string>
        </property>
       </widget>
      </widget>
