@@ -5,6 +5,13 @@ Contratos/Include/
 Contratos/pyvenv.cfg
 
 
+# Horas extras
+Horas_web/data/data_web.db
+Horas_web/*.txt
+Horas_web/*.pyc
+
+
+
 # Entornos virtuales
 Casa_tv/Lib/
 Casa_tv/Scripts/
