@@ -4,7 +4,7 @@
 <h2>Registrar Horas Extras</h2>
 <form method="POST" action="/guardar_horas">
     <label for="codigo">Código del Empleado:</label>
-    <input type="number" id="codigo" name="codigo" required>
+    <input type="number" id="codigo" name="codigo" required readonly>
 
     <label for="nombre">Nombre del Empleado:</label>
     <input type="text" id="nombre" name="nombre" required>
@@ -13,10 +13,10 @@
     <input type="date" id="fecha" name="fecha" required>
 
     <label for="horas_35">Horas al 35%:</label>
-    <input type="number" id="horas_35" name="horas_35" min="0" step="0.01" value="0">
-
+    <input type="text" id="horas_35" name="horas_35" class="hour-input" maxlength="4" required>
+    
     <label for="horas_100">Horas al 100%:</label>
-    <input type="number" id="horas_100" name="horas_100" min="0" step="0.01" value="0">
+    <input type="text" id="horas_100" name="horas_100" class="hour-input" maxlength="4" required>
 
     <label for="comentario">Destino/Comentario:</label>
     <textarea id="comentario" name="comentario"></textarea>
@@ -24,3 +24,50 @@
     <button type="submit">Guardar</button>
 </form>
 {% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hourInputs = document.querySelectorAll('.hour-input');
+        const horaInput = document.getElementById('horas_100');
+
+        hourInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                // Eliminar caracteres no numéricos y permitir el caracter ":"
+                input.value = input.value.replace(/[^0-9:]/g, '');
+                
+                // Formatear como 0:00
+                if (input.value.length > 2) {
+                input.value = input.value.slice(0, 2) + ':' + input.value.slice(2, 4);
+                }
+
+                // Limitar la longitud máxima a 4 caracteres
+                if (input.value.length > 4) {
+                input.value = input.value.slice(0, 4);
+                }
+            });
+
+            input.addEventListener('blur', () => {
+                // Validar formato cuando se pierda el foco
+                const regex = /^[0-9]:[0-5][0-9]$/;
+                if (!regex.test(input.value)) {
+                input.setCustomValidity("El formato debe ser 0:00.");
+                } else {
+                input.setCustomValidity("");
+                }
+            });
+
+            horaInput.addEventListener('input', (e) => {
+                const hora = e.target.value;
+                const regex = /^[0-9:]*$/;
+                if (!regex.test(hora)) {
+                    e.target.value = hora.replace(/[^0-9:]/g, '');
+                }
+
+                // Introducir automáticamente el símbolo ":"
+                if (hora.length === 2) {
+                    e.target.value += ':';
+                }
+                });
+        });
+    });
+</script>
