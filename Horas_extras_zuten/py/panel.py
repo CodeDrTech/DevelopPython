@@ -567,6 +567,30 @@ def main(page: ft.Page):
     
     # Create table with data
     tabla_edicion = crear_tabla_edicion(registros, on_edit_click)
+    
+    
+    def convertir_formato_fecha(fecha_str):
+            """
+            Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-MMM-YYYY'.
+
+            Args:
+                fecha_str (str): Fecha en formato 'YYYY-MM-DD'.
+
+            Returns:
+                str: Fecha en formato 'DD-MMM-YYYY' si la conversión es exitosa, 
+                        de lo contrario, devuelve la cadena original.
+            """
+            """Convierte fecha de YYYY-MM-DD a YYYYMMM-DD"""
+            try:
+                fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
+                meses_abrev = {
+                    1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
+                    5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
+                    9: 'SEPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+                }
+                return f"{fecha.day:02d}-{meses_abrev[fecha.month]}-{fecha.year}"
+            except ValueError:
+                return fecha_str
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
