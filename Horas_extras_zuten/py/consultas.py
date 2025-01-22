@@ -323,7 +323,7 @@ def get_ultimos_registros():
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT Fecha, Codigo, Nombre, Horas_35, Horas_100, Nocturnas 
+                SELECT ID, Fecha, Codigo, Nombre, Horas_35, Horas_100, Nocturnas 
                 FROM Horas 
                 ORDER BY Fecha DESC, Codigo ASC 
                 LIMIT 15
@@ -336,51 +336,54 @@ def get_ultimos_registros():
     return registros
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-def actualizar_registro(fecha_original, codigo, nueva_fecha, horas_35, horas_100, nocturnas, horas_35_original, horas_100_original, nocturnas_original):
+def actualizar_registro(registro_id, nueva_fecha, horas_35, horas_100, nocturnas):
     """
-    Actualiza un registro específico de horas en la base de datos.
+    Actualiza un registro específico en la tabla 'Horas' usando el id único del registro.
 
-    Parámetros:
-    fecha_original (str): La fecha original del registro.
-    codigo (str): El código del registro.
-    nueva_fecha (str): La nueva fecha para actualizar el registro.
-    horas_35 (float): Las nuevas horas al 35% para actualizar el registro.
-    horas_100 (float): Las nuevas horas al 100% para actualizar el registro.
-    nocturnas (float): Las nuevas horas nocturnas para actualizar el registro.
-    horas_35_original (float): Las horas al 35% originales del registro.
-    horas_100_original (float): Las horas al 100% originales del registro.
-    nocturnas_original (float): Las horas nocturnas originales del registro.
+    Parameters
+    ----------
+    registro_id : int
+        ID único del registro a actualizar.
+    nueva_fecha : str
+        Nueva fecha.
+    horas_35 : float
+        Nuevas horas al 35%.
+    horas_100 : float
+        Nuevas horas al 100%.
+    nocturnas : float
+        Nuevas horas nocturnas.
 
-    Retorna:
-    bool: True si el registro se actualizó correctamente, False en caso contrario.
+    Returns
+    -------
+    bool
+        True si el registro se actualizó correctamente, False en caso contrario.
+
+    Raises
+    ------
+    Exception
+        Si ocurre un error durante la actualización.
     """
-    """Actualiza un registro específico de horas"""
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                UPDATE Horas 
-                SET Fecha = ?, 
-                    Horas_35 = ?, 
-                    Horas_100 = ?, 
-                    Nocturnas = ?
-                WHERE Fecha = ? 
-                AND Codigo = ? 
-                AND Horas_35 = ?
-                AND Horas_100 = ?
-                AND Nocturnas = ?
-            """, (nueva_fecha, horas_35, horas_100, nocturnas, 
-                  fecha_original, codigo, horas_35_original, 
-                  horas_100_original, nocturnas_original))
+                UPDATE Horas
+                SET Fecha = ?, Horas_35 = ?, Horas_100 = ?, Nocturnas = ?
+                WHERE id = ?
+            """, (nueva_fecha, horas_35, horas_100, nocturnas, registro_id))
             conn.commit()
+            if cursor.rowcount == 0:
+                raise Exception("No se encontró un registro con el ID proporcionado.")
             return True
         except sqlite3.Error as e:
-            print(f"Error al actualizar registro: {e}")
-            return False
+            raise Exception(f"Error al actualizar registro: {e}")
         finally:
             conn.close()
-    return False
+    else:
+        raise Exception("No se pudo establecer conexión con la base de datos.")
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def validar_entrada_hora(hora_str):

@@ -5,7 +5,7 @@ from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_
 
 #Funcion principal para iniciar la ventana con los controles
 def registro(page: ft.Page):
-    page.title = "Horas Extras"
+    page.title = "Horas Extras Ver. 20250122"
     page.window.alignment = ft.alignment.center
     page.window.width = 600
     page.window.height = 650
@@ -34,6 +34,7 @@ def registro(page: ft.Page):
             Tabla con los registros de horas
         """        
         columns = [
+            ft.DataColumn(ft.Text("#")),
             ft.DataColumn(ft.Text("Fecha")),
             ft.DataColumn(ft.Text("Código")),
             ft.DataColumn(ft.Text("Nombre")),
@@ -46,12 +47,13 @@ def registro(page: ft.Page):
         rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(reg[0])),
-                    ft.DataCell(ft.Text(str(reg[1]))),
-                    ft.DataCell(ft.Text(reg[2])),
+                    ft.DataCell(ft.Text(str(reg[0]))),
+                    ft.DataCell(ft.Text(reg[1])),
+                    ft.DataCell(ft.Text(str(reg[2]))),
                     ft.DataCell(ft.Text(reg[3])),
                     ft.DataCell(ft.Text(reg[4])),
-                    ft.DataCell(ft.Text(reg[5] if reg[5] else "")),
+                    ft.DataCell(ft.Text(reg[5])),
+                    ft.DataCell(ft.Text(reg[6])),
                     ft.DataCell(
                         ft.IconButton(
                             icon=ft.Icons.EDIT,
@@ -359,6 +361,9 @@ def registro(page: ft.Page):
                 txt_hora35.current.value = ""
                 txt_hora100.current.value = ""
                 txt_nocturnas.current.value = ""
+                
+                registros = get_ultimos_registros()
+                tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
                 page.update()
 
         except Exception as error:
@@ -418,16 +423,7 @@ def registro(page: ft.Page):
     
     def on_edit_click(registro_data):
         """
-        Maneja el evento de click en el botón "Editar" de una fila de la tabla de edición.
-
-        Abre un cuadro de diálogo con los campos de la fila seleccionada, permitiendo al usuario editar
-        la fecha, horas 35% y 100%, y comentario. Si el usuario hace clic en "Guardar", se actualizarán
-        los campos en la tabla y se mostrará un mensaje de confirmación. Si se produce un error, se
-        mostrará un mensaje de error.
-
-        :param registro_data: lista con los datos de la fila seleccionada. La lista debe tener al menos
-                              5 elementos: fecha original, código, horas 35% original, horas 100% original,
-                              y comentario original.
+        Maneja el evento de clic en el botón "Editar" de una fila de la tabla de edición.
         """
         def close_dlg(e):
             edit_dialog.open = False
@@ -435,12 +431,7 @@ def registro(page: ft.Page):
 
         def save_changes(e):
             """
-            Maneja el evento de click en el botón "Guardar" del cuadro de diálogo de edición.
-
-            Valida los campos de la fila seleccionada, y si son válidos, actualiza la tabla y muestra un
-            mensaje de confirmación. Si se produce un error, se muestra un mensaje de error.
-
-            :param e: evento de click en el botón "Guardar"
+            Guarda los cambios realizados en el cuadro de diálogo de edición.
             """
             try:
                 nueva_fecha = txt_edit_fecha.current.value
@@ -448,52 +439,53 @@ def registro(page: ft.Page):
                 nuevas_horas100 = txt_edit_horas100.current.value
                 nuevas_nocturnas = txt_edit_nocturnas.current.value
 
-                # Validate all hour fields
+                # Validar campos de horas
                 valido35, mensaje35 = validar_entrada_hora(nuevas_horas35)
                 if not valido35:
                     open_dlg_modal(e, f"Hora 35%: {mensaje35}")
                     return
-                    
+
                 valido100, mensaje100 = validar_entrada_hora(nuevas_horas100)
                 if not valido100:
                     open_dlg_modal(e, f"Hora 100%: {mensaje100}")
                     return
-                    
+
                 validonoc, mensajenoc = validar_entrada_hora(nuevas_nocturnas)
                 if not validonoc:
                     open_dlg_modal(e, f"Horas Nocturnas: {mensajenoc}")
                     return
+                
+                if not nueva_fecha or not nuevas_horas35 or not nuevas_horas100 or not nuevas_nocturnas:
+                    open_dlg_modal(e, "Complete los campos obligatorios")
+                    return
 
+                # Actualizar registro en la base de datos
                 if actualizar_registro(
-                    registro_data[0],  # fecha original
-                    registro_data[1],  # código
+                    registro_data[0],  # ID del registro
                     nueva_fecha,
                     nuevas_horas35,
                     nuevas_horas100,
-                    nuevas_nocturnas,
-                    registro_data[3],  # horas_35 original
-                    registro_data[4],  # horas_100 original
-                    registro_data[5]   # nocturnas original
+                    nuevas_nocturnas
                 ):
-                    # Actualizar tabla
+                    # Actualizar tabla en la interfaz
                     registros = get_ultimos_registros()
                     tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado")))
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado"), bgcolor="green"))
                     edit_dialog.open = False
                     page.update()
                 else:
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar")))
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Actualización exitosa!"), bgcolor="green"))
             except Exception as error:
-                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}")))
+                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {e}"), bgcolor="red"))
 
         def mostrar_datepicker_edit(e):
-            """Abre DatePicker para edición"""
+            """Abre el DatePicker para la edición de la fecha."""
             page.overlay.append(date_picker_edit)
             date_picker_edit.open = True
             page.update()
-    
+
         def seleccionar_fecha_edit(e):
-            """Actualiza fecha en TextField de edición"""
+            """Actualiza la fecha seleccionada en el campo de texto."""
             fecha_seleccionada = date_picker_edit.value
             if fecha_seleccionada:
                 fecha_solo = fecha_seleccionada.date()
@@ -501,20 +493,21 @@ def registro(page: ft.Page):
                 date_picker_edit.open = False
                 page.update()
 
-        # DatePicker específico para edición
+        # Configuración del DatePicker
         date_picker_edit = ft.DatePicker(
             first_date=fecha_inicio,
             last_date=fecha_fin,
-            current_date=datetime.datetime.strptime(registro_data[0], "%Y-%m-%d"),
+            current_date=datetime.datetime.strptime(registro_data[1], "%Y-%m-%d"),  # Fecha actual del registro
             on_change=seleccionar_fecha_edit
         )
-        
-        
+
+        # Referencias para los TextField
         txt_edit_fecha = ft.Ref[ft.TextField]()
         txt_edit_horas35 = ft.Ref[ft.TextField]()
         txt_edit_horas100 = ft.Ref[ft.TextField]()
         txt_edit_nocturnas = ft.Ref[ft.TextField]()
 
+        # Configuración del cuadro de diálogo de edición
         edit_dialog = ft.AlertDialog(
             modal=True,
             title=ft.Text("Editar Registro"),
@@ -522,15 +515,15 @@ def registro(page: ft.Page):
                 ft.TextField(
                     ref=txt_edit_fecha,
                     label="Fecha",
-                    value=registro_data[0],
+                    value=registro_data[1],  # Fecha del registro
                     width=320,
-                    read_only=True,
                     on_click=mostrar_datepicker_edit,
+                    read_only=True,
                 ),
                 ft.TextField(
                     ref=txt_edit_horas35,
-                    label="Nocturnas",
-                    value=registro_data[5],
+                    label="Horas 35%",
+                    value=registro_data[4],  # Horas 35%
                     width=320,
                     max_length=4,
                     input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
@@ -538,8 +531,8 @@ def registro(page: ft.Page):
                 ),
                 ft.TextField(
                     ref=txt_edit_horas100,
-                    label="Horas 35%",
-                    value=registro_data[3],
+                    label="Horas 100%",
+                    value=registro_data[5],  # Horas 100%
                     width=320,
                     max_length=4,
                     input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
@@ -547,12 +540,12 @@ def registro(page: ft.Page):
                 ),
                 ft.TextField(
                     ref=txt_edit_nocturnas,
-                    label="Horas 100%",
-                    value=registro_data[4],
+                    label="Horas Nocturnas",
+                    value=registro_data[6],  # Nocturnas
                     width=320,
                     max_length=4,
                     input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
-                    on_change=format_hora                    
+                    on_change=format_hora
                 ),
             ]),
             actions=[
@@ -562,9 +555,12 @@ def registro(page: ft.Page):
             actions_alignment=ft.MainAxisAlignment.END,
         )
 
+        # Mostrar el cuadro de diálogo
         page.dialog = edit_dialog
         edit_dialog.open = True
         page.update()
+
+
     
     # Get initial data for table
     registros = get_ultimos_registros()
