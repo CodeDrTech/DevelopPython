@@ -326,7 +326,7 @@ def get_ultimos_registros():
                 SELECT ID, Fecha, Codigo, Nombre, Horas_35, Horas_100, Nocturnas 
                 FROM Horas 
                 ORDER BY Fecha DESC, Codigo ASC 
-                LIMIT 15
+                LIMIT 100
             """)
             registros = cursor.fetchall()
         except sqlite3.Error as e:

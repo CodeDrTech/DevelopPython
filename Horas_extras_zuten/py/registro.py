@@ -5,13 +5,13 @@ from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_
 
 #Funcion principal para iniciar la ventana con los controles
 def registro(page: ft.Page):
-    page.title = "Horas Extras Ver. 20250122"
+    page.title = "Horas Extras Ver. 20250123"
     page.window.alignment = ft.alignment.center
     page.window.width = 600
     page.window.height = 650
     page.window.resizable = False
     page.padding = 20
-    page.scroll = False
+    page.scroll = True # type: ignore
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
     
@@ -32,7 +32,29 @@ def registro(page: ft.Page):
         -------
         ft.DataTable
             Tabla con los registros de horas
-        """        
+        """
+        def formato_fecha_usuario_tabla(fecha_str):
+            """
+            Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-MMM-YYYY'.
+
+            Args:
+                fecha_str (str): Fecha en formato 'YYYY-MM-DD'.
+
+            Returns:
+                str: Fecha en formato 'DD-MMM-YYYY' si la conversión es exitosa, 
+                        de lo contrario, devuelve la cadena original.
+            """
+            """Convierte fecha de YYYY-MM-DD a YYYYMMM-DD"""
+            try:
+                fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
+                meses_abrev = {
+                    1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
+                    5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
+                    9: 'SEPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+                }
+                return f"{fecha.day:02d}-{meses_abrev[fecha.month]}-{fecha.year}"
+            except ValueError:
+                return fecha_str        
         columns = [
             ft.DataColumn(ft.Text("#")),
             ft.DataColumn(ft.Text("Fecha")),
@@ -48,7 +70,7 @@ def registro(page: ft.Page):
             ft.DataRow(
                 cells=[
                     ft.DataCell(ft.Text(str(reg[0]))),
-                    ft.DataCell(ft.Text(reg[1])),
+                    ft.DataCell(ft.Text(formato_fecha_usuario_tabla(reg[1]))),
                     ft.DataCell(ft.Text(str(reg[2]))),
                     ft.DataCell(ft.Text(reg[3])),
                     ft.DataCell(ft.Text(reg[4])),
@@ -145,8 +167,8 @@ def registro(page: ft.Page):
         """
         fecha_actual = date_picker_dialog.value
         if fecha_actual:
-            fecha_solo = fecha_actual.date()
-            txt_fecha.current.value = fecha_solo.strftime("%Y-%m-%d")
+            fecha_solo = formato_fecha_usuario(str(fecha_actual.date()))
+            txt_fecha.current.value = fecha_solo #.strftime("%Y-%m-%d")
             date_picker_dialog.open = False
             page.update()  
 
@@ -309,6 +331,7 @@ def registro(page: ft.Page):
     txt_hora35 = ft.Ref[ft.TextField]()
     txt_hora100 = ft.Ref[ft.TextField]()
     txt_nocturnas = ft.Ref[ft.TextField]()
+    
     def agregar_horas(e):
         """
         Agrega un registro a la tabla Horas en la base de datos, validando que los campos obligatorios estén completos y
@@ -317,14 +340,17 @@ def registro(page: ft.Page):
         :param e: El evento del botón "Agregar".
         :return: None
         """
+        
         try:
             #nonlocal nombre_seleccionado
-            fecha = txt_fecha.current.value
+            fecha = formato_fecha_bd(txt_fecha.current.value)
             codigo = txt_codigo.current.value
             nombre = nombre_seleccionado
             hora35 = txt_hora35.current.value
             hora100 = txt_hora100.current.value
             nocturnas = txt_nocturnas.current.value
+            
+            
 
             # Validate hours format
             valido35, mensaje35 = validar_entrada_hora(hora35)
@@ -434,7 +460,7 @@ def registro(page: ft.Page):
             Guarda los cambios realizados en el cuadro de diálogo de edición.
             """
             try:
-                nueva_fecha = txt_edit_fecha.current.value
+                nueva_fecha = formato_fecha_bd(txt_edit_fecha.current.value)
                 nuevas_horas35 = txt_edit_horas35.current.value
                 nuevas_horas100 = txt_edit_horas100.current.value
                 nuevas_nocturnas = txt_edit_nocturnas.current.value
@@ -470,13 +496,13 @@ def registro(page: ft.Page):
                     # Actualizar tabla en la interfaz
                     registros = get_ultimos_registros()
                     tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado"), bgcolor="green"))
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado"), bgcolor="green", duration=3000))
                     edit_dialog.open = False
                     page.update()
                 else:
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Actualización exitosa!"), bgcolor="green"))
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Actualización exitosa!"), bgcolor="green", duration=3000))
             except Exception as error:
-                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {e}"), bgcolor="red"))
+                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {e}"), bgcolor="red", duration=3000))
 
         def mostrar_datepicker_edit(e):
             """Abre el DatePicker para la edición de la fecha."""
@@ -488,8 +514,8 @@ def registro(page: ft.Page):
             """Actualiza la fecha seleccionada en el campo de texto."""
             fecha_seleccionada = date_picker_edit.value
             if fecha_seleccionada:
-                fecha_solo = fecha_seleccionada.date()
-                txt_edit_fecha.current.value = fecha_solo.strftime("%Y-%m-%d")
+                fecha_solo = formato_fecha_usuario(str(fecha_seleccionada.date())) #fecha_seleccionada.date()
+                txt_edit_fecha.current.value = fecha_solo #.strftime("%Y-%m-%d")
                 date_picker_edit.open = False
                 page.update()
 
@@ -515,7 +541,7 @@ def registro(page: ft.Page):
                 ft.TextField(
                     ref=txt_edit_fecha,
                     label="Fecha",
-                    value=registro_data[1],  # Fecha del registro
+                    value=formato_fecha_usuario(registro_data[1]),  # Fecha del registro
                     width=320,
                     on_click=mostrar_datepicker_edit,
                     read_only=True,
@@ -567,6 +593,54 @@ def registro(page: ft.Page):
     
     # Create table with data
     tabla_edicion = crear_tabla_edicion(registros, on_edit_click)
+    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def formato_fecha_usuario(fecha_str):
+            """
+            Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-MMM-YYYY'.
+
+            Args:
+                fecha_str (str): Fecha en formato 'YYYY-MM-DD'.
+
+            Returns:
+                str: Fecha en formato 'DD-MMM-YYYY' si la conversión es exitosa, 
+                        de lo contrario, devuelve la cadena original.
+            """
+            """Convierte fecha de YYYY-MM-DD a YYYYMMM-DD"""
+            try:
+                fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
+                meses_abrev = {
+                    1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
+                    5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
+                    9: 'SEPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+                }
+                return f"{fecha.day:02d}-{meses_abrev[fecha.month]}-{fecha.year}"
+            except ValueError:
+                return fecha_str
+            
+    def formato_fecha_bd(fecha_str):
+        """
+        Convierte una fecha de formato 'DD-MMM-YYYY' a 'YYYY-MM-DD'.
+
+        Args:
+            fecha_str (str): Fecha en formato 'DD-MMM-YYYY'.
+
+        Returns:
+            str: Fecha en formato 'YYYY-MM-DD' si la conversión es exitosa, 
+                    de lo contrario, devuelve la cadena original.
+        """
+        meses_abrev = {
+            'ENE': 1, 'FEB': 2, 'MAR': 3, 'ABR': 4,
+            'MAY': 5, 'JUN': 6, 'JUL': 7, 'AGO': 8,
+            'SEPT': 9, 'OCT': 10, 'NOV': 11, 'DIC': 12
+        }
+        try:
+            dia, mes, año = fecha_str.split('-')
+            fecha = datetime.datetime(int(año), meses_abrev[mes], int(dia))
+            return fecha.strftime('%Y-%m-%d')
+        except ValueError:
+            return fecha_str
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -585,7 +659,7 @@ def registro(page: ft.Page):
                         ft.Text("Registro de horas"),
                         ft.Row([
                             ft.Text("Fecha:", width=100),
-                            ft.TextField(width=320, ref=txt_fecha, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=fecha_actual.strftime("%Y-%m-%d"), on_click=mostrar_datepicker, icon=ft.Icons.CALENDAR_MONTH),
+                            ft.TextField(width=320, ref=txt_fecha, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, value=formato_fecha_usuario(str(fecha_actual)), on_click=mostrar_datepicker, icon=ft.Icons.CALENDAR_MONTH),
                         ]),
                         ft.Row([
                             ft.Text("Código:", width=100),
