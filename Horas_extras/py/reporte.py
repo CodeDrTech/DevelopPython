@@ -157,8 +157,8 @@ def reporte(page: ft.Page):
         """
         fecha_seleccionada = date_picker_dialog1.value
         if fecha_seleccionada:
-            fecha_solo = fecha_seleccionada.date()
-            txt_fecha1.current.value = fecha_solo.strftime("%Y-%m-%d")
+            fecha_solo = formato_fecha_usuario(str(fecha_seleccionada.date()))
+            txt_fecha1.current.value = fecha_solo #.strftime("%Y-%m-%d")
             date_picker_dialog1.open = False
             
             # Actualizar tabla al cambiar de fechas
@@ -178,8 +178,8 @@ def reporte(page: ft.Page):
         """
         fecha_seleccionada = date_picker_dialog2.value
         if fecha_seleccionada:
-            fecha_solo = fecha_seleccionada.date()
-            txt_fecha2.current.value = fecha_solo.strftime("%Y-%m-%d")
+            fecha_solo = formato_fecha_usuario(str(fecha_seleccionada.date()))
+            txt_fecha2.current.value = fecha_solo #.strftime("%Y-%m-%d")
             date_picker_dialog2.open = False
             
             # Actualizar tabla al cambiar de fechas
@@ -289,8 +289,8 @@ def reporte(page: ft.Page):
         extras correspondientes al rango de fechas y actualiza el contenido de la tabla 
         en la interfaz de usuario.
         """
-        fecha_inicio = txt_fecha1.current.value
-        fecha_fin = txt_fecha2.current.value
+        fecha_inicio = formato_fecha_bd(txt_fecha1.current.value)
+        fecha_fin = formato_fecha_bd(txt_fecha2.current.value)
 
         # Validar si la fecha inicial es mayor a la fecha final
         if fecha_inicio > fecha_fin:
@@ -570,11 +570,58 @@ def reporte(page: ft.Page):
         "Exportar a PDF",
         icon=ft.icons.PICTURE_AS_PDF,
         on_click=lambda e: exportar_pdf(
-            get_horas_por_fecha_pdf(txt_fecha1.current.value, txt_fecha2.current.value),
+            get_horas_por_fecha_pdf(formato_fecha_bd(txt_fecha1.current.value), formato_fecha_bd(txt_fecha2.current.value)),
             txt_fecha1.current.value,
             txt_fecha2.current.value
         )
     )
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def formato_fecha_usuario(fecha_str):
+            """
+            Convierte una fecha de formato 'YYYY-MM-DD' a 'DD-MMM-YYYY'.
+
+            Args:
+                fecha_str (str): Fecha en formato 'YYYY-MM-DD'.
+
+            Returns:
+                str: Fecha en formato 'DD-MMM-YYYY' si la conversión es exitosa, 
+                        de lo contrario, devuelve la cadena original.
+            """
+            """Convierte fecha de YYYY-MM-DD a YYYYMMM-DD"""
+            try:
+                fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d')
+                meses_abrev = {
+                    1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR',
+                    5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AGO',
+                    9: 'SEPT', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+                }
+                return f"{fecha.day:02d}-{meses_abrev[fecha.month]}-{fecha.year}"
+            except ValueError:
+                return fecha_str
+            
+    def formato_fecha_bd(fecha_str):
+        """
+        Convierte una fecha de formato 'DD-MMM-YYYY' a 'YYYY-MM-DD'.
+
+        Args:
+            fecha_str (str): Fecha en formato 'DD-MMM-YYYY'.
+
+        Returns:
+            str: Fecha en formato 'YYYY-MM-DD' si la conversión es exitosa, 
+                    de lo contrario, devuelve la cadena original.
+        """
+        meses_abrev = {
+            'ENE': 1, 'FEB': 2, 'MAR': 3, 'ABR': 4,
+            'MAY': 5, 'JUN': 6, 'JUL': 7, 'AGO': 8,
+            'SEPT': 9, 'OCT': 10, 'NOV': 11, 'DIC': 12
+        }
+        try:
+            dia, mes, año = fecha_str.split('-')
+            fecha = datetime.datetime(int(año), meses_abrev[mes], int(dia))
+            return fecha.strftime('%Y-%m-%d')
+        except ValueError:
+            return fecha_str
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -592,9 +639,9 @@ def reporte(page: ft.Page):
                         ft.Text("Reportes de Horas Extras"),
                         ft.Row([
                             ft.Text("Desde"),
-                            ft.TextField(ref=txt_fecha1, value=fecha_actual1.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker),
+                            ft.TextField(ref=txt_fecha1, value=formato_fecha_usuario(fecha_actual1.strftime("%Y-%m-%d")), width=200, read_only=True, on_click=mostrar_datepicker),
                             ft.Text("Hasta"),
-                            ft.TextField(ref=txt_fecha2, value=fecha_actual2.strftime("%Y-%m-%d"), width=200, read_only=True, on_click=mostrar_datepicker2),
+                            ft.TextField(ref=txt_fecha2, value=formato_fecha_usuario(fecha_actual2.strftime("%Y-%m-%d")), width=200, read_only=True, on_click=mostrar_datepicker2),
                             ft.ElevatedButton(text="Atras", icon=ft.Icons.ARROW_BACK, width=150, on_click=tab_registro),
                             boton_exportar,
                         ]),
