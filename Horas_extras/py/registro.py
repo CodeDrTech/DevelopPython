@@ -56,6 +56,7 @@ def registro(page: ft.Page):
             except ValueError:
                 return fecha_str
         columns = [
+            ft.DataColumn(ft.Text("#")),
             ft.DataColumn(ft.Text("Fecha")),
             ft.DataColumn(ft.Text("Código")),
             ft.DataColumn(ft.Text("Nombre")),
@@ -68,12 +69,13 @@ def registro(page: ft.Page):
         rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(formato_fecha_usuario_tabla(reg[0]))),
-                    ft.DataCell(ft.Text(str(reg[1]))),
-                    ft.DataCell(ft.Text(reg[2])),
+                    ft.DataCell(ft.Text(str(reg[0]))),
+                    ft.DataCell(ft.Text(formato_fecha_usuario_tabla(reg[1]))),
+                    ft.DataCell(ft.Text(str(reg[2]))),
                     ft.DataCell(ft.Text(reg[3])),
                     ft.DataCell(ft.Text(reg[4])),
-                    ft.DataCell(ft.Text(reg[5] if reg[5] else "")),
+                    ft.DataCell(ft.Text(reg[5])),
+                    ft.DataCell(ft.Text(reg[6] if reg[6] else "")),
                     ft.DataCell(
                         ft.IconButton(
                             icon=ft.Icons.EDIT,
@@ -421,7 +423,7 @@ def registro(page: ft.Page):
         Si se selecciona la pestaña de "Empleados" o "Reporte", el tamaño de la ventana es de 1250x700.
         """
         if mainTab.selected_index == 1:
-            page.window.width = 1250
+            page.window.width = 1300
             page.window.height = 700
             page.update()
         else:
@@ -466,10 +468,7 @@ def registro(page: ft.Page):
                 nuevas_horas100 = txt_edit_horas100.current.value
                 nuevo_comentario = txt_edit_comentario.current.value
                 
-                # Obtenemos valores originales de registro_data
-                horas_35_original = registro_data[3]  # Índice 3 para Horas_35
-                horas_100_original = registro_data[4]  # Índice 4 para Horas_100
-                
+                # Validar campos de horas
                 valido35, mensaje35 = validar_entrada_hora(nuevas_horas35)
                 if not valido35:
                     open_dlg_modal(e, f"Hora 35%: {mensaje35}")
@@ -480,25 +479,28 @@ def registro(page: ft.Page):
                     open_dlg_modal(e, f"Hora 100%: {mensaje100}")
                     return
 
+                if not nueva_fecha or not nuevas_horas35 or not nuevas_horas100 or not nuevo_comentario:
+                    open_dlg_modal(e, "Complete los campos obligatorios")
+                    return
+                
                 if actualizar_registro(
-                    registro_data[0],  # fecha original
-                    registro_data[1],  # código
+                    registro_data[0],
                     nueva_fecha,
                     nuevas_horas35,
                     nuevas_horas100,
-                    nuevo_comentario,
-                    horas_35_original,
-                    horas_100_original
+                    nuevo_comentario
+                    
                 ):
                     # Actualizar tabla
                     registros = get_ultimos_registros()
                     tabla_edicion.rows = crear_tabla_edicion(registros, on_edit_click).rows
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado"), duration=3000))
-                    close_dlg(e)
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro actualizado"),bgcolor="green", duration=3000))
+                    edit_dialog.open = False
+                    page.update()
                 else:
-                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar"), duration=3000))
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al actualizar"),bgcolor="green", duration=3000))
             except Exception as error:
-                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}"), duration=3000))
+                page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}"),bgcolor="red", duration=3000))
 
         def mostrar_datepicker_edit(e):
             """Abre DatePicker para edición"""
@@ -519,7 +521,7 @@ def registro(page: ft.Page):
         date_picker_edit = ft.DatePicker(
             first_date=fecha_inicio,
             last_date=fecha_fin,
-            current_date=datetime.datetime.strptime(registro_data[0], "%Y-%m-%d"),
+            current_date=datetime.datetime.strptime(registro_data[1], "%Y-%m-%d"),
             on_change=seleccionar_fecha_edit
         )
         
@@ -536,7 +538,7 @@ def registro(page: ft.Page):
                 ft.TextField(
                     ref=txt_edit_fecha,
                     label="Fecha",
-                    value=formato_fecha_usuario(registro_data[0]),
+                    value=formato_fecha_usuario(registro_data[1]),
                     width=320,
                     on_click=mostrar_datepicker_edit,
                     read_only=True,
@@ -544,7 +546,7 @@ def registro(page: ft.Page):
                 ft.TextField(
                     ref=txt_edit_horas35,
                     label="Horas 35%",
-                    value=registro_data[3],
+                    value=registro_data[4],
                     width=320,
                     max_length=4,
                     input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
@@ -553,7 +555,7 @@ def registro(page: ft.Page):
                 ft.TextField(
                     ref=txt_edit_horas100,
                     label="Horas 100%",
-                    value=registro_data[4],
+                    value=registro_data[5],
                     width=320,
                     max_length=4,
                     input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$"),
@@ -562,7 +564,7 @@ def registro(page: ft.Page):
                 ft.TextField(
                     ref=txt_edit_comentario,
                     label="Comentario",
-                    value=registro_data[5],
+                    value=registro_data[6],
                     multiline=True,
                     max_length=90,
                     capitalization=ft.TextCapitalization.CHARACTERS,
