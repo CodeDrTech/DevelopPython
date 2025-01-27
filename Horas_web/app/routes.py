@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, redirect, flash
-
-app = Flask(__name__)
+from flask import render_template, request, redirect, flash
+from app import app
 
 @app.route('/')
 def index():
@@ -9,7 +8,6 @@ def index():
 @app.route('/registro')
 def registro():
     return render_template('registro.html')
-
 
 @app.route('/guardar_horas', methods=['POST'])
 def guardar_horas():
@@ -34,6 +32,3 @@ def guardar_horas():
     print(f"Datos recibidos: {codigo}, {nombre}, {fecha}, {horas_35}, {horas_100}, {comentario}")
     flash('Registro guardado exitosamente.')
     return redirect('/')
-
-if __name__ == '__main__':
-    app.run(debug=True)
