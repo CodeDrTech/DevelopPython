@@ -1,11 +1,11 @@
 import flet as ft
 from flet import ScrollMode, AppView
 import datetime, calendar
-from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_ultimos_registros, actualizar_registro, validar_entrada_hora
+from consultas import get_empleados, insertar_horas, get_codigo_por_nombre, get_ultimos_registros, actualizar_registro, delete_record, validar_entrada_hora
 
 #Funcion principal para iniciar la ventana con los controles
 def main(page: ft.Page):
-    page.title = "Horas Extras Ver. 20250123"
+    page.title = "Horas Extras Ver. 20250127"
     page.window.alignment = ft.alignment.center
     page.window.width = 600
     page.window.height = 650
@@ -54,7 +54,48 @@ def main(page: ft.Page):
                 }
                 return f"{fecha.day:02d}-{meses_abrev[fecha.month]}-{fecha.year}"
             except ValueError:
-                return fecha_str        
+                return fecha_str
+        def confirmar_eliminacion(registro_id):
+            """
+            Muestra un cuadro de diálogo de confirmación para eliminar un registro.
+            Args:
+                registro_id (int): ID del registro a eliminar.
+            """
+            def close_dlg(e):
+                confirm_dialog.open = False
+                page.update()
+            def eliminar_registro_confirmado(e):
+                """
+                Elimina el registro después de la confirmación del usuario.
+                """
+                try:
+                    if delete_record(registro_id):
+                        # Actualizar la tabla después de eliminar el registro
+                        registros_actualizados = get_ultimos_registros()
+                        tabla_edicion.rows = crear_tabla_edicion(registros_actualizados, on_edit_click).rows
+                        page.show_snack_bar(ft.SnackBar(content=ft.Text("Registro eliminado"), bgcolor="green", duration=3000))
+                    else:
+                        page.show_snack_bar(ft.SnackBar(content=ft.Text("Error al eliminar"), bgcolor="red", duration=3000))
+                except Exception as error:
+                    page.show_snack_bar(ft.SnackBar(content=ft.Text(f"Error: {error}"), bgcolor="red", duration=3000))
+                finally:
+                    confirm_dialog.open = False
+                    page.update()
+            # Cuadro de diálogo de confirmación
+            confirm_dialog = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Confirmar eliminación"),
+                content=ft.Text("¿Estás seguro de que deseas eliminar este registro?"),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=close_dlg),
+                    ft.TextButton("Eliminar", on_click=eliminar_registro_confirmado),
+                ],
+                actions_alignment=ft.MainAxisAlignment.END,
+            )
+            page.dialog = confirm_dialog
+            confirm_dialog.open = True
+            page.update()
+                
         columns = [
             ft.DataColumn(ft.Text("#")),
             ft.DataColumn(ft.Text("Fecha")),
@@ -64,6 +105,7 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Horas 100%     ")),
             ft.DataColumn(ft.Text("Nocturnas")),
             ft.DataColumn(ft.Text("Editar")),
+            ft.DataColumn(ft.Text("Eliminar")),
         ]
         
         rows = [
@@ -85,7 +127,16 @@ def main(page: ft.Page):
                             on_click=lambda e: on_edit_click(e.control.data)
                         )
                     ),
-                ],
+                    ft.DataCell(
+                    ft.IconButton(
+                        icon=ft.Icons.DELETE,
+                        icon_color="red",
+                        tooltip="Eliminar",
+                        data=reg[0],  # Almacena el ID del registro
+                        on_click=lambda e, r=reg[0]: confirmar_eliminacion(r)  # Llama a la función de confirmación
+                    )
+                ),
+            ],
             ) for reg in registros
         ]
         

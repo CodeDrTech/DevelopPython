@@ -260,7 +260,7 @@ def get_horas_por_fecha_tabla(fecha_inicio, fecha_fin):
                 FROM Horas 
                 WHERE Fecha BETWEEN ? AND ? 
                 ORDER BY Fecha DESC, Codigo ASC
-                LIMIT 10
+                LIMIT 100
             """, (fecha_inicio, fecha_fin))
             registros = cursor.fetchall()
         except sqlite3.Error as e:
@@ -382,7 +382,42 @@ def actualizar_registro(registro_id, nueva_fecha, horas_35, horas_100, nocturnas
             conn.close()
     else:
         raise Exception("No se pudo establecer conexión con la base de datos.")
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def delete_record(registro_id):
+    """
+    Elimina un registro específico de la tabla 'Horas' usando el id único del registro.
+    Parameters
+    ----------
+    registro_id : int
+        ID único del registro a eliminar.
+    Returns
+    -------
+    bool
+        True si el registro se eliminó correctamente, False en caso contrario.
+    Raises
+    ------
+    Exception
+        Si ocurre un error durante la eliminación.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                DELETE FROM Horas
+                WHERE id = ?
+            """, (registro_id,))
+            conn.commit()
+            if cursor.rowcount == 0:
+                raise Exception("No se encontró un registro con el ID proporcionado.")
+            return True
+        except sqlite3.Error as e:
+            raise Exception(f"Error al eliminar registro: {e}")
+        finally:
+            conn.close()
+    else:
+        raise Exception("No se pudo establecer conexión con la base de datos.")
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

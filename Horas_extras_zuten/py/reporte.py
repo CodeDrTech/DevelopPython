@@ -17,13 +17,13 @@ from operator import itemgetter
 
 #Funcion principal para iniciar la ventana con los controles.
 def reporte(page: ft.Page):
-    page.title = "Horas Extras"
+    page.title = "Horas Extras Ver. 20250127"
     page.window.alignment = ft.alignment.center
     page.window.width = 1200
     page.window.height = 700
     page.window.resizable = False
     page.padding = 20
-    page.scroll = False
+    page.scroll = True # type: ignore
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
 
@@ -256,7 +256,7 @@ def reporte(page: ft.Page):
         rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(reg[0])),  # Fecha
+                    ft.DataCell(ft.Text(formato_fecha_usuario(reg[0]))),  # Fecha
                     ft.DataCell(ft.Text(str(reg[1]))),  # Código
                     ft.DataCell(ft.Text(reg[2])),  # Nombre
                     ft.DataCell(ft.Text(reg[3])),  # Horas 35
