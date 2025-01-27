@@ -360,6 +360,21 @@ def reporte(page: ft.Page):
             show_snackbar(f"Error al abrir carpeta: {str(error)}")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def colorear_suma_tiempo(estado: str) -> str:
+                """
+                Retorna el color correspondiente al estado del pago en formato CSS.
+                
+                Args:
+                    estado (str): Estado del pago (En corte/Pendiente/Cerca/Al día)
+                
+                Returns:
+                    str: Color en formato CSS (hexadecimal) para el estado.
+                """
+                estado_colores = {
+                    "reg[4]": "#FF0000",     # Rojo
+                    "reg[3]": "#008000"       # Verde
+                }
+                return estado_colores.get(estado, "#000000")  # Negro como predeterminado
     def exportar_pdf(registros, fecha_inicio, fecha_fin):
         """
         Exporta los registros a un archivo PDF agrupados por empleado.
@@ -415,8 +430,8 @@ def reporte(page: ft.Page):
                 datos_empleado = list(grupo)
                 
                 # Calcular totales
-                total_horas_35 = sumar_tiempo([reg[3] for reg in datos_empleado])
-                total_horas_100 = sumar_tiempo([reg[4] for reg in datos_empleado])
+                total_horas_35 = sumar_tiempo([colorear_suma_tiempo(reg[3]) for reg in datos_empleado])
+                total_horas_100 = sumar_tiempo([colorear_suma_tiempo(reg[4]) for reg in datos_empleado])
                 
                 # Nombre para mostrar en la fila de totales
                 Nombre_total = datos_empleado[0][2]
