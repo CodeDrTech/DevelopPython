@@ -9,7 +9,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.enums import TA_CENTER
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, PageTemplate, Frame, Paragraph
+from reportlab.platypus import SimpleDocTemplate, PageBreak, Table, TableStyle, Spacer, PageTemplate, Frame, Paragraph
 from reportlab.lib.units import inch
 from itertools import groupby
 from operator import itemgetter
@@ -508,6 +508,10 @@ def reporte(page: ft.Page):
                 tabla.setStyle(estilo)
                 
                 elements.append(tabla)
+                
+                # Agregar un salto de página después de cada tabla (excepto la última)
+                elements.append(PageBreak())
+                
                 elements.append(Spacer(1, 30))
                 
             def convertir_formato_fecha(fecha_str):
