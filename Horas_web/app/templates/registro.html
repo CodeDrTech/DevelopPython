@@ -13,10 +13,13 @@
     <input type="date" id="fecha" name="fecha" required>
 
     <label for="horas_35">Horas al 35%:</label>
-    <input type="text" id="horas_35" name="horas_35" class="hour-input" maxlength="4" required>
-    
+    <input type="text" id="horas_35" name="horas_35" class="hour-input" 
+        placeholder="Ej: 2:00" pattern="^\d:[0-5]\d$" required>
+    <small class="form-help">Formato automático: 1 número + 2 números (ej: 2:30)</small>
+
     <label for="horas_100">Horas al 100%:</label>
-    <input type="text" id="horas_100" name="horas_100" class="hour-input" maxlength="4" required>
+    <input type="text" id="horas_100" name="horas_100" class="hour-input" 
+        placeholder="Ej: 1:45" pattern="^\d:[0-5]\d$" required>
 
     <label for="comentario">Destino/Comentario:</label>
     <textarea id="comentario" name="comentario"></textarea>

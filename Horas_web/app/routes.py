@@ -18,13 +18,12 @@ def guardar_horas():
     horas_100 = request.form['horas_100']
     comentario = request.form.get('comentario', '')
 
-    # Validación del formato de horas
+    # Validación mejorada del formato
     import re
-    if not re.match(r'^[0-9]:[0-5][0-9]$', horas_35):
-        flash('El campo Horas al 35% tiene un formato inválido.')
-        return redirect('/registro')
-    if not re.match(r'^[0-9]:[0-5][0-9]$', horas_100):
-        flash('El campo Horas al 100% tiene un formato inválido.')
+    hora_pattern = r'^[0-9]:[0-5][0-9]$'
+    
+    if not re.match(hora_pattern, horas_35) or not re.match(hora_pattern, horas_100):
+        flash('Formato de horas inválido. Use H:MM (ej: 2:30)')
         return redirect('/registro')
 
     # Aquí guardarías los datos en la base de datos.

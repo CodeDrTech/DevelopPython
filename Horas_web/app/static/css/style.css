@@ -56,3 +56,31 @@ footer {
     background: #9e1010;
     margin-top: 2rem;
 }
+
+.form-help {
+    color: #666;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 0.2rem;
+}
+
+input:invalid {
+    border-color: #ff4444;
+}
+
+input:valid {
+    border-color: #00C851;
+}
+.hour-input {
+    letter-spacing: 1px;
+}
+
+.hour-input::placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+.hour-input:focus {
+    border-color: #2196F3;
+    box-shadow: 0 0 3px #2196F3;
+}
