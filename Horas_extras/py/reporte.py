@@ -14,7 +14,7 @@ from reportlab.lib.units import inch
 from itertools import groupby
 from operator import itemgetter
 from reportlab.lib.colors import HexColor
-from reportlab.lib import colors
+
 
 
 #Funcion principal para iniciar la ventana con los controles.

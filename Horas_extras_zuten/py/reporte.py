@@ -13,6 +13,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, Pag
 from reportlab.lib.units import inch
 from itertools import groupby
 from operator import itemgetter
+from reportlab.lib.colors import HexColor
 
 
 #Funcion principal para iniciar la ventana con los controles.
