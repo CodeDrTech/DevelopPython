@@ -13,6 +13,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, Pag
 from reportlab.lib.units import inch
 from itertools import groupby
 from operator import itemgetter
+from reportlab.lib.colors import HexColor
+from reportlab.lib import colors
 
 
 #Funcion principal para iniciar la ventana con los controles.
@@ -360,21 +362,18 @@ def reporte(page: ft.Page):
             show_snackbar(f"Error al abrir carpeta: {str(error)}")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def colorear_suma_tiempo(estado: str) -> str:
-                """
-                Retorna el color correspondiente al estado del pago en formato CSS.
-                
-                Args:
-                    estado (str): Estado del pago (En corte/Pendiente/Cerca/Al día)
-                
-                Returns:
-                    str: Color en formato CSS (hexadecimal) para el estado.
-                """
-                estado_colores = {
-                    "reg[4]": "#FF0000",     # Rojo
-                    "reg[3]": "#008000"       # Verde
-                }
-                return estado_colores.get(estado, "#000000")  # Negro como predeterminado
+    def aplicar_estilo_a_totales():
+        """Estilo para totales: fondo gris oscuro y texto coloreado"""
+        return [
+            # Fondo gris oscuro para ambas celdas (permite ver líneas negras)
+            ('BACKGROUND', (3, -1), (4, -1), colors.HexColor("#2A2A2A")),  # Gris oscuro
+            
+            # Texto verde para Horas 35% (columna 3)
+            ('TEXTCOLOR', (3, -1), (3, -1), colors.limegreen),  # Verde brillante
+            
+            # Texto rojo para Horas 100% (columna 4)
+            ('TEXTCOLOR', (4, -1), (4, -1), colors.tomato)     # Rojo vibrante
+        ]
     def exportar_pdf(registros, fecha_inicio, fecha_fin):
         """
         Exporta los registros a un archivo PDF agrupados por empleado.
@@ -430,8 +429,8 @@ def reporte(page: ft.Page):
                 datos_empleado = list(grupo)
                 
                 # Calcular totales
-                total_horas_35 = sumar_tiempo([colorear_suma_tiempo(reg[3]) for reg in datos_empleado])
-                total_horas_100 = sumar_tiempo([colorear_suma_tiempo(reg[4]) for reg in datos_empleado])
+                total_horas_35 = sumar_tiempo([reg[3] for reg in datos_empleado])
+                total_horas_100 = sumar_tiempo([reg[4] for reg in datos_empleado])
                 
                 # Nombre para mostrar en la fila de totales
                 Nombre_total = datos_empleado[0][2]
@@ -505,7 +504,7 @@ def reporte(page: ft.Page):
                     ('WORDWRAP', (0, 0), (-1, -1), True),     # Wrap automático
                     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),   # Alineación vertical
                     ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Add grid lines
-                ])
+                ] + aplicar_estilo_a_totales())
                 tabla.setStyle(estilo)
                 
                 elements.append(tabla)
