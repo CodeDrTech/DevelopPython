@@ -362,6 +362,18 @@ def reporte(page: ft.Page):
             show_snackbar(f"Error al abrir carpeta: {str(error)}")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def aplicar_estilo_a_totales():
+        """Estilo para totales: fondo gris oscuro y texto coloreado"""
+        return [
+            # Fondo gris oscuro para ambas celdas (permite ver líneas negras)
+            ('BACKGROUND', (3, -1), (4, -1), colors.HexColor("#2A2A2A")),  # Gris oscuro
+            
+            # Texto verde para Horas 35% (columna 3)
+            ('TEXTCOLOR', (3, -1), (3, -1), colors.limegreen),  # Verde brillante
+            
+            # Texto rojo para Horas 100% (columna 4)
+            ('TEXTCOLOR', (4, -1), (4, -1), colors.tomato)     # Rojo vibrante
+        ]
     def exportar_pdf(registros, fecha_inicio, fecha_fin):
         """
         Exporta los registros a un archivo PDF agrupados por empleado.
@@ -486,7 +498,7 @@ def reporte(page: ft.Page):
                 ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # Fondo gris para encabezados
                 ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),  # Fondo gris para totales
                 
-                ])
+                ] + aplicar_estilo_a_totales())
                 tabla.setStyle(estilo)
                 
                 elements.append(tabla)
