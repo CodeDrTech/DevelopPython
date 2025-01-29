@@ -649,7 +649,7 @@ def reporte(page: ft.Page):
                 text="Reportes",
                 content=ft.Column(                    
                     [
-                        ft.Text("Reportes de Horas Extras"),
+                        ft.Text("Recuerda seleccionar tu fecha de inicio.", size=20, weight=ft.FontWeight.BOLD),
                         ft.Row([
                             ft.Text("Desde"),
                             ft.TextField(ref=txt_fecha1, value=formato_fecha_usuario(fecha_actual1.strftime("%Y-%m-%d")), width=200, read_only=True, on_click=mostrar_datepicker),
