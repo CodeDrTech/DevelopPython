@@ -464,6 +464,9 @@ def main(page: ft.Page):
             cual imprime los controles y la tabla de reporte en la página actual.
             """
             page.clean()
+            
+            # Mostrar mensaje snackbar de advertencia
+            show_snackbar("Seleccione la fecha de inicio antes de generar el reporte.")
 
             # Importamos y ejecutamos la función y sus controles en la página actual
             from reporte import reporte
