@@ -283,7 +283,9 @@ def main(page: ft.Page):
             for cliente in clientes:
                 primer_nombre = cliente[0].split()[0]
                 numero_limpio = ''.join(filter(str.isdigit, cliente[1]))
-                enlace_whatsapp = f"https://wa.me/1{numero_limpio}?text=Hola.%20Mensaje%20de%20alerta%20de%20pago."
+                enlace_whatsapp = f"https://wa.me/1{numero_limpio}?text=Hola.%20Bendiciones%0A%0AEl%20pago%20de%20su%20cuota%20es%0Aen%20fecha%20{convertir_formato_fecha(cliente[6])}.%0A%0AFavor%20pagar%20dentro%20de%203%0Adias%20para%20evitar%20corte.%0A%0AGracias."
+
+                
                 body += (
                         f"<b>Nombre: {cliente[0]}</b><br>"                        
                         f"Correo: {cliente[3]}<br>"
