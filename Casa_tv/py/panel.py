@@ -1,6 +1,9 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente, insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales, obtener_numeros_whatsapp
+from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
+insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales,\
+obtener_numeros_whatsapp
+
 import datetime
 import time
 import pywhatkit
@@ -1247,18 +1250,18 @@ def main(page: ft.Page):
                     envio_estados(),                    
                 ])
             ),
-            ft.Tab(
-                icon=ft.Icons.MESSAGE,
-                text="Whatsapp",
-                content=ft.Column([
-                    ft.Text("Envio de mensajes por whatsapp", size=20),
-                    ft.Row([
-                            ft.Text("Mensaje:", width=100),
-                            mensaje_textbox,
-                        ]),
-                    ft.ElevatedButton(text="Enviar", width=100, on_click=enviar_click),
-                ])
-            ),
+            #ft.Tab(
+            #    icon=ft.Icons.MESSAGE,
+            #    text="Whatsapp",
+            #    content=ft.Column([
+            #        ft.Text("Envio de mensajes por whatsapp", size=20),
+            #        ft.Row([
+            #                ft.Text("Mensaje:", width=100),
+            #                mensaje_textbox,
+            #            ]),
+            #        ft.ElevatedButton(text="Enviar", width=100, on_click=enviar_click),
+            #    ])
+            #),
         ],
     )
     page.add(mainTab)
