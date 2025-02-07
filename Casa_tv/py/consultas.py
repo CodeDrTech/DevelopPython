@@ -166,54 +166,91 @@ def get_estado_pagos():
     return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-def insertar_pago(cliente_id: int, fecha_pago: str) -> bool:
+def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
     """
-    Inserta un nuevo pago manteniendo la secuencia de fechas original del cliente.
+    Registra un nuevo pago y actualiza el saldo pendiente y saldo neto del cliente,
+    siempre que la diferencia entre la frecuencia de pago y los días transcurridos
+    desde el último pago o la fecha de inicio sea de 3 días o menos. Si la diferencia
+    es mayor, se rechaza el pago y se requiere actualizar la fecha de inicio del cliente
+    (reiniciar el contrato).
 
     Args:
-        cliente_id (int): ID del cliente que realiza el pago
-        fecha_pago (str): Fecha del pago actual en formato 'YYYY-MM-DD'
+        cliente_id (int): ID del cliente.
+        fecha_pago (str): Fecha del pago en formato 'YYYY-MM-DD'.
+        monto_pagado (int): Monto abonado en el pago.
 
     Returns:
-        bool: True si la inserción fue exitosa, False en caso contrario
+        bool: True si la inserción fue exitosa, False en caso contrario.
     """
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             
-            # Obtener datos del cliente
+            # Obtener datos del cliente: nombre, fecha de inicio, frecuencia, monto (cuota), saldo_pendiente.
             cursor.execute('''
-                SELECT nombre, inicio, frecuencia 
+                SELECT nombre, inicio, frecuencia, monto, saldo_pendiente 
                 FROM clientes 
                 WHERE id = ?
             ''', (cliente_id,))
-            
             cliente = cursor.fetchone()
             if not cliente:
                 raise ValueError("Cliente no encontrado")
                 
-            nombre_cliente, fecha_inicio, frecuencia = cliente
-            # Validar que frecuencia sea un número positivo
-            if frecuencia <= 0:
-                raise ValueError("La frecuencia debe ser mayor a cero")
+            nombre_cliente, fecha_inicio, frecuencia, monto, saldo_pendiente = cliente
             
-            # Convertir fechas a objetos datetime
+            # Convertir fechas a objetos datetime.
             fecha_inicio_obj = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d')
             fecha_pago_obj = datetime.datetime.strptime(fecha_pago, '%Y-%m-%d')
             
-            # Calcular cuántos períodos han pasado (en días)
-            dias_transcurridos = (fecha_pago_obj - fecha_inicio_obj).days
+            # Obtener la fecha del último pago realizado por el cliente.
+            cursor.execute('''
+                SELECT MAX(fecha_pago) 
+                FROM pagos 
+                WHERE cliente_id = ?
+            ''', (cliente_id,))
+            ultima_fecha_pago = cursor.fetchone()[0]
             
-            # Verificar si la fecha de pago está alineada con la frecuencia
-            if dias_transcurridos % frecuencia != 0:
-                raise ValueError("La fecha de pago no está alineada con la frecuencia del cliente")
+            if ultima_fecha_pago:
+                # Si existe un pago previo, usar la fecha del último pago.
+                fecha_base_obj = datetime.datetime.strptime(ultima_fecha_pago, '%Y-%m-%d')
+            else:
+                # Si no hay pagos previos, usar la fecha de inicio.
+                fecha_base_obj = fecha_inicio_obj
             
-            # Insertar el pago
+            # Calcular los días transcurridos desde la fecha base hasta la fecha de pago.
+            dias_transcurridos = (fecha_pago_obj - fecha_base_obj).days
+            
+            # Calcular la diferencia entre la frecuencia de pago y los días transcurridos.
+            diferencia = abs(frecuencia - dias_transcurridos)
+            
+            # Verificar si la diferencia es mayor que 3 días.
+            if diferencia > 3:
+                raise ValueError("La diferencia entre la frecuencia de pago y los días transcurridos "
+                                 "es mayor a 3 días. Por favor, actualice la fecha de inicio del cliente "
+                                 "para reiniciar el contrato.")
+            
+            # Calcular el total que debe pagar en el período actual.
+            total_a_pagar = monto + saldo_pendiente
+            
+            # Calcular el nuevo saldo pendiente (lo que no se cubre del total a pagar).
+            nuevo_saldo_pendiente = max(0, total_a_pagar - monto_pagado)
+            
+            # El saldo neto se actualiza como la suma de la cuota fija y el nuevo saldo pendiente.
+            nuevo_saldo_neto = monto + nuevo_saldo_pendiente
+            
+            # Registrar el pago en la tabla 'pagos'.
             cursor.execute('''
                 INSERT INTO pagos (cliente_id, nombre_cliente, fecha_pago)
                 VALUES (?, ?, ?)
             ''', (cliente_id, nombre_cliente, fecha_pago))
+            
+            # Actualizar el registro del cliente con el nuevo saldo pendiente y saldo neto.
+            cursor.execute('''
+                UPDATE clientes 
+                SET saldo_pendiente = ?, saldo_neto = ?
+                WHERE id = ?
+            ''', (nuevo_saldo_pendiente, nuevo_saldo_neto, cliente_id))
             
             conn.commit()
             return True
@@ -227,7 +264,6 @@ def insertar_pago(cliente_id: int, fecha_pago: str) -> bool:
         finally:
             conn.close()
     return False
-
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_estado_pago_cliente(cliente_id: int):
@@ -277,7 +313,9 @@ def get_estado_pago_cliente(cliente_id: int):
                                 JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
                         THEN 'Cerca'
                         ELSE 'Al día'
-                    END AS estado_pago
+                    END AS estado_pago,
+                    c.saldo_pendiente,
+                    c.saldo_neto
                 FROM clientes c
                 LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
                 WHERE c.id = ?
