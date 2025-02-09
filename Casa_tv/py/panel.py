@@ -2,7 +2,7 @@ import flet as ft
 from flet import ScrollMode, AppView
 from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
 insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales,\
-obtener_numeros_whatsapp
+obtener_numeros_whatsapp, get_correos_clientes, get_cuentas, insertar_cuenta, actualizar_cuenta
 
 import datetime
 import time
@@ -1149,7 +1149,239 @@ def main(page: ft.Page):
                 )
             ])
         )
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def crear_tab_cuentas():
+        """
+        Crea el tab "Cuentas" que permite agregar nuevas cuentas mediante un diálogo
+        y muestra una tabla con los registros actuales, con opción de editar.
+        """
+        # Contenedor donde se mostrará la tabla de cuentas.
+        tabla_container = ft.Container()
+        
+        # Función para actualizar la tabla de cuentas en el tab.
+        def actualizar_tabla_cuentas():
+            cuentas_list = get_cuentas()
+            rows = []
+            for cuenta in cuentas_list:
+                # cuenta: (id, correo, costo, fecha_de_pago, servicio)
+                editar_btn = ft.IconButton(
+                    icon=ft.Icons.EDIT,
+                    tooltip="Editar cuenta",
+                    on_click=lambda e, id=cuenta[0]: editar_cuenta(e, id)
+                )
+                rows.append(
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(cuenta[0]))),
+                            ft.DataCell(ft.Text(cuenta[1])),
+                            ft.DataCell(ft.Text(f"${cuenta[2]:.2f}")),
+                            ft.DataCell(ft.Text(cuenta[3] if cuenta[3] else "No Definido")),
+                            ft.DataCell(ft.Text(cuenta[4])),
+                            ft.DataCell(editar_btn)
+                        ]
+                    )
+                )
+            tabla_container.content = ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("ID")),
+                    ft.DataColumn(ft.Text("Correo")),
+                    ft.DataColumn(ft.Text("Costo")),
+                    ft.DataColumn(ft.Text("Fecha de Pago")),
+                    ft.DataColumn(ft.Text("Servicio")),
+                    ft.DataColumn(ft.Text("Acciones"))
+                ],
+                rows=rows,
+                border=ft.border.all(1, ft.Colors.GREY_400),
+                border_radius=10
+            )
+            page.update()
 
+
+        # Función para abrir el diálogo "Nuevo" para agregar una cuenta.
+        def abrir_dialogo_nuevo(e):
+            # Crear controles del diálogo:
+            txt_correo = ft.TextField(label="Correo", width=300)
+            # AutoComplete para correos que están en la tabla clientes:
+            auto_complete = ft.AutoComplete(
+                suggestions=[
+                    ft.AutoCompleteSuggestion(key=correo, value=correo)
+                    for correo in get_correos_clientes()
+                ]
+            )
+            # Para el campo "Correo", puedes usar un contenedor que incluya el AutoComplete.
+            container_correo = ft.Container(content=auto_complete, width=300)
+            txt_costo = ft.TextField(label="Costo (en DOP)", width=300, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
+            txt_fecha_pago = ft.TextField(label="Fecha de Pago (YYYY-MM-DD)", width=300)
+            txt_servicio = ft.TextField(label="Servicio", width=300)
+            
+            def guardar_nueva_cuenta(e):
+                correo = auto_complete.value if auto_complete.value else txt_correo.value.strip()
+                servicio = txt_servicio.value.strip()
+                try:
+                    costo = int(txt_costo.value.strip())
+                except ValueError:
+                    mostrar_mensaje("El costo debe ser un número.", page)
+                    return
+                fecha_pago = txt_fecha_pago.value.strip()
+                try:
+                    datetime.datetime.strptime(fecha_pago, '%Y-%m-%d')
+                except ValueError:
+                    mostrar_mensaje("El formato de fecha debe ser YYYY-MM-DD.", page)
+                    return
+                if insertar_cuenta(correo, costo, fecha_pago, servicio):
+                    mostrar_mensaje("Cuenta agregada correctamente.", page)
+                    dialogo_nuevo.open = False
+                    actualizar_tabla_cuentas()
+                else:
+                    mostrar_mensaje("Error al agregar cuenta.", page)
+                page.update()
+            
+            dialogo_nuevo = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Agregar Nueva Cuenta"),
+                content=ft.Column([
+                    ft.Text("Ingrese los datos de la cuenta:"),
+                    container_correo,
+                    txt_costo,
+                    txt_fecha_pago,
+                    txt_servicio,
+                ], spacing=10),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dialogo_nuevo)),
+                    ft.TextButton("Guardar", on_click=guardar_nueva_cuenta)
+                ]
+            )
+            page.overlay.append(dialogo_nuevo)
+            dialogo_nuevo.open = True
+            page.update()
+        
+        def editar_cuenta(e, cuenta_id):
+            """Abre un diálogo modal para editar una cuenta existente."""
+            # Obtener la lista actualizada de cuentas
+            cuentas_list = get_cuentas()
+            # Buscar la cuenta que se quiere editar.
+            cuenta = next(c for c in cuentas_list if c[0] == cuenta_id)
+            
+            # Crear controles para editar los campos
+            auto_complete_correo = ft.AutoComplete(
+                suggestions=[
+                    ft.AutoCompleteSuggestion(key=correo, value=correo)
+                    for correo in get_correos_clientes()
+                ],
+                value=cuenta[1]
+            )
+            correo_container = ft.Container(content=auto_complete_correo, width=320)
+            
+            txt_costo = ft.TextField(
+                label="Costo",
+                value=str(cuenta[2]),
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+            )
+            txt_fecha_pago = ft.TextField(
+                label="Fecha de Pago (YYYY-MM-DD)",
+                value=cuenta[3] if cuenta[3] else "",
+                read_only=True,
+                icon=ft.Icons.CALENDAR_MONTH,
+                on_click=lambda _: mostrar_datepicker_editar_fecha()
+            )
+            txt_servicio = ft.TextField(label="Servicio", value=cuenta[4])
+        
+            def seleccionar_fecha_editar(e):
+                """Actualiza el campo de fecha con la fecha seleccionada del DatePicker."""
+                if e.control.value:
+                    fecha = e.control.value.date()
+                    txt_fecha_pago.value = fecha.strftime("%Y-%m-%d")
+                    e.control.open = False
+                    page.update()
+        
+            def mostrar_datepicker_editar_fecha():
+                """Muestra un DatePicker para seleccionar la fecha de pago."""
+                date_picker = ft.DatePicker(
+                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+                    last_date=datetime.datetime.now() + datetime.timedelta(days=365),
+                    on_change=lambda e: seleccionar_fecha_editar(e)
+                )
+                page.overlay.append(date_picker)
+                date_picker.open = True
+                page.update()
+        
+            def guardar_cambios(e):
+                """Guarda los cambios de la cuenta mediante la función actualizar_cuenta (definida en consultas.py)."""
+                nuevo_correo = auto_complete_correo.value if auto_complete_correo.value else ""
+                nuevo_servicio = txt_servicio.value.strip()
+                try:
+                    nuevo_costo = int(txt_costo.value.strip())
+                except ValueError:
+                    mostrar_mensaje("El costo debe ser un número.", page)
+                    return
+                nueva_fecha_pago = txt_fecha_pago.value.strip()
+                # Validar el formato de la fecha
+                try:
+                    datetime.datetime.strptime(nueva_fecha_pago, '%Y-%m-%d')
+                except ValueError:
+                    mostrar_mensaje("El formato de fecha debe ser YYYY-MM-DD.", page)
+                    return
+                
+                if actualizar_cuenta(cuenta_id, nuevo_correo, nuevo_costo, nueva_fecha_pago, nuevo_servicio):
+                    dlg_modal.open = False
+                    # Actualizar la tabla de cuentas en la UI (se asume que existe la función actualizar_tabla_cuentas)
+                    actualizar_tabla_cuentas()
+                    page.update()
+                    mostrar_mensaje("Cuenta actualizada correctamente.", page)
+                else:
+                    mostrar_mensaje("Error al actualizar la cuenta.", page)
+                page.update()
+        
+            def close_dlg(e):
+                """Cierra el diálogo modal."""
+                dlg_modal.open = False
+                e.control.page.update()
+        
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Editar Cuenta"),
+                content=ft.Column([
+                    correo_container,
+                    txt_costo,
+                    txt_fecha_pago,
+                    txt_servicio,
+                ], spacing=10),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=close_dlg),
+                    ft.TextButton("Guardar", on_click=guardar_cambios)
+                ]
+            )
+            page.overlay.append(dlg_modal)
+            dlg_modal.open = True
+            page.update()
+        
+        def cerrar_dialogo(dialog):
+            dialog.open = False
+            page.update()
+
+        # Crear el botón "Nuevo" para agregar una cuenta.
+        btn_nuevo = ft.ElevatedButton(
+            text="Nuevo",
+            icon=ft.Icons.ADD,
+            on_click=abrir_dialogo_nuevo
+        )
+        
+        # Contenedor principal del tab "Cuentas"
+        contenido_tab = ft.Column([
+            ft.Row([btn_nuevo], alignment=ft.MainAxisAlignment.END),
+            ft.Text("Listado de Cuentas", size=20, weight="bold"),
+            tabla_container
+        ], spacing=20)
+        
+        # Actualizamos la tabla de cuentas inicialmente.
+        actualizar_tabla_cuentas()
+        
+        return ft.Tab(
+            icon=ft.Icons.ACCOUNT_BALANCE,
+            text="Cuentas",
+            content=contenido_tab
+        )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     mainTab = ft.Tabs(
@@ -1256,6 +1488,7 @@ def main(page: ft.Page):
                     envio_estados(),                    
                 ])
             ),
+            crear_tab_cuentas(),
             #ft.Tab(
             #    icon=ft.Icons.MESSAGE,
             #    text="Whatsapp",

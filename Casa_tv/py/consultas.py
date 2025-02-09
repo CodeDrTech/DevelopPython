@@ -623,4 +623,72 @@ def obtener_numeros_whatsapp():
     return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_correos_clientes():
+    """Obtiene una lista de correos únicos de la tabla clientes."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT DISTINCT correo FROM clientes WHERE correo IS NOT NULL")
+            resultados = [row[0] for row in cursor.fetchall()]
+            return resultados
+        except sqlite3.Error as e:
+            print(f"Error obteniendo correos: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
 
+def get_cuentas():
+    """Obtiene todos los registros de la tabla cuentas."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, correo, costo, fecha_de_pago, servicio FROM cuentas")
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo cuentas: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+
+def insertar_cuenta(correo: str, costo: int, fecha_de_pago: str, servicio: str) -> bool:
+    """Inserta una nueva cuenta en la tabla cuentas."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO cuentas (correo, costo, fecha_de_pago, servicio)
+                VALUES (?, ?, ?, ?)
+            """, (correo, costo, fecha_de_pago, servicio))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error insertando cuenta: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, fecha_de_pago: str, servicio: str) -> bool:
+    """Actualiza los datos de una cuenta existente."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                UPDATE cuentas
+                SET correo = ?, costo = ?, fecha_de_pago = ?, servicio = ?
+                WHERE id = ?
+            """, (correo, costo, fecha_de_pago, servicio, cuenta_id))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error actualizando cuenta: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
