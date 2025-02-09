@@ -1201,36 +1201,50 @@ def main(page: ft.Page):
 
         # Función para abrir el diálogo "Nuevo" para agregar una cuenta.
         def abrir_dialogo_nuevo(e):
-            # Crear controles del diálogo:
-            txt_correo = ft.TextField(label="Correo", width=300)
-            # AutoComplete para correos que están en la tabla clientes:
-            auto_complete = ft.AutoComplete(
-                suggestions=[
-                    ft.AutoCompleteSuggestion(key=correo, value=correo)
-                    for correo in get_correos_clientes()
-                ]
+            # Controles para el formulario de nueva cuenta.
+            # Para el campo "Cliente", usaremos AutoComplete basado en el ID y nombre de los clientes.
+            # Aquí usamos get_correos_clientes() si lo adaptas para retornar también IDs o, alternativamente, otra función.
+            # Por ejemplo, supongamos que tienes una función get_clientes() que retorna lista de clientes.
+            clientes_list = get_cuentas()  # o get_clientes() si deseas todos
+            # Suponiendo que dispones de una función que retorne una lista de tuplas (id, nombre)
+            # En este ejemplo, simulo sugerencias con IDs y nombres:
+            sugerencias = []
+            conn = connect_to_database()
+            if conn:
+                try:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id, nombre FROM clientes")
+                    for cid, nombre in cursor.fetchall():
+                        sugerencias.append(ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}"))
+                except sqlite3.Error as e:
+                    print(e)
+                finally:
+                    conn.close()
+            
+            auto_complete_cliente = ft.AutoComplete(
+                suggestions=sugerencias,
+                width=300
             )
-            # Para el campo "Correo", puedes usar un contenedor que incluya el AutoComplete.
-            container_correo = ft.Container(content=auto_complete, width=300)
+        
             txt_costo = ft.TextField(label="Costo (en DOP)", width=300, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
-            txt_fecha_pago = ft.TextField(label="Fecha de Pago (YYYY-MM-DD)", width=300)
             txt_servicio = ft.TextField(label="Servicio", width=300)
             
             def guardar_nueva_cuenta(e):
-                correo = auto_complete.value if auto_complete.value else txt_correo.value.strip()
+                # Se toma el valor del AutoComplete, que debe contener el ID del cliente.
+                cliente_valor = auto_complete_cliente.value
+                if not cliente_valor:
+                    mostrar_mensaje("Seleccione un cliente (ID - Nombre).", page)
+                    return
+                # Asumimos que el valor es "ID - Nombre" y extraemos el ID.
+                cliente_id = int(cliente_valor.split(" - ")[0])
                 servicio = txt_servicio.value.strip()
                 try:
                     costo = int(txt_costo.value.strip())
                 except ValueError:
                     mostrar_mensaje("El costo debe ser un número.", page)
                     return
-                fecha_pago = txt_fecha_pago.value.strip()
-                try:
-                    datetime.datetime.strptime(fecha_pago, '%Y-%m-%d')
-                except ValueError:
-                    mostrar_mensaje("El formato de fecha debe ser YYYY-MM-DD.", page)
-                    return
-                if insertar_cuenta(correo, costo, fecha_pago, servicio):
+                
+                if insertar_cuenta(cliente_id, costo, "", servicio):  # Se envía fecha de pago vacía
                     mostrar_mensaje("Cuenta agregada correctamente.", page)
                     dialogo_nuevo.open = False
                     actualizar_tabla_cuentas()
@@ -1243,13 +1257,12 @@ def main(page: ft.Page):
                 title=ft.Text("Agregar Nueva Cuenta"),
                 content=ft.Column([
                     ft.Text("Ingrese los datos de la cuenta:"),
-                    container_correo,
+                    auto_complete_cliente,
                     txt_costo,
-                    txt_fecha_pago,
                     txt_servicio,
                 ], spacing=10),
                 actions=[
-                    ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dialogo_nuevo)),
+                    ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dialogo_nuevo, page)),
                     ft.TextButton("Guardar", on_click=guardar_nueva_cuenta)
                 ]
             )
@@ -1257,82 +1270,75 @@ def main(page: ft.Page):
             dialogo_nuevo.open = True
             page.update()
         
-        def editar_cuenta(e, cuenta_id):
+        def editar_cuenta(e, cuenta_id, page):
             """Abre un diálogo modal para editar una cuenta existente."""
-            # Obtener la lista actualizada de cuentas
-            cuentas_list = get_cuentas()
-            # Buscar la cuenta que se quiere editar.
+            cuentas_list = get_cuentas()  # Obtenemos la lista actualizada
             cuenta = next(c for c in cuentas_list if c[0] == cuenta_id)
             
-            # Crear controles para editar los campos
-            auto_complete_correo = ft.AutoComplete(
-                suggestions=[
-                    ft.AutoCompleteSuggestion(key=correo, value=correo)
-                    for correo in get_correos_clientes()
-                ],
-                value=cuenta[1]
-            )
-            correo_container = ft.Container(content=auto_complete_correo, width=320)
+            # Campo para Cliente: AutoComplete con sugerencias de clientes.
+            sugerencias = []
+            conn = connect_to_database()
+            if conn:
+                try:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id, nombre FROM clientes")
+                    for cid, nombre in cursor.fetchall():
+                        sugerencias.append(ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}"))
+                except sqlite3.Error as e:
+                    print(e)
+                finally:
+                    conn.close()
             
-            txt_costo = ft.TextField(
-                label="Costo",
-                value=str(cuenta[2]),
-                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+            auto_complete_cliente = ft.AutoComplete(
+                suggestions=sugerencias,
+                value=str(cuenta[1])  # Se asume que el cliente_id se guarda en cuenta[1]
             )
-            txt_fecha_pago = ft.TextField(
-                label="Fecha de Pago (YYYY-MM-DD)",
-                value=cuenta[3] if cuenta[3] else "",
-                read_only=True,
-                icon=ft.Icons.CALENDAR_MONTH,
-                on_click=lambda _: mostrar_datepicker_editar_fecha()
-            )
-            txt_servicio = ft.TextField(label="Servicio", value=cuenta[4])
-        
-            def seleccionar_fecha_editar(e):
-                """Actualiza el campo de fecha con la fecha seleccionada del DatePicker."""
-                if e.control.value:
-                    fecha = e.control.value.date()
-                    txt_fecha_pago.value = fecha.strftime("%Y-%m-%d")
-                    e.control.open = False
-                    page.update()
-        
-            def mostrar_datepicker_editar_fecha():
-                """Muestra un DatePicker para seleccionar la fecha de pago."""
-                date_picker = ft.DatePicker(
-                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
-                    last_date=datetime.datetime.now() + datetime.timedelta(days=365),
-                    on_change=lambda e: seleccionar_fecha_editar(e)
-                )
-                page.overlay.append(date_picker)
-                date_picker.open = True
-                page.update()
+            txt_costo = ft.TextField(label="Costo", value=str(cuenta[2]), 
+                                    input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
+            txt_servicio = ft.TextField(label="Servicio", value=cuenta[3])
         
             def guardar_cambios(e):
-                """Guarda los cambios de la cuenta mediante la función actualizar_cuenta (definida en consultas.py)."""
-                nuevo_correo = auto_complete_correo.value if auto_complete_correo.value else ""
+                nuevo_cliente_valor = auto_complete_cliente.value
+                if not nuevo_cliente_valor:
+                    mostrar_mensaje("Seleccione un cliente.", page)
+                    return
+                nuevo_cliente_id = int(nuevo_cliente_valor.split(" - ")[0])
                 nuevo_servicio = txt_servicio.value.strip()
                 try:
                     nuevo_costo = int(txt_costo.value.strip())
                 except ValueError:
                     mostrar_mensaje("El costo debe ser un número.", page)
                     return
-                nueva_fecha_pago = txt_fecha_pago.value.strip()
-                # Validar el formato de la fecha
-                try:
-                    datetime.datetime.strptime(nueva_fecha_pago, '%Y-%m-%d')
-                except ValueError:
-                    mostrar_mensaje("El formato de fecha debe ser YYYY-MM-DD.", page)
-                    return
                 
-                if actualizar_cuenta(cuenta_id, nuevo_correo, nuevo_costo, nueva_fecha_pago, nuevo_servicio):
+                if actualizar_cuenta(cuenta_id, nuevo_cliente_id, nuevo_costo, "", nuevo_servicio):
                     dlg_modal.open = False
-                    # Actualizar la tabla de cuentas en la UI (se asume que existe la función actualizar_tabla_cuentas)
                     actualizar_tabla_cuentas()
                     page.update()
                     mostrar_mensaje("Cuenta actualizada correctamente.", page)
                 else:
                     mostrar_mensaje("Error al actualizar la cuenta.", page)
                 page.update()
+            
+            def close_dlg(e):
+                dlg_modal.open = False
+                page.update()
+            
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Editar Cuenta"),
+                content=ft.Column([
+                    auto_complete_cliente,
+                    txt_costo,
+                    txt_servicio,
+                ], spacing=10),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=lambda e: close_dlg(e)),
+                    ft.TextButton("Guardar", on_click=guardar_cambios)
+                ]
+            )
+            page.overlay.append(dlg_modal)
+            dlg_modal.open = True
+            page.update()
         
             def close_dlg(e):
                 """Cierra el diálogo modal."""
@@ -1357,27 +1363,24 @@ def main(page: ft.Page):
             dlg_modal.open = True
             page.update()
         
-        def cerrar_dialogo(dialog):
+        def cerrar_dialogo(dialog, page):
             dialog.open = False
             page.update()
-
-        # Crear el botón "Nuevo" para agregar una cuenta.
+        
+        # Botón "Nuevo"
         btn_nuevo = ft.ElevatedButton(
             text="Nuevo",
             icon=ft.Icons.ADD,
             on_click=abrir_dialogo_nuevo
         )
         
-        # Contenedor principal del tab "Cuentas"
         contenido_tab = ft.Column([
-            ft.Text("Listado de Cuentas", size=20, weight="bold"),
             ft.Row([btn_nuevo], alignment=ft.MainAxisAlignment.START),
+            ft.Text("Listado de Cuentas", size=20, weight="bold"),
             tabla_container
         ], spacing=20)
         
-        # Actualizamos la tabla de cuentas inicialmente.
         actualizar_tabla_cuentas()
-        
         return ft.Tab(
             icon=ft.Icons.ACCOUNT_BALANCE,
             text="Cuentas",
