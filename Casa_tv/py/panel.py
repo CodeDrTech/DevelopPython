@@ -1369,8 +1369,8 @@ def main(page: ft.Page):
         
         # Contenedor principal del tab "Cuentas"
         contenido_tab = ft.Column([
-            ft.Row([btn_nuevo], alignment=ft.MainAxisAlignment.END),
             ft.Text("Listado de Cuentas", size=20, weight="bold"),
+            ft.Row([btn_nuevo], alignment=ft.MainAxisAlignment.START),
             tabla_container
         ], spacing=20)
         
