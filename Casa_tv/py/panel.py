@@ -1164,20 +1164,22 @@ def main(page: ft.Page):
             cuentas_list = get_cuentas()
             rows = []
             for cuenta in cuentas_list:
-                # cuenta: (id, correo, costo, fecha_de_pago, servicio)
+                # cuenta: (id, cliente_id, costo, servicio) – dependiendo de la definición en consultas.py
+                # Obtener el nombre del cliente propietario
+                cliente = get_cliente_por_id(cuenta[1])
+                nombre_cliente = cliente[1] if cliente else "Desconocido"
                 editar_btn = ft.IconButton(
                     icon=ft.Icons.EDIT,
                     tooltip="Editar cuenta",
-                    on_click=lambda e, id=cuenta[0]: editar_cuenta(e, id)
+                    on_click=lambda e, id=cuenta[0]: editar_cuenta(e, id, page)
                 )
                 rows.append(
                     ft.DataRow(
                         cells=[
                             ft.DataCell(ft.Text(str(cuenta[0]))),
-                            ft.DataCell(ft.Text(cuenta[1])),
+                            ft.DataCell(ft.Text(f"{nombre_cliente} (ID: {cuenta[1]})")),
                             ft.DataCell(ft.Text(f"${cuenta[2]:.2f}")),
-                            ft.DataCell(ft.Text(cuenta[3] if cuenta[3] else "No Definido")),
-                            ft.DataCell(ft.Text(cuenta[4])),
+                            ft.DataCell(ft.Text(cuenta[3])),
                             ft.DataCell(editar_btn)
                         ]
                     )
@@ -1185,9 +1187,8 @@ def main(page: ft.Page):
             tabla_container.content = ft.DataTable(
                 columns=[
                     ft.DataColumn(ft.Text("ID")),
-                    ft.DataColumn(ft.Text("Correo")),
+                    ft.DataColumn(ft.Text("Cliente")),
                     ft.DataColumn(ft.Text("Costo")),
-                    ft.DataColumn(ft.Text("Fecha de Pago")),
                     ft.DataColumn(ft.Text("Servicio")),
                     ft.DataColumn(ft.Text("Acciones"))
                 ],
