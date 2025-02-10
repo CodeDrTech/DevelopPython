@@ -31,7 +31,9 @@ def get_clientes():
                     whatsapp,
                     estado,
                     frecuencia,
-                    comentario
+                    comentario,
+                    saldo_pendiente,
+                    saldo_neto
                 FROM clientes 
                 ORDER BY date(inicio) DESC
             ''')
