@@ -31,8 +31,6 @@ def get_clientes():
                     whatsapp,
                     estado,
                     frecuencia,
-                    monto,
-                    correo,
                     comentario
                 FROM clientes 
                 ORDER BY date(inicio) DESC
@@ -122,10 +120,10 @@ def get_estado_pagos():
             cursor.execute('''
                 WITH ultimo_pago AS (
                 SELECT
-                    cliente_id,
-                    MAX(fecha_pago) AS ultima_fecha_pago
-                FROM pagos
-                GROUP BY cliente_id
+                    p.cliente_id,
+                    MAX(p.fecha_pago) AS ultima_fecha_pago
+                FROM pagos p
+                GROUP BY p.cliente_id
             )
             SELECT 
                 c.id AS cliente_id,
@@ -149,11 +147,12 @@ def get_estado_pagos():
                     THEN 'Cerca'
                     ELSE 'Al día'
                 END AS estado_pago,
-                c.monto,
-                c.correo,
+                s.monto,
+                s.correo,
                 c.comentario
             FROM clientes c
             LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+            INNER JOIN suscripcion s ON c.id = s.cliente_id
             WHERE c.estado = 'Activo'
             ORDER BY dias_transcurridos DESC;
             ''')
