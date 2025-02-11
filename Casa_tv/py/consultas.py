@@ -47,7 +47,7 @@ def get_clientes():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio: str, estado: str, frecuencia: int, monto: float, correo: str, comentario: str) -> bool:
+def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio: str, estado: str, frecuencia: int, comentario: str) -> bool:
     """
     Actualiza los datos de un cliente en la base de datos.
 
@@ -79,11 +79,9 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio
                     inicio = ?,
                     estado = ?,
                     frecuencia = ?,
-                    monto = ?,
-                    correo = ?,
                     comentario = ?
                 WHERE id = ?
-            ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia, monto, correo, comentario, cliente_id))
+            ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia, comentario, cliente_id))
             
             conn.commit()
             return cursor.rowcount > 0
@@ -354,9 +352,9 @@ def insertar_cliente(nombre: str, whatsapp: str, fecha_inicio: str, estado: str,
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                INSERT INTO clientes (nombre, whatsapp, inicio, estado, frecuencia, monto, correo, comentario)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia, monto, correo, comentario))
+                INSERT INTO clientes (nombre, whatsapp, inicio, estado, frecuencia, comentario)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia, comentario))
             conn.commit()
             return True
         except sqlite3.Error as e:

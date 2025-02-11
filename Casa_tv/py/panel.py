@@ -362,94 +362,94 @@ def main(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Referencias para controles
-    txt_nombre = ft.Ref[ft.TextField]()
-    txt_whatsapp = ft.Ref[ft.TextField]()
-    txt_fecha_inicio = ft.Ref[ft.TextField]()
-    dd_estado = ft.Ref[ft.Dropdown]()
-    txt_frecuencia = ft.Ref[ft.TextField]()
-    txt_monto = ft.Ref[ft.TextField]()
-    txt_correo = ft.Ref[ft.TextField]()
-    txt_comentario = ft.Ref[ft.TextField]()    
+    # txt_nombre = ft.Ref[ft.TextField]()
+    # txt_whatsapp = ft.Ref[ft.TextField]()
+    # txt_fecha_inicio = ft.Ref[ft.TextField]()
+    # dd_estado = ft.Ref[ft.Dropdown]()
+    # txt_frecuencia = ft.Ref[ft.TextField]()
+    # txt_monto = ft.Ref[ft.TextField]()
+    # txt_correo = ft.Ref[ft.TextField]()
+    # txt_comentario = ft.Ref[ft.TextField]()    
     
     tabla_vencimientos = None  # Referencia a tabla_vencimientos
-    clientes = None  # Referencia a clientes
+    # clientes = None  # Referencia a clientes
     
-    def mostrar_datepicker_inicio(e):
-        """Muestra DatePicker para fecha inicio"""
-        date_picker = ft.DatePicker(
-            first_date=datetime.datetime.now() - datetime.timedelta(days=365),
-            last_date=datetime.datetime.now() + datetime.timedelta(days=365),
-            on_change=lambda e: seleccionar_fecha_inicio(e),            
-        )
-        page.overlay.append(date_picker)
-        date_picker.open = True
-        page.update()
+    # def mostrar_datepicker_inicio(e):
+    #     """Muestra DatePicker para fecha inicio"""
+    #     date_picker = ft.DatePicker(
+    #         first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+    #         last_date=datetime.datetime.now() + datetime.timedelta(days=365),
+    #         on_change=lambda e: seleccionar_fecha_inicio(e),            
+    #     )
+    #     page.overlay.append(date_picker)
+    #     date_picker.open = True
+    #     page.update()
 
-    def seleccionar_fecha_inicio(e):
-        """Actualiza TextField con fecha seleccionada"""
-        if e.control.value:
-            fecha = e.control.value.date()
-            txt_fecha_inicio.current.value = fecha.strftime("%Y-%m-%d")
-            e.control.open = False
-            page.update()
+    # def seleccionar_fecha_inicio(e):
+    #     """Actualiza TextField con fecha seleccionada"""
+    #     if e.control.value:
+    #         fecha = e.control.value.date()
+    #         txt_fecha_inicio.current.value = fecha.strftime("%Y-%m-%d")
+    #         e.control.open = False
+    #         page.update()
 
-    def limpiar_campos():
-        """Limpia todos los campos del formulario"""
-        txt_nombre.current.value = ""
-        txt_whatsapp.current.value = ""
-        txt_fecha_inicio.current.value = ""
-        dd_estado.current.value = "Activo"
-        txt_monto.current.value = ""
-        txt_correo.current.value = ""
-        txt_comentario.current.value = ""
-        page.update()
+    # def limpiar_campos():
+    #     """Limpia todos los campos del formulario"""
+    #     txt_nombre.current.value = ""
+    #     txt_whatsapp.current.value = ""
+    #     txt_fecha_inicio.current.value = ""
+    #     dd_estado.current.value = "Activo"
+    #     txt_monto.current.value = ""
+    #     txt_correo.current.value = ""
+    #     txt_comentario.current.value = ""
+    #     page.update()
 
-    def guardar_cliente(e):
-        """Valida y guarda nuevo cliente"""
-        try:
-            # Validar campos requeridos
-            if not all([
-                txt_nombre.current.value,
-                txt_whatsapp.current.value,
-                txt_fecha_inicio.current.value,
-                dd_estado.current.value,
-                txt_frecuencia.current.value,
-                txt_monto.current.value,
-                txt_correo.current.value
-            ]):
-                raise ValueError("Algunos campos son requeridos")
+    # def guardar_cliente(e):
+    #     """Valida y guarda nuevo cliente"""
+    #     try:
+    #         # Validar campos requeridos
+    #         if not all([
+    #             txt_nombre.current.value,
+    #             txt_whatsapp.current.value,
+    #             txt_fecha_inicio.current.value,
+    #             dd_estado.current.value,
+    #             txt_frecuencia.current.value,
+    #             txt_monto.current.value,
+    #             txt_correo.current.value
+    #         ]):
+    #             raise ValueError("Algunos campos son requeridos")
 
-            # Insertar cliente
-            if insertar_cliente(
-                txt_nombre.current.value,
-                txt_whatsapp.current.value,
-                txt_fecha_inicio.current.value,
-                dd_estado.current.value,
-                int(txt_frecuencia.current.value),
-                int(txt_monto.current.value),
-                txt_correo.current.value,
-                txt_comentario.current.value
-            ):
-                mostrar_mensaje("Cliente guardado correctamente")
-                limpiar_campos()
+    #         # Insertar cliente
+    #         if insertar_cliente(
+    #             txt_nombre.current.value,
+    #             txt_whatsapp.current.value,
+    #             txt_fecha_inicio.current.value,
+    #             dd_estado.current.value,
+    #             int(txt_frecuencia.current.value),
+    #             int(txt_monto.current.value),
+    #             txt_correo.current.value,
+    #             txt_comentario.current.value
+    #         ):
+    #             mostrar_mensaje("Cliente guardado correctamente")
+    #             limpiar_campos()
                 
-                # Actualizar tabla de vencimientos
-                nonlocal tabla_vencimientos
-                tabla_vencimientos = crear_tabla_vencimientos()
-                mainTab.tabs[0].content = tabla_vencimientos                
+    #             # Actualizar tabla de vencimientos
+    #             nonlocal tabla_vencimientos
+    #             tabla_vencimientos = crear_tabla_vencimientos()
+    #             mainTab.tabs[0].content = tabla_vencimientos                
                 
-                # Actualizar datos
-                nonlocal clientes
-                clientes = crear_tabla_clientes()
-                mainTab.tabs[1].content = clientes
-                page.update()
+    #             # Actualizar datos
+    #             nonlocal clientes
+    #             clientes = crear_tabla_clientes()
+    #             mainTab.tabs[1].content = clientes
+    #             page.update()
                 
-            else:
-                mostrar_mensaje("Error al guardar cliente")
-        except ValueError as e:
-            mostrar_mensaje(f"Error: {str(e)}")
-        except Exception as e:
-            mostrar_mensaje(f"Error inesperado: {str(e)}")
+    #         else:
+    #             mostrar_mensaje("Error al guardar cliente")
+    #     except ValueError as e:
+    #         mostrar_mensaje(f"Error: {str(e)}")
+    #     except Exception as e:
+    #         mostrar_mensaje(f"Error inesperado: {str(e)}")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_tabla_vencimientos():
@@ -650,6 +650,7 @@ def main(page: ft.Page):
     def crear_tabla_clientes():
         """
         Crea tabla de clientes con:
+        - Agregar nuevo cliente
         - Filtro por nombre con AutoComplete
         - Edición completa de datos incluyendo fecha
         - Actualización en tiempo real
@@ -660,7 +661,117 @@ def main(page: ft.Page):
         tabla_container = ft.Container()
         auto_complete = None
         auto_complete_container = None
+        # -----------------------------------------------
+        # Función para NUEVO CLIENTE
+        # -----------------------------------------------
+        def nuevo_cliente(e):
+            """Abre diálogo para crear nuevo cliente"""
+            nombre_edit = ft.TextField(label="Nombre", capitalization=ft.TextCapitalization.WORDS)
+            whatsapp_edit = ft.TextField(label="WhatsApp", max_length=10, 
+                        input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
+            fecha_edit = ft.TextField(
+                label="Fecha inicio",
+                value=datetime.date.today().strftime("%Y-%m-%d"),
+                read_only=True,
+                icon=ft.Icons.CALENDAR_MONTH,
+                on_click=lambda _: mostrar_datepicker_nuevo()
+            )
+            condicion_edit = ft.Dropdown(
+                label="Condicion",
+                options=[
+                    ft.dropdown.Option("Activo"),
+                    ft.dropdown.Option("Inactivo")
+                ],
+                value="Activo"
+            )
+            frecuencia_edit = ft.Dropdown(
+                label="Frecuencia",
+                options=[
+                    ft.dropdown.Option("30"),
+                    ft.dropdown.Option("15"),
+                    ft.dropdown.Option("1"),
+                ],
+                value="30"
+            )
+            comentario_edit = ft.TextField(label="Comentario", multiline=True, max_length=100)
 
+            def seleccionar_fecha_nuevo(e):
+                if e.control.value:
+                    fecha = e.control.value.date()
+                    fecha_edit.value = fecha.strftime("%Y-%m-%d")
+                    e.control.open = False
+                    page.update()
+
+            def mostrar_datepicker_nuevo():
+                date_picker = ft.DatePicker(
+                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+                    last_date=datetime.datetime.now() + datetime.timedelta(days=365),
+                    on_change=seleccionar_fecha_nuevo
+                )
+                page.overlay.append(date_picker)
+                date_picker.open = True
+                page.update()
+
+            def guardar_nuevo(e):
+                try:
+                    if insertar_cliente(
+                        nombre_edit.value,
+                        whatsapp_edit.value,
+                        fecha_edit.value,
+                        condicion_edit.value,
+                        int(frecuencia_edit.value),
+                        comentario_edit.value
+                    ):
+                        dlg_modal.open = False
+                        
+                        # Actualizar datos
+                        nonlocal clientes
+                        clientes = get_clientes()
+                        actualizar_tabla(clientes)
+                        actualizar_autocomplete()
+                        
+                        limpiar_y_recrear_auto_complete(auto_complete_container, clientes)
+                        
+                        nonlocal tabla_vencimientos
+                        tabla_vencimientos = crear_tabla_vencimientos()
+                        mainTab.tabs[0].content = tabla_vencimientos
+                        
+                        page.update()
+                        mostrar_mensaje("Cliente creado")
+                    else:
+                        mostrar_mensaje("Error al crear")
+                except Exception as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}")
+                page.update()
+
+            def close_dlg(e):
+                """Cierra el diálogo modal"""
+                dlg_modal.open = False
+                e.control.page.update()
+            
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Nuevo Cliente"),
+                content=ft.Column([
+                    nombre_edit,
+                    whatsapp_edit,
+                    fecha_edit,
+                    condicion_edit,
+                    frecuencia_edit,
+                    comentario_edit
+                ]),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=close_dlg),
+                    ft.TextButton("Guardar", on_click=guardar_nuevo)
+                ]
+            )
+            
+            page.overlay.append(dlg_modal)
+            dlg_modal.open = True
+            page.update()
+        # -----------------------------------------------
+        # Función para EDITAR CLIENTE
+        # -----------------------------------------------
         def editar_cliente(e, cliente_id):
             """Abre diálogo para editar cliente"""
             cliente = next(c for c in clientes if c[0] == cliente_id)
@@ -687,9 +798,7 @@ def main(page: ft.Page):
                 value=str(cliente[5]),
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
-            monto_edit = ft.TextField(label="Monto", value=str(cliente[6]))
-            correo_edit = ft.TextField(label="Correo", multiline=True, value=cliente[7])
-            comentario_edit = ft.TextField(label="Comentario", multiline=True, value=cliente[8])
+            comentario_edit = ft.TextField(label="Comentario", multiline=True, value=cliente[6])
 
             def seleccionar_fecha_edit(e, txt_field):
                 """
@@ -735,8 +844,6 @@ def main(page: ft.Page):
                         fecha_edit.value,
                         condicion_edit.value,
                         int(frecuencia_edit.value),
-                        int(monto_edit.value),
-                        correo_edit.value,
                         comentario_edit.value
                     ):
                         dlg_modal.open = False
@@ -779,8 +886,6 @@ def main(page: ft.Page):
                     fecha_edit,
                     condicion_edit,
                     frecuencia_edit,
-                    monto_edit,
-                    correo_edit,
                     comentario_edit
                 ]),
                 actions=[
@@ -805,8 +910,6 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("WhatsApp")),
                     ft.DataColumn(ft.Text("Condicion")),
                     ft.DataColumn(ft.Text("Frecuencia")),
-                    ft.DataColumn(ft.Text("Monto")),
-                    ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Comentario")),
                     ft.DataColumn(ft.Text("Acciones"))
                 ],
@@ -819,9 +922,7 @@ def main(page: ft.Page):
                             ft.DataCell(ft.Text(cliente[3])),
                             ft.DataCell(ft.Text(cliente[4])),
                             ft.DataCell(ft.Text(f"{cliente[5]} días")),
-                            ft.DataCell(ft.Text(str(f"${cliente[6]}"))),
-                            ft.DataCell(ft.Text(cliente[7])),
-                            ft.DataCell(ft.Text(cliente[8])),
+                            ft.DataCell(ft.Text(cliente[6])),
                             ft.DataCell(
                                 ft.IconButton(
                                     icon=ft.Icons.EDIT,
@@ -932,136 +1033,19 @@ def main(page: ft.Page):
         actualizar_tabla(clientes)       
         
         return ft.Column([
+        ft.Row([
             auto_complete_container,
-            tabla_container
-        ])
+            ft.ElevatedButton(
+                "Nuevo Cliente",
+                icon=ft.Icons.ADD,
+                on_click=nuevo_cliente
+            )
+        ], alignment=ft.MainAxisAlignment.START),
+        tabla_container
+    ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Función para cerrar el diálogo
-    def cerrar_dialogo(dialog, page):
-        dialog.open = False
-        page.update()
 
-    # Función para abrir el diálogo "Nuevo Cliente" y registrar un nuevo cliente.
-    def abrir_dialogo_nuevo_cliente():
-        # Crear controles para el formulario de nuevo cliente
-        txt_nombre = ft.TextField(label="Nombre", width=320)
-        txt_fecha_inicio = ft.TextField(
-            label="Fecha de inicio",
-            width=320,
-            read_only=True,
-            icon=ft.Icons.CALENDAR_MONTH,
-            on_click=lambda e: mostrar_datepicker_inicio(e)  # Asume que esta función está definida
-        )
-        txt_whatsapp = ft.TextField(
-            label="Whatsapp",
-            width=320,
-            max_length=10,
-            input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
-        )
-        dd_estado = ft.Dropdown(
-            label="Condición",
-            value="Activo",
-            options=[
-                ft.dropdown.Option("Activo"),
-                ft.dropdown.Option("Inactivo")
-            ],
-            width=320
-        )
-        txt_frecuencia = ft.TextField(
-            label="Frecuencia de pago (días)",
-            value=30,
-            width=320,
-            max_length=2,
-            input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
-        )
-        txt_comentario = ft.TextField(label="Comentario", width=320, multiline=True, max_length=100, capitalization=ft.TextCapitalization.WORDS)
-        
-        # Función para guardar el nuevo cliente.
-        def guardar_nuevo_cliente(e):
-            # Validar que se ingresen datos mínimos.
-            if not txt_nombre.value:
-                mostrar_mensaje("El nombre es requerido.", page)
-                return
-            if not txt_fecha_inicio.value:
-                mostrar_mensaje("Seleccione la fecha de inicio.", page)
-                return
-            if not txt_whatsapp.value:
-                mostrar_mensaje("Ingrese el Whatsapp.", page)
-                return
-            if not txt_frecuencia.value:
-                mostrar_mensaje("Ingrese la frecuencia de pago.", page)
-                return
-            try:
-                frecuencia_val = int(txt_frecuencia.value)
-            except ValueError:
-                mostrar_mensaje("La frecuencia debe ser numérica.", page)
-                return
-
-            # Llama a la función de inserción de cliente (definida en consultas.py)
-            if insertar_cliente(
-                txt_nombre.value,
-                txt_fecha_inicio.value,
-                txt_whatsapp.value,
-                dd_estado.value,
-                frecuencia_val,
-                # Aquí ya no se insertarán los campos de monto y correo, pues se moverán a la tabla suscripcion
-                txt_comentario.value
-            ):
-                mostrar_mensaje("Cliente creado correctamente.", page)
-                dlg_nuevo_cliente.open = False
-                # Actualiza la tabla de clientes
-                # Se asume que la función crear_tabla_clientes() retorna la tabla actualizada
-                # y que existe un contenedor en la UI donde se muestra la tabla.
-                actualizar_tabla(get_clientes())
-            else:
-                mostrar_mensaje("Error al crear cliente.", page)
-            page.update()
-        
-        # Crear el diálogo con el formulario
-        dlg_nuevo_cliente = ft.AlertDialog(
-            modal=True,
-            title=ft.Text("Nuevo Cliente"),
-            content=ft.Column([
-                txt_nombre,
-                txt_fecha_inicio,
-                txt_whatsapp,
-                dd_estado,
-                txt_frecuencia,
-                txt_comentario
-            ], spacing=10),
-            actions=[
-                ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_nuevo_cliente, page)),
-                ft.TextButton("Guardar", on_click=guardar_nuevo_cliente)
-            ]
-        )
-        page.overlay.append(dlg_nuevo_cliente)
-        dlg_nuevo_cliente.open = True
-        page.update()
-
-    # Función para crear el tab "Clientes" que incluya el botón "Nuevo" y la tabla con los clientes.
-    def crear_tab_clientes():
-        # Botón para crear un nuevo cliente.
-        btn_nuevo = ft.ElevatedButton(
-            text="Agregar cliente",
-            icon=ft.Icons.ADD,
-            on_click=lambda e: abrir_dialogo_nuevo_cliente()
-        )
-        
-        # Se asume que ya tienes la función crear_tabla_clientes() que retorna la tabla de clientes.
-        tabla_clientes = crear_tabla_clientes()  # Esta función ya debe estar definida en tu módulo
-        
-        # Organizar el contenido del tab.
-        contenido = ft.Column([
-            ft.Row([btn_nuevo], alignment=ft.MainAxisAlignment.START),
-            tabla_clientes
-        ], spacing=20)
-        
-        return ft.Tab(
-            icon=ft.Icons.PERSON,
-            text="Clientes",
-            content=contenido
-        )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def get_estado_color(estado: str) -> str:
@@ -1532,84 +1516,84 @@ def main(page: ft.Page):
                 ])
             ),
             ft.Tab(
-                icon=ft.Icons.LIST,
-                text="Listado de clientes",
+                icon=ft.Icons.PERSON_ADD,
+                text="Clientes",
                 content=ft.Column([
                     ft.Text("Clientes", size=20),
                     crear_tabla_clientes(),
                 ]),
             ),
-            ft.Tab(
-                icon=ft.Icons.PERSON_ADD,
-                text="Agregar clientes",
-                content=ft.Column(
-                    [
-                        ft.Text("Registrar clientes", size=20),
-                        ft.Row([
-                            ft.Text("Nombre:", width=100),
-                            ft.TextField(width=320, ref=txt_nombre, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.WORDS),
-                        ]),
-                        ft.Row([
-                            ft.Text("Fecha de inicio:", width=100),
-                            ft.TextField(width=320, ref=txt_fecha_inicio, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, icon=ft.Icons.CALENDAR_MONTH, on_click=mostrar_datepicker_inicio),
+            # ft.Tab(
+            #     icon=ft.Icons.PERSON_ADD,
+            #     text="Agregar clientes",
+            #     content=ft.Column(
+            #         [
+            #             ft.Text("Registrar clientes", size=20),
+            #             ft.Row([
+            #                 ft.Text("Nombre:", width=100),
+            #                 ft.TextField(width=320, ref=txt_nombre, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, capitalization=ft.TextCapitalization.WORDS),
+            #             ]),
+            #             ft.Row([
+            #                 ft.Text("Fecha de inicio:", width=100),
+            #                 ft.TextField(width=320, ref=txt_fecha_inicio, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, read_only=True, icon=ft.Icons.CALENDAR_MONTH, on_click=mostrar_datepicker_inicio),
                             
-                        ]),
-                        ft.Row([
-                            ft.Text("Whatsapp:", width=100),
-                            ft.TextField(width=320, ref=txt_whatsapp, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ]),
-                        ft.Row([
-                            ft.Text("Condicion:", width=100),
-                            ft.Dropdown(
-                            width=320,
-                            ref=dd_estado,
-                            value="Activo",
-                            options=[
-                                ft.dropdown.Option("Activo"),
-                                ft.dropdown.Option("Inactivo"),
-                            ],
-                            border=ft.border.all(2, ft.Colors.BLACK),
-                            border_radius=10,
-                        ),
-                        ]),
-                        ft.Row([
-                        ft.Text("Frecuencia de pago:", width=100),
-                        ft.Dropdown(
-                            width=320,
-                            ref=txt_frecuencia,
-                            value="30",
-                            options=[
-                                ft.dropdown.Option("1"),
-                                ft.dropdown.Option("15"),
-                                ft.dropdown.Option("30"),
-                            ],
-                            border=ft.border.all(2, ft.Colors.BLACK),
-                            border_radius=10,
-                        ),
-                        ]),
-                        ft.Row([
-                            ft.Text("Monto:", width=100),
-                            ft.TextField(width=320, ref=txt_monto, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
-                        ]),
-                        ft.Row([
-                            ft.Text("Correo:", width=100),
-                            ft.TextField(width=320, ref=txt_correo, multiline=True, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
-                        ]),
-                        ft.Row([
-                            ft.Text("Comentario:", width=100),
-                            ft.TextField(width=320, ref=txt_comentario, multiline=True, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=100, capitalization=ft.TextCapitalization.WORDS),
-                        ]),
-                        ft.Row([
-                        ft.Text(" ", width=100),
-                        ft.ElevatedButton(text="Registrar", width=100, on_click=guardar_cliente),
-                        ft.ElevatedButton(text="Empleados", width=100),
-                        ft.ElevatedButton(text="Reportes", width=100),
-                        ]),
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    spacing=15,
-                ),
-            ),
+            #             ]),
+            #             ft.Row([
+            #                 ft.Text("Whatsapp:", width=100),
+            #                 ft.TextField(width=320, ref=txt_whatsapp, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+            #             ]),
+            #             ft.Row([
+            #                 ft.Text("Condicion:", width=100),
+            #                 ft.Dropdown(
+            #                 width=320,
+            #                 ref=dd_estado,
+            #                 value="Activo",
+            #                 options=[
+            #                     ft.dropdown.Option("Activo"),
+            #                     ft.dropdown.Option("Inactivo"),
+            #                 ],
+            #                 border=ft.border.all(2, ft.Colors.BLACK),
+            #                 border_radius=10,
+            #             ),
+            #             ]),
+            #             ft.Row([
+            #             ft.Text("Frecuencia de pago:", width=100),
+            #             ft.Dropdown(
+            #                 width=320,
+            #                 ref=txt_frecuencia,
+            #                 value="30",
+            #                 options=[
+            #                     ft.dropdown.Option("1"),
+            #                     ft.dropdown.Option("15"),
+            #                     ft.dropdown.Option("30"),
+            #                 ],
+            #                 border=ft.border.all(2, ft.Colors.BLACK),
+            #                 border_radius=10,
+            #             ),
+            #             ]),
+            #             ft.Row([
+            #                 ft.Text("Monto:", width=100),
+            #                 ft.TextField(width=320, ref=txt_monto, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")),
+            #             ]),
+            #             ft.Row([
+            #                 ft.Text("Correo:", width=100),
+            #                 ft.TextField(width=320, ref=txt_correo, multiline=True, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10),
+            #             ]),
+            #             ft.Row([
+            #                 ft.Text("Comentario:", width=100),
+            #                 ft.TextField(width=320, ref=txt_comentario, multiline=True, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=100, capitalization=ft.TextCapitalization.WORDS),
+            #             ]),
+            #             ft.Row([
+            #             ft.Text(" ", width=100),
+            #             ft.ElevatedButton(text="Registrar", width=100, on_click=guardar_cliente),
+            #             ft.ElevatedButton(text="Empleados", width=100),
+            #             ft.ElevatedButton(text="Reportes", width=100),
+            #             ]),
+            #         ],
+            #         alignment=ft.MainAxisAlignment.START,
+            #         spacing=15,
+            #     ),
+            # ),
             crear_tab_pagos(),
             ft.Tab(
                 icon=ft.Icons.MAIL,
@@ -1620,7 +1604,6 @@ def main(page: ft.Page):
                 ])
             ),
             crear_tab_cuentas(),
-            crear_tab_clientes(),
             #ft.Tab(
             #    icon=ft.Icons.MESSAGE,
             #    text="Whatsapp",
