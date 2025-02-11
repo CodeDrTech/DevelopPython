@@ -2,7 +2,7 @@ import flet as ft
 from flet import ScrollMode, AppView
 from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
 insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales,\
-obtener_numeros_whatsapp, get_correos_clientes, get_cuentas, insertar_cuenta, actualizar_cuenta
+obtener_numeros_whatsapp, get_clientes_autocomplete, get_cuentas, insertar_cuenta, actualizar_cuenta, get_cliente_por_id
 
 import datetime
 import time
@@ -175,7 +175,7 @@ def main(page: ft.Page):
                     str: Color en formato CSS (hexadecimal) para el estado.
                 """
                 estado_colores = {
-                    "En corte": "#FF0000",     # Rojo
+                    "En corte": "#FF0000",    # Rojo
                     "Pendiente": "#FF8C00",   # Naranja oscuro
                     "Cerca": "#007FFF",       # Azul
                     "Al día": "#008000"       # Verde
@@ -714,6 +714,17 @@ def main(page: ft.Page):
 
             def guardar_nuevo(e):
                 try:
+                    # Validar campos requeridos
+                    if not all([
+                        nombre_edit.value,
+                        whatsapp_edit.value,
+                        fecha_edit.value,
+                        condicion_edit.value,
+                        frecuencia_edit.value
+                    ]):
+                        dlg_modal.open = False
+                        raise ValueError("Todos los campos son requeridos")
+                    
                     if insertar_cliente(
                         nombre_edit.value,
                         whatsapp_edit.value,
@@ -1312,41 +1323,30 @@ def main(page: ft.Page):
 
         # Función para abrir el diálogo "Nuevo" para agregar una cuenta.
         def abrir_dialogo_nuevo(e):
-            # Controles para el formulario de nueva cuenta.
-            # Para el campo "Cliente", usaremos AutoComplete basado en el ID y nombre de los clientes.
-            # Aquí usamos get_correos_clientes() si lo adaptas para retornar también IDs o, alternativamente, otra función.
-            # Por ejemplo, supongamos que tienes una función get_clientes() que retorna lista de clientes.
-            clientes_list = get_cuentas()  # o get_clientes() si deseas todos
-            # Suponiendo que dispones de una función que retorne una lista de tuplas (id, nombre)
-            # En este ejemplo, simulo sugerencias con IDs y nombres:
-            sugerencias = []
-            conn = connect_to_database()
-            if conn:
-                try:
-                    cursor = conn.cursor()
-                    cursor.execute("SELECT id, nombre FROM clientes")
-                    for cid, nombre in cursor.fetchall():
-                        sugerencias.append(ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}"))
-                except sqlite3.Error as e:
-                    print(e)
-                finally:
-                    conn.close()
+            # Obtener sugerencias de clientes (ID y nombre) desde el módulo de consultas
+            clientes_sugerencias = get_clientes_autocomplete()  # Llama a la función externa
+            sugerencias = [
+                ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}")
+                for cid, nombre in clientes_sugerencias
+            ]
             
             auto_complete_cliente = ft.AutoComplete(
-                suggestions=sugerencias,
-                width=300
+                suggestions=sugerencias
             )
-        
-            txt_costo = ft.TextField(label="Costo (en DOP)", width=300, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
+            
+            txt_costo = ft.TextField(
+                label="Costo (en DOP)", 
+                width=300, 
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+            )
             txt_servicio = ft.TextField(label="Servicio", width=300)
             
             def guardar_nueva_cuenta(e):
-                # Se toma el valor del AutoComplete, que debe contener el ID del cliente.
                 cliente_valor = auto_complete_cliente.value
                 if not cliente_valor:
                     mostrar_mensaje("Seleccione un cliente (ID - Nombre).", page)
                     return
-                # Asumimos que el valor es "ID - Nombre" y extraemos el ID.
+                # Se asume que el valor es "ID - Nombre", extraemos el ID
                 cliente_id = int(cliente_valor.split(" - ")[0])
                 servicio = txt_servicio.value.strip()
                 try:
@@ -1355,7 +1355,8 @@ def main(page: ft.Page):
                     mostrar_mensaje("El costo debe ser un número.", page)
                     return
                 
-                if insertar_cuenta(cliente_id, costo, "", servicio):  # Se envía fecha de pago vacía
+                # Aquí se llama a la función de inserción de cuenta, la cual ahora deberá recibir el cliente_id
+                if insertar_cuenta(cliente_id, costo, "", servicio):
                     mostrar_mensaje("Cuenta agregada correctamente.", page)
                     dialogo_nuevo.open = False
                     actualizar_tabla_cuentas()
@@ -1380,34 +1381,32 @@ def main(page: ft.Page):
             page.overlay.append(dialogo_nuevo)
             dialogo_nuevo.open = True
             page.update()
+
         
         def editar_cuenta(e, cuenta_id, page):
             """Abre un diálogo modal para editar una cuenta existente."""
-            cuentas_list = get_cuentas()  # Obtenemos la lista actualizada
+            cuentas_list = get_cuentas()  # Función que ya tienes definida en consultas.py
             cuenta = next(c for c in cuentas_list if c[0] == cuenta_id)
             
-            # Campo para Cliente: AutoComplete con sugerencias de clientes.
-            sugerencias = []
-            conn = connect_to_database()
-            if conn:
-                try:
-                    cursor = conn.cursor()
-                    cursor.execute("SELECT id, nombre FROM clientes")
-                    for cid, nombre in cursor.fetchall():
-                        sugerencias.append(ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}"))
-                except sqlite3.Error as e:
-                    print(e)
-                finally:
-                    conn.close()
+            # Obtener sugerencias de clientes para el AutoComplete
+            clientes_sugerencias = get_clientes_autocomplete()
+            sugerencias = [
+                ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}")
+                for cid, nombre in clientes_sugerencias
+            ]
             
             auto_complete_cliente = ft.AutoComplete(
-                suggestions=sugerencias,
-                value=str(cuenta[1])  # Se asume que el cliente_id se guarda en cuenta[1]
+                suggestions=sugerencias  # Si en la tabla 'cuentas' ya se almacena el cliente o si quieres mostrar otra información, ajusta según corresponda.
             )
-            txt_costo = ft.TextField(label="Costo", value=str(cuenta[2]), 
-                                    input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
+            correo_container = ft.Container(content=auto_complete_cliente, width=320)
+            
+            txt_costo = ft.TextField(
+                label="Costo",
+                value=str(cuenta[2]),
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+            )
             txt_servicio = ft.TextField(label="Servicio", value=cuenta[3])
-        
+            
             def guardar_cambios(e):
                 nuevo_cliente_valor = auto_complete_cliente.value
                 if not nuevo_cliente_valor:
@@ -1438,7 +1437,7 @@ def main(page: ft.Page):
                 modal=True,
                 title=ft.Text("Editar Cuenta"),
                 content=ft.Column([
-                    auto_complete_cliente,
+                    correo_container,
                     txt_costo,
                     txt_servicio,
                 ], spacing=10),
@@ -1450,6 +1449,7 @@ def main(page: ft.Page):
             page.overlay.append(dlg_modal)
             dlg_modal.open = True
             page.update()
+
         
             def close_dlg(e):
                 """Cierra el diálogo modal."""

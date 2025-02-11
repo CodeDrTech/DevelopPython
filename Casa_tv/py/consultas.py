@@ -418,36 +418,21 @@ def obtener_clientes_por_estado(estado: str):
             cursor = conn.cursor()
             query = """
             WITH ultimo_pago AS (
-                SELECT
-                    cliente_id,
-                    MAX(fecha_pago) AS ultima_fecha_pago
-                FROM pagos
-                GROUP BY cliente_id
-            )
-            SELECT 
-                c.nombre,
-                c.whatsapp,
-                c.monto,
-                c.correo,
-                c.comentario,
-                COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
-                DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
-                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
-                CASE 
-                    WHEN ROUND(JULIANDAY('now') - 
-                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
-                    THEN 'En corte'
-                    WHEN ROUND(JULIANDAY('now') - 
-                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
-                    THEN 'Pago pendiente'
-                    WHEN ROUND(JULIANDAY('now') - 
-                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
-                    THEN 'Cerca'
-                    ELSE 'Al día'
-                END AS estado
-            FROM clientes c
-            LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
-            WHERE c.estado = 'Activo' AND (
+            SELECT
+                cliente_id,
+                MAX(fecha_pago) AS ultima_fecha_pago
+            FROM pagos
+            GROUP BY cliente_id
+        )
+        SELECT 
+            c.nombre,
+            c.whatsapp,
+            s.monto,
+            s.correo,
+            c.comentario,
+            COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
+            DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
+                '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
             CASE 
                 WHEN ROUND(JULIANDAY('now') - 
                         JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
@@ -459,13 +444,31 @@ def obtener_clientes_por_estado(estado: str):
                         JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
                 THEN 'Cerca'
                 ELSE 'Al día'
-            END = ?)
-            ORDER BY CASE estado 
-                WHEN 'En corte' THEN 1
-                WHEN 'Pago pendiente' THEN 2
-                WHEN 'Cerca' THEN 3
-                ELSE 4
-            END;
+            END AS estado
+        FROM clientes c
+        LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+        LEFT JOIN suscripcion s ON c.id = s.cliente_id
+        WHERE c.estado = 'Activo' 
+        AND (
+            CASE 
+                WHEN ROUND(JULIANDAY('now') - 
+                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                THEN 'En corte'
+                WHEN ROUND(JULIANDAY('now') - 
+                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                THEN 'Pago pendiente'
+                WHEN ROUND(JULIANDAY('now') - 
+                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                THEN 'Cerca'
+                ELSE 'Al día'
+            END = ?  -- Aquí se filtra por estado dinámicamente
+        )
+        ORDER BY CASE estado 
+            WHEN 'En corte' THEN 1
+            WHEN 'Pago pendiente' THEN 2
+            WHEN 'Cerca' THEN 3
+            ELSE 4
+        END;
             """
             cursor.execute(query, (estado,))
             clientes = cursor.fetchall()
@@ -492,42 +495,44 @@ def obtener_todos_los_clientes():
             cursor = conn.cursor()
             cursor.execute('''
                 WITH ultimo_pago AS (
-                    SELECT
-                        cliente_id,
-                        MAX(fecha_pago) AS ultima_fecha_pago
-                    FROM pagos
-                    GROUP BY cliente_id
-                )
-                SELECT 
-                    c.nombre,
-                    c.whatsapp,
-                    c.monto,
-                    c.correo,
-                    c.comentario,
-                    COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
-                    DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
-                        '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
-                    CASE 
-                        WHEN ROUND(JULIANDAY('now') - 
-                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
-                        THEN 'En corte'
-                        WHEN ROUND(JULIANDAY('now') - 
-                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
-                        THEN 'Pago pendiente'
-                        WHEN ROUND(JULIANDAY('now') - 
-                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
-                        THEN 'Cerca'
-                        ELSE 'Al día'
-                    END AS estado
-                FROM clientes c
-                LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
-                WHERE c.estado = 'Activo'
-                ORDER BY CASE estado 
-                    WHEN 'En corte' THEN 1
-                    WHEN 'Pago pendiente' THEN 2
-                    WHEN 'Cerca' THEN 3
-                    ELSE 4
-                END;
+                SELECT
+                    cliente_id,
+                    MAX(fecha_pago) AS ultima_fecha_pago
+                FROM pagos
+                GROUP BY cliente_id
+            )
+            SELECT 
+                c.nombre,
+                c.whatsapp,
+                s.monto,
+                s.correo,
+                c.comentario,
+                COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
+                DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
+                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
+                CASE 
+                    WHEN ROUND(JULIANDAY('now') - 
+                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                    THEN 'En corte'
+                    WHEN ROUND(JULIANDAY('now') - 
+                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                    THEN 'Pago pendiente'
+                    WHEN ROUND(JULIANDAY('now') - 
+                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                    THEN 'Cerca'
+                    ELSE 'Al día'
+                END AS estado
+            FROM clientes c
+            LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+            LEFT JOIN suscripcion s ON c.id = s.cliente_id
+            WHERE c.estado = 'Activo'
+            ORDER BY CASE estado 
+                WHEN 'En corte' THEN 1
+                WHEN 'Pago pendiente' THEN 2
+                WHEN 'Cerca' THEN 3
+                ELSE 4
+            END;
+
             ''')
             clientes = cursor.fetchall()
             # Convertir tupla a lista para devolver como lista
@@ -637,14 +642,15 @@ def get_correos_clientes():
         finally:
             conn.close()
     return []
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_cuentas():
     """Obtiene todos los registros de la tabla cuentas."""
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, correo, costo, fecha_de_pago, servicio FROM cuentas")
+            cursor.execute("SELECT id, correo, costo, servicio FROM cuentas")
             return cursor.fetchall()
         except sqlite3.Error as e:
             print(f"Error obteniendo cuentas: {e}")
@@ -652,17 +658,18 @@ def get_cuentas():
         finally:
             conn.close()
     return []
-
-def insertar_cuenta(correo: str, costo: int, fecha_de_pago: str, servicio: str) -> bool:
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def insertar_cuenta(correo: str, costo: int, servicio: str) -> bool:
     """Inserta una nueva cuenta en la tabla cuentas."""
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO cuentas (correo, costo, fecha_de_pago, servicio)
-                VALUES (?, ?, ?, ?)
-            """, (correo, costo, fecha_de_pago, servicio))
+                INSERT INTO cuentas (correo, costo, servicio)
+                VALUES (?, ?, ?)
+            """, (correo, costo, servicio))
             conn.commit()
             return True
         except sqlite3.Error as e:
@@ -671,8 +678,9 @@ def insertar_cuenta(correo: str, costo: int, fecha_de_pago: str, servicio: str) 
         finally:
             conn.close()
     return False
-
-def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, fecha_de_pago: str, servicio: str) -> bool:
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, servicio: str) -> bool:
     """Actualiza los datos de una cuenta existente."""
     conn = connect_to_database()
     if conn:
@@ -680,9 +688,9 @@ def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, fecha_de_pago: st
             cursor = conn.cursor()
             cursor.execute("""
                 UPDATE cuentas
-                SET correo = ?, costo = ?, fecha_de_pago = ?, servicio = ?
+                SET correo = ?, costo = ?, servicio = ?
                 WHERE id = ?
-            """, (correo, costo, fecha_de_pago, servicio, cuenta_id))
+            """, (correo, costo, servicio, cuenta_id))
             conn.commit()
             return True
         except sqlite3.Error as e:
@@ -691,3 +699,50 @@ def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, fecha_de_pago: st
         finally:
             conn.close()
     return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_cliente_por_id(cliente_id: int):
+    """
+    Obtiene el registro de un cliente a partir de su ID.
+
+    Args:
+        cliente_id (int): El ID del cliente a buscar.
+
+    Returns:
+        tuple o None: Una tupla con los datos del cliente si se encuentra, o None en caso de error o si no existe.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM clientes WHERE id = ?", (cliente_id,))
+            cliente = cursor.fetchone()
+            return cliente
+        except sqlite3.Error as e:
+            print(f"Error al obtener el cliente con ID {cliente_id}: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_clientes_autocomplete():
+    """
+    Obtiene una lista de tuplas (id, nombre) de todos los clientes para usarse en AutoComplete.
+
+    Returns:
+        list: Lista de tuplas con (id, nombre) de cada cliente.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, nombre FROM clientes")
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo clientes para autocomplete: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+
