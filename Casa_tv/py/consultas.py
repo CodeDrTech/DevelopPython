@@ -332,7 +332,7 @@ def get_estado_pago_cliente(cliente_id: int):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def insertar_cliente(nombre: str, whatsapp: str, fecha_inicio: str, estado: str, 
-                     frecuencia: int, monto: float, correo: str, comentario: str) -> bool:
+                     frecuencia: int, comentario: str) -> bool:
     """
     Inserta un nuevo cliente en la base de datos.
 

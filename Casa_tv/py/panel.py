@@ -937,6 +937,133 @@ def main(page: ft.Page):
         ])
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Función para cerrar el diálogo
+    def cerrar_dialogo(dialog, page):
+        dialog.open = False
+        page.update()
+
+    # Función para abrir el diálogo "Nuevo Cliente" y registrar un nuevo cliente.
+    def abrir_dialogo_nuevo_cliente():
+        # Crear controles para el formulario de nuevo cliente
+        txt_nombre = ft.TextField(label="Nombre", width=320)
+        txt_fecha_inicio = ft.TextField(
+            label="Fecha de inicio",
+            width=320,
+            read_only=True,
+            icon=ft.Icons.CALENDAR_MONTH,
+            on_click=lambda e: mostrar_datepicker_inicio(e)  # Asume que esta función está definida
+        )
+        txt_whatsapp = ft.TextField(
+            label="Whatsapp",
+            width=320,
+            max_length=10,
+            input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+        )
+        dd_estado = ft.Dropdown(
+            label="Condición",
+            value="Activo",
+            options=[
+                ft.dropdown.Option("Activo"),
+                ft.dropdown.Option("Inactivo")
+            ],
+            width=320
+        )
+        txt_frecuencia = ft.TextField(
+            label="Frecuencia de pago (días)",
+            value=30,
+            width=320,
+            max_length=2,
+            input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+        )
+        txt_comentario = ft.TextField(label="Comentario", width=320, multiline=True, max_length=100, capitalization=ft.TextCapitalization.WORDS)
+        
+        # Función para guardar el nuevo cliente.
+        def guardar_nuevo_cliente(e):
+            # Validar que se ingresen datos mínimos.
+            if not txt_nombre.value:
+                mostrar_mensaje("El nombre es requerido.", page)
+                return
+            if not txt_fecha_inicio.value:
+                mostrar_mensaje("Seleccione la fecha de inicio.", page)
+                return
+            if not txt_whatsapp.value:
+                mostrar_mensaje("Ingrese el Whatsapp.", page)
+                return
+            if not txt_frecuencia.value:
+                mostrar_mensaje("Ingrese la frecuencia de pago.", page)
+                return
+            try:
+                frecuencia_val = int(txt_frecuencia.value)
+            except ValueError:
+                mostrar_mensaje("La frecuencia debe ser numérica.", page)
+                return
+
+            # Llama a la función de inserción de cliente (definida en consultas.py)
+            if insertar_cliente(
+                txt_nombre.value,
+                txt_fecha_inicio.value,
+                txt_whatsapp.value,
+                dd_estado.value,
+                frecuencia_val,
+                # Aquí ya no se insertarán los campos de monto y correo, pues se moverán a la tabla suscripcion
+                txt_comentario.value
+            ):
+                mostrar_mensaje("Cliente creado correctamente.", page)
+                dlg_nuevo_cliente.open = False
+                # Actualiza la tabla de clientes
+                # Se asume que la función crear_tabla_clientes() retorna la tabla actualizada
+                # y que existe un contenedor en la UI donde se muestra la tabla.
+                actualizar_tabla(get_clientes())
+            else:
+                mostrar_mensaje("Error al crear cliente.", page)
+            page.update()
+        
+        # Crear el diálogo con el formulario
+        dlg_nuevo_cliente = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Nuevo Cliente"),
+            content=ft.Column([
+                txt_nombre,
+                txt_fecha_inicio,
+                txt_whatsapp,
+                dd_estado,
+                txt_frecuencia,
+                txt_comentario
+            ], spacing=10),
+            actions=[
+                ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_nuevo_cliente, page)),
+                ft.TextButton("Guardar", on_click=guardar_nuevo_cliente)
+            ]
+        )
+        page.overlay.append(dlg_nuevo_cliente)
+        dlg_nuevo_cliente.open = True
+        page.update()
+
+    # Función para crear el tab "Clientes" que incluya el botón "Nuevo" y la tabla con los clientes.
+    def crear_tab_clientes():
+        # Botón para crear un nuevo cliente.
+        btn_nuevo = ft.ElevatedButton(
+            text="Agregar cliente",
+            icon=ft.Icons.ADD,
+            on_click=lambda e: abrir_dialogo_nuevo_cliente()
+        )
+        
+        # Se asume que ya tienes la función crear_tabla_clientes() que retorna la tabla de clientes.
+        tabla_clientes = crear_tabla_clientes()  # Esta función ya debe estar definida en tu módulo
+        
+        # Organizar el contenido del tab.
+        contenido = ft.Column([
+            ft.Row([btn_nuevo], alignment=ft.MainAxisAlignment.START),
+            tabla_clientes
+        ], spacing=20)
+        
+        return ft.Tab(
+            icon=ft.Icons.PERSON,
+            text="Clientes",
+            content=contenido
+        )
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def get_estado_color(estado: str) -> str:
         """
         Retorna el color correspondiente al estado del pago.
@@ -1493,6 +1620,7 @@ def main(page: ft.Page):
                 ])
             ),
             crear_tab_cuentas(),
+            crear_tab_clientes(),
             #ft.Tab(
             #    icon=ft.Icons.MESSAGE,
             #    text="Whatsapp",
