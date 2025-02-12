@@ -1299,7 +1299,7 @@ def main(page: ft.Page):
                     ft.DataRow(
                         cells=[
                             ft.DataCell(ft.Text(str(cuenta[0]))),
-                            ft.DataCell(ft.Text(f"{nombre_cliente} (ID: {cuenta[1]})")),
+                            ft.DataCell(ft.Text(cuenta[1])),
                             ft.DataCell(ft.Text(f"${cuenta[2]:.2f}")),
                             ft.DataCell(ft.Text(cuenta[3])),
                             ft.DataCell(editar_btn)
@@ -1309,59 +1309,61 @@ def main(page: ft.Page):
             tabla_container.content = ft.DataTable(
                 columns=[
                     ft.DataColumn(ft.Text("ID")),
-                    ft.DataColumn(ft.Text("Cliente")),
+                    ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Costo")),
                     ft.DataColumn(ft.Text("Servicio")),
                     ft.DataColumn(ft.Text("Acciones"))
                 ],
                 rows=rows,
                 border=ft.border.all(1, ft.Colors.GREY_400),
-                border_radius=10
+                border_radius=10,
+                vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+                horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400)
             )
             page.update()
 
 
         # Función para abrir el diálogo "Nuevo" para agregar una cuenta.
-        def abrir_dialogo_nuevo(e):
-            # Obtener sugerencias de clientes (ID y nombre) desde el módulo de consultas
-            clientes_sugerencias = get_clientes_autocomplete()  # Llama a la función externa
-            sugerencias = [
-                ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}")
-                for cid, nombre in clientes_sugerencias
-            ]
+        def abrir_dialogo_nuevo(e):            
             
-            auto_complete_cliente = ft.AutoComplete(
-                suggestions=sugerencias
-            )
+            txt_correo = ft.TextField(label="Correo", width=300)
             
             txt_costo = ft.TextField(
                 label="Costo (en DOP)", 
                 width=300, 
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
-            txt_servicio = ft.TextField(label="Servicio", width=300)
+            txt_servicio = ft.TextField(label="Servicio (Netflix, HBO)", width=300, capitalization=ft.TextCapitalization.WORDS)
             
             def guardar_nueva_cuenta(e):
-                cliente_valor = auto_complete_cliente.value
-                if not cliente_valor:
-                    mostrar_mensaje("Seleccione un cliente (ID - Nombre).", page)
-                    return
-                # Se asume que el valor es "ID - Nombre", extraemos el ID
-                cliente_id = int(cliente_valor.split(" - ")[0])
-                servicio = txt_servicio.value.strip()
                 try:
-                    costo = int(txt_costo.value.strip())
-                except ValueError:
-                    mostrar_mensaje("El costo debe ser un número.", page)
-                    return
-                
-                # Aquí se llama a la función de inserción de cuenta, la cual ahora deberá recibir el cliente_id
-                if insertar_cuenta(cliente_id, costo, "", servicio):
-                    mostrar_mensaje("Cuenta agregada correctamente.", page)
-                    dialogo_nuevo.open = False
-                    actualizar_tabla_cuentas()
-                else:
-                    mostrar_mensaje("Error al agregar cuenta.", page)
+                    # Validación de campos
+                    if not txt_correo.value:
+                        mostrar_mensaje("El campo correo es requerido.")
+                        return
+                    if not txt_costo.value:
+                        mostrar_mensaje("El campo costo es requerido.")
+                        return
+                    if not txt_servicio.value:
+                        mostrar_mensaje("El campo servicio es requerido.")
+                        return
+
+                    # Conversión de tipos
+                    try:
+                        costo = int(txt_costo.value)
+                    except ValueError:
+                        mostrar_mensaje("El campo costo debe ser un número válido.")
+                        return
+
+                    # Llamada a insertar_cuenta
+                    if insertar_cuenta(txt_correo.value, costo, txt_servicio.value):
+                        mostrar_mensaje("Cuenta agregada correctamente.")
+                        dialogo_nuevo.open = False
+                        actualizar_tabla_cuentas()
+                    else:
+                        mostrar_mensaje("Error al agregar cuenta.")
+                except Exception as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}")                
                 page.update()
             
             dialogo_nuevo = ft.AlertDialog(
@@ -1369,7 +1371,7 @@ def main(page: ft.Page):
                 title=ft.Text("Agregar Nueva Cuenta"),
                 content=ft.Column([
                     ft.Text("Ingrese los datos de la cuenta:"),
-                    auto_complete_cliente,
+                    txt_correo,
                     txt_costo,
                     txt_servicio,
                 ], spacing=10),
@@ -1398,7 +1400,7 @@ def main(page: ft.Page):
             auto_complete_cliente = ft.AutoComplete(
                 suggestions=sugerencias  # Si en la tabla 'cuentas' ya se almacena el cliente o si quieres mostrar otra información, ajusta según corresponda.
             )
-            correo_container = ft.Container(content=auto_complete_cliente, width=320)
+            correo_container = ft.Container(content=auto_complete_cliente, width=300, border=ft.border.all(1, ft.Colors.BLACK), border_radius=10)
             
             txt_costo = ft.TextField(
                 label="Costo",
@@ -1462,7 +1464,6 @@ def main(page: ft.Page):
                 content=ft.Column([
                     correo_container,
                     txt_costo,
-                    txt_fecha_pago,
                     txt_servicio,
                 ], spacing=10),
                 actions=[
