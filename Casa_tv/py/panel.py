@@ -342,7 +342,7 @@ def main(page: ft.Page):
         )
 
         # Botón para enviar correo
-        enviar_correo_button = ft.ElevatedButton("Enviar correo estado", icon=ft.Icons.EMAIL, on_click=enviar_correo)
+        enviar_correo_button = ft.ElevatedButton("Enviar correo", icon=ft.Icons.EMAIL, on_click=enviar_correo)
         
         # Botón para actializar los datos de las credenciales de correo para enviar el correo
         btn_actualizar_credenciales = ft.ElevatedButton("Actualizar credenciales", icon=ft.Icons.UPDATE, on_click=abrir_dialogo_credenciales)
@@ -1259,7 +1259,7 @@ def main(page: ft.Page):
             text="Aplicar Pagos",
             icon=ft.Icons.PAYMENT,
             content=ft.Column([
-                ft.Text("Registrar Pago", size=20),
+                ft.Text("Registrar Pago", size=20, weight="bold"),
                 auto_complete_container,
                 campo_fecha,
                 campo_pago,
@@ -1273,6 +1273,7 @@ def main(page: ft.Page):
         )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     def crear_tab_cuentas():
         """
         Crea el tab "Cuentas" que permite agregar nuevas cuentas mediante un diálogo
@@ -1280,16 +1281,59 @@ def main(page: ft.Page):
         """
         # Contenedor donde se mostrará la tabla de cuentas.
         tabla_container = ft.Container()
+        correo_seleccionado = None
+        cuenta_seleccionada, _cuentas = None
         
-        # Función para actualizar la tabla de cuentas en el tab.
-        def actualizar_tabla_cuentas():
-            cuentas_list = get_cuentas()
+        def limpiar_y_recrear_auto_complete_cuentas(auto_complete_container, cuentas):
+            """
+            Limpia y recrea el widget AutoComplete para cuentas después de crear o actualizar una cuenta,
+            para que el usuario pueda buscar y filtrar la tabla de cuentas por el correo.
+
+            Args:
+                auto_complete_container: Contenedor donde se muestra el AutoComplete.
+                cuentas: Lista actualizada de cuentas (cada cuenta: (id, correo, costo, servicio)).
+            """
+            nonlocal cuenta_seleccionada
+            cuenta_seleccionada = None
+            # Obtener los correos únicos de la lista de cuentas
+            correos = sorted(set(c[1] for c in cuentas))
+            # Recrear el AutoComplete con las sugerencias actualizadas
+            auto_complete = ft.AutoComplete(
+                suggestions=[
+                    ft.AutoCompleteSuggestion(key=correo, value=correo)
+                    for correo in correos
+                ],
+                on_select=on_cuenta_selected  # Esta función filtra la tabla de cuentas según el correo seleccionado
+            )
+            auto_complete_container.content = auto_complete
+            auto_complete_container.update()
+            
+            page.update()
+
+
+        def on_cuenta_selected(e):
+            """
+            Actualiza la información cuando se selecciona un correo en el AutoComplete de cuentas.
+            Filtra la tabla de cuentas para mostrar únicamente aquellas cuyo correo coincide con
+            el valor seleccionado.
+            """
+            nonlocal cuenta_seleccionada, _cuentas
+            cuenta_seleccionada = e.selection.value
+            if cuenta_seleccionada:
+                filtrados = [c for c in _cuentas if c[1].lower() == cuenta_seleccionada.lower()]
+                actualizar_tabla_cuentas(filtrados)
+            else:
+                actualizar_tabla_cuentas()
+            page.update()
+
+        
+        
+        # Función para actualizar la tabla de cuentas; acepta opcionalmente una lista filtrada.
+        def actualizar_tabla_cuentas(cuentas_filtradas=None):
+            cuentas_list = cuentas_filtradas if cuentas_filtradas is not None else get_cuentas()
             rows = []
             for cuenta in cuentas_list:
-                # cuenta: (id, cliente_id, costo, servicio) – dependiendo de la definición en consultas.py
-                # Obtener el nombre del cliente propietario
-                cliente = get_cliente_por_id(cuenta[1])
-                nombre_cliente = cliente[1] if cliente else "Desconocido"
+                # Se asume que get_cuentas() devuelve registros con: (id, correo, costo, servicio)
                 editar_btn = ft.IconButton(
                     icon=ft.Icons.EDIT,
                     tooltip="Editar cuenta",
@@ -1386,49 +1430,39 @@ def main(page: ft.Page):
 
         
         def editar_cuenta(e, cuenta_id, page):
-            """Abre un diálogo modal para editar una cuenta existente."""
-            cuentas_list = get_cuentas()  # Función que ya tienes definida en consultas.py
+            """Abre un diálogo modal para editar una cuenta existente, usando TextFields para actualizar los datos."""
+            # Obtener la lista actualizada de cuentas y buscar la cuenta a editar.
+            cuentas_list = get_cuentas()  # Se asume que get_cuentas() retorna registros con: (id, correo, costo, servicio)
             cuenta = next(c for c in cuentas_list if c[0] == cuenta_id)
             
-            # Obtener sugerencias de clientes para el AutoComplete
-            clientes_sugerencias = get_clientes_autocomplete()
-            sugerencias = [
-                ft.AutoCompleteSuggestion(key=str(cid), value=f"{cid} - {nombre}")
-                for cid, nombre in clientes_sugerencias
-            ]
-            
-            auto_complete_cliente = ft.AutoComplete(
-                suggestions=sugerencias  # Si en la tabla 'cuentas' ya se almacena el cliente o si quieres mostrar otra información, ajusta según corresponda.
-            )
-            correo_container = ft.Container(content=auto_complete_cliente, width=300, border=ft.border.all(1, ft.Colors.BLACK), border_radius=10)
-            
+            # Crear TextFields para cada campo (correo, costo y servicio)
+            txt_correo = ft.TextField(label="Correo", value=cuenta[1], width=320, multiline=True)
             txt_costo = ft.TextField(
-                label="Costo",
+                label="Costo (en DOP)",
                 value=str(cuenta[2]),
+                width=320,
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
-            txt_servicio = ft.TextField(label="Servicio", value=cuenta[3])
+            txt_servicio = ft.TextField(label="Servicio", value=cuenta[3], width=320)
             
             def guardar_cambios(e):
-                nuevo_cliente_valor = auto_complete_cliente.value
-                if not nuevo_cliente_valor:
-                    mostrar_mensaje("Seleccione un cliente.", page)
-                    return
-                nuevo_cliente_id = int(nuevo_cliente_valor.split(" - ")[0])
+                nuevo_correo = txt_correo.value.strip()
                 nuevo_servicio = txt_servicio.value.strip()
                 try:
                     nuevo_costo = int(txt_costo.value.strip())
                 except ValueError:
-                    mostrar_mensaje("El costo debe ser un número.", page)
+                    mostrar_mensaje("El costo debe ser un número.")
                     return
                 
-                if actualizar_cuenta(cuenta_id, nuevo_cliente_id, nuevo_costo, "", nuevo_servicio):
+                # Llamar a la función actualizar_cuenta del módulo de consultas, que debe actualizar la cuenta
+                # con los nuevos valores: (cuenta_id, correo, costo, servicio).
+                if actualizar_cuenta(cuenta_id, nuevo_correo, nuevo_costo, nuevo_servicio):
                     dlg_modal.open = False
-                    actualizar_tabla_cuentas()
+                    actualizar_tabla_cuentas()  # Se asume que esta función refresca la tabla de cuentas en la UI
                     page.update()
-                    mostrar_mensaje("Cuenta actualizada correctamente.", page)
+                    mostrar_mensaje("Cuenta actualizada correctamente.")
                 else:
-                    mostrar_mensaje("Error al actualizar la cuenta.", page)
+                    mostrar_mensaje("Error al actualizar la cuenta.")
                 page.update()
             
             def close_dlg(e):
@@ -1439,7 +1473,7 @@ def main(page: ft.Page):
                 modal=True,
                 title=ft.Text("Editar Cuenta"),
                 content=ft.Column([
-                    correo_container,
+                    txt_correo,
                     txt_costo,
                     txt_servicio,
                 ], spacing=10),
@@ -1453,48 +1487,57 @@ def main(page: ft.Page):
             page.update()
 
         
-            def close_dlg(e):
-                """Cierra el diálogo modal."""
-                dlg_modal.open = False
-                e.control.page.update()
-        
-            dlg_modal = ft.AlertDialog(
-                modal=True,
-                title=ft.Text("Editar Cuenta"),
-                content=ft.Column([
-                    correo_container,
-                    txt_costo,
-                    txt_servicio,
-                ], spacing=10),
-                actions=[
-                    ft.TextButton("Cancelar", on_click=close_dlg),
-                    ft.TextButton("Guardar", on_click=guardar_cambios)
-                ]
-            )
-            page.overlay.append(dlg_modal)
-            dlg_modal.open = True
-            page.update()
-        
         def cerrar_dialogo(dialog, page):
             dialog.open = False
             page.update()
         
         # Botón "Nuevo"
         btn_nuevo = ft.ElevatedButton(
-            text="Nuevo",
+            text="Nuev cuenta",
             icon=ft.Icons.ADD,
             on_click=abrir_dialogo_nuevo
         )
         
+        # Función para filtrar la tabla por correo, basada en el valor seleccionado en el AutoComplete.
+        def on_autocomplete_selected(e):
+            nonlocal correo_seleccionado
+            correo_seleccionado = e.selection.value  # Se obtiene el correo seleccionado
+            if correo_seleccionado:
+                cuentas = get_cuentas()  # Obtener la lista completa de cuentas
+                filtrados = [c for c in cuentas if c[1].lower() == correo_seleccionado.lower()]
+                actualizar_tabla_cuentas(filtrados)
+            else:
+                actualizar_tabla_cuentas()
+        
+        # Crear el AutoComplete para correos, usando los datos de get_cuentas().
+        # Se extrae el campo "correo" de cada registro.
+        correos = get_cuentas()
+        auto_complete = ft.AutoComplete(
+            suggestions=[
+                ft.AutoCompleteSuggestion(key=cuenta[1], value=cuenta[1])
+                for cuenta in correos
+            ],
+            on_select=on_autocomplete_selected,
+            suggestions_max_height=150,
+        )
+
+        auto_complete_container = ft.Container(
+            content=auto_complete,
+            width=320,
+            border=ft.border.all(1, ft.Colors.BLACK),
+            border_radius=10
+        )
+        
         contenido_tab = ft.Column([
-            ft.Row([btn_nuevo], alignment=ft.MainAxisAlignment.START),
             ft.Text("Listado de Cuentas", size=20, weight="bold"),
+            
+            ft.Row([auto_complete_container, btn_nuevo], alignment=ft.MainAxisAlignment.START),
             tabla_container
         ], spacing=20)
         
         actualizar_tabla_cuentas()
         return ft.Tab(
-            icon=ft.Icons.ACCOUNT_BALANCE,
+            icon=ft.Icons.STREAM,
             text="Cuentas",
             content=contenido_tab
         )
@@ -1511,7 +1554,7 @@ def main(page: ft.Page):
                 icon=ft.Icons.HOME,
                 text="Vencimientos",
                 content=ft.Column([
-                    ft.Text("Busqueda por nombre", size=20),
+                    ft.Text("Busqueda por nombre", size=20, weight="bold"),
                     crear_tabla_vencimientos(),
                     
                 ])
@@ -1520,7 +1563,7 @@ def main(page: ft.Page):
                 icon=ft.Icons.PERSON_ADD,
                 text="Clientes",
                 content=ft.Column([
-                    ft.Text("Clientes", size=20),
+                    ft.Text("Clientes", size=20, weight="bold"),
                     crear_tabla_clientes(),
                 ]),
             ),
@@ -1598,9 +1641,9 @@ def main(page: ft.Page):
             crear_tab_pagos(),
             ft.Tab(
                 icon=ft.Icons.MAIL,
-                text="Envio de estados",
+                text="Envio de correos",
                 content=ft.Column([
-                    ft.Text("Envio de estados", size=20),
+                    ft.Text("Envio de estados por correo", size=20, weight="bold"),
                     envio_estados(),                    
                 ])
             ),
