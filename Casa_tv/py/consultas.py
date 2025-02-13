@@ -164,8 +164,7 @@ def get_estado_pagos():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
-    """
-    Registra un nuevo pago y actualiza el saldo pendiente y saldo neto del cliente,
+    """Registra un nuevo pago y actualiza el saldo pendiente y saldo neto del cliente,
     utilizando como cuota la suma de los montos de sus suscripciones (ya que un cliente
     puede tener varias suscripciones). Se valida que la diferencia entre la frecuencia de pago
     y los días transcurridos desde el último pago (o la fecha de inicio si no hay pagos previos)
