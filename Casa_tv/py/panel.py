@@ -737,11 +737,13 @@ def main(page: ft.Page):
                         
                         # Actualizar datos
                         nonlocal clientes
+                        limpiar_y_recrear_auto_complete(auto_complete_container, clientes)
+                        
                         clientes = get_clientes()
                         actualizar_tabla(clientes)
                         actualizar_autocomplete()
                         
-                        limpiar_y_recrear_auto_complete(auto_complete_container, clientes)
+                        
                         
                         nonlocal tabla_vencimientos
                         tabla_vencimientos = crear_tabla_vencimientos()
@@ -859,14 +861,14 @@ def main(page: ft.Page):
                     ):
                         dlg_modal.open = False
                         
-                        # Actualizar datos
-                        nonlocal clientes
+                        nonlocal clientes                        
+                        # Limpia y recrea el AutoComplete
+                        limpiar_y_recrear_auto_complete(auto_complete_container, clientes)
+                        
+                        
                         clientes = get_clientes()
                         actualizar_tabla(clientes)
                         actualizar_autocomplete()
-                        
-                        # Limpia y recrea el AutoComplete
-                        limpiar_y_recrear_auto_complete(auto_complete_container, clientes)
                         
                         # Actualizar tabla de vencimientos
                         nonlocal tabla_vencimientos
@@ -1282,7 +1284,8 @@ def main(page: ft.Page):
         # Contenedor donde se mostrará la tabla de cuentas.
         tabla_container = ft.Container()
         correo_seleccionado = None
-        cuenta_seleccionada, _cuentas = None
+        cuenta_seleccionada = None
+        cuentas_auto_complete = None
         
         def limpiar_y_recrear_auto_complete_cuentas(auto_complete_container, cuentas):
             """
@@ -1310,17 +1313,28 @@ def main(page: ft.Page):
             
             page.update()
 
-
+        def actualizar_autocomplete():
+            """Actualiza sugerencias del AutoComplete."""
+            cuentas = get_cuentas()
+            if auto_complete and auto_complete_container:
+                correos = sorted(set(c[1] for c in cuentas))
+                auto_complete.suggestions = [
+                    ft.AutoCompleteSuggestion(key=correo, value=correo) 
+                    for correo in correos
+                ]
+                auto_complete_container.content = auto_complete
+                auto_complete_container.update()
+                
         def on_cuenta_selected(e):
             """
             Actualiza la información cuando se selecciona un correo en el AutoComplete de cuentas.
             Filtra la tabla de cuentas para mostrar únicamente aquellas cuyo correo coincide con
             el valor seleccionado.
             """
-            nonlocal cuenta_seleccionada, _cuentas
+            nonlocal cuenta_seleccionada, cuentas_auto_complete
             cuenta_seleccionada = e.selection.value
             if cuenta_seleccionada:
-                filtrados = [c for c in _cuentas if c[1].lower() == cuenta_seleccionada.lower()]
+                filtrados = [c for c in cuentas_auto_complete if c[1].lower() == cuenta_seleccionada.lower()]
                 actualizar_tabla_cuentas(filtrados)
             else:
                 actualizar_tabla_cuentas()
@@ -1402,8 +1416,14 @@ def main(page: ft.Page):
                     # Llamada a insertar_cuenta
                     if insertar_cuenta(txt_correo.value, costo, txt_servicio.value):
                         mostrar_mensaje("Cuenta agregada correctamente.")
+                        
                         dialogo_nuevo.open = False
+                        
+                        actualizar_autocomplete()
+                        
                         actualizar_tabla_cuentas()
+                        
+                        limpiar_y_recrear_auto_complete_cuentas(cuentas_auto_complete, get_cuentas())
                     else:
                         mostrar_mensaje("Error al agregar cuenta.")
                 except Exception as ex:
@@ -1458,7 +1478,12 @@ def main(page: ft.Page):
                 # con los nuevos valores: (cuenta_id, correo, costo, servicio).
                 if actualizar_cuenta(cuenta_id, nuevo_correo, nuevo_costo, nuevo_servicio):
                     dlg_modal.open = False
+                    
+                    actualizar_autocomplete()
+                    
                     actualizar_tabla_cuentas()  # Se asume que esta función refresca la tabla de cuentas en la UI
+                    
+                    limpiar_y_recrear_auto_complete_cuentas(cuentas_auto_complete, get_cuentas())
                     page.update()
                     mostrar_mensaje("Cuenta actualizada correctamente.")
                 else:
