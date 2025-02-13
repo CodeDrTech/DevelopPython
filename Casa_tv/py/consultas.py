@@ -44,6 +44,50 @@ def get_clientes():
     return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_clientes_pagos():
+    """
+    Obtiene todos los clientes ordenados por fecha de inicio descendente.
+
+    Returns:
+        list: Lista de tuplas con datos de clientes:
+            - id_cliente (int)
+            - nombre (str)
+            - fecha_inicio (str)
+            - whatsapp (str)
+            - estado (str)
+            - frecuencia_pago (int)
+            - comentario (str)
+        list vacía si hay error.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT 
+                    id,
+                    nombre,
+                    inicio,
+                    whatsapp,
+                    estado,
+                    frecuencia,
+                    comentario,
+                    saldo_pendiente,
+                    saldo_neto
+                FROM clientes 
+                WHERE estado = 'Activo'
+                ORDER BY date(inicio) DESC;
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error consultando clientes: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio: str, estado: str, frecuencia: int, comentario: str) -> bool:
     """

@@ -1,6 +1,6 @@
 import flet as ft
 from flet import ScrollMode, AppView
-from consultas import get_clientes, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
+from consultas import get_clientes, get_clientes_pagos, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
 insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales,\
 obtener_numeros_whatsapp, get_clientes_autocomplete, get_cuentas, insertar_cuenta, actualizar_cuenta, get_cliente_por_id
 
@@ -870,6 +870,8 @@ def main(page: ft.Page):
                         actualizar_tabla(clientes)
                         actualizar_autocomplete()
                         
+                        
+                        
                         # Actualizar tabla de vencimientos
                         nonlocal tabla_vencimientos
                         tabla_vencimientos = crear_tabla_vencimientos()
@@ -1101,7 +1103,7 @@ def main(page: ft.Page):
         # Variables de estado
         info_container = ft.Container()
         cliente_seleccionado = None
-        clientes = get_clientes()  # Se obtiene la lista de clientes actualizada
+        clientes = get_clientes_pagos()  # Se obtiene la lista de clientes actualizada
         txt_fecha_pago = ft.Ref[ft.TextField]()
         txt_campo_pago = ft.Ref[ft.TextField]()
         tabla_vencimientos = None  # Referencia a tabla_vencimientos
@@ -1224,7 +1226,7 @@ def main(page: ft.Page):
                 
                 if insertar_pago(cliente_id, txt_fecha_pago.current.value, monto_pagado):
                     mostrar_mensaje("Pago registrado correctamente")
-                    limpiar_y_recrear_auto_complete_pago(auto_complete_container, get_clientes())
+                    limpiar_y_recrear_auto_complete_pago(auto_complete_container, get_clientes_pagos())
                     txt_fecha_pago.current.value = ""
                     txt_campo_pago.current.value = ""
                     
