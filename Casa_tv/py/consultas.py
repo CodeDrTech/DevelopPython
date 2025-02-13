@@ -14,8 +14,6 @@ def get_clientes():
             - whatsapp (str)
             - estado (str)
             - frecuencia_pago (int)
-            - monto (float)
-            - correo (str)
             - comentario (str)
         list vacía si hay error.
     """
@@ -168,10 +166,11 @@ def get_estado_pagos():
 def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
     """
     Registra un nuevo pago y actualiza el saldo pendiente y saldo neto del cliente,
-    siempre que la diferencia entre la frecuencia de pago y los días transcurridos
-    desde el último pago o la fecha de inicio sea de 3 días o menos. Si la diferencia
-    es mayor, se rechaza el pago y se requiere actualizar la fecha de inicio del cliente
-    (reiniciar el contrato).
+    utilizando como cuota la suma de los montos de sus suscripciones (ya que un cliente
+    puede tener varias suscripciones). Se valida que la diferencia entre la frecuencia de pago
+    y los días transcurridos desde el último pago (o la fecha de inicio si no hay pagos previos)
+    sea de 3 días o menos. Si la diferencia es mayor, se rechaza el pago y se requiere actualizar
+    la fecha de inicio del cliente (reiniciar el contrato).
 
     Args:
         cliente_id (int): ID del cliente.
@@ -181,40 +180,41 @@ def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
     Returns:
         bool: True si la inserción fue exitosa, False en caso contrario.
     """
+    import datetime, sqlite3
+
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             
-            # Obtener datos del cliente: nombre, fecha de inicio, frecuencia, monto (cuota), saldo_pendiente.
+            # Obtener datos del cliente y la suma de los montos de sus suscripciones
             cursor.execute('''
-                SELECT nombre, inicio, frecuencia, monto, saldo_pendiente 
-                FROM clientes 
-                WHERE id = ?
+                SELECT c.nombre, c.inicio, c.frecuencia, COALESCE(SUM(s.monto),0) AS cuota, c.saldo_pendiente
+                FROM clientes c
+                JOIN suscripcion s ON c.id = s.cliente_id
+                WHERE c.id = ?
+                GROUP BY c.id, c.nombre, c.inicio, c.frecuencia, c.saldo_pendiente
             ''', (cliente_id,))
-            cliente = cursor.fetchone()
-            if not cliente:
-                raise ValueError("Cliente no encontrado")
-                
-            nombre_cliente, fecha_inicio, frecuencia, monto, saldo_pendiente = cliente
+            resultado = cursor.fetchone()
+            if not resultado:
+                raise ValueError("Cliente o suscripciones no encontradas")
+            nombre_cliente, fecha_inicio, frecuencia, cuota, saldo_pendiente = resultado
             
-            # Convertir fechas a objetos datetime.
+            # Convertir las fechas a objetos datetime.
             fecha_inicio_obj = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d')
             fecha_pago_obj = datetime.datetime.strptime(fecha_pago, '%Y-%m-%d')
             
             # Obtener la fecha del último pago realizado por el cliente.
             cursor.execute('''
-                SELECT MAX(fecha_pago) 
-                FROM pagos 
+                SELECT MAX(fecha_pago)
+                FROM pagos
                 WHERE cliente_id = ?
             ''', (cliente_id,))
             ultima_fecha_pago = cursor.fetchone()[0]
             
             if ultima_fecha_pago:
-                # Si existe un pago previo, usar la fecha del último pago.
                 fecha_base_obj = datetime.datetime.strptime(ultima_fecha_pago, '%Y-%m-%d')
             else:
-                # Si no hay pagos previos, usar la fecha de inicio.
                 fecha_base_obj = fecha_inicio_obj
             
             # Calcular los días transcurridos desde la fecha base hasta la fecha de pago.
@@ -223,30 +223,28 @@ def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
             # Calcular la diferencia entre la frecuencia de pago y los días transcurridos.
             diferencia = abs(frecuencia - dias_transcurridos)
             
-            # Verificar si la diferencia es mayor que 3 días.
+            # Validar que la diferencia sea de 3 días o menos.
             if diferencia > 3:
-                raise ValueError("La diferencia entre la frecuencia de pago y los días transcurridos "
-                                 "es mayor a 3 días. Por favor, actualice la fecha de inicio del cliente "
-                                 "para reiniciar el contrato.")
+                raise ValueError("La diferencia entre la frecuencia de pago y los días transcurridos es mayor a 3 días. "
+                                 "Por favor, actualice la fecha de inicio del cliente para reiniciar el contrato.")
             
-            # Calcular el total que debe pagar en el período actual.
-            total_a_pagar = monto + saldo_pendiente
+            # Calcular el total a pagar en el período actual.
+            total_a_pagar = cuota + saldo_pendiente
             
             # Calcular el nuevo saldo pendiente (lo que no se cubre del total a pagar).
             nuevo_saldo_pendiente = max(0, total_a_pagar - monto_pagado)
+            # El saldo neto se actualiza como la suma de la cuota y el nuevo saldo pendiente.
+            nuevo_saldo_neto = cuota + nuevo_saldo_pendiente
             
-            # El saldo neto se actualiza como la suma de la cuota fija y el nuevo saldo pendiente.
-            nuevo_saldo_neto = monto + nuevo_saldo_pendiente
-            
-            # Registrar el pago en la tabla 'pagos'.
+            # Registrar el pago en la tabla 'pagos' (sin almacenar el nombre, ya que se relaciona por cliente_id).
             cursor.execute('''
-                INSERT INTO pagos (cliente_id, nombre_cliente, fecha_pago)
-                VALUES (?, ?, ?)
-            ''', (cliente_id, nombre_cliente, fecha_pago))
+                INSERT INTO pagos (cliente_id, fecha_pago)
+                VALUES (?, ?)
+            ''', (cliente_id, fecha_pago))
             
             # Actualizar el registro del cliente con el nuevo saldo pendiente y saldo neto.
             cursor.execute('''
-                UPDATE clientes 
+                UPDATE clientes
                 SET saldo_pendiente = ?, saldo_neto = ?
                 WHERE id = ?
             ''', (nuevo_saldo_pendiente, nuevo_saldo_neto, cliente_id))
@@ -267,58 +265,68 @@ def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_estado_pago_cliente(cliente_id: int):
     """
-    Obtiene estado de pago para un cliente específico.
+    Obtiene el estado de pago para un cliente específico.
     
     Args:
         cliente_id (int): ID del cliente
 
     Returns:
-        tuple: Datos del cliente o None si no existe
+        tuple: Datos del cliente o None si no existe.
+               Se espera que la consulta retorne los siguientes campos:
+               0: id, 1: nombre, 2: inicio, 3: whatsapp, 4: estado, 5: frecuencia, 
+               6: monto, 7: correo, 8: comentario, 9: fecha_base, 10: proximo_pago,
+               11: días_transcurridos, 12: estado_pago, 13: saldo_pendiente, 14: saldo_neto
     """
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute('''
+            query = '''
                 WITH ultimo_pago AS (
-                    SELECT cliente_id, MAX(fecha_pago) AS ultima_fecha_pago
-                    FROM pagos 
-                    WHERE cliente_id = ?
-                    GROUP BY cliente_id
-                )
-                SELECT 
-                    c.id,
-                    c.nombre,
-                    c.inicio,
-                    c.whatsapp,
-                    c.estado,
-                    c.frecuencia,
-                    c.monto,
-                    c.correo,
-                    c.comentario,
-                    COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,
-                    DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
-                        '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
-                    ROUND(JULIANDAY('now') - 
-                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) AS dias_transcurridos,
-                    CASE 
-                        WHEN ROUND(JULIANDAY('now') - 
-                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                SELECT cliente_id, MAX(fecha_pago) AS ultima_fecha_pago
+                FROM pagos 
+                WHERE cliente_id = :cid
+                GROUP BY cliente_id
+            ),
+            sus AS (
+                SELECT cliente_id, 
+                    SUM(monto) AS pago_mensual,
+                    group_concat(correo, ', ') AS correos
+                FROM suscripcion
+                WHERE cliente_id = :cid
+                GROUP BY cliente_id
+            )
+            SELECT 
+                c.id,
+                c.nombre,
+                c.inicio,
+                c.whatsapp,
+                c.estado,
+                c.frecuencia,
+                IFNULL(s.pago_mensual, 0) AS pago_mensual,
+                IFNULL(s.correos, '') AS correos,
+                c.comentario,
+                COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,
+                DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
+                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
+                ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) AS dias_transcurridos,
+                CASE 
+                    WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
                         THEN 'En corte'
-                        WHEN ROUND(JULIANDAY('now') - 
-                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                    WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
                         THEN 'Pendiente'
-                        WHEN ROUND(JULIANDAY('now') - 
-                                JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                    WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
                         THEN 'Cerca'
-                        ELSE 'Al día'
-                    END AS estado_pago,
-                    c.saldo_pendiente,
-                    c.saldo_neto
-                FROM clientes c
-                LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
-                WHERE c.id = ?
-            ''', (cliente_id, cliente_id))
+                    ELSE 'Al día'
+                END AS estado_pago,
+                c.saldo_pendiente,
+                c.saldo_neto
+            FROM clientes c
+            LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
+            LEFT JOIN sus s ON c.id = s.cliente_id
+            WHERE c.id = :cid;
+            '''
+            cursor.execute(query, {"cid": cliente_id})
             return cursor.fetchone()
         except sqlite3.Error as e:
             print(f"Error consultando cliente: {e}")
@@ -326,7 +334,6 @@ def get_estado_pago_cliente(cliente_id: int):
         finally:
             conn.close()
     return None
-
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def insertar_cliente(nombre: str, whatsapp: str, fecha_inicio: str, estado: str, 

@@ -1204,7 +1204,6 @@ def main(page: ft.Page):
                             )
                         ])
                         page.update()
-            
         def aplicar_pago(e):
             """Registra pago y limpia selección"""
             try:
@@ -1287,31 +1286,31 @@ def main(page: ft.Page):
         cuenta_seleccionada = None
         cuentas_auto_complete = None
         
-        def limpiar_y_recrear_auto_complete_cuentas(auto_complete_container, cuentas):
-            """
-            Limpia y recrea el widget AutoComplete para cuentas después de crear o actualizar una cuenta,
-            para que el usuario pueda buscar y filtrar la tabla de cuentas por el correo.
+        # def limpiar_y_recrear_auto_complete_cuentas(auto_complete_container, cuentas):
+        #     """
+        #     Limpia y recrea el widget AutoComplete para cuentas después de crear o actualizar una cuenta,
+        #     para que el usuario pueda buscar y filtrar la tabla de cuentas por el correo.
 
-            Args:
-                auto_complete_container: Contenedor donde se muestra el AutoComplete.
-                cuentas: Lista actualizada de cuentas (cada cuenta: (id, correo, costo, servicio)).
-            """
-            nonlocal cuenta_seleccionada
-            cuenta_seleccionada = None
-            # Obtener los correos únicos de la lista de cuentas
-            correos = sorted(set(c[1] for c in cuentas))
-            # Recrear el AutoComplete con las sugerencias actualizadas
-            auto_complete = ft.AutoComplete(
-                suggestions=[
-                    ft.AutoCompleteSuggestion(key=correo, value=correo)
-                    for correo in correos
-                ],
-                on_select=on_cuenta_selected  # Esta función filtra la tabla de cuentas según el correo seleccionado
-            )
-            auto_complete_container.content = auto_complete
-            auto_complete_container.update()
+        #     Args:
+        #         auto_complete_container: Contenedor donde se muestra el AutoComplete.
+        #         cuentas: Lista actualizada de cuentas (cada cuenta: (id, correo, costo, servicio)).
+        #     """
+        #     nonlocal cuenta_seleccionada
+        #     #cuenta_seleccionada = None
+        #     # Obtener los correos únicos de la lista de cuentas
+        #     correos = sorted(set(c[1] for c in cuentas))
+        #     # Recrear el AutoComplete con las sugerencias actualizadas
+        #     auto_complete = ft.AutoComplete(
+        #         suggestions=[
+        #             ft.AutoCompleteSuggestion(key=correo, value=correo)
+        #             for correo in correos
+        #         ],
+        #         on_select=on_cuenta_selected  # Esta función filtra la tabla de cuentas según el correo seleccionado
+        #     )
+        #     auto_complete_container.content = auto_complete
+        #     auto_complete_container.update()
             
-            page.update()
+        #     page.update()
 
         def actualizar_autocomplete():
             """Actualiza sugerencias del AutoComplete."""
@@ -1423,7 +1422,7 @@ def main(page: ft.Page):
                         
                         actualizar_tabla_cuentas()
                         
-                        limpiar_y_recrear_auto_complete_cuentas(cuentas_auto_complete, get_cuentas())
+                        #limpiar_y_recrear_auto_complete_cuentas(cuentas_auto_complete, get_cuentas())
                     else:
                         mostrar_mensaje("Error al agregar cuenta.")
                 except Exception as ex:
@@ -1483,7 +1482,7 @@ def main(page: ft.Page):
                     
                     actualizar_tabla_cuentas()  # Se asume que esta función refresca la tabla de cuentas en la UI
                     
-                    limpiar_y_recrear_auto_complete_cuentas(cuentas_auto_complete, get_cuentas())
+                    #limpiar_y_recrear_auto_complete_cuentas(cuentas_auto_complete, get_cuentas())
                     page.update()
                     mostrar_mensaje("Cuenta actualizada correctamente.")
                 else:
