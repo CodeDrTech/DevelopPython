@@ -372,6 +372,7 @@ def main(page: ft.Page):
     # txt_comentario = ft.Ref[ft.TextField]()    
     
     tabla_vencimientos = None  # Referencia a tabla_vencimientos
+    datos_pagos = None  # Referencia a datos_pagos
     # clientes = None  # Referencia a clientes
     
     # def mostrar_datepicker_inicio(e):
@@ -870,8 +871,6 @@ def main(page: ft.Page):
                         actualizar_tabla(clientes)
                         actualizar_autocomplete()
                         
-                        
-                        
                         # Actualizar tabla de vencimientos
                         nonlocal tabla_vencimientos
                         tabla_vencimientos = crear_tabla_vencimientos()
@@ -1107,6 +1106,7 @@ def main(page: ft.Page):
         txt_fecha_pago = ft.Ref[ft.TextField]()
         txt_campo_pago = ft.Ref[ft.TextField]()
         tabla_vencimientos = None  # Referencia a tabla_vencimientos
+        
         
         def limpiar_y_recrear_auto_complete_pago(auto_complete_container, clientes):
             """
