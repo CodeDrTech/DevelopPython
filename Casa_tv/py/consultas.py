@@ -180,7 +180,6 @@ def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
     Returns:
         bool: True si la inserción fue exitosa, False en caso contrario.
     """
-    import datetime, sqlite3
 
     conn = connect_to_database()
     if conn:
