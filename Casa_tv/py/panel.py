@@ -2,8 +2,8 @@ import flet as ft
 from flet import ScrollMode, AppView
 from consultas import get_clientes, get_clientes_pagos, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
 insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales,\
-obtener_numeros_whatsapp, get_clientes_autocomplete, get_cuentas, insertar_cuenta, actualizar_cuenta, get_cliente_por_id
-
+obtener_numeros_whatsapp, get_clientes_autocomplete, get_cuentas, insertar_cuenta, actualizar_cuenta, get_cliente_por_id, get_suscripciones\
+, get_cliente_by_id, get_cuenta_by_id, insertar_suscripcion, actualizar_suscripcion, get_suscripcion_by_id
 import datetime
 import time
 import pywhatkit
@@ -286,16 +286,25 @@ def main(page: ft.Page):
                 enlace_whatsapp = f"https://wa.me/1{numero_limpio}?text=Hola.%20Bendiciones%0A%0AEl%20pago%20de%20su%20cuota%20es%0Aen%20fecha%20{convertir_formato_fecha(cliente[6])}.%0A%0AFavor%20pagar%20dentro%20de%203%0Adias%20para%20evitar%20corte.%0A%0AGracias."
 
                 
+                # Convertir cliente[8] (deuda pendiente) y cliente[2] (pago mensual) a enteros,
+                # usando 0 si son None.
+                deuda_pendiente = int(cliente[8]) if cliente[8] is not None else 0
+                pago_mensual = int(cliente[2]) if cliente[2] is not None else 0
+                deuda_total = pago_mensual + deuda_pendiente
+
                 body += (
-                        f"<b>Nombre: {cliente[0]}</b><br>"                        
-                        f"Correo: {cliente[3]}<br>"
-                        f"WhatsApp: <a href='{enlace_whatsapp}'>{cliente[1]}</a><br>"
-                        f"Último pago: {convertir_formato_fecha(cliente[5])}<br>"
-                        f"Próximo pago: {convertir_formato_fecha(cliente[6])}<br>"
-                        f"Monto: ${cliente[2]}<br>"
-                        f"Estado: <span style='color: {get_estado_color_css(cliente[7])}'>{cliente[7]}</span><br>"
-                        f"Comentario: {cliente[4]}<br><br>"                        
-                    )
+                    f"<b>Nombre: {cliente[0]}</b><br>"                        
+                    f"Correo: {cliente[3]}<br>"
+                    f"WhatsApp: <a href='{enlace_whatsapp}'>{cliente[1]}</a><br>"
+                    f"Último pago: {convertir_formato_fecha(cliente[5])}<br>"
+                    f"Próximo pago: {convertir_formato_fecha(cliente[6])}<br>"
+                    f"Deuda pendiente: ${deuda_pendiente}<br>"
+                    f"Pago mensual: ${pago_mensual}<br>"
+                    f"Deuda total: ${deuda_total}<br>"
+                    f"Estado: <span style='color: {get_estado_color_css(cliente[7])}'>{cliente[7]}</span><br>"
+                    f"Comentario: {cliente[4]}<br><br>"                        
+                )
+
 
             message = MIMEMultipart()
             message['From'] = sender_email
@@ -1448,10 +1457,10 @@ def main(page: ft.Page):
             txt_servicio = ft.TextField(label="Servicio", value=cuenta[3], width=320)
             
             def guardar_cambios(e):
-                nuevo_correo = txt_correo.value.strip()
-                nuevo_servicio = txt_servicio.value.strip()
+                nuevo_correo = txt_correo.value.strip() # type: ignore
+                nuevo_servicio = txt_servicio.value.strip() # type: ignore
                 try:
-                    nuevo_costo = int(txt_costo.value.strip())
+                    nuevo_costo = int(txt_costo.value.strip()) # type: ignore
                 except ValueError:
                     mostrar_mensaje("El costo debe ser un número.")
                     return
@@ -1536,7 +1545,7 @@ def main(page: ft.Page):
         )
         
         contenido_tab = ft.Column([
-            ft.Text("Listado de Cuentas", size=20, weight="bold"),
+            ft.Text("Listado de Cuentas", size=20, weight="bold"), # type: ignore
             
             ft.Row([auto_complete_container, btn_nuevo], alignment=ft.MainAxisAlignment.START),
             tabla_container
@@ -1546,6 +1555,268 @@ def main(page: ft.Page):
         return ft.Tab(
             icon=ft.Icons.STREAM,
             text="Cuentas",
+            content=contenido_tab
+        )
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def crear_tab_suscripciones():
+        """
+        Crea el tab "Suscripciones" con funcionalidad similar al tab de cuentas
+        """
+        # Contenedor principal para la tabla
+        tabla_container = ft.Container()
+        correo_seleccionado = None
+        suscripcion_seleccionada = None
+        suscripciones_auto_complete = None
+
+        def actualizar_autocomplete():
+            """Actualiza las sugerencias del autocomplete con los correos de suscripciones"""
+            suscripciones = get_suscripciones()
+            if auto_complete and auto_complete_container:
+                correos = sorted(set(s[4] for s in suscripciones))  # Índice 4 es el correo
+                auto_complete.suggestions = [
+                    ft.AutoCompleteSuggestion(key=correo, value=correo) 
+                    for correo in correos
+                ]
+                auto_complete_container.content = auto_complete
+                auto_complete_container.update()
+
+        def actualizar_tabla_suscripciones(suscripciones_filtradas=None):
+            """Actualiza la tabla con los datos de suscripciones"""
+            suscripciones_list = suscripciones_filtradas if suscripciones_filtradas is not None else get_suscripciones()
+            rows = []
+            
+            for suscripcion in suscripciones_list:
+                # Obtener datos del cliente
+                cliente = get_cliente_by_id(suscripcion[1])
+                if cliente is not None:
+                    cliente_nombre = cliente[1]
+                else:
+                    cliente_nombre = "Cliente no encontrado"
+                
+                # Obtener datos de la cuenta
+                cuenta_info = get_cuenta_by_id(suscripcion[2])
+                if cuenta_info is not None:
+                    servicio = cuenta_info[3]  # Asumiendo que el nombre del servicio está en la posición 3
+                else:
+                    servicio = "Cuenta no encontrada"
+                
+                editar_btn = ft.IconButton(
+                    icon=ft.Icons.EDIT,
+                    tooltip="Editar suscripción",
+                    on_click=lambda e, id=suscripcion[0]: editar_suscripcion(e, id, page)
+                )
+                
+                rows.append(
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(suscripcion[0]))),
+                            ft.DataCell(ft.Text(cliente_nombre)),
+                            ft.DataCell(ft.Text(servicio)),  # Nombre del servicio
+                            ft.DataCell(ft.Text(f"${suscripcion[3]:.2f}")),
+                            ft.DataCell(ft.Text(suscripcion[4])),
+                            ft.DataCell(editar_btn)
+                        ]
+                    )
+                )
+            
+            tabla_container.content = ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("ID")),
+                    ft.DataColumn(ft.Text("Cliente")),
+                    ft.DataColumn(ft.Text("Servicio")),
+                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Correo")),
+                    ft.DataColumn(ft.Text("Acciones"))
+                ],
+                rows=rows,
+                border=ft.border.all(1, ft.Colors.GREY_400),
+                border_radius=10,
+                vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_400),
+                horizontal_lines=ft.border.BorderSide(1, ft.Colors.GREY_400)
+            )
+            page.update()
+
+
+        def abrir_dialogo_nuevo(e):
+            """Diálogo para nueva suscripción"""
+            clientes = get_clientes()
+            cuentas = get_cuentas()
+            
+            # Dropdown para clientes
+            dropdown_cliente = ft.Dropdown(
+                options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
+                label="Cliente",
+                width=300
+            )
+            
+            # Dropdown para cuentas
+            dropdown_cuenta = ft.Dropdown(
+                options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
+                label="Cuenta",
+                width=300
+            )
+            
+            txt_monto = ft.TextField(
+                label="Monto (DOP)",
+                width=300,
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+            )
+            
+            txt_correo = ft.TextField(label="Correo", width=300)
+
+            def guardar_nueva_suscripcion(e):
+                try:
+                    if not dropdown_cliente.value:
+                        mostrar_mensaje("Seleccione un cliente")
+                        return
+                    if not dropdown_cuenta.value:
+                        mostrar_mensaje("Seleccione una cuenta")
+                        return
+                    if not txt_monto.value:
+                        mostrar_mensaje("Ingrese un monto válido")
+                        return
+                    if not txt_correo.value:
+                        mostrar_mensaje("Ingrese un correo")
+                        return
+
+                    if insertar_suscripcion(
+                        int(dropdown_cliente.value),
+                        int(dropdown_cuenta.value),
+                        int(txt_monto.value),
+                        txt_correo.value
+                    ):
+                        mostrar_mensaje("Suscripción creada!")
+                        dialogo_nuevo.open = False
+                        actualizar_autocomplete()
+                        actualizar_tabla_suscripciones()
+                    else:
+                        mostrar_mensaje("Error al crear suscripción")
+                except Exception as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}")
+                page.update()
+
+            dialogo_nuevo = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Nueva Suscripción"),
+                content=ft.Column([
+                    dropdown_cliente,
+                    dropdown_cuenta,
+                    txt_monto,
+                    txt_correo
+                ], spacing=10),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dialogo_nuevo, page)),
+                    ft.TextButton("Guardar", on_click=guardar_nueva_suscripcion)
+                ]
+            )
+            page.overlay.append(dialogo_nuevo)
+            dialogo_nuevo.open = True
+            page.update()
+
+        def editar_suscripcion(e, suscripcion_id, page):
+            """Diálogo para editar suscripción existente"""
+            suscripcion = get_suscripcion_by_id(suscripcion_id)
+            clientes = get_clientes()
+            cuentas = get_cuentas()
+
+            dropdown_cliente = ft.Dropdown(
+                options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
+                value=str(suscripcion[1]),
+                label="Cliente",
+                width=300
+            )
+            
+            dropdown_cuenta = ft.Dropdown(
+                options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
+                value=str(suscripcion[2]),
+                label="Cuenta",
+                width=300
+            )
+            
+            txt_monto = ft.TextField(
+                value=str(suscripcion[3]), 
+                label="Monto (DOP)",
+                width=300,
+                input_filter=ft.NumbersOnlyInputFilter()
+            )
+            
+            txt_correo = ft.TextField(value=suscripcion[4], label="Correo", width=300)
+
+            def guardar_cambios(e):
+                try:
+                    if actualizar_suscripcion(
+                        suscripcion_id,
+                        int(dropdown_cliente.value),
+                        int(dropdown_cuenta.value),
+                        int(txt_monto.value),
+                        txt_correo.value
+                    ):
+                        mostrar_mensaje("Suscripción actualizada!")
+                        dlg_modal.open = False
+                        actualizar_autocomplete()
+                        actualizar_tabla_suscripciones()
+                    else:
+                        mostrar_mensaje("Error al actualizar")
+                except Exception as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}")
+                page.update()
+
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Editar Suscripción"),
+                content=ft.Column([
+                    dropdown_cliente,
+                    dropdown_cuenta,
+                    txt_monto,
+                    txt_correo
+                ], spacing=10),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal, page)),
+                    ft.TextButton("Guardar", on_click=guardar_cambios)
+                ]
+            )
+            page.overlay.append(dlg_modal)
+            dlg_modal.open = True
+            page.update()
+
+        # Componentes UI
+        btn_nuevo = ft.ElevatedButton(
+            text="Nueva suscripción",
+            icon=ft.Icons.ADD,
+            on_click=abrir_dialogo_nuevo
+        )
+
+        # Autocomplete para correos
+        suscripciones = get_suscripciones()
+        auto_complete = ft.AutoComplete(
+            suggestions=[
+                ft.AutoCompleteSuggestion(key=s[4], value=s[4])
+                for s in suscripciones
+            ],
+            on_select=lambda e: actualizar_tabla_suscripciones(
+                [s for s in suscripciones if s[4] == e.selection.value]
+            ),
+            suggestions_max_height=150
+        )
+
+        auto_complete_container = ft.Container(
+            content=auto_complete,
+            width=320,
+            border=ft.border.all(1, ft.Colors.BLACK),
+            border_radius=10
+        )
+
+        contenido_tab = ft.Column([
+            ft.Text("Listado de Suscripciones", size=20, weight="bold"),
+            ft.Row([auto_complete_container, btn_nuevo], alignment=ft.MainAxisAlignment.START),
+            tabla_container
+        ], spacing=20)
+
+        actualizar_tabla_suscripciones()
+        return ft.Tab(
+            icon=ft.Icons.SUBSCRIPTIONS,
+            text="Suscripciones",
             content=contenido_tab
         )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1646,6 +1917,7 @@ def main(page: ft.Page):
             #     ),
             # ),
             crear_tab_pagos(),
+            crear_tab_suscripciones(),
             ft.Tab(
                 icon=ft.Icons.MAIL,
                 text="Envio de correos",

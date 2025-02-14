@@ -570,26 +570,24 @@ def obtener_todos_los_clientes():
                 GROUP BY cliente_id
             )
             SELECT 
-                c.nombre,
-                c.whatsapp,
-                s.monto,
-                s.correo,
-                c.comentario,
-                COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
+                c.nombre,                                          -- índice 0
+                c.whatsapp,                                        -- índice 1
+                s.monto,                                           -- índice 2
+                s.correo,                                          -- índice 3
+                c.comentario,                                      -- índice 4
+                COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,  -- índice 5
                 DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
-                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
+                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,  -- índice 6
                 CASE 
-                    WHEN ROUND(JULIANDAY('now') - 
-                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
-                    THEN 'En corte'
-                    WHEN ROUND(JULIANDAY('now') - 
-                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
-                    THEN 'Pago pendiente'
-                    WHEN ROUND(JULIANDAY('now') - 
-                            JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
-                    THEN 'Cerca'
+                    WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                        THEN 'En corte'
+                    WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                        THEN 'Pago pendiente'
+                    WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                        THEN 'Cerca'
                     ELSE 'Al día'
-                END AS estado
+                END AS estado,                                   -- índice 7
+                c.saldo_pendiente AS deuda                       -- índice 8
             FROM clientes c
             LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
             LEFT JOIN suscripcion s ON c.id = s.cliente_id
@@ -600,7 +598,6 @@ def obtener_todos_los_clientes():
                 WHEN 'Cerca' THEN 3
                 ELSE 4
             END;
-
             ''')
             clientes = cursor.fetchall()
             # Convertir tupla a lista para devolver como lista
@@ -813,4 +810,163 @@ def get_clientes_autocomplete():
         finally:
             conn.close()
     return []
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_suscripciones():
+    """
+    Obtiene todas las suscripciones con joins para el nombre del cliente y el servicio.
+    
+    Returns:
+        list: Lista de tuplas con (suscripcion.id, cliente.nombre, cuenta.servicio, suscripcion.monto, suscripcion.correo)
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            query = """
+                SELECT s.id, cl.nombre, cu.servicio, s.monto, s.correo
+                FROM suscripcion s
+                JOIN clientes cl ON s.cliente_id = cl.id
+                JOIN cuentas cu ON s.cuenta_id = cu.id
+            """
+            cursor.execute(query)
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo suscripciones: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+
+def get_cliente_by_id(cliente_id: int):
+    """
+    Obtiene los datos de un cliente por su ID.
+    
+    Args:
+        cliente_id (int): El ID del cliente.
+        
+    Returns:
+        tuple or None: Los datos del cliente o None si no se encuentra.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM clientes WHERE id = ?", (cliente_id,))
+            return cursor.fetchone()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo cliente: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
+
+def get_cuenta_by_id(cuenta_id: int):
+    """
+    Obtiene los datos de una cuenta por su ID.
+    
+    Args:
+        cuenta_id (int): El ID de la cuenta.
+        
+    Returns:
+        tuple or None: Los datos de la cuenta o None si no se encuentra.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM cuentas WHERE id = ?", (cuenta_id,))
+            return cursor.fetchone()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo cuenta: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
+
+def insertar_suscripcion(cliente_id: int, cuenta_id: int, monto: int, correo: str) -> bool:
+    """
+    Inserta una nueva suscripción.
+    
+    Args:
+        cliente_id (int): ID del cliente.
+        cuenta_id (int): ID de la cuenta.
+        monto (int): Monto asignado a la suscripción.
+        correo (str): Correo asociado a la suscripción.
+    
+    Returns:
+        bool: True si la inserción fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO suscripcion (cliente_id, cuenta_id, monto, correo)
+                VALUES (?, ?, ?, ?)
+            """, (cliente_id, cuenta_id, monto, correo))
+            conn.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"Error insertando suscripcion: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def actualizar_suscripcion(suscripcion_id: int, cliente_id: int, cuenta_id: int, monto: int, correo: str) -> bool:
+    """
+    Actualiza los datos de una suscripción existente.
+    
+    Args:
+        suscripcion_id (int): ID de la suscripción a actualizar.
+        cliente_id (int): Nuevo ID del cliente.
+        cuenta_id (int): Nuevo ID de la cuenta.
+        monto (int): Nuevo monto asignado.
+        correo (str): Nuevo correo asociado.
+        
+    Returns:
+        bool: True si la actualización fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                UPDATE suscripcion
+                SET cliente_id = ?, cuenta_id = ?, monto = ?, correo = ?
+                WHERE id = ?
+            """, (cliente_id, cuenta_id, monto, correo, suscripcion_id))
+            conn.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"Error actualizando suscripcion: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def get_suscripcion_by_id(suscripcion_id: int):
+    """
+    Obtiene una suscripción específica por su ID.
+    
+    Args:
+        suscripcion_id (int): El ID de la suscripción.
+        
+    Returns:
+        tuple or None: Los datos de la suscripción o None si no se encuentra.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM suscripcion WHERE id = ?", (suscripcion_id,))
+            return cursor.fetchone()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo suscripcion: {e}")
+            return None
+        finally:
+            conn.close()
+    return None
+
 
