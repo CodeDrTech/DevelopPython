@@ -1561,7 +1561,7 @@ def main(page: ft.Page):
                 icon=ft.Icons.HOME,
                 text="Vencimientos",
                 content=ft.Column([
-                    ft.Text("Busqueda por nombre", size=20, weight="bold"),
+                    ft.Text("Busqueda por nombre", size=20, weight="bold"), # type: ignore
                     crear_tabla_vencimientos(),
                     
                 ])
@@ -1570,7 +1570,7 @@ def main(page: ft.Page):
                 icon=ft.Icons.PERSON_ADD,
                 text="Clientes",
                 content=ft.Column([
-                    ft.Text("Clientes", size=20, weight="bold"),
+                    ft.Text("Clientes", size=20, weight="bold"), # type: ignore
                     crear_tabla_clientes(),
                 ]),
             ),

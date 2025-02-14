@@ -91,21 +91,20 @@ def get_clientes_pagos():
 
 def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio: str, estado: str, frecuencia: int, comentario: str) -> bool:
     """
-    Actualiza los datos de un cliente en la base de datos.
-
+    Actualiza los datos de un cliente en la base de datos. Si la fecha de inicio se actualiza,
+    también se actualiza el último pago (en la tabla pagos) con esa misma fecha, ya que se reinicia el contrato.
+    
     Args:
-        cliente_id (int): ID del cliente a actualizar
-        nombre (str): Nombre del cliente
-        whatsapp (str): Número de WhatsApp
-        fecha_inicio (str): Fecha de inicio en formato YYYY-MM-DD
-        estado (str): Estado del cliente (Activo/Inactivo)
-        frecuencia (int): Frecuencia de pago en días
-        monto (float): Monto asignado al cliente
-        correo (str): Correo electrónico del cliente
-        comentario (str): Comentario asociado al cliente
-
+        cliente_id (int): ID del cliente a actualizar.
+        nombre (str): Nombre del cliente.
+        whatsapp (str): Número de WhatsApp.
+        fecha_inicio (str): Nueva fecha de inicio en formato YYYY-MM-DD.
+        estado (str): Estado del cliente (Activo/Inactivo).
+        frecuencia (int): Frecuencia de pago en días.
+        comentario (str): Comentario asociado al cliente.
+        
     Returns:
-        bool: True si la actualización fue exitosa, False en caso contrario
+        bool: True si la actualización fue exitosa, False en caso contrario.
     """
     if not all([cliente_id, nombre, whatsapp, fecha_inicio, estado, frecuencia]):
         raise ValueError("Todos los campos son requeridos")
@@ -114,6 +113,12 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio
     if conn:
         try:
             cursor = conn.cursor()
+            # Obtener la fecha de inicio actual del cliente
+            cursor.execute("SELECT inicio FROM clientes WHERE id = ?", (cliente_id,))
+            row = cursor.fetchone()
+            old_fecha_inicio = row[0] if row else None
+
+            # Actualizar los datos del cliente
             cursor.execute('''
                 UPDATE clientes 
                 SET nombre = ?, 
@@ -125,6 +130,19 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio
                 WHERE id = ?
             ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia, comentario, cliente_id))
             
+            # Si la fecha de inicio cambió, se actualiza el último pago registrado
+            if old_fecha_inicio and old_fecha_inicio != fecha_inicio:
+                cursor.execute('''
+                    SELECT id FROM pagos
+                    WHERE cliente_id = ?
+                    ORDER BY fecha_pago DESC
+                    LIMIT 1
+                ''', (cliente_id,))
+                last_payment_row = cursor.fetchone()
+                if last_payment_row:
+                    last_payment_id = last_payment_row[0]
+                    cursor.execute("UPDATE pagos SET fecha_pago = ? WHERE id = ?", (fecha_inicio, last_payment_id))
+            
             conn.commit()
             return cursor.rowcount > 0
             
@@ -134,6 +152,7 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio
         finally:
             conn.close()
     return False
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 
