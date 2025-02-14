@@ -494,19 +494,25 @@ def main(page: ft.Page):
                 filtrados = [
                     reg for reg in filtrados 
                     if reg[7] == estado_seleccionado
-                ]
-            
+                ]     
             
             
             # Actualizar tabla con resultados
             actualizar_tabla(filtrados)
             page.update()
-
+            
+        def reiniciar_tabla_vencimientos(e=None):
+            # Actualizar tabla de vencimientos (si aplica)
+            nonlocal tabla_vencimientos
+            tabla_vencimientos = crear_tabla_vencimientos()
+            mainTab.tabs[0].content = tabla_vencimientos
+            page.update()
+            
         # Botón refresh
         btn_refresh = ft.IconButton(
             icon=ft.Icons.REFRESH,
             tooltip="Actualizar tabla",
-            on_click=lambda _: filtrar_registros()
+            on_click=reiniciar_tabla_vencimientos
         )
         
         def on_estado_change(e):
