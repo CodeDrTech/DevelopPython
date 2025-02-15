@@ -226,6 +226,34 @@ def get_estado_pagos():
     return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_total_pagos_mes_actual():
+    """
+    Obtiene la suma de los pagos realizados en el mes actual.
+    
+    Returns:
+        float: Suma de los montos de pagos del mes actual. 
+               Retorna 0 si no hay pagos o hay un error.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT COALESCE(SUM(s.monto), 0) 
+                FROM pagos p
+                INNER JOIN suscripcion s ON p.cliente_id = s.cliente_id
+                WHERE strftime('%Y-%m', p.fecha_pago) = strftime('%Y-%m', 'now')
+            ''')
+            total = cursor.fetchone()[0]
+            return total
+        except sqlite3.Error as e:
+            print(f"Error consultando pagos del mes actual: {e}")
+            return 0
+        finally:
+            conn.close()
+    return 0
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
     """Registra un nuevo pago y actualiza el saldo pendiente y saldo neto del cliente,
     utilizando como cuota la suma de los montos de sus suscripciones (ya que un cliente
@@ -838,12 +866,12 @@ def get_suscripciones():
             conn.close()
     return []
 
-def get_cliente_by_id(cliente_id: int):
+def get_cliente_by_nombre(nombre: int):
     """
     Obtiene los datos de un cliente por su ID.
     
     Args:
-        cliente_id (int): El ID del cliente.
+        nombre (int): El ID del cliente.
         
     Returns:
         tuple or None: Los datos del cliente o None si no se encuentra.
@@ -852,7 +880,7 @@ def get_cliente_by_id(cliente_id: int):
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM clientes WHERE id = ?", (cliente_id,))
+            cursor.execute("SELECT * FROM clientes WHERE nombre = ?", (nombre,))
             return cursor.fetchone()
         except sqlite3.Error as e:
             print(f"Error obteniendo cliente: {e}")
@@ -861,12 +889,12 @@ def get_cliente_by_id(cliente_id: int):
             conn.close()
     return None
 
-def get_cuenta_by_id(cuenta_id: int):
+def get_cuenta_by_servicio(servicio: int):
     """
     Obtiene los datos de una cuenta por su ID.
     
     Args:
-        cuenta_id (int): El ID de la cuenta.
+        servicio (int): El ID de la cuenta.
         
     Returns:
         tuple or None: Los datos de la cuenta o None si no se encuentra.
@@ -875,7 +903,7 @@ def get_cuenta_by_id(cuenta_id: int):
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM cuentas WHERE id = ?", (cuenta_id,))
+            cursor.execute("SELECT * FROM cuentas WHERE servicio = ?", (servicio,))
             return cursor.fetchone()
         except sqlite3.Error as e:
             print(f"Error obteniendo cuenta: {e}")

@@ -3,7 +3,7 @@ from flet import ScrollMode, AppView
 from consultas import get_clientes, get_clientes_pagos, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
 insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales,\
 obtener_numeros_whatsapp, get_clientes_autocomplete, get_cuentas, insertar_cuenta, actualizar_cuenta, get_cliente_por_id, get_suscripciones\
-, get_cliente_by_id, get_cuenta_by_id, insertar_suscripcion, actualizar_suscripcion, get_suscripcion_by_id
+, get_cliente_by_nombre, get_cuenta_by_servicio, insertar_suscripcion, actualizar_suscripcion, get_suscripcion_by_id, get_total_pagos_mes_actual
 import datetime
 import time
 import pywhatkit
@@ -480,7 +480,12 @@ def main(page: ft.Page):
         # Suma de los montos
         total_montos = sum(reg[8] for reg in registros)
         total_montos_format = "{:,}".format(total_montos)
-                
+        
+        # Obtener la suma de pagos del mes actual
+        total_montos = get_total_pagos_mes_actual()
+        total_pagado_mes = "{:,}".format(total_montos)
+        
+        
         def filtrar_registros():
             """
             Aplica filtros combinados y actualiza tabla.
@@ -657,7 +662,8 @@ def main(page: ft.Page):
                 auto_complete_container,
                 dropdown_estado,
                 btn_refresh,
-            ft.Row([ft.Text(f"Monto total: ${total_montos_format}", size=20, color=ft.Colors.GREEN)]),
+            ft.Row([ft.Text(f"Deuda total: ${total_montos_format}", size=20, color=ft.Colors.RED)]),
+            ft.Row([ft.Text(f"Pagado este mes: ${total_pagado_mes}", size=20, color=ft.Colors.GREEN)]),
             ]),            
             tabla_container
         ])
@@ -1568,7 +1574,8 @@ def main(page: ft.Page):
         correo_seleccionado = None
         suscripcion_seleccionada = None
         suscripciones_auto_complete = None
-
+        
+        
         def actualizar_autocomplete():
             """Actualiza las sugerencias del autocomplete con los correos de suscripciones"""
             suscripciones = get_suscripciones()
@@ -1588,14 +1595,14 @@ def main(page: ft.Page):
             
             for suscripcion in suscripciones_list:
                 # Obtener datos del cliente
-                cliente = get_cliente_by_id(suscripcion[1])
+                cliente = get_cliente_by_nombre(suscripcion[1])
                 if cliente is not None:
                     cliente_nombre = cliente[1]
                 else:
                     cliente_nombre = "Cliente no encontrado"
                 
                 # Obtener datos de la cuenta
-                cuenta_info = get_cuenta_by_id(suscripcion[2])
+                cuenta_info = get_cuenta_by_servicio(suscripcion[2])
                 if cuenta_info is not None:
                     servicio = cuenta_info[3]  # Asumiendo que el nombre del servicio está en la posición 3
                 else:
@@ -1647,19 +1654,19 @@ def main(page: ft.Page):
             dropdown_cliente = ft.Dropdown(
                 options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
                 label="Cliente",
-                width=300
+                width=320
             )
             
             # Dropdown para cuentas
             dropdown_cuenta = ft.Dropdown(
                 options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
                 label="Cuenta",
-                width=300
+                width=320
             )
             
             txt_monto = ft.TextField(
                 label="Monto (DOP)",
-                width=300,
+                width=320,
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
             
@@ -1713,7 +1720,9 @@ def main(page: ft.Page):
             page.overlay.append(dialogo_nuevo)
             dialogo_nuevo.open = True
             page.update()
-
+            
+        
+            
         def editar_suscripcion(e, suscripcion_id, page):
             """Diálogo para editar suscripción existente"""
             suscripcion = get_suscripcion_by_id(suscripcion_id)
@@ -1724,24 +1733,24 @@ def main(page: ft.Page):
                 options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
                 value=str(suscripcion[1]),
                 label="Cliente",
-                width=300
+                width=320
             )
             
             dropdown_cuenta = ft.Dropdown(
                 options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
                 value=str(suscripcion[2]),
                 label="Cuenta",
-                width=300
+                width=320
             )
             
             txt_monto = ft.TextField(
                 value=str(suscripcion[3]), 
                 label="Monto (DOP)",
-                width=300,
+                width=320,
                 input_filter=ft.NumbersOnlyInputFilter()
             )
             
-            txt_correo = ft.TextField(value=suscripcion[4], label="Correo", width=300)
+            txt_correo = ft.TextField(value=suscripcion[4], label="Correo", width=320)
 
             def guardar_cambios(e):
                 try:
