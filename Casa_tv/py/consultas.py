@@ -514,57 +514,51 @@ def obtener_clientes_por_estado(estado: str):
             cursor = conn.cursor()
             query = """
             WITH ultimo_pago AS (
-            SELECT
-                cliente_id,
-                MAX(fecha_pago) AS ultima_fecha_pago
+            SELECT cliente_id, MAX(fecha_pago) AS ultima_fecha_pago
             FROM pagos
             GROUP BY cliente_id
         )
         SELECT 
-            c.nombre,
-            c.whatsapp,
-            s.monto,
-            s.correo,
-            c.comentario,
-            COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,
+            c.nombre,                                                       -- índice 0
+            c.whatsapp,                                                     -- índice 1
+            IFNULL(SUM(s.monto), 0) AS monto,                               -- índice 2 (suma de montos de suscripciones)
+            IFNULL(GROUP_CONCAT(s.correo, ', '), '') AS correo,             -- índice 3 (todos los correos concatenados)
+            c.comentario,                                                   -- índice 4
+            COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,        -- índice 5
             DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
-                '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,
+                '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,   -- índice 6
             CASE 
-                WHEN ROUND(JULIANDAY('now') - 
-                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
-                THEN 'En corte'
-                WHEN ROUND(JULIANDAY('now') - 
-                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
-                THEN 'Pago pendiente'
-                WHEN ROUND(JULIANDAY('now') - 
-                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
-                THEN 'Cerca'
+                WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                    THEN 'En corte'
+                WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                    THEN 'Pago pendiente'
+                WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                    THEN 'Cerca'
                 ELSE 'Al día'
-            END AS estado
+            END AS estado,                                                  -- índice 7
+            c.saldo_pendiente AS deuda                                      -- índice 8
         FROM clientes c
         LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
         LEFT JOIN suscripcion s ON c.id = s.cliente_id
-        WHERE c.estado = 'Activo' 
+        WHERE c.estado = 'Activo'
         AND (
             CASE 
-                WHEN ROUND(JULIANDAY('now') - 
-                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
-                THEN 'En corte'
-                WHEN ROUND(JULIANDAY('now') - 
-                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
-                THEN 'Pago pendiente'
-                WHEN ROUND(JULIANDAY('now') - 
-                        JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
-                THEN 'Cerca'
+                WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
+                    THEN 'En corte'
+                WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) > c.frecuencia 
+                    THEN 'Pago pendiente'
+                WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
+                    THEN 'Cerca'
                 ELSE 'Al día'
-            END = ?  -- Aquí se filtra por estado dinámicamente
+            END = ?
         )
+        GROUP BY c.id, c.nombre, c.whatsapp, c.inicio, c.estado, c.frecuencia, c.comentario, c.saldo_pendiente
         ORDER BY CASE estado 
-            WHEN 'En corte' THEN 1
-            WHEN 'Pago pendiente' THEN 2
-            WHEN 'Cerca' THEN 3
-            ELSE 4
-        END;
+                    WHEN 'En corte' THEN 1
+                    WHEN 'Pago pendiente' THEN 2
+                    WHEN 'Cerca' THEN 3
+                    ELSE 4
+                END;
             """
             cursor.execute(query, (estado,))
             clientes = cursor.fetchall()
@@ -591,21 +585,19 @@ def obtener_todos_los_clientes():
             cursor = conn.cursor()
             cursor.execute('''
                 WITH ultimo_pago AS (
-                SELECT
-                    cliente_id,
-                    MAX(fecha_pago) AS ultima_fecha_pago
+                SELECT cliente_id, MAX(fecha_pago) AS ultima_fecha_pago
                 FROM pagos
                 GROUP BY cliente_id
             )
             SELECT 
-                c.nombre,                                          -- índice 0
-                c.whatsapp,                                        -- índice 1
-                s.monto,                                           -- índice 2
-                s.correo,                                          -- índice 3
-                c.comentario,                                      -- índice 4
-                COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,  -- índice 5
+                c.nombre,                                                       -- índice 0
+                c.whatsapp,                                                     -- índice 1
+                IFNULL(SUM(s.monto), 0) AS monto,                                 -- índice 2 (suma de montos de suscripciones)
+                IFNULL(group_concat(s.correo, ', '), '') AS correo,               -- índice 3 (todos los correos concatenados)
+                c.comentario,                                                   -- índice 4
+                COALESCE(up.ultima_fecha_pago, c.inicio) AS ultimo_pago,          -- índice 5
                 DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
-                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,  -- índice 6
+                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,     -- índice 6
                 CASE 
                     WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= 33 
                         THEN 'En corte'
@@ -614,18 +606,19 @@ def obtener_todos_los_clientes():
                     WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio))) >= (c.frecuencia - 3) 
                         THEN 'Cerca'
                     ELSE 'Al día'
-                END AS estado,                                   -- índice 7
-                c.saldo_pendiente AS deuda                       -- índice 8
+                END AS estado,                                                  -- índice 7
+                c.saldo_pendiente AS deuda                                      -- índice 8
             FROM clientes c
             LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
             LEFT JOIN suscripcion s ON c.id = s.cliente_id
             WHERE c.estado = 'Activo'
+            GROUP BY c.id, c.nombre, c.whatsapp, c.inicio, c.estado, c.frecuencia, c.comentario, c.saldo_pendiente
             ORDER BY CASE estado 
-                WHEN 'En corte' THEN 1
-                WHEN 'Pago pendiente' THEN 2
-                WHEN 'Cerca' THEN 3
-                ELSE 4
-            END;
+                        WHEN 'En corte' THEN 1
+                        WHEN 'Pago pendiente' THEN 2
+                        WHEN 'Cerca' THEN 3
+                        ELSE 4
+                    END;
             ''')
             clientes = cursor.fetchall()
             # Convertir tupla a lista para devolver como lista
