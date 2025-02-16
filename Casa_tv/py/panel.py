@@ -227,7 +227,7 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Último Pago")),
                     ft.DataColumn(ft.Text("Próximo Pago")),
                     ft.DataColumn(ft.Text("Estado")),
-                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Pago mens.")),
                     ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Comentario")),
                 ],
@@ -338,7 +338,7 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Último Pago")),
             ft.DataColumn(ft.Text("Próximo Pago")),
             ft.DataColumn(ft.Text("Estado")),
-            ft.DataColumn(ft.Text("Monto")),
+            ft.DataColumn(ft.Text("Pago mens.")),
             ft.DataColumn(ft.Text("Correo")),
             ft.DataColumn(ft.Text("Comentario")),
         ]
@@ -485,6 +485,10 @@ def main(page: ft.Page):
         total_montos = get_total_pagos_mes_actual()
         total_pagado_mes = "{:,}".format(total_montos)
         
+        # Utilidad total del mes actual.s
+        Utilidad = int(total_pagado_mes) - int(total_montos_format)
+        
+        
         
         def filtrar_registros():
             """
@@ -561,7 +565,7 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Frecuencia")),
             ft.DataColumn(ft.Text("Días")),
             ft.DataColumn(ft.Text("Estado")),
-            ft.DataColumn(ft.Text("Monto")),
+            ft.DataColumn(ft.Text("Pago mens.")),
             ft.DataColumn(ft.Text("Correo")),
             ft.DataColumn(ft.Text("Comentario"))
         ]
@@ -588,7 +592,7 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Frecuencia")),
                     ft.DataColumn(ft.Text("Días")),
                     ft.DataColumn(ft.Text("Estado")),
-                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Pago mens.")),
                     ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Comentario"))
                 ],
@@ -662,8 +666,9 @@ def main(page: ft.Page):
                 auto_complete_container,
                 dropdown_estado,
                 btn_refresh,
-            ft.Row([ft.Text(f"Deuda total: ${total_montos_format}", size=20, color=ft.Colors.RED)]),
-            ft.Row([ft.Text(f"Pagado este mes: ${total_pagado_mes}", size=20, color=ft.Colors.GREEN)]),
+            ft.Row([ft.Text(f"Deuda total: ${total_montos_format}", size=15, color=ft.Colors.RED)]),
+            ft.Row([ft.Text(f"Pagado este mes: ${total_pagado_mes}", size=15, color=ft.Colors.BLUE)]),
+            ft.Row([ft.Text(f"Ganancia: ${Utilidad}", size=15, color=ft.Colors.GREEN)]),
             ]),            
             tabla_container
         ])
@@ -1636,7 +1641,7 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("ID")),
                     ft.DataColumn(ft.Text("Cliente")),
                     ft.DataColumn(ft.Text("Servicio")),
-                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Pago mens.")),
                     ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Acciones"))
                 ],

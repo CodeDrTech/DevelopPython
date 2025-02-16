@@ -239,10 +239,12 @@ def get_total_pagos_mes_actual():
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT COALESCE(SUM(s.monto), 0) 
+                SELECT COALESCE(SUM(s.monto) - SUM(c.saldo_pendiente), 0) AS utilidad
                 FROM pagos p
                 INNER JOIN suscripcion s ON p.cliente_id = s.cliente_id
+                INNER JOIN clientes c ON p.cliente_id = c.id
                 WHERE strftime('%Y-%m', p.fecha_pago) = strftime('%Y-%m', 'now')
+                AND c.estado = 'Activo';
             ''')
             total = cursor.fetchone()[0]
             return total
