@@ -486,7 +486,7 @@ def main(page: ft.Page):
         total_pagado_mes = "{:,}".format(total_montos)
         
         # Utilidad total del mes actual.s
-        Utilidad = int(total_pagado_mes) - int(total_montos_format)
+        Utilidad = float(total_pagado_mes.replace(",", "")) - float(total_montos_format.replace(",", ""))
         
         
         
