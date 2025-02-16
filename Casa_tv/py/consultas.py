@@ -33,7 +33,7 @@ def get_clientes():
                     saldo_pendiente,
                     saldo_neto
                 FROM clientes 
-                ORDER BY date(inicio) DESC
+                ORDER BY nombre ASC
             ''')
             return cursor.fetchall()
         except sqlite3.Error as e:

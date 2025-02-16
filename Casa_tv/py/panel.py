@@ -1565,6 +1565,10 @@ def main(page: ft.Page):
         )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def cerrar_dialogo(dialog, page):
+        """Cierra el diálogo y actualiza la página."""
+        dialog.open = False
+        page.update()
     def crear_tab_suscripciones():
         """
         Crea el tab "Suscripciones" con funcionalidad similar al tab de cuentas
@@ -1620,7 +1624,7 @@ def main(page: ft.Page):
                             ft.DataCell(ft.Text(str(suscripcion[0]))),
                             ft.DataCell(ft.Text(cliente_nombre)),
                             ft.DataCell(ft.Text(servicio)),  # Nombre del servicio
-                            ft.DataCell(ft.Text(f"${suscripcion[3]:.2f}")),
+                            ft.DataCell(ft.Text(f"${int(suscripcion[3])}")),
                             ft.DataCell(ft.Text(suscripcion[4])),
                             ft.DataCell(editar_btn)
                         ]
@@ -1654,23 +1658,23 @@ def main(page: ft.Page):
             dropdown_cliente = ft.Dropdown(
                 options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
                 label="Cliente",
-                width=320
+                expand=True
             )
             
             # Dropdown para cuentas
             dropdown_cuenta = ft.Dropdown(
                 options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
                 label="Cuenta",
-                width=320
+                expand=True
             )
             
             txt_monto = ft.TextField(
                 label="Monto (DOP)",
-                width=320,
+                expand=True,
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
             
-            txt_correo = ft.TextField(label="Correo", width=300)
+            txt_correo = ft.TextField(label="Correo", expand=True)
 
             def guardar_nueva_suscripcion(e):
                 try:
@@ -1685,6 +1689,10 @@ def main(page: ft.Page):
                         return
                     if not txt_correo.value:
                         mostrar_mensaje("Ingrese un correo")
+                        return
+                    
+                    if txt_correo.value != [c[1] for c in cuentas if c[0] == int(dropdown_cuenta.value)][0]:
+                        mostrar_mensaje("El correo no coincide con el de la cuenta")
                         return
 
                     if insertar_suscripcion(
@@ -1733,27 +1741,44 @@ def main(page: ft.Page):
                 options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
                 value=str(suscripcion[1]),
                 label="Cliente",
-                width=320
+                expand=True
             )
             
             dropdown_cuenta = ft.Dropdown(
                 options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
                 value=str(suscripcion[2]),
                 label="Cuenta",
-                width=320
+                expand=True
             )
             
             txt_monto = ft.TextField(
                 value=str(suscripcion[3]), 
                 label="Monto (DOP)",
-                width=320,
+                expand=True,
                 input_filter=ft.NumbersOnlyInputFilter()
             )
             
-            txt_correo = ft.TextField(value=suscripcion[4], label="Correo", width=320)
+            txt_correo = ft.TextField(value=suscripcion[4], label="Correo", expand=True)
 
             def guardar_cambios(e):
                 try:
+                    if not dropdown_cliente.value:
+                        mostrar_mensaje("Seleccione un cliente")
+                        return
+                    if not dropdown_cuenta.value:
+                        mostrar_mensaje("Seleccione una cuenta")
+                        return
+                    if not txt_monto.value:
+                        mostrar_mensaje("Ingrese un monto válido")
+                        return
+                    if not txt_correo.value:
+                        mostrar_mensaje("Ingrese un correo")
+                        return
+                    
+                    if txt_correo.value != [c[1] for c in cuentas if c[0] == int(dropdown_cuenta.value)][0]:
+                        mostrar_mensaje("El correo no coincide con el de la cuenta")
+                        return
+                    
                     if actualizar_suscripcion(
                         suscripcion_id,
                         int(dropdown_cliente.value),
