@@ -6,7 +6,7 @@ obtener_numeros_whatsapp, get_clientes_autocomplete, get_cuentas, insertar_cuent
 , get_cliente_by_nombre, get_cuenta_by_servicio, insertar_suscripcion, actualizar_suscripcion, get_suscripcion_by_id, get_total_pagos_mes_actual
 import datetime
 import time
-import pywhatkit
+#import pywhatkit
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -25,31 +25,31 @@ def mostrar_mensaje_whatsapp(mensaje: str, page: ft.Page):
     snack.open = True
     page.update()
 
-def enviar_mensajes(numeros, mensaje, page, intervalo=10):
-    """
-    Envía mensajes de WhatsApp a una lista de números.
+# def enviar_mensajes(numeros, mensaje, page, intervalo=10):
+#     """
+#     Envía mensajes de WhatsApp a una lista de números.
 
-    Args:
-        numeros (list): Lista de números de WhatsApp.
-        mensaje (str): Mensaje a enviar.
-        page (ft.Page): Página de la aplicación.
-        intervalo (int): Tiempo en segundos entre mensajes (por defecto, 10 segundos).
-    """
-    if not mensaje.strip():
-        mostrar_mensaje_whatsapp("El mensaje no puede estar vacío.", page)
-        return
+#     Args:
+#         numeros (list): Lista de números de WhatsApp.
+#         mensaje (str): Mensaje a enviar.
+#         page (ft.Page): Página de la aplicación.
+#         intervalo (int): Tiempo en segundos entre mensajes (por defecto, 10 segundos).
+#     """
+#     if not mensaje.strip():
+#         mostrar_mensaje_whatsapp("El mensaje no puede estar vacío.", page)
+#         return
     
-    if not numeros:
-        mostrar_mensaje_whatsapp("No se encontraron números para enviar mensajes.", page)
-        return
+#     if not numeros:
+#         mostrar_mensaje_whatsapp("No se encontraron números para enviar mensajes.", page)
+#         return
 
-    for numero in numeros:
-        try:
-            pywhatkit.sendwhatmsg_instantly(f"+{numero}", mensaje)
-            mostrar_mensaje_whatsapp(f"Mensaje enviado a {numero}.", page)
-            time.sleep(intervalo)  # Esperar antes de enviar el siguiente mensaje
-        except Exception as e:
-            mostrar_mensaje_whatsapp(f"Error enviando mensaje a {numero}: {e}", page)
+#     for numero in numeros:
+#         try:
+#             pywhatkit.sendwhatmsg_instantly(f"+{numero}", mensaje)
+#             mostrar_mensaje_whatsapp(f"Mensaje enviado a {numero}.", page)
+#             time.sleep(intervalo)  # Esperar antes de enviar el siguiente mensaje
+#         except Exception as e:
+#             mostrar_mensaje_whatsapp(f"Error enviando mensaje a {numero}: {e}", page)
 
 def main(page: ft.Page):
     page.title = "TV en casa  Ver.20250216"
