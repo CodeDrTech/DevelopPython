@@ -735,7 +735,7 @@ def get_cuentas():
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, correo, costo, servicio FROM cuentas")
+            cursor.execute("SELECT id, correo, costo, servicio FROM cuentas ORDER by correo")
             return cursor.fetchall()
         except sqlite3.Error as e:
             print(f"Error obteniendo cuentas: {e}")
