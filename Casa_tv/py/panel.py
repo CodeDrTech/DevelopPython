@@ -1100,7 +1100,7 @@ def main(page: ft.Page):
         """
         if estado == "En corte":
             return ft.Colors.RED
-        elif estado == "Pendiente":
+        elif estado == "Pago pendiente":
             return ft.Colors.ORANGE_700
         elif estado == "Cerca":
             return ft.Colors.BLUE_700
