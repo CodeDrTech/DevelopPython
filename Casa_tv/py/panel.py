@@ -52,7 +52,7 @@ def enviar_mensajes(numeros, mensaje, page, intervalo=10):
             mostrar_mensaje_whatsapp(f"Error enviando mensaje a {numero}: {e}", page)
 
 def main(page: ft.Page):
-    page.title = "TV en casa  Ver.20250109"
+    page.title = "TV en casa  Ver.20250216"
     page.window.alignment = ft.alignment.center
     page.window.width = 1300
     page.window.height = 800
@@ -486,8 +486,9 @@ def main(page: ft.Page):
         total_pagado_mes = "{:,}".format(total_montos)
         
         # Utilidad total del mes actual.s
-        Utilidad = float(total_pagado_mes.replace(",", "")) - float(total_montos_format.replace(",", ""))
-        
+        calculo_utilidad = float(total_pagado_mes.replace(",", "")) - float(total_montos_format.replace(",", ""))
+        #Utilidad = "{:,}".format(total_pagado_mes) - "{:,}".format(total_montos_format)
+        Utilidad = "{:,}".format(calculo_utilidad)
         
         
         def filtrar_registros():
