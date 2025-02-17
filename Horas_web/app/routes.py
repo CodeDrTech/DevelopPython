@@ -1,5 +1,7 @@
 from flask import render_template, request, redirect, flash
 from app import app
+from app.database import get_db
+import sqlite3
 
 @app.route('/')
 def index():
@@ -26,8 +28,18 @@ def guardar_horas():
         flash('Formato de horas inválido. Use H:MM (ej: 2:30)')
         return redirect('/registro')
 
-    # Aquí guardarías los datos en la base de datos.
-    # Ejemplo de impresión para pruebas (luego reemplazar con lógica real)
-    print(f"Datos recibidos: {codigo}, {nombre}, {fecha}, {horas_35}, {horas_100}, {comentario}")
-    flash('Registro guardado exitosamente.')
+    try:
+        db = get_db()
+        db.execute('''
+            INSERT INTO Horas (
+                Fecha, Codigo, Nombre, 
+                Horas_35, Horas_100, Destino_Comentario
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        ''', (fecha, codigo, nombre, horas_35, horas_100, comentario))
+        db.commit()
+        flash('Registro guardado exitosamente.')
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        flash('Error al guardar el registro.')
+        
     return redirect('/')
