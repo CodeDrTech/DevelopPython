@@ -435,7 +435,7 @@ def validar_entrada_hora(hora_str):
     if not hora_str:
         return True, ""
     
-    if len(hora_str) < 4:
+    if len(hora_str) < 5:
         return False, "Formato inválido. Use H:MM o HH:MM"
         
     if ":" not in hora_str:

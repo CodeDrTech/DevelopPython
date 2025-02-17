@@ -122,7 +122,8 @@ def reporte(page: ft.Page):
     if num_dia_actual <= 15:
         fecha_actual2 = fecha_actual2.replace(day=15)
     else:
-        fecha_actual2 = fecha_actual2.replace(day=30)
+        ultimo_dia = calendar.monthrange(fecha_actual2.year, fecha_actual2.month)[1]
+        fecha_actual2 = fecha_actual2.replace(day=ultimo_dia)
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     
