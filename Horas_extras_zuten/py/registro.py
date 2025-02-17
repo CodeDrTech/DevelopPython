@@ -259,20 +259,35 @@ def registro(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def format_hora(e):
         """
-        Función para formatear entrada de hora en formato H:MM o HH:MM
+        Función para formatear entrada de hora en formato HH:MM
+        Si el primer dígito es 0, formatea horas de 01-09
+        Si el primer dígito es 1, formatea horas de 10-12
         """
-        # Quitar caracteres no numéricos
+        # Quitar caracteres no numéricos y obtener solo los dígitos
         raw = ''.join(filter(str.isdigit, e.control.value))
         
-        # Limitar a 4 dígitos máximo (2 para hora, 2 para minutos)
-        raw = raw[:4]
-        
-        # Aplicar formato HH:MM
-        formatted = ''
-        for i, char in enumerate(raw):
-            if i == 1:  # Añadir ":" después del primer o segundo dígito
-                formatted += ':'
-            formatted += char
+        # Si hay dígitos para procesar
+        if raw:
+            # Si comienza con 0, esperar dos dígitos para la hora
+            if raw[0] == '0':
+                if len(raw) == 1:
+                    formatted = raw  # Solo mostrar el 0
+                else:
+                    hours = raw[0:2]
+                    minutes = raw[2:4] if len(raw) > 2 else ""
+                    formatted = f"{hours}:{minutes}" if minutes else hours
+            # Si no comienza con 0
+            else:
+                if len(raw) == 1:
+                    formatted = raw  # Solo mostrar el primer dígito
+                else:
+                    hours = raw[0:2] if len(raw) >= 2 else raw[0]
+                    if len(hours) == 2 and int(hours) > 12:
+                        hours = "12"
+                    minutes = raw[2:4] if len(raw) > 2 else ""
+                    formatted = f"{hours}:{minutes}" if minutes else hours
+        else:
+            formatted = ""
         
         # Actualizar el campo de texto
         e.control.value = formatted
@@ -722,15 +737,15 @@ def registro(page: ft.Page):
                         ]),
                         ft.Row([
                             ft.Text("Nocturna:", width=100),
-                            ft.TextField(width=320, ref=txt_nocturnas, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_nocturnas, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=5, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Hora 35%:", width=100),
-                            ft.TextField(width=320, ref=txt_hora35, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_hora35, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=5, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                             ft.Text("Hora 100%:", width=100),
-                            ft.TextField(width=320, ref=txt_hora100, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=4, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
+                            ft.TextField(width=320, ref=txt_hora100, border=ft.border.all(2, ft.Colors.BLACK), border_radius=10, max_length=5, on_change=format_hora, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9:]*$", replacement_string="")),
                         ]),
                         ft.Row([
                         ft.Text(" ", width=100),
