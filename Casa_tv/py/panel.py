@@ -3,7 +3,8 @@ from flet import ScrollMode, AppView
 from consultas import get_clientes, get_clientes_pagos, actualizar_cliente, get_estado_pagos, insertar_pago, get_estado_pago_cliente,\
 insertar_cliente, obtener_todos_los_clientes, obtener_clientes_por_estado, obtener_credenciales, actualizar_credenciales,\
 obtener_numeros_whatsapp, get_clientes_autocomplete, get_cuentas, insertar_cuenta, actualizar_cuenta, get_cliente_por_id, get_suscripciones\
-, get_cliente_by_nombre, get_cuenta_by_servicio, insertar_suscripcion, actualizar_suscripcion, get_suscripcion_by_id, get_total_pagos_mes_actual
+, get_cliente_by_nombre, get_cuenta_by_servicio, insertar_suscripcion, actualizar_suscripcion, get_suscripcion_by_id, get_total_pagos_mes_actual\
+, eliminar_cliente_db, tiene_pagos, eliminar_pagos, tiene_suscripciones, eliminar_suscripciones, eliminar_cuenta_db,eliminar_suscripcion_db
 import datetime
 import time
 #import pywhatkit
@@ -690,6 +691,64 @@ def main(page: ft.Page):
         auto_complete = None
         auto_complete_container = None
         # -----------------------------------------------
+        # Función para ELIMINAR CLIENTE
+        # -----------------------------------------------
+        def eliminar_cliente(e, cliente_id):
+            """Elimina un cliente después de verificar y eliminar sus pagos y suscripciones."""
+            cliente = next(c for c in clientes if c[0] == cliente_id)
+            
+            def confirmar_eliminacion(e):
+                try:
+                    # Check and delete payments
+                    if tiene_pagos(cliente_id):
+                        eliminar_pagos(cliente_id)
+                    
+                    # Check and delete subscriptions
+                    if tiene_suscripciones(cliente_id):
+                        eliminar_suscripciones(cliente_id)
+                    
+                    # Delete the client
+                    if eliminar_cliente_db(cliente_id):
+                        mostrar_mensaje("Cliente eliminado correctamente")
+                        
+                        # Update the client list and table
+                        nonlocal clientes
+                        clientes = get_clientes()
+                        actualizar_tabla(clientes)
+                        actualizar_autocomplete()
+                        
+                        # Update the vencimientos table
+                        nonlocal tabla_vencimientos
+                        tabla_vencimientos = crear_tabla_vencimientos()
+                        mainTab.tabs[0].content = tabla_vencimientos
+                        
+                        page.update()
+                    else:
+                        mostrar_mensaje("Error al eliminar cliente")
+                except Exception as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}")
+                dlg_confirmacion.open = False
+                page.update()
+
+            def cancelar_eliminacion(e):
+                dlg_confirmacion.open = False
+                page.update()
+
+            dlg_confirmacion = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Confirmar eliminación"),
+                content=ft.Text(f"¿Está seguro que desea eliminar al cliente {cliente[1]}?"),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=cancelar_eliminacion),
+                    ft.TextButton("Eliminar", on_click=confirmar_eliminacion)
+                ],
+                actions_alignment=ft.MainAxisAlignment.END
+            )
+            
+            page.overlay.append(dlg_confirmacion)
+            dlg_confirmacion.open = True
+            page.update()
+        # -----------------------------------------------
         # Función para NUEVO CLIENTE
         # -----------------------------------------------
         def nuevo_cliente(e):
@@ -952,7 +1011,8 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Condicion")),
                     ft.DataColumn(ft.Text("Frecuencia")),
                     ft.DataColumn(ft.Text("Comentario")),
-                    ft.DataColumn(ft.Text("Acciones"))
+                    ft.DataColumn(ft.Text("Editar")),
+                    ft.DataColumn(ft.Text("Eliminar")),
                 ],
                 rows=[
                     ft.DataRow(
@@ -971,7 +1031,16 @@ def main(page: ft.Page):
                                     on_click=lambda e, id=cliente[0]: 
                                         editar_cliente(e, id)
                                 )
-                            )
+                            ),
+                            ft.DataCell(
+                                ft.IconButton(
+                                    icon=ft.Icons.DELETE,
+                                    icon_color="red",
+                                    data=cliente,
+                                    on_click=lambda e, id=cliente[0]:
+                                        eliminar_cliente(e, id)
+                                )
+                            ),
                         ]
                     ) for cliente in registros_filtrados
                 ],
@@ -1343,7 +1412,41 @@ def main(page: ft.Page):
                 actualizar_tabla_cuentas()
             page.update()
 
-        
+        def eliminar_cuenta(e, cuenta_id):
+            """Elimina una cuenta después de confirmar con el usuario."""
+            cuenta = next(c for c in get_cuentas() if c[0] == cuenta_id)
+            
+            def confirmar_eliminacion(e):
+                try:
+                    if eliminar_cuenta_db(cuenta_id):
+                        mostrar_mensaje("Cuenta eliminada correctamente")
+                        actualizar_autocomplete()
+                        actualizar_tabla_cuentas()
+                    else:
+                        mostrar_mensaje("Error al eliminar cuenta")
+                except Exception as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}")
+                dlg_confirmacion.open = False
+                page.update()
+
+            def cancelar_eliminacion(e):
+                dlg_confirmacion.open = False
+                page.update()
+
+            dlg_confirmacion = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Confirmar eliminación"),
+                content=ft.Text(f"¿Está seguro que desea eliminar la cuenta {cuenta[1]}?"),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=cancelar_eliminacion),
+                    ft.TextButton("Eliminar", on_click=confirmar_eliminacion)
+                ],
+                actions_alignment=ft.MainAxisAlignment.END
+            )
+            
+            page.overlay.append(dlg_confirmacion)
+            dlg_confirmacion.open = True
+            page.update()
         
         # Función para actualizar la tabla de cuentas; acepta opcionalmente una lista filtrada.
         def actualizar_tabla_cuentas(cuentas_filtradas=None):
@@ -1356,6 +1459,12 @@ def main(page: ft.Page):
                     tooltip="Editar cuenta",
                     on_click=lambda e, id=cuenta[0]: editar_cuenta(e, id, page)
                 )
+                eliminar_btn = ft.IconButton(
+                    icon=ft.Icons.DELETE,
+                    tooltip="Eliminar cuenta",
+                    icon_color="red",
+                    on_click=lambda e, id=cuenta[0]: eliminar_cuenta(e, id)
+                )
                 rows.append(
                     ft.DataRow(
                         cells=[
@@ -1363,7 +1472,8 @@ def main(page: ft.Page):
                             ft.DataCell(ft.Text(cuenta[1])),
                             ft.DataCell(ft.Text(f"${cuenta[2]:.2f}")),
                             ft.DataCell(ft.Text(cuenta[3])),
-                            ft.DataCell(editar_btn)
+                            ft.DataCell(editar_btn),
+                            ft.DataCell(eliminar_btn)
                         ]
                     )
                 )
@@ -1373,7 +1483,8 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Costo")),
                     ft.DataColumn(ft.Text("Servicio")),
-                    ft.DataColumn(ft.Text("Acciones"))
+                    ft.DataColumn(ft.Text("Editar")),
+                    ft.DataColumn(ft.Text("Eliminar"))
                 ],
                 rows=rows,
                 border=ft.border.all(1, ft.Colors.GREY_400),
@@ -1585,7 +1696,62 @@ def main(page: ft.Page):
         suscripcion_seleccionada = None
         suscripciones_auto_complete = None
         
-        
+        def eliminar_suscripcion(e, suscripcion_id):
+            """Elimina una suscripción después de confirmar con el usuario."""
+            try:
+                suscripcion = get_suscripcion_by_id(suscripcion_id)
+                if not suscripcion:
+                    mostrar_mensaje("Error: No se encontró la suscripción")
+                    return
+                
+                # Get related data with safe checks
+                cliente = get_cliente_by_nombre(suscripcion[1])
+                cuenta = get_cuenta_by_servicio(suscripcion[2])
+                
+                # Safe access to data with fallbacks
+                cliente_nombre = cliente[1] if cliente else "Cliente no encontrado"
+                servicio_nombre = cuenta[3] if cuenta else "Servicio no encontrado"
+                correo = suscripcion[4] if suscripcion[4] else "Sin correo"
+                
+                def confirmar_eliminacion(e):
+                    try:
+                        if eliminar_suscripcion_db(suscripcion_id):
+                            mostrar_mensaje("Suscripción eliminada correctamente")
+                            actualizar_autocomplete()
+                            actualizar_tabla_suscripciones()
+                        else:
+                            mostrar_mensaje("Error al eliminar suscripción")
+                    except Exception as ex:
+                        mostrar_mensaje(f"Error: {str(ex)}")
+                    dlg_confirmacion.open = False
+                    page.update()
+
+                def cancelar_eliminacion(e):
+                    dlg_confirmacion.open = False
+                    page.update()
+
+                dlg_confirmacion = ft.AlertDialog(
+                    modal=True,
+                    title=ft.Text("Confirmar eliminación"),
+                    content=ft.Text(
+                        f"¿Está seguro que desea eliminar la suscripción?\n"
+                        f"Cliente: {cliente_nombre}\n"
+                        f"Servicio: {servicio_nombre}\n"
+                        f"Correo: {correo}"
+                    ),
+                    actions=[
+                        ft.TextButton("Cancelar", on_click=cancelar_eliminacion),
+                        ft.TextButton("Eliminar", on_click=confirmar_eliminacion)
+                    ],
+                    actions_alignment=ft.MainAxisAlignment.END
+                )
+                
+                page.overlay.append(dlg_confirmacion)
+                dlg_confirmacion.open = True
+                page.update()
+            except Exception as ex:
+                mostrar_mensaje(f"Error al preparar eliminación: {str(ex)}")
+            
         def actualizar_autocomplete():
             """Actualiza las sugerencias del autocomplete con los correos de suscripciones"""
             suscripciones = get_suscripciones()
@@ -1604,35 +1770,34 @@ def main(page: ft.Page):
             rows = []
             
             for suscripcion in suscripciones_list:
-                # Obtener datos del cliente
-                cliente = get_cliente_by_nombre(suscripcion[1])
-                if cliente is not None:
-                    cliente_nombre = cliente[1]
-                else:
-                    cliente_nombre = "Cliente no encontrado"
-                
-                # Obtener datos de la cuenta
-                cuenta_info = get_cuenta_by_servicio(suscripcion[2])
-                if cuenta_info is not None:
-                    servicio = cuenta_info[3]  # Asumiendo que el nombre del servicio está en la posición 3
-                else:
-                    servicio = "Cuenta no encontrada"
+                # suscripcion[0] = id
+                # suscripcion[1] = nombre del cliente
+                # suscripcion[2] = servicio
+                # suscripcion[3] = monto
+                # suscripcion[4] = correo
                 
                 editar_btn = ft.IconButton(
                     icon=ft.Icons.EDIT,
                     tooltip="Editar suscripción",
                     on_click=lambda e, id=suscripcion[0]: editar_suscripcion(e, id, page)
                 )
+                eliminar_btn = ft.IconButton(
+                    icon=ft.Icons.DELETE,
+                    tooltip="Eliminar suscripción",
+                    icon_color="red",
+                    on_click=lambda e, id=suscripcion[0]: eliminar_suscripcion(e, id)
+                )
                 
                 rows.append(
                     ft.DataRow(
                         cells=[
                             ft.DataCell(ft.Text(str(suscripcion[0]))),
-                            ft.DataCell(ft.Text(cliente_nombre)),
-                            ft.DataCell(ft.Text(servicio)),  # Nombre del servicio
+                            ft.DataCell(ft.Text(suscripcion[1])),
+                            ft.DataCell(ft.Text(suscripcion[2])),  # Nombre del servicio
                             ft.DataCell(ft.Text(f"${int(suscripcion[3])}")),
                             ft.DataCell(ft.Text(suscripcion[4])),
-                            ft.DataCell(editar_btn)
+                            ft.DataCell(editar_btn),
+                            ft.DataCell(eliminar_btn)
                         ]
                     )
                 )
@@ -1644,7 +1809,8 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Servicio")),
                     ft.DataColumn(ft.Text("Pago mens.")),
                     ft.DataColumn(ft.Text("Correo")),
-                    ft.DataColumn(ft.Text("Acciones"))
+                    ft.DataColumn(ft.Text("Editar")),
+                    ft.DataColumn(ft.Text("Eliminar"))
                 ],
                 rows=rows,
                 border=ft.border.all(1, ft.Colors.GREY_400),

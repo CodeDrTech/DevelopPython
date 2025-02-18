@@ -858,7 +858,7 @@ def get_suscripciones():
             conn.close()
     return []
 
-def get_cliente_by_nombre(nombre: int):
+def get_cliente_by_nombre(nombre_id: int):
     """
     Obtiene los datos de un cliente por su ID.
     
@@ -872,7 +872,7 @@ def get_cliente_by_nombre(nombre: int):
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM clientes WHERE nombre = ?", (nombre,))
+            cursor.execute("SELECT * FROM clientes WHERE id = ?", (nombre_id,))
             return cursor.fetchone()
         except sqlite3.Error as e:
             print(f"Error obteniendo cliente: {e}")
@@ -881,7 +881,7 @@ def get_cliente_by_nombre(nombre: int):
             conn.close()
     return None
 
-def get_cuenta_by_servicio(servicio: int):
+def get_cuenta_by_servicio(servicio_id: int):
     """
     Obtiene los datos de una cuenta por su ID.
     
@@ -895,7 +895,7 @@ def get_cuenta_by_servicio(servicio: int):
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM cuentas WHERE servicio = ?", (servicio,))
+            cursor.execute("SELECT * FROM cuentas WHERE id = ?", (servicio_id,))
             return cursor.fetchone()
         except sqlite3.Error as e:
             print(f"Error obteniendo cuenta: {e}")
@@ -988,5 +988,183 @@ def get_suscripcion_by_id(suscripcion_id: int):
         finally:
             conn.close()
     return None
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def eliminar_cliente_db(cliente_id: int) -> bool:
+    """
+    Elimina un cliente de la base de datos.
 
+    Args:
+        cliente_id (int): ID del cliente a eliminar.
+
+    Returns:
+        bool: True si la eliminación fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM clientes WHERE id = ?", (cliente_id,))
+            conn.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"Error eliminando cliente: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def tiene_pagos(cliente_id: int) -> bool:
+    """
+    Verifica si un cliente tiene pagos registrados.
+
+    Args:
+        cliente_id (int): ID del cliente a verificar.
+
+    Returns:
+        bool: True si el cliente tiene pagos, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT COUNT(*) 
+                FROM pagos 
+                WHERE cliente_id = ?
+            """, (cliente_id,))
+            result = cursor.fetchone()[0]
+            return result > 0
+        except sqlite3.Error as e:
+            print(f"Error verificando pagos del cliente: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def eliminar_pagos(cliente_id: int) -> bool:
+    """
+    Elimina todos los pagos asociados a un cliente.
+
+    Args:
+        cliente_id (int): ID del cliente cuyos pagos se eliminarán.
+
+    Returns:
+        bool: True si la eliminación fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM pagos WHERE cliente_id = ?", (cliente_id,))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error eliminando pagos del cliente: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def tiene_suscripciones(cliente_id: int) -> bool:
+    """
+    Verifica si un cliente tiene suscripciones activas.
+
+    Args:
+        cliente_id (int): ID del cliente a verificar.
+
+    Returns:
+        bool: True si el cliente tiene suscripciones, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT COUNT(*) 
+                FROM suscripcion 
+                WHERE cliente_id = ?
+            """, (cliente_id,))
+            result = cursor.fetchone()[0]
+            return result > 0
+        except sqlite3.Error as e:
+            print(f"Error verificando suscripciones del cliente: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def eliminar_suscripciones(cliente_id: int) -> bool:
+    """
+    Elimina todas las suscripciones asociadas a un cliente.
+
+    Args:
+        cliente_id (int): ID del cliente cuyas suscripciones se eliminarán.
+
+    Returns:
+        bool: True si la eliminación fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM suscripcion WHERE cliente_id = ?", (cliente_id,))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error eliminando suscripciones del cliente: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def eliminar_cuenta_db(cuenta_id: int) -> bool:
+    """
+    Elimina una cuenta de la base de datos.
+
+    Args:
+        cuenta_id (int): ID de la cuenta a eliminar.
+
+    Returns:
+        bool: True si la eliminación fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM cuentas WHERE id = ?", (cuenta_id,))
+            conn.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"Error eliminando cuenta: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def eliminar_suscripcion_db(suscripcion_id: int) -> bool:
+    """
+    Elimina una suscripción de la base de datos.
+
+    Args:
+        suscripcion_id (int): ID de la suscripción a eliminar.
+
+    Returns:
+        bool: True si la eliminación fue exitosa, False en caso contrario.
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM suscripcion WHERE id = ?", (suscripcion_id,))
+            conn.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"Error eliminando suscripción: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
 
