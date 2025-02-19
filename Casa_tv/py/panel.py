@@ -63,6 +63,8 @@ def main(page: ft.Page):
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
     
+    
+    
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------
     def enviar_click(e):
@@ -1428,6 +1430,7 @@ def main(page: ft.Page):
                     mostrar_mensaje(f"Error: {str(ex)}")
                 dlg_confirmacion.open = False
                 page.update()
+                
 
             def cancelar_eliminacion(e):
                 dlg_confirmacion.open = False
