@@ -2,6 +2,7 @@ import flet as ft
 from tabs.vencimientos_tab import crear_tabla_vencimientos
 from tabs.clientes_tab import crear_tabla_clientes
 from tabs.pagos_tab import crear_tab_pagos
+from tabs.suscripciones_tab import crear_tab_suscripciones
 
 def main(page: ft.Page):
     page.title = "TV en casa  Ver.20250216"
@@ -30,6 +31,9 @@ def main(page: ft.Page):
     
     # Create pagos content
     pagos_content = crear_tab_pagos(page, mainTab)
+    
+    # Create suscripciones content
+    suscripciones_content = crear_tab_suscripciones(page, mainTab)
 
     # Create and add all tabs
     tabs_list = [
@@ -49,8 +53,9 @@ def main(page: ft.Page):
             content=pagos_content
         ),
         ft.Tab(
-            text="Suscripciones",
             icon=ft.Icons.SUBSCRIPTIONS,
+            text="Suscripciones",
+            content=suscripciones_content
         ),
         ft.Tab(
             icon=ft.Icons.MAIL,

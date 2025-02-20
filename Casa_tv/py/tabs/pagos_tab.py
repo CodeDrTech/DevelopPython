@@ -2,12 +2,18 @@ import flet as ft
 import datetime
 from utils import convertir_formato_fecha, mostrar_mensaje, get_estado_color
 from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago
+from tabs.vencimientos_tab import crear_tabla_vencimientos
 
 def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         """
         Crea tab para aplicar pagos con AutoComplete y fecha.
         Permite seleccionar cliente, establecer fecha y registrar pago.
         """
+        def actualizar_vencimientos():
+            """Updates the vencimientos tab content"""
+            mainTab.tabs[0].content = crear_tabla_vencimientos(page)
+            page.update()
+        
         # Variables de estado
         info_container = ft.Container()
         cliente_seleccionado = None
@@ -139,10 +145,9 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                     txt_fecha_pago.current.value = ""
                     txt_campo_pago.current.value = ""
                     
-                    # Actualizar tabla de vencimientos (si aplica)
-                    nonlocal tabla_vencimientos
-                    tabla_vencimientos = crear_tabla_vencimientos()
-                    mainTab.tabs[0].content = tabla_vencimientos
+                    # actualizar tabla de vencimientos
+                    actualizar_vencimientos()
+                    
                     page.update()
                 else:
                     mostrar_mensaje("Error registrando pago", page)
