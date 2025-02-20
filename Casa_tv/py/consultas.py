@@ -204,14 +204,15 @@ def get_estado_pagos():
                         THEN 'Cerca'
                     ELSE 'Al día'
                 END AS estado_pago,                                -- índice 7
-                s.monto,                                           -- índice 8
-                s.correo,                                          -- índice 9
+                IFNULL(SUM(s.monto), 0) AS monto,                   -- índice 8
+                IFNULL(GROUP_CONCAT(s.correo, ', '), '') AS correo, -- índice 9
                 c.comentario                                      -- índice 10
             FROM clientes c
             LEFT JOIN ultimo_pago up ON c.id = up.cliente_id
             INNER JOIN suscripcion s ON c.id = s.cliente_id
             WHERE c.estado = 'Activo'
-            ORDER BY dias_transcurridos DESC;
+            GROUP BY c.id
+            ORDER BY nombre DESC;
             ''')
             return cursor.fetchall()
         except sqlite3.Error as e:
@@ -848,6 +849,7 @@ def get_suscripciones():
                 FROM suscripcion s
                 JOIN clientes cl ON s.cliente_id = cl.id
                 JOIN cuentas cu ON s.cuenta_id = cu.id
+                ORDER BY cl.nombre;
             """
             cursor.execute(query)
             return cursor.fetchall()

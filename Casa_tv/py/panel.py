@@ -569,7 +569,7 @@ def main(page: ft.Page):
             ft.DataColumn(ft.Text("Frecuencia")),
             ft.DataColumn(ft.Text("Días")),
             ft.DataColumn(ft.Text("Estado")),
-            ft.DataColumn(ft.Text("Pago mens.")),
+            ft.DataColumn(ft.Text("Pago mens.        ")),
             ft.DataColumn(ft.Text("Correo")),
             ft.DataColumn(ft.Text("Comentario"))
         ]
@@ -596,7 +596,7 @@ def main(page: ft.Page):
                     ft.DataColumn(ft.Text("Frecuencia")),
                     ft.DataColumn(ft.Text("Días")),
                     ft.DataColumn(ft.Text("Estado")),
-                    ft.DataColumn(ft.Text("Pago mens.")),
+                    ft.DataColumn(ft.Text("Pago mens.        ")),
                     ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Comentario"))
                 ],
@@ -1689,7 +1689,7 @@ def main(page: ft.Page):
         """Cierra el diálogo y actualiza la página."""
         dialog.open = False
         page.update()
-    def crear_tab_suscripciones():
+    def  crear_tab_suscripciones():
         """
         Crea el tab "Suscripciones" con funcionalidad similar al tab de cuentas
         """
