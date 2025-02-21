@@ -1,7 +1,7 @@
 import flet as ft
 import datetime
 from utils import convertir_formato_fecha, mostrar_mensaje, get_estado_color
-from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago, get_pagos_cliente, eliminar_pago, actualizar_pago
+from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago, get_pagos_cliente, eliminar_pago, actualizar_pago, get_pagos_clientes_mes
 from tabs.vencimientos_tab import crear_tabla_vencimientos
 
 def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
@@ -16,7 +16,8 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
             columns=[
                 ft.DataColumn(ft.Text("Fecha")),
                 ft.DataColumn(ft.Text("Monto")),
-                ft.DataColumn(ft.Text("Acciones"))
+                ft.DataColumn(ft.Text("Editar")),
+                ft.DataColumn(ft.Text("Eliminar"))
             ],
             rows=[]
         ),
@@ -28,11 +29,13 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         def actualizar_tabla_pagos(cliente_id):
             """Actualiza la tabla de pagos del cliente."""
             pagos = get_pagos_cliente(cliente_id)
+            pagos_del_mes = get_pagos_clientes_mes()
             tabla_pagos.content = ft.DataTable(
                 columns=[
                     ft.DataColumn(ft.Text("Fecha")),
                     ft.DataColumn(ft.Text("Monto")),
-                    ft.DataColumn(ft.Text("Acciones"))
+                    ft.DataColumn(ft.Text("Editar")),
+                    ft.DataColumn(ft.Text("Eliminar"))
                 ],
                 rows=[
                     ft.DataRow(
@@ -42,12 +45,16 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                             ft.DataCell(
                                 ft.Row([
                                     ft.IconButton(
-                                        icon=ft.icons.EDIT,
+                                        icon=ft.Icons.EDIT,
                                         tooltip="Editar",
                                         on_click=lambda e, p=pago: editar_pago(e, p)
-                                    ),
+                                    )
+                                ])
+                            ),
+                            ft.DataCell(
+                                ft.Row([
                                     ft.IconButton(
-                                        icon=ft.icons.DELETE,
+                                        icon=ft.Icons.DELETE,
                                         tooltip="Eliminar",
                                         on_click=lambda e, p=pago: confirmar_eliminar_pago(e, p)
                                     )
@@ -294,13 +301,18 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
 
         return ft.Column([
             ft.Text("Registrar Pago", size=20, weight="bold"),
-            auto_complete_container,
-            campo_fecha,
-            campo_pago,
-            info_container,
-            ft.ElevatedButton(
-                "Aplicar Pago",
-                on_click=aplicar_pago,
-                icon=ft.Icons.SAVE
-            )
+            ft.Row([
+                ft.Column([
+                    auto_complete_container,
+                    campo_fecha,
+                    campo_pago,
+                    info_container,
+                    ft.ElevatedButton(
+                        "Aplicar Pago",
+                        on_click=aplicar_pago,
+                        icon=ft.Icons.SAVE
+                    )
+                ], spacing=10),
+                tabla_pagos
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         ])

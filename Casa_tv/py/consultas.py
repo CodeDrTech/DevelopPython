@@ -1162,6 +1162,48 @@ def get_pagos_cliente(cliente_id: int):
             conn.close()
     return []
 
+
+
+def get_pagos_clientes_mes():
+    """
+    Obtiene los pagos realizados en el mes actual y el mes anterior.
+    
+    Returns:
+        list: Lista de tuplas con los pagos, conteniendo:
+            - id del pago
+            - nombre del cliente
+            - fecha del pago
+            - monto pagado
+            - deuda pendiente
+            - saldo neto
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT 
+                    p.id,
+                    c.nombre,
+                    p.fecha_pago,
+                    p.monto_pagado,
+                    p.deuda_pendiente,
+                    p.saldo_neto
+                FROM pagos p
+                JOIN clientes c ON p.cliente_id = c.id
+                WHERE p.fecha_pago >= date('now', 'start of month', '-1 month')
+                    AND p.fecha_pago <= date('now', 'start of month', '+1 month', '-1 day')
+                ORDER BY p.fecha_pago DESC
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error consultando pagos del mes: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+
+
 def eliminar_pago(pago_id: int) -> bool:
     """Elimina un pago y actualiza saldos."""
     conn = connect_to_database()
