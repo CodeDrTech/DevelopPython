@@ -7,7 +7,7 @@ from tabs.envios_tab import envio_estados
 from tabs.cuentas_tab import crear_tab_cuentas
 
 def main(page: ft.Page):
-    page.title = "TV en casa  Ver.20250216"
+    page.title = "TV en casa  Ver.20250221"
     page.window.alignment = ft.alignment.center
     page.window.width = 1300
     page.window.height = 800

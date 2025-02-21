@@ -162,17 +162,17 @@ def get_estado_pagos():
 
     Returns:
         list: Lista de tuplas con:
-            - cliente_id (int)
-            - nombre_cliente (str)
-            - fecha_inicio (str)
-            - fecha_base (str): Último pago o fecha inicio
-            - proximo_pago (str)
-            - frecuencia (int)
-            - dias_transcurridos (int)
-            - estado_pago (str): En corte/Pendiente/Cerca/Al día
-            - monto (float)
-            - correo (str)
-            - comentario (str)
+            - cliente_id (int)          -- índice 0
+            - nombre_cliente (str)      -- índice 1
+            - fecha_inicio (str)        -- índice 2
+            - fecha_base (str)          -- índice 3
+            - proximo_pago (str)        -- índice 4
+            - saldo_pendiente (int)     -- índice 5 (antes frecuencia)
+            - dias_transcurridos (int)  -- índice 6
+            - estado_pago (str)         -- índice 7
+            - monto (float)             -- índice 8
+            - correo (str)              -- índice 9
+            - comentario (str)          -- índice 10
     """
     conn = connect_to_database()
     if conn:
@@ -193,7 +193,7 @@ def get_estado_pagos():
                 COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,  -- índice 3
                 DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
                     '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,  -- índice 4
-                c.frecuencia,                                        -- índice 5
+                c.saldo_pendiente,                                    -- índice 5 (cambiado de c.frecuencia)
                 ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) - 1) AS dias_transcurridos,  -- índice 6
                 CASE 
                     WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) - 1) > 33 

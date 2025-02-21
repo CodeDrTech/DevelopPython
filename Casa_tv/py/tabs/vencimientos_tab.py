@@ -120,10 +120,10 @@ def crear_tabla_vencimientos(page: ft.Page):
             ft.DataColumn(ft.Text("Inicio")),
             ft.DataColumn(ft.Text("Ultimo pago")),
             ft.DataColumn(ft.Text("Proximo pago")),
-            ft.DataColumn(ft.Text("Frecuencia")),
+            ft.DataColumn(ft.Text("Saldo pendiente", width=70, text_align=ft.TextAlign.LEFT)),
             ft.DataColumn(ft.Text("Días")),
             ft.DataColumn(ft.Text("Estado")),
-            ft.DataColumn(ft.Text("Pago mens.        ")),
+            ft.DataColumn(ft.Text("Pago    mensual", width=70, text_align=ft.TextAlign.LEFT)),
             ft.DataColumn(ft.Text("Correo")),
             ft.DataColumn(ft.Text("Comentario"))
         ]
@@ -147,10 +147,10 @@ def crear_tabla_vencimientos(page: ft.Page):
                     ft.DataColumn(ft.Text("Inicio")),
                     ft.DataColumn(ft.Text("Ultimo pago")),
                     ft.DataColumn(ft.Text("Proximo pago")),
-                    ft.DataColumn(ft.Text("Frecuencia")),
+                    ft.DataColumn(ft.Text("Saldo pendiente", width=70, text_align=ft.TextAlign.LEFT)),
                     ft.DataColumn(ft.Text("Días")),
                     ft.DataColumn(ft.Text("Estado")),
-                    ft.DataColumn(ft.Text("Pago mens.        ")),
+                    ft.DataColumn(ft.Text("Pago    mensual", width=70, text_align=ft.TextAlign.LEFT)),
                     ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Comentario"))
                 ],
@@ -162,8 +162,8 @@ def crear_tabla_vencimientos(page: ft.Page):
                             ft.DataCell(ft.Text(convertir_formato_fecha(reg[2]))),
                             ft.DataCell(ft.Text(convertir_formato_fecha(reg[3]))),
                             ft.DataCell(ft.Text(convertir_formato_fecha(reg[4]))),
-                            ft.DataCell(ft.Text(f"{reg[5]} días")),
-                            ft.DataCell(ft.Text(str(reg[6]))),
+                            ft.DataCell(ft.Text(f"${reg[5]}")),
+                            ft.DataCell(ft.Text(int(reg[6]))),
                             ft.DataCell(ft.Text(
                                 reg[7],
                                 color=get_estado_color(reg[7])
