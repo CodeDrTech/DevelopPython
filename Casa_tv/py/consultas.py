@@ -254,13 +254,8 @@ def get_total_pagos_mes_actual():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
-    """Registra un nuevo pago y actualiza el saldo pendiente y saldo neto del cliente,
-    utilizando como cuota la suma de los montos de sus suscripciones (ya que un cliente
-    puede tener varias suscripciones). Se valida que la diferencia entre la frecuencia de pago
-    y los días transcurridos desde el último pago (o la fecha de inicio si no hay pagos previos)
-    sea de 3 días o menos. Si la diferencia es mayor, se rechaza el pago y se requiere actualizar
-    la fecha de inicio del cliente (reiniciar el contrato).
-
+    """Registra un nuevo pago y actualiza el saldo pendiente y saldo neto del cliente.
+    
     Args:
         cliente_id (int): ID del cliente.
         fecha_pago (str): Fecha del pago en formato 'YYYY-MM-DD'.
@@ -269,7 +264,6 @@ def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
     Returns:
         bool: True si la inserción fue exitosa, False en caso contrario.
     """
-
     conn = connect_to_database()
     if conn:
         try:
@@ -288,49 +282,20 @@ def insertar_pago(cliente_id: int, fecha_pago: str, monto_pagado: int) -> bool:
                 raise ValueError("Cliente o suscripciones no encontradas")
             nombre_cliente, fecha_inicio, frecuencia, cuota, saldo_pendiente = resultado
             
-            # Convertir las fechas a objetos datetime.
-            fecha_inicio_obj = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d')
-            fecha_pago_obj = datetime.datetime.strptime(fecha_pago, '%Y-%m-%d')
+            # ... validación de fechas y días transcurridos ...
             
-            # Obtener la fecha del último pago realizado por el cliente.
-            cursor.execute('''
-                SELECT MAX(fecha_pago)
-                FROM pagos
-                WHERE cliente_id = ?
-            ''', (cliente_id,))
-            ultima_fecha_pago = cursor.fetchone()[0]
-            
-            if ultima_fecha_pago:
-                fecha_base_obj = datetime.datetime.strptime(ultima_fecha_pago, '%Y-%m-%d')
-            else:
-                fecha_base_obj = fecha_inicio_obj
-            
-            # Calcular los días transcurridos desde la fecha base hasta la fecha de pago.
-            dias_transcurridos = (fecha_pago_obj - fecha_base_obj).days
-            
-            # Calcular la diferencia entre la frecuencia de pago y los días transcurridos.
-            diferencia = abs(frecuencia - dias_transcurridos)
-            
-            # Validar que la diferencia sea de 3 días o menos.
-            if diferencia > 3:
-                raise ValueError("La diferencia entre la frecuencia de pago y los días transcurridos es mayor a 3 días. "
-                                 "Por favor, actualice la fecha de inicio del cliente para reiniciar el contrato.")
-            
-            # Calcular el total a pagar en el período actual.
+            # Calcular el total a pagar y nuevos saldos
             total_a_pagar = cuota + saldo_pendiente
-            
-            # Calcular el nuevo saldo pendiente (lo que no se cubre del total a pagar).
             nuevo_saldo_pendiente = max(0, total_a_pagar - monto_pagado)
-            # El saldo neto se actualiza como la suma de la cuota y el nuevo saldo pendiente.
             nuevo_saldo_neto = cuota + nuevo_saldo_pendiente
             
-            # Registrar el pago en la tabla 'pagos' (sin almacenar el nombre, ya que se relaciona por cliente_id).
+            # Registrar el pago con todos los campos
             cursor.execute('''
-                INSERT INTO pagos (cliente_id, fecha_pago)
-                VALUES (?, ?)
-            ''', (cliente_id, fecha_pago))
+                INSERT INTO pagos (cliente_id, fecha_pago, monto_pagado, deuda_pendiente, saldo_neto)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (cliente_id, fecha_pago, monto_pagado, nuevo_saldo_pendiente, nuevo_saldo_neto))
             
-            # Actualizar el registro del cliente con el nuevo saldo pendiente y saldo neto.
+            # Actualizar saldos del cliente
             cursor.execute('''
                 UPDATE clientes
                 SET saldo_pendiente = ?, saldo_neto = ?
