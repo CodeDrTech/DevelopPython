@@ -18,9 +18,7 @@ def cerrar_dialogo(dialog, page):
         dialog.open = False
         page.update()
 def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
-    """
-    Crea el tab "Suscripciones" con funcionalidad similar al tab de cuentas
-    """
+    """Crea el tab "Suscripciones" con funcionalidad similar al tab de cuentas"""
     def actualizar_vencimientos():
             """Updates the vencimientos tab content"""
             mainTab.tabs[0].content = crear_tabla_vencimientos(page)
@@ -28,9 +26,8 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
     
     # Contenedor principal para la tabla
     tabla_container = ft.Container()
-    correo_seleccionado = None
-    suscripcion_seleccionada = None
-    suscripciones_auto_complete = None
+    
+    
     
     def eliminar_suscripcion(e, suscripcion_id):
         """Elimina una suscripción después de confirmar con el usuario."""
@@ -50,6 +47,16 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
             correo = suscripcion[4] if suscripcion[4] else "Sin correo"
             
             def confirmar_eliminacion(e):
+                """
+                Confirma y procesa la eliminación de una suscripción.
+                
+                Elimina la suscripción de la base de datos, actualiza los componentes
+                relevantes de la interfaz y muestra mensajes de confirmación o error
+                según corresponda.
+                
+                Args:
+                    e: Evento del botón que activó la función
+                """
                 try:
                     if eliminar_suscripcion_db(suscripcion_id):
                         mostrar_mensaje("Suscripción eliminada correctamente", page)
@@ -64,6 +71,12 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
                 page.update()
 
             def cancelar_eliminacion(e):
+                """
+                Cancela el proceso de eliminación de una suscripción y cierra el diálogo de confirmación.
+                
+                Args:
+                    e: Evento del botón que activó la función
+                """
                 dlg_confirmacion.open = False
                 page.update()
 
@@ -186,6 +199,16 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
         txt_correo = ft.TextField(label="Correo", expand=True)
 
         def guardar_nueva_suscripcion(e):
+            """
+            Guarda una nueva suscripción en la base de datos.
+            
+            Valida que todos los campos requeridos estén completos y que el correo
+            coincida con el de la cuenta seleccionada. Si la validación es exitosa,
+            inserta la nueva suscripción y actualiza la interfaz.
+            
+            Args:
+                e: Evento del botón que activó la función
+            """
             try:
                 if not dropdown_cliente.value:
                     mostrar_mensaje("Seleccione un cliente", page)

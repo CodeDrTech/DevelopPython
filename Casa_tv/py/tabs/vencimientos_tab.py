@@ -13,7 +13,7 @@ def crear_tabla_vencimientos(page: ft.Page):
         """
         
         
-        tabla_vencimientos = None  # Referencia a tabla_vencimientos
+        
         datos_pagos = None  # Referencia a datos_pagos
         # Variables globales
         registros = get_estado_pagos()
