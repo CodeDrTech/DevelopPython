@@ -1,6 +1,7 @@
 import flet as ft
 from utils import mostrar_mensaje
 from tabs.vencimientos_tab import crear_tabla_vencimientos
+from tabs.pagos_tab import crear_tab_pagos
 from consultas import (
     get_suscripcion_by_id,
     get_cliente_by_nombre,
@@ -22,6 +23,11 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
     def actualizar_vencimientos():
             """Updates the vencimientos tab content"""
             mainTab.tabs[0].content = crear_tabla_vencimientos(page)
+            page.update()
+            
+    def actualizar_pagos():
+            """Updates the pagos tab content"""
+            mainTab.tabs[2].content = crear_tab_pagos(page, mainTab)
             page.update()
     
     # Contenedor principal para la tabla
@@ -63,6 +69,7 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
                         actualizar_autocomplete()
                         actualizar_tabla_suscripciones()
                         actualizar_vencimientos()
+                        actualizar_pagos()
                     else:
                         mostrar_mensaje("Error al eliminar suscripción", page)
                 except Exception as ex:
@@ -238,6 +245,7 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
                     actualizar_autocomplete()
                     actualizar_tabla_suscripciones()
                     actualizar_vencimientos()
+                    actualizar_pagos()
                 else:
                     mostrar_mensaje("Error al crear suscripción", page)
             except Exception as ex:
@@ -324,6 +332,7 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
                     actualizar_autocomplete()
                     actualizar_tabla_suscripciones()
                     actualizar_vencimientos()
+                    actualizar_pagos()
                 else:
                     mostrar_mensaje("Error al actualizar", page)
             except Exception as ex:

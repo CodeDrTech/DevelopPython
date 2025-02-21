@@ -3,6 +3,8 @@ from tabs.vencimientos_tab import crear_tabla_vencimientos
 from tabs.clientes_tab import crear_tabla_clientes
 from tabs.pagos_tab import crear_tab_pagos
 from tabs.suscripciones_tab import crear_tab_suscripciones
+from tabs.envios_tab import envio_estados
+from tabs.cuentas_tab import crear_tab_cuentas
 
 def main(page: ft.Page):
     page.title = "TV en casa  Ver.20250216"
@@ -34,6 +36,12 @@ def main(page: ft.Page):
     
     # Create suscripciones content
     suscripciones_content = crear_tab_suscripciones(page, mainTab)
+    
+    # Crate envios content
+    envios_content = envio_estados(page, mainTab)
+    
+    # Create cuentas content
+    cuentas_content = crear_tab_cuentas(page, mainTab)
 
     # Create and add all tabs
     tabs_list = [
@@ -60,10 +68,12 @@ def main(page: ft.Page):
         ft.Tab(
             icon=ft.Icons.MAIL,
             text="Envio de correos",
+            content=envios_content
         ),
         ft.Tab(
             text="Cuentas",
             icon=ft.Icons.STREAM,
+            content=cuentas_content
         )
     ]
 

@@ -1123,7 +1123,7 @@ def eliminar_suscripciones(cliente_id: int) -> bool:
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def eliminar_cuenta_db(cuenta_id: int) -> bool:
     """
-    Elimina una cuenta de la base de datos.
+    Elimina una cuenta de la base de datos y todas sus suscripciones asociadas.
 
     Args:
         cuenta_id (int): ID de la cuenta a eliminar.
@@ -1135,10 +1135,14 @@ def eliminar_cuenta_db(cuenta_id: int) -> bool:
     if conn:
         try:
             cursor = conn.cursor()
+            # First delete all subscriptions associated with this account
+            cursor.execute("DELETE FROM suscripcion WHERE cuenta_id = ?", (cuenta_id,))
+            # Then delete the account
             cursor.execute("DELETE FROM cuentas WHERE id = ?", (cuenta_id,))
             conn.commit()
             return cursor.rowcount > 0
         except sqlite3.Error as e:
+            conn.rollback()
             print(f"Error eliminando cuenta: {e}")
             return False
         finally:

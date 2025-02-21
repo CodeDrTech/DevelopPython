@@ -5,6 +5,7 @@ from utils import convertir_formato_fecha, mostrar_mensaje
 from consultas import get_clientes, eliminar_cliente_db, tiene_pagos, eliminar_pagos, insertar_cliente
 from consultas import tiene_suscripciones, eliminar_suscripciones, actualizar_cliente
 from tabs.vencimientos_tab import crear_tabla_vencimientos
+from tabs.pagos_tab import crear_tab_pagos
 
 def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
         """
@@ -17,6 +18,11 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
         def actualizar_vencimientos():
             """Updates the vencimientos tab content"""
             mainTab.tabs[0].content = crear_tabla_vencimientos(page)
+            page.update()
+        
+        def actualizar_pagos():
+            """Updates the pagos tab content"""
+            mainTab.tabs[2].content = crear_tab_pagos(page, mainTab)
             page.update()
         
         # Variables globales
@@ -52,11 +58,9 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
                         actualizar_tabla(clientes)
                         actualizar_autocomplete()
                         
-                        # Update the vencimientos table
-                        #nonlocal tabla_vencimientos
-                        #tabla_vencimientos = crear_tabla_vencimientos()
-                        #mainTab.tabs[0].content = tabla_vencimientos
+                        # Update the vencimientos table                        
                         actualizar_vencimientos()
+                        actualizar_pagos()
                         
                         page.update()
                     else:
@@ -168,10 +172,9 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
                         
                         
                         
-                        # nonlocal tabla_vencimientos
-                        # tabla_vencimientos = crear_tabla_vencimientos()
-                        # mainTab.tabs[0].content = tabla_vencimientos
+                        
                         actualizar_vencimientos()
+                        actualizar_pagos()
                         
                         page.update()
                         mostrar_mensaje("Cliente creado", page)
@@ -295,10 +298,8 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
                         actualizar_autocomplete()
                         
                         # Actualizar tabla de vencimientos
-                        # nonlocal tabla_vencimientos
-                        # tabla_vencimientos = crear_tabla_vencimientos()
-                        # mainTab.tabs[0].content = tabla_vencimientos
                         actualizar_vencimientos()
+                        actualizar_pagos()
                         
                         page.update()
                         
