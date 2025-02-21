@@ -1138,4 +1138,128 @@ def eliminar_suscripcion_db(suscripcion_id: int) -> bool:
         finally:
             conn.close()
     return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_pagos_cliente(cliente_id: int):
+    """Obtiene los últimos 10 pagos de un cliente específico."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT p.id, c.nombre, p.fecha_pago, p.monto_pagado, p.deuda_pendiente, p.saldo_neto
+                FROM pagos p
+                JOIN clientes c ON p.cliente_id = c.id
+                WHERE p.cliente_id = ?
+                ORDER BY p.fecha_pago DESC
+                LIMIT 10
+            ''', (cliente_id,))
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error consultando pagos: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+
+def eliminar_pago(pago_id: int) -> bool:
+    """Elimina un pago y actualiza saldos."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            # Obtener información del pago antes de eliminarlo
+            cursor.execute('''
+                SELECT cliente_id, monto_pagado, deuda_pendiente
+                FROM pagos 
+                WHERE id = ?
+            ''', (pago_id,))
+            pago = cursor.fetchone()
+            if not pago:
+                return False
+                
+            cliente_id = pago[0]
+            
+            # Eliminar el pago
+            cursor.execute('DELETE FROM pagos WHERE id = ?', (pago_id,))
+            
+            # Actualizar saldos del cliente
+            cursor.execute('''
+                UPDATE clientes 
+                SET saldo_pendiente = (
+                    SELECT COALESCE(p.deuda_pendiente, 0)
+                    FROM pagos p
+                    WHERE p.cliente_id = clientes.id
+                    ORDER BY p.fecha_pago DESC
+                    LIMIT 1
+                ),
+                saldo_neto = (
+                    SELECT COALESCE(p.saldo_neto, 0)
+                    FROM pagos p
+                    WHERE p.cliente_id = clientes.id
+                    ORDER BY p.fecha_pago DESC
+                    LIMIT 1
+                )
+                WHERE id = ?
+            ''', (cliente_id,))
+            
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error eliminando pago: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def actualizar_pago(pago_id: int, fecha_pago: str, monto_pagado: int) -> bool:
+    """Actualiza un pago y recalcula saldos."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            # Obtener información del cliente
+            cursor.execute('''
+                SELECT p.cliente_id, c.saldo_pendiente, 
+                       (SELECT SUM(monto) FROM suscripcion WHERE cliente_id = c.id) as cuota
+                FROM pagos p
+                JOIN clientes c ON p.cliente_id = c.id
+                WHERE p.id = ?
+            ''', (pago_id,))
+            result = cursor.fetchone()
+            if not result:
+                return False
+                
+            cliente_id, saldo_pendiente, cuota = result
+            
+            # Calcular nuevos saldos
+            nuevo_saldo_pendiente = max(0, cuota + saldo_pendiente - monto_pagado)
+            nuevo_saldo_neto = cuota + nuevo_saldo_pendiente
+            
+            # Actualizar el pago
+            cursor.execute('''
+                UPDATE pagos 
+                SET fecha_pago = ?, 
+                    monto_pagado = ?,
+                    deuda_pendiente = ?,
+                    saldo_neto = ?
+                WHERE id = ?
+            ''', (fecha_pago, monto_pagado, nuevo_saldo_pendiente, nuevo_saldo_neto, pago_id))
+            
+            # Actualizar saldos del cliente
+            cursor.execute('''
+                UPDATE clientes
+                SET saldo_pendiente = ?,
+                    saldo_neto = ?
+                WHERE id = ?
+            ''', (nuevo_saldo_pendiente, nuevo_saldo_neto, cliente_id))
+            
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error actualizando pago: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
 

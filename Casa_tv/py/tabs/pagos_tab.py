@@ -1,7 +1,7 @@
 import flet as ft
 import datetime
 from utils import convertir_formato_fecha, mostrar_mensaje, get_estado_color
-from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago
+from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago, get_pagos_cliente, eliminar_pago, actualizar_pago
 from tabs.vencimientos_tab import crear_tabla_vencimientos
 
 def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
@@ -9,6 +9,124 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         Crea tab para aplicar pagos con AutoComplete y fecha.
         Permite seleccionar cliente, establecer fecha y registrar pago.
         """
+        
+        # Add after info_container definition
+        tabla_pagos = ft.Container(
+        content=ft.DataTable(  # Contenido inicial vacío
+            columns=[
+                ft.DataColumn(ft.Text("Fecha")),
+                ft.DataColumn(ft.Text("Monto")),
+                ft.DataColumn(ft.Text("Acciones"))
+            ],
+            rows=[]
+        ),
+        padding=10,
+        border=ft.border.all(1, ft.Colors.GREY_400),
+        border_radius=10
+        )
+        
+        def actualizar_tabla_pagos(cliente_id):
+            """Actualiza la tabla de pagos del cliente."""
+            pagos = get_pagos_cliente(cliente_id)
+            tabla_pagos.content = ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("Fecha")),
+                    ft.DataColumn(ft.Text("Monto")),
+                    ft.DataColumn(ft.Text("Acciones"))
+                ],
+                rows=[
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(convertir_formato_fecha(pago[2]))),
+                            ft.DataCell(ft.Text(f"${pago[3]}")),
+                            ft.DataCell(
+                                ft.Row([
+                                    ft.IconButton(
+                                        icon=ft.icons.EDIT,
+                                        tooltip="Editar",
+                                        on_click=lambda e, p=pago: editar_pago(e, p)
+                                    ),
+                                    ft.IconButton(
+                                        icon=ft.icons.DELETE,
+                                        tooltip="Eliminar",
+                                        on_click=lambda e, p=pago: confirmar_eliminar_pago(e, p)
+                                    )
+                                ])
+                            )
+                        ]
+                    ) for pago in pagos
+                ]
+            )
+            #tabla_pagos.update()
+            page.update()
+
+        def confirmar_eliminar_pago(e, pago):
+            def eliminar(e):
+                if eliminar_pago(pago[0]):
+                    mostrar_mensaje("Pago eliminado", page)
+                    actualizar_tabla_pagos(pago[0])
+                    actualizar_vencimientos()
+                dlg_modal.open = False
+                page.update()
+
+            def cancelar(e):
+                dlg_modal.open = False
+                page.update()
+
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Confirmar eliminación"),
+                content=ft.Text(f"¿Eliminar el pago de ${pago[3]} del {convertir_formato_fecha(pago[2])}?"),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=cancelar),
+                    ft.TextButton("Eliminar", on_click=eliminar)
+                ]
+            )
+            page.dialog = dlg_modal
+            dlg_modal.open = True
+            page.update()
+
+        def editar_pago(e, pago):
+            fecha_edit = ft.TextField(
+                label="Fecha",
+                value=pago[2],
+                read_only=True
+            )
+            monto_edit = ft.TextField(
+                label="Monto",
+                value=str(pago[3])
+            )
+
+            def guardar(e):
+                try:
+                    if actualizar_pago(pago[0], fecha_edit.value, int(monto_edit.value)):
+                        mostrar_mensaje("Pago actualizado", page)
+                        actualizar_tabla_pagos(pago[0])
+                        actualizar_vencimientos()
+                    dlg_modal.open = False
+                    page.update()
+                except ValueError as ex:
+                    mostrar_mensaje(f"Error: {str(ex)}", page)
+
+            def cancelar(e):
+                dlg_modal.open = False
+                page.update()
+
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Editar pago"),
+                content=ft.Column([fecha_edit, monto_edit]),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=cancelar),
+                    ft.TextButton("Guardar", on_click=guardar)
+                ]
+            )
+            page.dialog = dlg_modal
+            dlg_modal.open = True
+            page.update()
+
+        
+        
         def actualizar_vencimientos():
             """Updates the vencimientos tab content"""
             mainTab.tabs[0].content = crear_tabla_vencimientos(page)
@@ -106,6 +224,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                 if cliente_id:
                     cliente = get_estado_pago_cliente(cliente_id)
                     if cliente:
+                        
                         # Los índices corresponden a la nueva consulta de get_estado_pago_cliente
                         info_container.content = ft.Column([
                             ft.Text(f"Informacion sobre : {cliente[1]}", size=20),
@@ -120,6 +239,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                                 color=get_estado_color(cliente[12])
                             )
                         ])
+                        actualizar_tabla_pagos(cliente_id)
                         page.update()
         def aplicar_pago(e):
             """Registra pago y limpia selección"""

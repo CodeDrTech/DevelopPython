@@ -64,13 +64,22 @@ def crear_tabla_vencimientos(page: ft.Page):
             actualizar_tabla(filtrados)
             page.update()
             
-        # ... existing code ...
-
         def reiniciar_tabla_vencimientos(e=None):
             """Actualiza la tabla de vencimientos con datos frescos"""
             # Recargar datos frescos
-            nonlocal registros, tabla_container
+            nonlocal registros, tabla_container, nombre_seleccionado, auto_complete
             registros = get_estado_pagos()
+            
+            # Reset nombre_seleccionado
+            nombre_seleccionado = None
+            
+            # Actualizar AutoComplete con nombres frescos
+            nombres = sorted(set(reg[1] for reg in registros))
+            auto_complete.suggestions = [
+                ft.AutoCompleteSuggestion(key=nombre, value=nombre) 
+                for nombre in nombres
+            ]
+            auto_complete.value = ""
             
             # Recalcular totales
             total_montos = sum(reg[8] for reg in registros)
