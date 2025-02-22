@@ -131,7 +131,7 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
 
             def mostrar_datepicker_nuevo():
                 date_picker = ft.DatePicker(
-                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+                    first_date=datetime.datetime.now() - datetime.timedelta(days=30),
                     last_date=datetime.datetime.now() + datetime.timedelta(days=365),
                     on_change=seleccionar_fecha_nuevo
                 )
@@ -168,11 +168,9 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
                         
                         clientes = get_clientes()
                         actualizar_tabla(clientes)
-                        actualizar_autocomplete()
+                        actualizar_autocomplete()  
                         
-                        
-                        
-                        
+                        # Actualizar tabla de vencimientos
                         actualizar_vencimientos()
                         actualizar_pagos()
                         
@@ -257,7 +255,7 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
             def mostrar_datepicker_edit():
                 """Muestra DatePicker para editar fecha"""
                 date_picker = ft.DatePicker(
-                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+                    first_date=datetime.datetime.now() - datetime.timedelta(days=30),
                     last_date=datetime.datetime.now() + datetime.timedelta(days=365),
                     on_change=lambda e: seleccionar_fecha_edit(e, fecha_edit)
                 )

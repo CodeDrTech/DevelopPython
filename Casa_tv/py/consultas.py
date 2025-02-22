@@ -87,12 +87,10 @@ def get_clientes_pagos():
     return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
 def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio: str, estado: str, frecuencia: int, comentario: str) -> bool:
     """
     Actualiza los datos de un cliente en la base de datos. Si la fecha de inicio se actualiza,
-    también se actualiza el último pago (en la tabla pagos) con esa misma fecha, ya que se reinicia el contrato.
+    se inserta un nuevo registro de pago con esa fecha y valores en cero.
     """
     if not all([cliente_id, nombre, whatsapp, fecha_inicio, estado, frecuencia]):
         raise ValueError("Todos los campos son requeridos")
@@ -121,23 +119,12 @@ def actualizar_cliente(cliente_id: int, nombre: str, whatsapp: str, fecha_inicio
                 WHERE id = ?
             ''', (nombre, whatsapp, fecha_inicio, estado, frecuencia, comentario, cliente_id))
             
-            # Si la fecha de inicio cambió, se actualiza el último pago registrado
+            # Si la fecha de inicio cambió, insertar un nuevo registro de pago con valores en cero
             if old_fecha_inicio != fecha_inicio:
                 cursor.execute('''
-                    SELECT id, fecha_pago 
-                    FROM pagos
-                    WHERE cliente_id = ?
-                    ORDER BY fecha_pago DESC
-                    LIMIT 1
-                ''', (cliente_id,))
-                last_payment = cursor.fetchone()
-                
-                if last_payment:
-                    last_payment_id = last_payment[0]
-                    cursor.execute(
-                        "UPDATE pagos SET fecha_pago = ? WHERE id = ?", 
-                        (fecha_inicio, last_payment_id)
-                    )
+                    INSERT INTO pagos (cliente_id, fecha_pago, monto_pagado, deuda_pendiente, saldo_neto)
+                    VALUES (?, ?, 0, 0, 0)
+                ''', (cliente_id, fecha_inicio))
             
             conn.commit()
             return True
