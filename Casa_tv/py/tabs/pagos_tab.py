@@ -1,7 +1,7 @@
 import flet as ft
 import datetime
 from utils import convertir_formato_fecha, mostrar_mensaje, get_estado_color
-from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago, get_pagos_cliente, eliminar_pago, actualizar_pago, get_pagos_clientes_mes
+from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago, get_pagos_cliente, eliminar_pago, actualizar_pago
 from tabs.vencimientos_tab import crear_tabla_vencimientos
 
 def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
@@ -29,7 +29,6 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         def actualizar_tabla_pagos(cliente_id):
             """Actualiza la tabla de pagos del cliente."""
             pagos = get_pagos_cliente(cliente_id)
-            pagos_del_mes = get_pagos_clientes_mes()
             tabla_pagos.content = ft.DataTable(
                 columns=[
                     ft.DataColumn(ft.Text("Fecha")),
