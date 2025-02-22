@@ -66,6 +66,9 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
             #tabla_pagos.update()
             page.update()
 
+        
+        
+        
         def confirmar_eliminar_pago(e, pago):
             def eliminar(e):
                 if eliminar_pago(pago[0]):
@@ -93,10 +96,37 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
             page.update()
 
         def editar_pago(e, pago):
+            
+            def seleccionar_fecha_edit(e, txt_field):
+                """
+                Actualiza TextField con la fecha seleccionada en el DatePicker.
+                
+                Args:
+                    e: Evento del DatePicker con la fecha seleccionada
+                    txt_field: TextField a actualizar con la nueva fecha
+                """
+                if e.control.value:
+                    fecha = e.control.value.date()
+                    txt_field.value = fecha.strftime("%Y-%m-%d")
+                    e.control.open = False
+                    page.update()
+            
+            def mostrar_datepicker_edit():
+                """Muestra DatePicker para editar fecha"""
+                date_picker = ft.DatePicker(
+                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
+                    last_date=datetime.datetime.now() + datetime.timedelta(days=365),
+                    on_change=lambda e: seleccionar_fecha_edit(e, fecha_edit)
+                )
+                page.overlay.append(date_picker)
+                date_picker.open = True
+                page.update()
+                
             fecha_edit = ft.TextField(
                 label="Fecha",
-                value=pago[2],
-                read_only=True
+                value=convertir_formato_fecha(pago[2]),
+                read_only=True,
+                on_click=lambda _: mostrar_datepicker_edit()
             )
             monto_edit = ft.TextField(
                 label="Monto",
@@ -299,19 +329,26 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         )
 
         return ft.Column([
-            ft.Text("Registrar Pago", size=20, weight="bold"),
+            ft.Text("Registrar pago", size=20, weight="bold"),
             ft.Row([
                 ft.Column([
                     auto_complete_container,
                     campo_fecha,
                     campo_pago,
-                    info_container,
+                    ft.Column([  # Nueva columna independiente para info_container
+                        info_container
+                    ], expand=True),
                     ft.ElevatedButton(
                         "Aplicar Pago",
                         on_click=aplicar_pago,
                         icon=ft.Icons.SAVE
                     )
-                ], spacing=10),
-                tabla_pagos
+                ], spacing=10, expand=1),  # Expand para ocupar el espacio restante
+                
+                ft.Column([
+                    ft.Text("Historial de pago del cliente", size=20, weight="bold"),
+                    tabla_pagos
+                ], alignment=ft.MainAxisAlignment.START)  # Asegura que la tabla no se mueva
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         ])
+
