@@ -187,19 +187,22 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
         dropdown_cliente = ft.Dropdown(
             options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
             label="Cliente",
-            expand=True
+            editable=True,
+            max_menu_height=200,
+            width=360
         )
         
         # Dropdown para cuentas
         dropdown_cuenta = ft.Dropdown(
             options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
             label="Cuenta",
-            expand=True
+            editable=True,
+            max_menu_height=200,
+            width=360
         )
         
         txt_monto = ft.TextField(
-            label="Monto (DOP)",
-            expand=True,
+            label="Monto (DOP)",            
             input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
         )
         
@@ -282,20 +285,23 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
             options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
             value=str(suscripcion[1]),
             label="Cliente",
-            expand=True
+            editable=True,
+            max_menu_height=200,
+            width=360
         )
         
         dropdown_cuenta = ft.Dropdown(
             options=[ft.dropdown.Option(key=str(c[0]), text=f"{c[3]} ({c[1]})") for c in cuentas],
             value=str(suscripcion[2]),
             label="Cuenta",
-            expand=True
+            editable=True,
+            max_menu_height=200,
+            width=360
         )
         
         txt_monto = ft.TextField(
             value=str(suscripcion[3]), 
             label="Monto (DOP)",
-            expand=True,
             input_filter=ft.NumbersOnlyInputFilter()
         )
         
