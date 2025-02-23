@@ -369,7 +369,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                 ], spacing=10, expand=1),  # Expand para ocupar el espacio restante
                 
                 ft.Column([
-                    ft.Text("Historial de pago del cliente", size=20, weight="bold"),
+                    ft.Text("Historial de pagos del cliente", size=20, weight="bold"),
                     tabla_pagos
                 ], alignment=ft.MainAxisAlignment.START)  # Asegura que la tabla no se mueva
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
