@@ -54,18 +54,17 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                                 ft.Row([
                                     ft.IconButton(
                                         icon=ft.Icons.DELETE,
+                                        icon_color="red",
                                         tooltip="Eliminar",
                                         on_click=lambda e, p=pago: confirmar_eliminar_pago(e, p)
-                                    )
+                                    ) if index == 0 else ft.Text("")  # Solo mostrar en el primer registro (último pago)
                                 ])
                             )
                         ]
-                    ) for pago in pagos
+                    ) for index, pago in enumerate(pagos)  # Añadimos index para rastrear la posición
                 ]
             )
-            #tabla_pagos.update()
             page.update()
-
         
         
         
@@ -124,7 +123,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                 
             fecha_edit = ft.TextField(
                 label="Fecha",
-                value=convertir_formato_fecha(pago[2]),
+                value=pago[2],
                 read_only=True,
                 on_click=lambda _: mostrar_datepicker_edit()
             )
@@ -137,10 +136,34 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                 try:
                     if actualizar_pago(pago[0], fecha_edit.value, int(monto_edit.value)):
                         mostrar_mensaje("Pago actualizado", page)
+                        # Actualizar tabla de pagos
                         actualizar_tabla_pagos(pago[0])
+                        # Actualizar vencimientos
                         actualizar_vencimientos()
-                    dlg_modal.open = False
-                    page.update()
+                        # Actualizar controles de pago
+                        if cliente_seleccionado:
+                            cliente_id = next(
+                                (c[0] for c in clientes if c[1] == cliente_seleccionado), 
+                                None
+                            )
+                            if cliente_id:
+                                cliente = get_estado_pago_cliente(cliente_id)
+                                if cliente:
+                                    info_container.content = ft.Column([
+                                        ft.Text(f"Informacion sobre : {cliente[1]}", size=20),
+                                        ft.Text(f"Último pago: {convertir_formato_fecha(cliente[9])}"),
+                                        ft.Text(f"Próximo pago: {convertir_formato_fecha(cliente[10])}"),
+                                        ft.Text(f"Pago mensual de: $ {cliente[6]}"),
+                                        ft.Text(f"Deuda pendiente: $ {cliente[13]}"),
+                                        ft.Text(f"Monto a pagar: $ {cliente[6]+cliente[13]}"),
+                                        ft.Text(f"Días transcurridos: {cliente[11]}"),
+                                        ft.Text(
+                                            f"Estado: {cliente[12]}", 
+                                            color=get_estado_color(cliente[12])
+                                        )
+                                    ])
+                        dlg_modal.open = False
+                        page.update()
                 except ValueError as ex:
                     mostrar_mensaje(f"Error: {str(ex)}", page)
 

@@ -1170,25 +1170,43 @@ def eliminar_pago(pago_id: int) -> bool:
             # Eliminar el pago
             cursor.execute('DELETE FROM pagos WHERE id = ?', (pago_id,))
             
-            # Actualizar saldos del cliente
+            # Verificar si quedan pagos para el cliente
             cursor.execute('''
-                UPDATE clientes 
-                SET saldo_pendiente = (
-                    SELECT COALESCE(p.deuda_pendiente, 0)
-                    FROM pagos p
-                    WHERE p.cliente_id = clientes.id
-                    ORDER BY p.fecha_pago DESC
-                    LIMIT 1
-                ),
-                saldo_neto = (
-                    SELECT COALESCE(p.saldo_neto, 0)
-                    FROM pagos p
-                    WHERE p.cliente_id = clientes.id
-                    ORDER BY p.fecha_pago DESC
-                    LIMIT 1
-                )
-                WHERE id = ?
+                SELECT COUNT(*) 
+                FROM pagos 
+                WHERE cliente_id = ?
             ''', (cliente_id,))
+            
+            tiene_pagos = cursor.fetchone()[0] > 0
+            
+            if tiene_pagos:
+                # Si hay pagos anteriores, actualizar con el último pago
+                cursor.execute('''
+                    UPDATE clientes 
+                    SET saldo_pendiente = (
+                        SELECT COALESCE(p.deuda_pendiente, 0)
+                        FROM pagos p
+                        WHERE p.cliente_id = clientes.id
+                        ORDER BY p.fecha_pago DESC
+                        LIMIT 1
+                    ),
+                    saldo_neto = (
+                        SELECT COALESCE(p.saldo_neto, 0)
+                        FROM pagos p
+                        WHERE p.cliente_id = clientes.id
+                        ORDER BY p.fecha_pago DESC
+                        LIMIT 1
+                    )
+                    WHERE id = ?
+                ''', (cliente_id,))
+            else:
+                # Si no quedan pagos, establecer saldos en cero
+                cursor.execute('''
+                    UPDATE clientes 
+                    SET saldo_pendiente = 0,
+                        saldo_neto = 0
+                    WHERE id = ?
+                ''', (cliente_id,))
             
             conn.commit()
             return True
@@ -1200,14 +1218,13 @@ def eliminar_pago(pago_id: int) -> bool:
     return False
 
 def actualizar_pago(pago_id: int, fecha_pago: str, monto_pagado: int) -> bool:
-    """Actualiza un pago y recalcula saldos."""
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
-            # Obtener información del cliente
+            # Obtener información del cliente y sus suscripciones
             cursor.execute('''
-                SELECT p.cliente_id, c.saldo_pendiente, 
+                SELECT p.cliente_id, 
                        (SELECT SUM(monto) FROM suscripcion WHERE cliente_id = c.id) as cuota
                 FROM pagos p
                 JOIN clientes c ON p.cliente_id = c.id
@@ -1217,10 +1234,11 @@ def actualizar_pago(pago_id: int, fecha_pago: str, monto_pagado: int) -> bool:
             if not result:
                 return False
                 
-            cliente_id, saldo_pendiente, cuota = result
+            cliente_id, cuota = result
             
             # Calcular nuevos saldos
-            nuevo_saldo_pendiente = max(0, cuota + saldo_pendiente - monto_pagado)
+            total_a_pagar = cuota  # Solo la cuota actual
+            nuevo_saldo_pendiente = max(0, total_a_pagar - monto_pagado)
             nuevo_saldo_neto = cuota + nuevo_saldo_pendiente
             
             # Actualizar el pago
