@@ -183,6 +183,8 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
         clientes = get_clientes()
         cuentas = get_cuentas()
         
+        
+        
         # Dropdown para clientes
         dropdown_cliente = ft.Dropdown(
             options=[ft.dropdown.Option(key=str(c[0]), text=c[1]) for c in clientes],
@@ -237,8 +239,20 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
                     mostrar_mensaje("Ingrese un correo", page)
                     return
                 
-                if txt_correo.value != [c[1] for c in cuentas if c[0] == int(dropdown_cuenta.value)][0]:
-                    mostrar_mensaje("El correo no coincide con el de la cuenta", page)
+                # Validar que el cliente exista
+                cliente_valido = any(str(c[0]) == dropdown_cliente.value for c in clientes)
+                if not cliente_valido:
+                    mostrar_mensaje("El cliente seleccionado no es válido", page)
+                    return
+
+                # Validar que la cuenta exista y coincida con el correo
+                cuenta_encontrada = next((c for c in cuentas if str(c[0]) == dropdown_cuenta.value), None)
+                if not cuenta_encontrada:
+                    mostrar_mensaje("La cuenta seleccionada no es válida", page)
+                    return
+                
+                if txt_correo.value != cuenta_encontrada[1]:  # Comparar con el correo de la cuenta
+                    mostrar_mensaje("El correo no coincide con el de la cuenta seleccionada", page)
                     return
 
                 if insertar_suscripcion(
