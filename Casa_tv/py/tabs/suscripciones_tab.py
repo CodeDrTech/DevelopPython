@@ -189,7 +189,9 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
             label="Cliente",
             editable=True,
             max_menu_height=200,
-            width=360
+            width=360,
+            enable_filter=True,
+            enable_search=True
         )
         
         # Dropdown para cuentas
@@ -198,7 +200,9 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
             label="Cuenta",
             editable=True,
             max_menu_height=200,
-            width=360
+            width=360,
+            enable_filter=True,
+            enable_search=True
         )
         
         txt_monto = ft.TextField(
@@ -287,7 +291,9 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
             label="Cliente",
             editable=True,
             max_menu_height=200,
-            width=360
+            width=360,
+            enable_filter=True,
+            enable_search=True
         )
         
         dropdown_cuenta = ft.Dropdown(
@@ -296,7 +302,9 @@ def  crear_tab_suscripciones(page: ft.Page, mainTab: ft.Tabs):
             label="Cuenta",
             editable=True,
             max_menu_height=200,
-            width=360
+            width=360,
+            enable_filter=True,
+            enable_search=True
         )
         
         txt_monto = ft.TextField(
