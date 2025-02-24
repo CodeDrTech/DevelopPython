@@ -11,6 +11,7 @@ from tabs.vencimientos_tab import crear_tabla_vencimientos
 from tabs.clientes_tab import crear_tabla_clientes
 from tabs.pagos_tab import crear_tab_pagos
 from tabs.suscripciones_tab import crear_tab_suscripciones
+from tabs.suplidores_tab import crear_tab_pagos_suplidores
 
 
 def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
@@ -38,6 +39,11 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                 """Updates the pagos tab content"""
                 mainTab.tabs[3].content = crear_tab_suscripciones(page, mainTab)
                 page.update()
+        
+        def actualizar_suplidores():
+            """Updates the pagos tab content"""
+            mainTab.tabs[6].content = crear_tab_pagos_suplidores(page, mainTab)
+            page.update()
         
         # Contenedor donde se mostrará la tabla de cuentas.
         tabla_container = ft.Container()
@@ -89,6 +95,7 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                         actualizar_clientes()
                         actualizar_pagos()
                         actualizar_suscripciones()
+                        actualizar_suplidores()
                     else:
                         mostrar_mensaje("Error al eliminar cuenta", page)
                 except Exception as ex:
@@ -254,6 +261,7 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                         actualizar_clientes()
                         actualizar_pagos()
                         actualizar_suscripciones()
+                        actualizar_suplidores()
                         
                         
                     else:
@@ -354,6 +362,7 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                     actualizar_clientes()
                     actualizar_pagos()
                     actualizar_suscripciones()
+                    actualizar_suplidores()
                     
                     page.update()
                     mostrar_mensaje("Cuenta actualizada correctamente.", page)

@@ -7,11 +7,11 @@ from consultas import (
 )
 from tabs.vencimientos_tab import crear_tabla_vencimientos
 
+
 def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     """Crea el tab para gestionar pagos a suplidores."""
     
-    # Estados de pago disponibles
-    ESTADOS_PAGO = ["Pendiente", "Pagado", "Cancelado"]
+    
     
     def actualizar_vencimientos():
             """Updates the vencimientos tab content"""
