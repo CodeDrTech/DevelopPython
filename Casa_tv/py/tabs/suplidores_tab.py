@@ -3,7 +3,7 @@ import datetime
 from utils import mostrar_mensaje, convertir_formato_fecha, get_estado_color_suplidores
 from consultas import (
     get_pagos_suplidores, get_cuentas, insertar_pago_suplidor,
-    actualizar_pago_suplidor, eliminar_pago_suplidor, get_estado_pagos_suplidores
+    actualizar_pago_suplidor, eliminar_pago_suplidor, get_estado_pagos_suplidores, get_correos_unicos
 )
 from tabs.vencimientos_tab import crear_tabla_vencimientos
 
@@ -17,6 +17,20 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
             """Updates the vencimientos tab content"""
             mainTab.tabs[0].content = crear_tabla_vencimientos(page)
             page.update()
+            
+    # Dropdown para filtrar por correo
+    dropdown_correos = ft.Dropdown(
+        label="Filtrar por correo",
+        width=300,
+        editable=True,
+        enable_filter=True,
+        enable_search=True,
+        max_menu_height=200,
+        options=[ft.dropdown.Option("Todos los correos")] + [
+            ft.dropdown.Option(correo) for correo in get_correos_unicos()
+        ],
+        on_change=lambda e: filtrar_tabla(e.control.value)
+    )
     
     # Contenedor para la tabla
     tabla_container = ft.Container(
@@ -43,151 +57,37 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def cerrar_dialogo(dlg):
-        """Cierra un diálogo modal."""
-        dlg.open = False
-        page.update()
+    
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def mostrar_dialogo_editar(e, pago):
-        txt_fecha = ft.TextField(
-            label="Fecha de pago",
-            value=convertir_formato_fecha(pago[3]),
-            read_only=True
-        )
-
-        txt_comentarios = ft.TextField(
-            label="Comentarios",
-            value=pago[10] if pago[10] else "",
-            multiline=True,
-            min_lines=3,
-            max_lines=3,
-            width=400
-        )
-
-        def guardar(e):
-            try:
-                if actualizar_pago_suplidor(pago[0], txt_fecha.value, txt_comentarios.value):
-                    mostrar_mensaje("Pago actualizado exitosamente", page)
-                    dlg_modal.open = False
-                    actualizar_tabla()
-                else:
-                    mostrar_mensaje("Error al actualizar el pago", page)
-            except Exception as ex:
-                mostrar_mensaje(f"Error: {str(ex)}", page)
-            page.update()
-
-        dlg_modal = ft.AlertDialog(
-            modal=True,
-            title=ft.Text(f"Editar Pago - {pago[1]}"),
-            content=ft.Column([
-                txt_fecha,
-                txt_comentarios
-            ], spacing=10),
-            actions=[
-                ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal)),
-                ft.TextButton("Guardar", on_click=guardar)
-            ]
-        )
-
-        page.dialog = dlg_modal # type: ignore
-        dlg_modal.open = True
-        page.update()
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def mostrar_dialogo_eliminar(e, pago):
-        dlg_modal = ft.AlertDialog(
-            modal=True,
-            title=ft.Text("Confirmar eliminación"),
-            content=ft.Text(f"¿Eliminar el pago de {pago[1]}?"),
-            actions=[
-                ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal)),
-                ft.TextButton("Eliminar", on_click=lambda e: eliminar_y_cerrar(dlg_modal, pago[0]))
-            ]
-        )
-        page.dialog = dlg_modal # type: ignore
-        dlg_modal.open = True
-        page.update()
-
-    def eliminar_y_cerrar(dlg, pago_id):
-        if eliminar_pago_suplidor(pago_id):
-            mostrar_mensaje("Pago eliminado exitosamente", page)
-            dlg.open = False
-            actualizar_tabla()
-        else:
-            mostrar_mensaje("Error al eliminar el pago", page)
-        page.update()
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def mostrar_dialogo_pago(e, pago):
-        txt_fecha = ft.TextField(
-            label="Fecha de pago",
-            value=datetime.datetime.now().strftime("%Y-%m-%d"),
-            read_only=True
-        )
-
-        def mostrar_fecha(e):
-            date_picker = ft.DatePicker(
-                on_change=lambda e: cambiar_fecha(e, txt_fecha)
-            )
-            page.overlay.append(date_picker)
-            date_picker.pick_date()
-            page.update()
-
-        def cambiar_fecha(e, txt_field):
-            if e.control.value:
-                fecha = e.control.value.date()
-                txt_field.value = fecha.strftime("%Y-%m-%d")
-                page.update()
-
-        txt_fecha.on_click = mostrar_fecha
-
-        txt_comentarios = ft.TextField(
-            label="Comentarios",
-            multiline=True,
-            min_lines=3,
-            max_lines=3,
-            width=400
-        )
-
-        def guardar(e):
-            try:
-                if insertar_pago_suplidor(pago[0], txt_fecha.value, txt_comentarios.value):
-                    mostrar_mensaje("Pago registrado exitosamente", page)
-                    dlg_modal.open = False
-                    actualizar_tabla()
-                else:
-                    mostrar_mensaje("Error al registrar el pago", page)
-            except Exception as ex:
-                mostrar_mensaje(f"Error: {str(ex)}", page)
-            page.update()
-
-        dlg_modal = ft.AlertDialog(
-            modal=True,
-            title=ft.Text(f"Registrar Pago - {pago[1]}"),
-            content=ft.Column([
-                txt_fecha,
-                txt_comentarios
-            ], spacing=10),
-            actions=[
-                ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal)),
-                ft.TextButton("Guardar", on_click=guardar)
-            ]
-        )
-
-        page.dialog = dlg_modal
-        dlg_modal.open = True
-        page.update()
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def actualizar_tabla():
+    def filtrar_tabla(correo_seleccionado=None):
         """Actualiza la tabla con los pagos actuales."""
         pagos = get_estado_pagos_suplidores()
         rows = []
         
         for pago in pagos:
+            # Filter by selected email
+            if correo_seleccionado and correo_seleccionado != "Todos los correos" and pago[2] != correo_seleccionado:
+                continue
+            # Create buttons with proper event handling
+            edit_button = ft.IconButton(
+                icon=ft.icons.EDIT,
+                tooltip="Editar",
+                
+            )
+            
+            delete_button = ft.IconButton(
+                icon=ft.icons.DELETE,
+                tooltip="Eliminar",
+                
+            )
+            
+            pay_button = ft.IconButton(
+                icon=ft.icons.PAYMENT,
+                tooltip="Registrar Pago",
+                
+            )
+            
             rows.append(
                 ft.DataRow(
                     cells=[
@@ -201,39 +101,28 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
                         ft.DataCell(ft.Text(f"*{pago[9]}" if pago[9] else "-")),  # tarjeta
                         ft.DataCell(ft.Text(pago[10] or "")),  # comentarios
                         ft.DataCell(
-                            ft.Row([
-                                ft.IconButton(
-                                    icon=ft.icons.EDIT,
-                                    tooltip="Editar",
-                                    on_click=lambda e, p=pago: mostrar_dialogo_editar(e, p)  # Changed to new function
-                                ),
-                                ft.IconButton(
-                                    icon=ft.icons.DELETE,
-                                    tooltip="Eliminar",
-                                    on_click=lambda e, p=pago: mostrar_dialogo_eliminar(e, p)  # Changed to new function
-                                ),
-                                ft.IconButton(
-                                    icon=ft.icons.PAYMENT,
-                                    tooltip="Registrar Pago",
-                                    on_click=lambda e, p=pago: mostrar_dialogo_pago(e, p)  # Changed to new function
-                                )
-                            ])
+                            ft.Row(
+                                controls=[edit_button, delete_button, pay_button],
+                                spacing=0
+                            )
                         )
                     ]
                 )
             )
         
-        tabla_container.content.rows = rows # type: ignore
-        page.update()
+        if tabla_container.content:
+            tabla_container.content.rows = rows # type: ignore
+            page.update()
 
     # Create main content
     contenido = ft.Column([
         ft.Text("Pagos a Suplidores", size=20, weight="bold"), # type: ignore
+        dropdown_correos,
         tabla_container
     ])
 
     # Initial table load
-    actualizar_tabla()
+    filtrar_tabla()
 
     return contenido
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

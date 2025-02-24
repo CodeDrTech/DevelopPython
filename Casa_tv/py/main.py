@@ -7,7 +7,7 @@ from tabs.envios_tab import envio_estados
 from tabs.cuentas_tab import crear_tab_cuentas
 from tabs.suplidores_tab import crear_tab_pagos_suplidores
 def main(page: ft.Page):
-    page.title = "TV en casa  Ver.20250222"
+    page.title = "TV en casa  Ver.20250224"
     page.window.alignment = ft.alignment.center
     page.window.width = 1300
     page.window.height = 800

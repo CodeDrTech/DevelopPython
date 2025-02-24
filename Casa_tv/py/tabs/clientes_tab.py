@@ -101,18 +101,18 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
         # -----------------------------------------------
         def nuevo_cliente(e):
             """Abre diálogo para crear nuevo cliente"""
-            nombre_edit = ft.TextField(label="Nombre", capitalization=ft.TextCapitalization.WORDS)
+            nombre_edit = ft.TextField(label="Nombre", capitalization=ft.TextCapitalization.WORDS, width=300)
             whatsapp_edit = ft.TextField(label="WhatsApp", max_length=10, 
-                        input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
+                        input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""), width=300)
             fecha_edit = ft.TextField(
                 label="Fecha inicio",
                 value=datetime.date.today().strftime("%Y-%m-%d"),
                 read_only=True,
-                icon=ft.Icons.CALENDAR_MONTH,
                 on_click=lambda _: mostrar_datepicker_nuevo()
             )
             condicion_edit = ft.Dropdown(
                 label="Condicion",
+                width=300,
                 options=[
                     ft.dropdown.Option("Activo"),
                     ft.dropdown.Option("Inactivo")
@@ -121,6 +121,7 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
             )
             frecuencia_edit = ft.Dropdown(
                 label="Frecuencia",
+                width=300,
                 options=[
                     ft.dropdown.Option("30"),
                     ft.dropdown.Option("15"),
@@ -222,17 +223,17 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
             """Abre diálogo para editar cliente"""
             cliente = next(c for c in clientes if c[0] == cliente_id)
             
-            nombre_edit = ft.TextField(label="Nombre", value=cliente[1])
+            nombre_edit = ft.TextField(label="Nombre", value=cliente[1], width=300)
             whatsapp_edit = ft.TextField(label="WhatsApp", value=cliente[3], max_length=10, input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string=""))
             fecha_edit = ft.TextField(
                 label="Fecha inicio",
                 value=cliente[2],
                 read_only=True,
-                icon=ft.Icons.CALENDAR_MONTH,
                 on_click=lambda _: mostrar_datepicker_edit()
             )
             condicion_edit = ft.Dropdown(
                 label="Condicion",
+                width=300,
                 options=[
                     ft.dropdown.Option("Activo"),
                     ft.dropdown.Option("Inactivo")
@@ -241,6 +242,7 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
             )
             frecuencia_edit = ft.TextField(
                 label="Frecuencia",
+                width=300,
                 value=str(cliente[5]),
                 input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
             )
@@ -276,7 +278,6 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
                 label="Fecha inicio",
                 value=cliente[2],
                 read_only=True,
-                icon=ft.Icons.CALENDAR_MONTH,
                 on_click=lambda _: mostrar_datepicker_edit()
             )
 

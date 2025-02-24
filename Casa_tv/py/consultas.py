@@ -1410,3 +1410,18 @@ def eliminar_pago_suplidor(pago_id: int) -> bool:
         finally:
             conn.close()
     return False
+
+def get_correos_unicos():
+    """Obtiene todos los correos únicos de la tabla cuentas."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT DISTINCT correo FROM cuentas ORDER BY correo")
+            return [row[0] for row in cursor.fetchall()]
+        except sqlite3.Error as e:
+            print(f"Error obteniendo correos: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
