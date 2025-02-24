@@ -11,9 +11,6 @@ def crear_tabla_vencimientos(page: ft.Page):
         - AutoComplete para filtrar por nombre
         - Dropdown para filtrar por estado (En corte/Pendiente/Cerca/Todos)
         """
-        
-        
-        
         datos_pagos = None  # Referencia a datos_pagos
         # Variables globales
         registros = get_estado_pagos()

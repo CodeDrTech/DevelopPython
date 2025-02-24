@@ -1267,4 +1267,81 @@ def actualizar_pago(pago_id: int, fecha_pago: str, monto_pagado: int) -> bool:
         finally:
             conn.close()
     return False
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_pagos_suplidores():
+    """Obtiene todos los pagos a suplidores con información de la cuenta."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT ps.id, c.servicio, c.correo, ps.fecha_pago, 
+                ps.monto_pago, ps.estado, ps.comentarios, c.id as cuenta_id
+                FROM pagos_suplidores ps
+                JOIN cuentas c ON ps.cuenta_id = c.id
+                ORDER BY ps.fecha_pago DESC
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error obteniendo pagos suplidores: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
 
+def insertar_pago_suplidor(cuenta_id: int, fecha_pago: str, monto_pago: float, estado: str, comentarios: str) -> bool:
+    """Inserta un nuevo pago a suplidor."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO pagos_suplidores 
+                (cuenta_id, fecha_pago, monto_pago, estado, comentarios)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (cuenta_id, fecha_pago, monto_pago, estado, comentarios))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error insertando pago suplidor: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def actualizar_pago_suplidor(pago_id: int, fecha_pago: str, monto_pago: float, estado: str, comentarios: str) -> bool:
+    """Actualiza un pago a suplidor existente."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                UPDATE pagos_suplidores 
+                SET fecha_pago = ?, monto_pago = ?, estado = ?, comentarios = ?
+                WHERE id = ?
+            ''', (fecha_pago, monto_pago, estado, comentarios, pago_id))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error actualizando pago suplidor: {e}")
+            return False
+        finally:
+            conn.close()
+    return False
+
+def eliminar_pago_suplidor(pago_id: int) -> bool:
+    """Elimina un pago a suplidor."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('DELETE FROM pagos_suplidores WHERE id = ?', (pago_id,))
+            conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error eliminando pago suplidor: {e}")
+            return False
+        finally:
+            conn.close()
+    return False

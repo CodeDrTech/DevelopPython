@@ -31,6 +31,14 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
         tabla_container = ft.Container()
         auto_complete = None
         auto_complete_container = None
+        
+        contador_clientes = ft.Text(
+            f"Total clientes registrados: {len(clientes)}", 
+            size=16,
+            weight=ft.FontWeight.BOLD,
+            color=ft.colors.BLUE
+        )
+        
         # -----------------------------------------------
         # Función para ELIMINAR CLIENTE
         # -----------------------------------------------
@@ -339,6 +347,10 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
         
         def actualizar_tabla(registros_filtrados):
             """Actualiza contenido de la tabla."""
+            
+            # Update counter
+            contador_clientes.value = f"Total de clientes: {len(clientes)}"
+            
             tabla_container.content = ft.DataTable(
                 columns=[
                     ft.DataColumn(ft.Text("ID")),
@@ -487,7 +499,8 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
                     "Nuevo Cliente",
                     icon=ft.Icons.ADD,
                     on_click=nuevo_cliente
-                )
+                ),
+                contador_clientes
             ], alignment=ft.MainAxisAlignment.START),
             tabla_container
         ])

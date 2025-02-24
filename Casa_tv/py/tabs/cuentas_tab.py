@@ -311,7 +311,7 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
         
         # Botón "Nuevo"
         btn_nuevo = ft.ElevatedButton(
-            text="Nuev cuenta",
+            text="Nueva cuenta",
             icon=ft.Icons.ADD,
             on_click=abrir_dialogo_nuevo
         )

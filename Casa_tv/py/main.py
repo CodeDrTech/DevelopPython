@@ -5,7 +5,7 @@ from tabs.pagos_tab import crear_tab_pagos
 from tabs.suscripciones_tab import crear_tab_suscripciones
 from tabs.envios_tab import envio_estados
 from tabs.cuentas_tab import crear_tab_cuentas
-
+from tabs.suplidores_tab import crear_tab_pagos_suplidores
 def main(page: ft.Page):
     page.title = "TV en casa  Ver.20250222"
     page.window.alignment = ft.alignment.center
@@ -42,6 +42,9 @@ def main(page: ft.Page):
     
     # Create cuentas content
     cuentas_content = crear_tab_cuentas(page, mainTab)
+    
+    # Create pagos_suplidores content
+    pagos_suplidores_content = crear_tab_pagos_suplidores(page)
 
     # Create and add all tabs
     tabs_list = [
@@ -74,6 +77,11 @@ def main(page: ft.Page):
             text="Cuentas",
             icon=ft.Icons.STREAM,
             content=cuentas_content
+        ),
+        ft.Tab(
+            text="Suplidores",
+            icon=ft.Icons.SHOP_SHARP,
+            content=pagos_suplidores_content
         )
     ]
 
