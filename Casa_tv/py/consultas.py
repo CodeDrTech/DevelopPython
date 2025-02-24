@@ -687,7 +687,7 @@ def get_cuentas():
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, correo, costo, servicio FROM cuentas ORDER by correo")
+            cursor.execute("SELECT id, correo, costo, servicio, fecha_de_pago, tarjeta FROM cuentas ORDER by correo")
             return cursor.fetchall()
         except sqlite3.Error as e:
             print(f"Error obteniendo cuentas: {e}")
@@ -697,16 +697,16 @@ def get_cuentas():
     return []
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-def insertar_cuenta(correo: str, costo: int, servicio: str) -> bool:
+def insertar_cuenta(correo: str, costo: int, servicio: str, fecha_de_pago: str = None, tarjeta: int = None) -> bool:
     """Inserta una nueva cuenta en la tabla cuentas."""
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO cuentas (correo, costo, servicio)
-                VALUES (?, ?, ?)
-            """, (correo, costo, servicio))
+                INSERT INTO cuentas (correo, costo, servicio, fecha_de_pago, tarjeta)
+                VALUES (?, ?, ?, ?, ?)
+            """, (correo, costo, servicio, fecha_de_pago, tarjeta))
             conn.commit()
             return True
         except sqlite3.Error as e:
@@ -717,7 +717,7 @@ def insertar_cuenta(correo: str, costo: int, servicio: str) -> bool:
     return False
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, servicio: str) -> bool:
+def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, servicio: str, fecha_de_pago: str = None, tarjeta: int = None) -> bool:
     """Actualiza los datos de una cuenta existente."""
     conn = connect_to_database()
     if conn:
@@ -725,9 +725,9 @@ def actualizar_cuenta(cuenta_id: int, correo: str, costo: int, servicio: str) ->
             cursor = conn.cursor()
             cursor.execute("""
                 UPDATE cuentas
-                SET correo = ?, costo = ?, servicio = ?
+                SET correo = ?, costo = ?, servicio = ?, fecha_de_pago = ?, tarjeta = ?
                 WHERE id = ?
-            """, (correo, costo, servicio, cuenta_id))
+            """, (correo, costo, servicio, fecha_de_pago, tarjeta, cuenta_id))
             conn.commit()
             return True
         except sqlite3.Error as e:
@@ -1290,21 +1290,86 @@ def get_pagos_suplidores():
             conn.close()
     return []
 
-def insertar_pago_suplidor(cuenta_id: int, fecha_pago: str, monto_pago: float, estado: str, comentarios: str) -> bool:
-    """Inserta un nuevo pago a suplidor."""
+def get_estado_pagos_suplidores():
+    """
+    Obtiene información detallada de pagos a suplidores incluyendo fechas, estados y montos.
+    """
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                INSERT INTO pagos_suplidores 
-                (cuenta_id, fecha_pago, monto_pago, estado, comentarios)
-                VALUES (?, ?, ?, ?, ?)
-            ''', (cuenta_id, fecha_pago, monto_pago, estado, comentarios))
+                WITH ultimo_pago AS (
+                    SELECT 
+                        cuenta_id,
+                        MAX(fecha_pago) as ultima_fecha_pago,
+                        comentarios
+                    FROM pagos_suplidores
+                    GROUP BY cuenta_id
+                )
+                SELECT 
+                    c.id,
+                    c.servicio,
+                    c.correo,
+                    c.fecha_de_pago as fecha_inicial,
+                    COALESCE(up.ultima_fecha_pago, c.fecha_de_pago) as ultimo_pago,
+                    DATE(COALESCE(up.ultima_fecha_pago, c.fecha_de_pago), '+1 month') as proximo_pago,
+                    ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.fecha_de_pago))) as dias_transcurridos,
+                    CASE 
+                        WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.fecha_de_pago))) > 33 
+                            THEN 'Pago pendiente'
+                        WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.fecha_de_pago))) >= 27 
+                            THEN 'Cerca'
+                        ELSE 'Pagado'
+                    END as estado,
+                    c.costo as cuota,
+                    c.tarjeta,
+                    COALESCE(up.comentarios, '') as comentarios
+                FROM cuentas c
+                LEFT JOIN ultimo_pago up ON c.id = up.cuenta_id
+                ORDER BY dias_transcurridos DESC;
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error consultando estado de pagos: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
+
+def insertar_pago_suplidor(cuenta_id: int, fecha_pago: str, comentarios: str = None) -> bool:
+    """
+    Inserta un nuevo pago de suplidor.
+    Args:
+        cuenta_id: ID de la cuenta
+        fecha_pago: Fecha del pago
+        comentarios: Comentarios opcionales sobre el pago
+    Returns:
+        bool: True si se insertó correctamente, False en caso contrario
+    """
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            # Obtener el monto y la tarjeta de la cuenta
+            cursor.execute("SELECT costo, tarjeta FROM cuentas WHERE id = ?", (cuenta_id,))
+            cuenta = cursor.fetchone()
+            if not cuenta:
+                return False
+            
+            monto = cuenta[0]
+            tarjeta = cuenta[1]
+            estado = "Pagado"
+            
+            cursor.execute("""
+                INSERT INTO pagos_suplidores (cuenta_id, fecha_pago, monto_pago, estado, comentarios, tarjeta)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (cuenta_id, fecha_pago, monto, estado, comentarios, tarjeta))
+            
             conn.commit()
             return True
         except sqlite3.Error as e:
-            print(f"Error insertando pago suplidor: {e}")
+            print(f"Error insertando pago: {e}")
             return False
         finally:
             conn.close()

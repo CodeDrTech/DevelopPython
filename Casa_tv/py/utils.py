@@ -27,3 +27,12 @@ def get_estado_color(estado: str) -> str:
     elif estado == "Cerca":
         return ft.Colors.BLUE_700
     return ft.Colors.GREEN
+
+def get_estado_color_suplidores(estado: str) -> str:
+    if estado == "Pagado":
+        return ft.colors.GREEN_700
+    elif estado == "Pago pendiente":
+        return ft.colors.ORANGE_700
+    elif estado == "Cerca":
+        return ft.colors.BLUE_700
+    return ft.colors.BLACK

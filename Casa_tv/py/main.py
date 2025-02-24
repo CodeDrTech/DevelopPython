@@ -13,7 +13,7 @@ def main(page: ft.Page):
     page.window.height = 800
     page.window.resizable = False
     page.padding = 20
-    page.scroll = "adaptive"
+    page.scroll = "adaptive" # type: ignore
     page.bgcolor = "#e7e7e7"
     page.theme_mode = ft.ThemeMode.LIGHT
 
@@ -44,7 +44,7 @@ def main(page: ft.Page):
     cuentas_content = crear_tab_cuentas(page, mainTab)
     
     # Create pagos_suplidores content
-    pagos_suplidores_content = crear_tab_pagos_suplidores(page)
+    pagos_suplidores_content = crear_tab_pagos_suplidores(page, mainTab)
 
     # Create and add all tabs
     tabs_list = [

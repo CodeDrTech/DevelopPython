@@ -1,5 +1,6 @@
 import flet as ft
-from utils import mostrar_mensaje
+import datetime
+from utils import mostrar_mensaje, convertir_formato_fecha
 from consultas import (
     get_cuentas,
     insertar_cuenta,
@@ -139,6 +140,8 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                             ft.DataCell(ft.Text(cuenta[1])),
                             ft.DataCell(ft.Text(f"${cuenta[2]:.2f}")),
                             ft.DataCell(ft.Text(cuenta[3])),
+                            ft.DataCell(ft.Text(convertir_formato_fecha(cuenta[4]) if cuenta[4] else "-")), # fecha_de_pago
+                            ft.DataCell(ft.Text(f"*{cuenta[5]}" if cuenta[5] else "-")), # tarjeta
                             ft.DataCell(editar_btn),
                             ft.DataCell(eliminar_btn)
                         ]
@@ -150,6 +153,8 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                     ft.DataColumn(ft.Text("Correo")),
                     ft.DataColumn(ft.Text("Costo")),
                     ft.DataColumn(ft.Text("Servicio")),
+                    ft.DataColumn(ft.Text("Fecha de Pago")),
+                    ft.DataColumn(ft.Text("Tarjeta")),
                     ft.DataColumn(ft.Text("Editar")),
                     ft.DataColumn(ft.Text("Eliminar"))
                 ],
@@ -174,6 +179,33 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
             )
             txt_servicio = ft.TextField(label="Servicio (Netflix, HBO)", width=300, capitalization=ft.TextCapitalization.WORDS)
             
+            # New fields
+            txt_fecha_pago = ft.TextField(
+                label="Fecha de Pago",
+                width=300,
+                read_only=True
+            )
+            def mostrar_fecha(e):
+                date_picker = ft.DatePicker(
+                    on_change=lambda e: cambiar_fecha(e, txt_fecha_pago)
+                )
+                page.overlay.append(date_picker)
+                date_picker.open = True
+                page.update()
+
+            def cambiar_fecha(e, txt_field):
+                if e.control.value:  # Check control.value instead of date
+                    fecha = e.control.value.date()  # Get date from control.value
+                    txt_field.value = fecha.strftime("%Y-%m-%d")
+                    page.update()
+
+            txt_fecha_pago.on_click = mostrar_fecha
+            
+            txt_tarjeta = ft.TextField(
+                label="Tarjeta (últimos 4 dígitos)",
+                width=300,
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]{0,4}$", replacement_string="")
+            )
             def guardar_nueva_cuenta(e):
                 try:
                     # Validación de campos
@@ -186,6 +218,19 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                     if not txt_servicio.value:
                         mostrar_mensaje("El campo servicio es requerido.", page)
                         return
+                    if not txt_fecha_pago.value:
+                        mostrar_mensaje("El campo fecha de pago es requerido.", page)
+                        return
+                    if not txt_tarjeta.value:
+                        mostrar_mensaje("El campo tarjeta es requerido.", page)
+                        return
+                    
+                    # Conversión de tipos
+                    try:
+                        tarjeta = int(txt_tarjeta.value)
+                    except ValueError:
+                        mostrar_mensaje("El campo tarjeta debe ser un número válido.", page)
+                        return
 
                     # Conversión de tipos
                     try:
@@ -195,7 +240,7 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                         return
 
                     # Llamada a insertar_cuenta
-                    if insertar_cuenta(txt_correo.value, costo, txt_servicio.value):
+                    if insertar_cuenta(txt_correo.value, costo, txt_servicio.value, txt_fecha_pago.value, tarjeta):
                         mostrar_mensaje("Cuenta agregada correctamente.", page)
                         
                         dialogo_nuevo.open = False
@@ -225,6 +270,8 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                     txt_correo,
                     txt_costo,
                     txt_servicio,
+                    txt_fecha_pago,
+                    txt_tarjeta
                 ], spacing=10),
                 actions=[
                     ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dialogo_nuevo, page)),
@@ -252,18 +299,49 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
             )
             txt_servicio = ft.TextField(label="Servicio", value=cuenta[3], width=320)
             
+            txt_fecha_pago = ft.TextField(
+            label="Fecha de Pago",
+            value=cuenta[4] if cuenta[4] else "",
+            width=320,
+            read_only=True
+            )
+        
+            def mostrar_fecha(e):
+                date_picker = ft.DatePicker(
+                    on_change=lambda e: cambiar_fecha(e, txt_fecha_pago)
+                )
+                page.overlay.append(date_picker)
+                date_picker.open = True
+                page.update()
+
+            def cambiar_fecha(e, txt_field):
+                if e.control.value:  # Check control.value instead of date
+                    fecha = e.control.value.date()  # Get date from control.value
+                    txt_field.value = fecha.strftime("%Y-%m-%d")
+                    page.update()
+
+            txt_fecha_pago.on_click = mostrar_fecha
+            
+            txt_tarjeta = ft.TextField(
+                label="Tarjeta (últimos 4 dígitos)",
+                value=str(cuenta[5]) if cuenta[5] else "",
+                width=320,
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]{0,4}$", replacement_string="")
+            )
+            
             def guardar_cambios(e):
                 nuevo_correo = txt_correo.value.strip() # type: ignore
                 nuevo_servicio = txt_servicio.value.strip() # type: ignore
                 try:
                     nuevo_costo = int(txt_costo.value.strip()) # type: ignore
+                    nueva_tarjeta = int(txt_tarjeta.value.strip()) # type: ignore
                 except ValueError:
                     mostrar_mensaje("El costo debe ser un número.", page)
                     return
                 
                 # Llamar a la función actualizar_cuenta del módulo de consultas, que debe actualizar la cuenta
                 # con los nuevos valores: (cuenta_id, correo, costo, servicio).
-                if actualizar_cuenta(cuenta_id, nuevo_correo, nuevo_costo, nuevo_servicio):
+                if actualizar_cuenta(cuenta_id, nuevo_correo, nuevo_costo, nuevo_servicio, txt_fecha_pago.value, nueva_tarjeta):
                     dlg_modal.open = False
                     
                     actualizar_autocomplete()
@@ -294,6 +372,8 @@ def crear_tab_cuentas(page: ft.Page, mainTab: ft.Tabs):
                     txt_correo,
                     txt_costo,
                     txt_servicio,
+                    txt_fecha_pago,
+                    txt_tarjeta
                 ], spacing=10),
                 actions=[
                     ft.TextButton("Cancelar", on_click=lambda e: close_dlg(e)),

@@ -349,7 +349,7 @@ def crear_tabla_clientes(page: ft.Page, mainTab: ft.Tabs):
             """Actualiza contenido de la tabla."""
             
             # Update counter
-            contador_clientes.value = f"Total de clientes: {len(clientes)}"
+            contador_clientes.value = f"Total clientes registrados: {len(clientes)}"
             
             tabla_container.content = ft.DataTable(
                 columns=[
