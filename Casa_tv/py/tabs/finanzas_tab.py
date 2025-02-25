@@ -1,93 +1,183 @@
 import flet as ft
-import matplotlib
-matplotlib.use('Agg')  # Set Agg backend before importing pyplot
-import matplotlib.pyplot as plt
-import io
-import base64
-from consultas import get_estado_pagos, get_total_pagos_mes_actual
-from threading import Lock
-
-plot_lock = Lock()
+from consultas import get_estado_pagos, get_total_pagos_mes_actual, get_pagos_por_mes
 
 def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
     """Crea el tab de finanzas con gráficos estadísticos."""
     
     def calcular_datos_financieros():
-        """Calcula los datos financieros para los gráficos."""
         registros = get_estado_pagos()
         deuda_total = sum(reg[8] for reg in registros)
         pagos_mes = get_total_pagos_mes_actual()
         ganancia = pagos_mes - deuda_total
         return deuda_total, pagos_mes, ganancia
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_grafico_barras():
-        """Crea el gráfico de barras y lo convierte en imagen para Flet."""
-        with plot_lock:  # Use lock for thread safety
-            deuda_total, pagos_mes, ganancia = calcular_datos_financieros()
-            
-            # Create a new figure
-            fig = plt.figure(figsize=(10, 6))
-            ax = fig.add_subplot(111)
-            
-            # Datos para el gráfico
-            categorias = ["Deuda Total", "Pagado este mes", "Ganancia"]
-            valores = [deuda_total, pagos_mes, ganancia]
-            colores = ["#FF4444", "#4444FF", "#44FF44"]
-            
-            # Crear barras
-            bars = ax.bar(categorias, valores, color=colores)
-            
-            # Personalizar gráfico
-            ax.set_title("Resumen Financiero", pad=20)
-            ax.set_ylabel("Monto ($)")
-            
-            # Añadir valores sobre las barras
-            for bar in bars:
-                height = bar.get_height()
-                ax.text(
-                    bar.get_x() + bar.get_width()/2.,
-                    height,
-                    f'${height:,.0f}',
-                    ha='center',
-                    va='bottom'
-                )
-            
-            # Ajustar layout
-            plt.tight_layout()
-            
-            # Convertir el gráfico a imagen
-            buf = io.BytesIO()
-            fig.savefig(buf, format='png', dpi=300, bbox_inches='tight')
-            buf.seek(0)
-            img_str = base64.b64encode(buf.getvalue()).decode()
-            
-            # Clean up
-            plt.close(fig)
-            
-            return img_str
+        deuda_total, pagos_mes, ganancia = calcular_datos_financieros()
+        max_value = max(deuda_total, pagos_mes, abs(ganancia)) * 1.1
 
-    # Crear contenedor para la imagen
-    img_container = ft.Container(
-        content=ft.Image(
-            src_base64=crear_grafico_barras(),
-            width=800,
-            height=500,
-            fit=ft.ImageFit.CONTAIN,
-        ),
-        padding=20,
+        chart = ft.BarChart(
+            bar_groups=[
+                ft.BarChartGroup(
+                    x=0,
+                    bar_rods=[
+                        ft.BarChartRod(
+                            from_y=0,
+                            to_y=deuda_total,
+                            width=40,
+                            color=ft.colors.RED_400,
+                            tooltip=f"${deuda_total:,.0f}",
+                            border_radius=0,
+                        ),
+                    ],
+                ),
+                ft.BarChartGroup(
+                    x=1,
+                    bar_rods=[
+                        ft.BarChartRod(
+                            from_y=0,
+                            to_y=pagos_mes,
+                            width=40,
+                            color=ft.colors.BLUE_400,
+                            tooltip=f"${pagos_mes:,.0f}",
+                            border_radius=0,
+                        ),
+                    ],
+                ),
+                ft.BarChartGroup(
+                    x=2,
+                    bar_rods=[
+                        ft.BarChartRod(
+                            from_y=0,
+                            to_y=ganancia,
+                            width=40,
+                            color=ft.colors.GREEN_400,
+                            tooltip=f"${ganancia:,.0f}",
+                            border_radius=0,
+                        ),
+                    ],
+                ),
+            ],
+            border=ft.border.all(1, ft.colors.GREY_400),
+            left_axis=ft.ChartAxis(
+                labels=[
+                    ft.ChartAxisLabel(value=0, label=ft.Text("$0")),
+                    ft.ChartAxisLabel(value=max_value/2, label=ft.Text(f"${max_value/2:,.0f}")),
+                    ft.ChartAxisLabel(value=max_value, label=ft.Text(f"${max_value:,.0f}")),
+                ],
+                labels_size=35
+            ),
+            bottom_axis=ft.ChartAxis(
+                labels=[
+                    ft.ChartAxisLabel(
+                        value=0,
+                        label=ft.Container(ft.Text("Deuda Total"), padding=1)
+                    ),
+                    ft.ChartAxisLabel(
+                        value=1,
+                        label=ft.Container(ft.Text("Pagado Mes"), padding=1)
+                    ),
+                    ft.ChartAxisLabel(
+                        value=2,
+                        label=ft.Container(ft.Text("Ganancia"), padding=1)
+                    ),
+                ],
+                labels_size=35,
+            ),
+            horizontal_grid_lines=ft.ChartGridLines(
+                color=ft.colors.GREY_300,
+                width=1,
+                dash_pattern=[3, 3]
+            ),
+            tooltip_bgcolor=ft.colors.with_opacity(0.5, ft.colors.GREY_300),
+            max_y=max_value,
+            interactive=True,
+            height=300
+        )
+        return chart
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def crear_grafico_meses():
+        pagos_mensuales = get_pagos_por_mes()
+        valores = [pago[1] for pago in pagos_mensuales]
+        max_value = max(valores) * 1.1 if valores else 1000
+
+        meses = ["ENE-", "FEB-", "MAR-", "ABR-", "MAY-", "JUN-", 
+                 "JUL-", "AGO-", "SEP-", "OCT-", "NOV-", "DIC-"]
+
+        chart = ft.BarChart(
+            bar_groups=[
+                ft.BarChartGroup(
+                    x=i,
+                    bar_rods=[
+                        ft.BarChartRod(
+                            from_y=0,
+                            to_y=valor,
+                            width=30,
+                            color=ft.colors.BLUE_400,
+                            tooltip=f"${valor:,.0f}",
+                            border_radius=0,
+                        ),
+                    ],
+                ) for i, valor in enumerate(valores)
+            ],
+            border=ft.border.all(1, ft.colors.GREY_400),
+            left_axis=ft.ChartAxis(
+                labels=[
+                    ft.ChartAxisLabel(value=0, label=ft.Text("$0")),
+                    ft.ChartAxisLabel(value=max_value/2, label=ft.Text(f"${max_value/2:,.0f}")),
+                    ft.ChartAxisLabel(value=max_value, label=ft.Text(f"${max_value:,.0f}")),
+                ],
+                labels_size=35
+            ),
+            bottom_axis=ft.ChartAxis(
+                labels=[
+                    ft.ChartAxisLabel(
+                        value=i,
+                        label=ft.Container(ft.Text(mes), padding=1)
+                    ) for i, mes in enumerate(meses)
+                ],
+                labels_size=35,
+            ),
+            horizontal_grid_lines=ft.ChartGridLines(
+                color=ft.colors.GREY_300,
+                width=1,
+                dash_pattern=[3, 3]
+            ),
+            tooltip_bgcolor=ft.colors.with_opacity(0.5, ft.colors.GREY_300),
+            max_y=max_value,
+            interactive=True,
+            height=300
+        )
+        return chart
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    chart_container = ft.Container(
+        content=crear_grafico_barras(),
+        padding=25,
         border=ft.border.all(1, ft.colors.GREY_400),
         border_radius=10,
         bgcolor=ft.colors.WHITE,
+        width=500,
+        height=400
+    )
+    
+    chart_container_meses = ft.Container(
+        content=crear_grafico_meses(),
+        padding=25,
+        border=ft.border.all(1, ft.colors.GREY_400),
+        border_radius=10,
+        bgcolor=ft.colors.WHITE,
+        width=500,
+        height=400
     )
 
-    
-
-    # Crear layout principal
     contenido = ft.Column([
+        ft.Text("Datos financieros", size=20, weight="bold"), # type: ignore
         ft.Row([
-            ft.Text("Resumen Financiero", size=20, weight="bold"), # type: ignore
-        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-        img_container
+            chart_container,
+            chart_container_meses
+        ], alignment=ft.MainAxisAlignment.CENTER)
     ])
 
     return contenido

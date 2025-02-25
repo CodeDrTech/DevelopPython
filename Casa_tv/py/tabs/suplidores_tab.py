@@ -267,12 +267,14 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
             delete_button = ft.IconButton(
                 icon=ft.icons.DELETE,
                 tooltip="Eliminar",
+                icon_color="red",
                 on_click=lambda e, p=pago: mostrar_dialogo_eliminar(e, p)
             )
             
             pay_button = ft.IconButton(
                 icon=ft.icons.PAYMENT,
                 tooltip="Registrar Pago",
+                icon_color="green",
                 on_click=lambda e, p=pago: mostrar_dialogo_pago(e, p)
             )
             

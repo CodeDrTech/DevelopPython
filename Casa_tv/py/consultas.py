@@ -1443,3 +1443,33 @@ def get_correos_unicos():
         finally:
             conn.close()
     return []
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_pagos_por_mes():
+    """Obtiene el total de pagos por mes del año actual."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                WITH RECURSIVE months(month_num) AS (
+                    SELECT 1
+                    UNION ALL
+                    SELECT month_num + 1 FROM months WHERE month_num < 12
+                )
+                SELECT 
+                    months.month_num,
+                    COALESCE(SUM(p.monto_pagado), 0) as total
+                FROM months
+                LEFT JOIN pagos p ON strftime('%m', p.fecha_pago) = printf('%02d', months.month_num)
+                    AND strftime('%Y', p.fecha_pago) = strftime('%Y', 'now')
+                GROUP BY months.month_num
+                ORDER BY months.month_num;
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error consultando pagos por mes: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
