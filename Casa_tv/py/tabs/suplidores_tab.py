@@ -57,7 +57,78 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    
+    def registrar_pago_suplidor(e, pago):
+        """Abre diálogo para registrar nuevo pago de suplidor"""
+        
+        txt_fecha = ft.TextField(
+            label="Fecha de pago",
+            value=datetime.datetime.now().strftime("%Y-%m-%d"),
+            read_only=True,
+            icon=ft.Icons.CALENDAR_MONTH
+        )
+
+        def mostrar_fecha(e):
+            date_picker = ft.DatePicker(
+                on_change=lambda e: cambiar_fecha(e, txt_fecha)
+            )
+            page.overlay.append(date_picker)
+            date_picker.pick_date()
+            page.update()
+
+        def cambiar_fecha(e, txt_field):
+            txt_field.value = e.control.value.date().strftime("%Y-%m-%d")
+            page.update()
+
+        txt_fecha.on_click = mostrar_fecha
+
+        txt_comentarios = ft.TextField(
+            label="Comentarios",
+            multiline=True,
+            min_lines=2,
+            max_lines=3,
+            width=400
+        )
+
+        def guardar_pago(e):
+            try:
+                if not txt_fecha.value:
+                    raise ValueError("La fecha es obligatoria")
+                
+                if insertar_pago_suplidor(
+                    cuenta_id=pago[0],  # ID de la cuenta
+                    fecha_pago=txt_fecha.value,
+                    comentarios=txt_comentarios.value
+                ):
+                    mostrar_mensaje("Pago registrado exitosamente", page)
+                    dlg_modal.open = False
+                    actualizar_vencimientos()
+                    filtrar_tabla(dropdown_correos.value)  # Actualizar la tabla con el filtro actual
+                else:
+                    mostrar_mensaje("Error al registrar el pago", page)
+            except ValueError as ex:
+                mostrar_mensaje(str(ex), page)
+            page.update()
+
+        dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(f"Registrar Pago - {pago[1]}"),  # Nombre del servicio
+            content=ft.Column([
+                ft.Text(f"Servicio: {pago[1]}"),
+                ft.Text(f"Correo: {pago[2]}"),
+                ft.Text(f"Monto a pagar: ${pago[8]}"),  # Muestra el monto pero no es editable
+                txt_fecha,
+                txt_comentarios
+            ], spacing=10),
+            actions=[
+                ft.TextButton("Cancelar", 
+                            on_click=lambda e: setattr(dlg_modal, 'open', False) or page.update()),
+                ft.TextButton("Guardar", on_click=guardar_pago)
+            ]
+        )
+
+        page.dialog = dlg_modal
+        dlg_modal.open = True
+        page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def filtrar_tabla(correo_seleccionado=None):
@@ -78,13 +149,16 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
             
             delete_button = ft.IconButton(
                 icon=ft.icons.DELETE,
+                icon_color="red",
                 tooltip="Eliminar",
                 
             )
             
             pay_button = ft.IconButton(
                 icon=ft.icons.PAYMENT,
+                icon_color="green",
                 tooltip="Registrar Pago",
+                on_click=lambda e, p=pago: registrar_pago_suplidor(e, p)
                 
             )
             

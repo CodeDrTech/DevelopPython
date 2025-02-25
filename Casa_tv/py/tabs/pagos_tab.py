@@ -26,53 +26,20 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         border_radius=10
         )
         
-        def actualizar_tabla_pagos(cliente_id):
-            """Actualiza la tabla de pagos del cliente."""
-            pagos = get_pagos_cliente(cliente_id)
-            tabla_pagos.content = ft.DataTable(
-                columns=[
-                    ft.DataColumn(ft.Text("Fecha")),
-                    ft.DataColumn(ft.Text("Monto")),
-                    ft.DataColumn(ft.Text("Editar")),
-                    ft.DataColumn(ft.Text("Eliminar"))
-                ],
-                rows=[
-                    ft.DataRow(
-                        cells=[
-                            ft.DataCell(ft.Text(convertir_formato_fecha(pago[2]))),
-                            ft.DataCell(ft.Text(f"${pago[3]}")),
-                            ft.DataCell(
-                                ft.Row([
-                                    ft.IconButton(
-                                        icon=ft.Icons.EDIT,
-                                        tooltip="Editar",
-                                        on_click=lambda e, p=pago: editar_pago(e, p)
-                                    )
-                                ])
-                            ),
-                            ft.DataCell(
-                                ft.Row([
-                                    ft.IconButton(
-                                        icon=ft.Icons.DELETE,
-                                        icon_color="red",
-                                        tooltip="Eliminar",
-                                        on_click=lambda e, p=pago: confirmar_eliminar_pago(e, p)
-                                    ) if index == 0 else ft.Text("")  # Solo mostrar en el primer registro (último pago)
-                                ])
-                            )
-                        ]
-                    ) for index, pago in enumerate(pagos)  # Añadimos index para rastrear la posición
-                ]
-            )
-            page.update()
-        
-        
-        
-        def confirmar_eliminar_pago(e, pago):
+        def confirmar_eliminar_pago(e, pago, cliente_id):
+            
+            """
+            Muestra diálogo de confirmación para eliminar pago.
+            
+            Args:
+                e: Evento del botón
+                pago: Datos del pago a eliminar
+                cliente_id: ID del cliente
+            """
             def eliminar(e):
                 if eliminar_pago(pago[0]):
                     mostrar_mensaje("Pago eliminado", page)
-                    actualizar_tabla_pagos(pago[0])
+                    actualizar_tabla_pagos(cliente_id)
                     actualizar_vencimientos()
                 dlg_modal.open = False
                 page.update()
@@ -94,8 +61,16 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
             dlg_modal.open = True
             page.update()
 
-        def editar_pago(e, pago):
+        def editar_pago(e, pago, cliente_id):
             
+            """
+            Muestra diálogo para editar pago.
+            
+            Args:
+                e: Evento del botón
+                pago: Datos del pago a editar
+                cliente_id: ID del cliente
+            """            
             def seleccionar_fecha_edit(e, txt_field):
                 """
                 Actualiza TextField con la fecha seleccionada en el DatePicker.
@@ -136,9 +111,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                 try:
                     if actualizar_pago(pago[0], fecha_edit.value, int(monto_edit.value)):
                         mostrar_mensaje("Pago actualizado", page)
-                        # Actualizar tabla de pagos
-                        actualizar_tabla_pagos(pago[0])
-                        # Actualizar vencimientos
+                        actualizar_tabla_pagos(cliente_id)
                         actualizar_vencimientos()
                         # Actualizar controles de pago
                         if cliente_seleccionado:
@@ -183,7 +156,62 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
             page.dialog = dlg_modal
             dlg_modal.open = True
             page.update()
+        
+        
+        def actualizar_tabla_pagos(cliente_id):
+            """
+            Actualiza la tabla de pagos del cliente mostrando el historial de pagos.
+            
+            Args:
+                cliente_id (int): ID del cliente cuyos pagos se mostrarán
+            """
+            try:
+                pagos = get_pagos_cliente(cliente_id)
+                if not pagos:
+                    tabla_pagos.content = ft.Text("No hay pagos registrados")
+                    page.update()
+                    return
 
+                rows = []
+                for index, pago in enumerate(pagos):
+                    # Crear botón editar con función lambda correcta
+                    btn_editar = ft.IconButton(
+                        icon=ft.icons.EDIT,
+                        tooltip="Editar",
+                        on_click=lambda e, p=pago, cid=cliente_id: editar_pago(e, p, cid)
+                    )
+                    
+                    # Crear botón eliminar con función lambda correcta
+                    btn_eliminar = ft.IconButton(
+                        icon=ft.icons.DELETE,
+                        icon_color="red",
+                        tooltip="Eliminar",
+                        on_click=lambda e, p=pago, cid=cliente_id: confirmar_eliminar_pago(e, p, cid)
+                    ) if index == 0 else ft.Text("")
+
+                    # Crear fila
+                    row = ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(convertir_formato_fecha(pago[2]))),
+                            ft.DataCell(ft.Text(f"${pago[3]}")),
+                            ft.DataCell(ft.Row([btn_editar])),
+                            ft.DataCell(ft.Row([btn_eliminar]))
+                        ]
+                    )
+                    rows.append(row)
+
+                tabla_pagos.content = ft.DataTable(
+                    columns=[
+                        ft.DataColumn(ft.Text("Fecha")),
+                        ft.DataColumn(ft.Text("Monto")),
+                        ft.DataColumn(ft.Text("Editar")),
+                        ft.DataColumn(ft.Text("Eliminar"))
+                    ],
+                    rows=rows
+                )
+                page.update()
+            except Exception as ex:
+                mostrar_mensaje(f"Error al actualizar tabla: {str(ex)}", page)  
         
         
         def actualizar_vencimientos():
