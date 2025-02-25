@@ -3,12 +3,18 @@ import datetime
 from utils import convertir_formato_fecha, mostrar_mensaje, get_estado_color
 from consultas import get_clientes_pagos, get_estado_pago_cliente, insertar_pago, get_pagos_cliente, eliminar_pago, actualizar_pago
 from tabs.vencimientos_tab import crear_tabla_vencimientos
+from tabs.finanzas_tab import crear_tab_finanzas
 
 def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         """
         Crea tab para aplicar pagos con AutoComplete y fecha.
         Permite seleccionar cliente, establecer fecha y registrar pago.
         """
+        
+        def actualizar_finanzas():
+            """Updates the vencimientos tab content"""
+            mainTab.tabs[7].content = crear_tab_finanzas(page, mainTab)
+            page.update()
         
         # Add after info_container definition
         tabla_pagos = ft.Container(
@@ -52,6 +58,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                 dlg.open = False
                 actualizar_tabla_pagos(cliente_id)
                 actualizar_vencimientos()
+                actualizar_finanzas()
             else:
                 mostrar_mensaje("Error al eliminar el pago", page)
             page.update()
@@ -98,6 +105,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                         dlg_modal.open = False
                         actualizar_tabla_pagos(cliente_id)
                         actualizar_vencimientos()
+                        actualizar_finanzas()
                     else:
                         mostrar_mensaje("Error al actualizar el pago", page)
                 except Exception as ex:
@@ -307,6 +315,7 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
                     
                     # actualizar tabla de vencimientos
                     actualizar_vencimientos()
+                    actualizar_finanzas()
                     
                     page.update()
                 else:

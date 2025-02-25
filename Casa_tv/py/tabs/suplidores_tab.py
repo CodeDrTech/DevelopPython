@@ -38,6 +38,17 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
         on_change=lambda e: filtrar_tabla(e.control.value)
     )
     
+    dropdown_estados = ft.Dropdown(
+        label="Filtrar por estado",
+        width=300,
+        options=[
+            ft.dropdown.Option("Todos los estados"),
+            ft.dropdown.Option("Pagado"),
+            ft.dropdown.Option("Cerca"),
+            ft.dropdown.Option("Pago pendiente")
+        ]
+    )
+    
     # Contenedor para la tabla
     tabla_container = ft.Container(
         content=ft.DataTable(
@@ -63,7 +74,7 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def registrar_pago_suplidor(e, pago):
+    def mostrar_dialogo_pago(e, pago):
         """Abre diálogo para registrar nuevo pago de suplidor"""
         
         txt_fecha = ft.TextField(
@@ -232,37 +243,37 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    def filtrar_tabla(correo_seleccionado=None):
-        """Actualiza la tabla con los pagos actuales."""
+    def filtrar_tabla(correo_seleccionado=None, estado_seleccionado=None):
+        """Actualiza la tabla con los pagos filtrados por correo y estado."""
         pagos = get_estado_pagos_suplidores()
         rows = []
         
         for pago in pagos:
-            # Filter by selected email
+            # Skip if doesn't match correo filter
             if correo_seleccionado and correo_seleccionado != "Todos los correos" and pago[2] != correo_seleccionado:
                 continue
-            # Create buttons with proper event handling
+                
+            # Skip if doesn't match estado filter
+            if estado_seleccionado and estado_seleccionado != "Todos los estados" and pago[7] != estado_seleccionado:
+                continue
+
+            # Create buttons and row as before...
             edit_button = ft.IconButton(
                 icon=ft.icons.EDIT,
                 tooltip="Editar",
                 on_click=lambda e, p=pago: mostrar_dialogo_editar(e, p)
-                
             )
             
             delete_button = ft.IconButton(
                 icon=ft.icons.DELETE,
-                icon_color="red",
                 tooltip="Eliminar",
                 on_click=lambda e, p=pago: mostrar_dialogo_eliminar(e, p)
-                
             )
             
             pay_button = ft.IconButton(
                 icon=ft.icons.PAYMENT,
-                icon_color="green",
                 tooltip="Registrar Pago",
-                on_click=lambda e, p=pago: registrar_pago_suplidor(e, p)
-                
+                on_click=lambda e, p=pago: mostrar_dialogo_pago(e, p)
             )
             
             rows.append(
@@ -290,11 +301,24 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
         if tabla_container.content:
             tabla_container.content.rows = rows # type: ignore
             page.update()
+            
+    dropdown_correos.on_change = lambda e: filtrar_tabla(
+        e.control.value, 
+        dropdown_estados.value
+    )
+    
+    dropdown_estados.on_change = lambda e: filtrar_tabla(
+        dropdown_correos.value, 
+        e.control.value
+    )
 
     # Create main content
     contenido = ft.Column([
         ft.Text("Pagos a Suplidores", size=20, weight="bold"), # type: ignore
-        dropdown_correos,
+        ft.Row([
+            dropdown_correos,
+            dropdown_estados
+        ], spacing=20),
         tabla_container
     ])
 
