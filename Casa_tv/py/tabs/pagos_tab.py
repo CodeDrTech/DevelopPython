@@ -27,133 +27,93 @@ def crear_tab_pagos(page: ft.Page, mainTab: ft.Tabs):
         )
         
         def confirmar_eliminar_pago(e, pago, cliente_id):
-            
-            """
-            Muestra diálogo de confirmación para eliminar pago.
-            
-            Args:
-                e: Evento del botón
-                pago: Datos del pago a eliminar
-                cliente_id: ID del cliente
-            """
-            def eliminar(e):
-                if eliminar_pago(pago[0]):
-                    mostrar_mensaje("Pago eliminado", page)
-                    actualizar_tabla_pagos(cliente_id)
-                    actualizar_vencimientos()
-                dlg_modal.open = False
-                page.update()
-
-            def cancelar(e):
-                dlg_modal.open = False
-                page.update()
-
+            """Muestra diálogo de confirmación para eliminar pago."""
             dlg_modal = ft.AlertDialog(
                 modal=True,
                 title=ft.Text("Confirmar eliminación"),
-                content=ft.Text(f"¿Eliminar el pago de ${pago[3]} del {convertir_formato_fecha(pago[2])}?"),
+                content=ft.Text(
+                    f"¿Está seguro que desea eliminar el pago?\n"
+                    f"Fecha: {convertir_formato_fecha(pago[2])}\n"
+                    f"Monto: ${pago[3]}"
+                ),
                 actions=[
-                    ft.TextButton("Cancelar", on_click=cancelar),
-                    ft.TextButton("Eliminar", on_click=eliminar)
+                    ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal)),
+                    ft.TextButton("Eliminar", on_click=lambda e: eliminar_y_cerrar(dlg_modal, pago[0], cliente_id))
                 ]
             )
-            page.dialog = dlg_modal
+            page.overlay.append(dlg_modal)
             dlg_modal.open = True
             page.update()
 
+        def eliminar_y_cerrar(dlg, pago_id, cliente_id):
+            """Elimina el pago y cierra el diálogo."""
+            if eliminar_pago(pago_id):
+                mostrar_mensaje("Pago eliminado exitosamente", page)
+                dlg.open = False
+                actualizar_tabla_pagos(cliente_id)
+                actualizar_vencimientos()
+            else:
+                mostrar_mensaje("Error al eliminar el pago", page)
+            page.update()
+
+        def cerrar_dialogo(dlg):
+            """Cierra un diálogo modal."""
+            dlg.open = False
+            page.update()
+
         def editar_pago(e, pago, cliente_id):
-            
-            """
-            Muestra diálogo para editar pago.
-            
-            Args:
-                e: Evento del botón
-                pago: Datos del pago a editar
-                cliente_id: ID del cliente
-            """            
-            def seleccionar_fecha_edit(e, txt_field):
-                """
-                Actualiza TextField con la fecha seleccionada en el DatePicker.
-                
-                Args:
-                    e: Evento del DatePicker con la fecha seleccionada
-                    txt_field: TextField a actualizar con la nueva fecha
-                """
-                if e.control.value:
-                    fecha = e.control.value.date()
-                    txt_field.value = fecha.strftime("%Y-%m-%d")
-                    e.control.open = False
-                    page.update()
-            
-            def mostrar_datepicker_edit():
-                """Muestra DatePicker para editar fecha"""
+            """Muestra diálogo para editar pago."""
+            fecha_edit = ft.TextField(
+                label="Fecha",
+                value=pago[2],
+                read_only=True
+            )
+
+            def mostrar_fecha(e):
                 date_picker = ft.DatePicker(
-                    first_date=datetime.datetime.now() - datetime.timedelta(days=365),
-                    last_date=datetime.datetime.now() + datetime.timedelta(days=365),
-                    on_change=lambda e: seleccionar_fecha_edit(e, fecha_edit)
+                    on_change=lambda e: cambiar_fecha(e, fecha_edit)
                 )
                 page.overlay.append(date_picker)
                 date_picker.open = True
                 page.update()
-                
-            fecha_edit = ft.TextField(
-                label="Fecha",
-                value=pago[2],
-                read_only=True,
-                on_click=lambda _: mostrar_datepicker_edit()
-            )
+
+            def cambiar_fecha(e, txt_field):
+                if e.control.value:
+                    fecha = e.control.value.date()
+                    txt_field.value = fecha.strftime("%Y-%m-%d")
+                    page.update()
+
+            fecha_edit.on_click = mostrar_fecha
+
             monto_edit = ft.TextField(
                 label="Monto",
-                value=str(pago[3])
+                value=str(pago[3]),
+                input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$")
             )
 
             def guardar(e):
                 try:
                     if actualizar_pago(pago[0], fecha_edit.value, int(monto_edit.value)):
                         mostrar_mensaje("Pago actualizado", page)
+                        dlg_modal.open = False
                         actualizar_tabla_pagos(cliente_id)
                         actualizar_vencimientos()
-                        # Actualizar controles de pago
-                        if cliente_seleccionado:
-                            cliente_id = next(
-                                (c[0] for c in clientes if c[1] == cliente_seleccionado), 
-                                None
-                            )
-                            if cliente_id:
-                                cliente = get_estado_pago_cliente(cliente_id)
-                                if cliente:
-                                    info_container.content = ft.Column([
-                                        ft.Text(f"Informacion sobre : {cliente[1]}", size=20),
-                                        ft.Text(f"Último pago: {convertir_formato_fecha(cliente[9])}"),
-                                        ft.Text(f"Próximo pago: {convertir_formato_fecha(cliente[10])}"),
-                                        ft.Text(f"Pago mensual de: $ {cliente[6]}"),
-                                        ft.Text(f"Deuda pendiente: $ {cliente[13]}"),
-                                        ft.Text(f"Monto a pagar: $ {cliente[6]+cliente[13]}"),
-                                        ft.Text(f"Días transcurridos: {cliente[11]}"),
-                                        ft.Text(
-                                            f"Estado: {cliente[12]}", 
-                                            color=get_estado_color(cliente[12])
-                                        )
-                                    ])
-                        dlg_modal.open = False
-                        page.update()
-                except ValueError as ex:
+                    else:
+                        mostrar_mensaje("Error al actualizar el pago", page)
+                except Exception as ex:
                     mostrar_mensaje(f"Error: {str(ex)}", page)
-
-            def cancelar(e):
-                dlg_modal.open = False
                 page.update()
 
             dlg_modal = ft.AlertDialog(
                 modal=True,
                 title=ft.Text("Editar pago"),
-                content=ft.Column([fecha_edit, monto_edit]),
+                content=ft.Column([fecha_edit, monto_edit], spacing=10),
                 actions=[
-                    ft.TextButton("Cancelar", on_click=cancelar),
+                    ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal)),
                     ft.TextButton("Guardar", on_click=guardar)
                 ]
             )
-            page.dialog = dlg_modal
+            page.overlay.append(dlg_modal)
             dlg_modal.open = True
             page.update()
         

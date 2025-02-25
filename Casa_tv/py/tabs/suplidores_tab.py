@@ -72,7 +72,7 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
                 on_change=lambda e: cambiar_fecha(e, txt_fecha)
             )
             page.overlay.append(date_picker)
-            date_picker.pick_date()
+            date_picker.open = True
             page.update()
 
         def cambiar_fecha(e, txt_field):
@@ -126,7 +126,7 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
             ]
         )
 
-        page.dialog = dlg_modal
+        page.overlay.append(dlg_modal)
         dlg_modal.open = True
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
