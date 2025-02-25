@@ -1,5 +1,5 @@
 import flet as ft
-from consultas import get_estado_pagos, get_total_pagos_mes_actual, get_pagos_por_mes
+from consultas import get_estado_pagos, get_total_pagos_mes_actual, get_pagos_por_mes, get_ultimas_deudas
 
 def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
     """Crea el tab de finanzas con gráficos estadísticos."""
@@ -152,6 +152,65 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
         return chart
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def crear_grafico_deudas():
+        deudas = get_ultimas_deudas()
+        if not deudas:
+            return ft.Text("No hay deudas pendientes", size=16, color=ft.colors.GREY_600)
+            
+        max_value = max(deuda[1] for deuda in deudas) * 1.1
+
+        chart = ft.BarChart(
+            bar_groups=[
+                ft.BarChartGroup(
+                    x=i,
+                    bar_rods=[
+                        ft.BarChartRod(
+                            from_y=0,
+                            to_y=deuda[1],
+                            width=30,
+                            color=ft.colors.RED_300,
+                            tooltip=f"{deuda[0]}",
+                            border_radius=0,
+                        ),
+                    ],
+                ) for i, deuda in enumerate(deudas)
+            ],
+            border=ft.border.all(1, ft.colors.GREY_400),
+            left_axis=ft.ChartAxis(
+                labels=[
+                    ft.ChartAxisLabel(value=0, label=ft.Text("$0")),
+                    ft.ChartAxisLabel(value=max_value/2, label=ft.Text(f"${max_value/2:,.0f}")),
+                    ft.ChartAxisLabel(value=max_value, label=ft.Text(f"${max_value:,.0f}")),
+                ],
+                labels_size=35,
+                title=ft.Text("Deuda ($)"),
+                title_size=35
+            ),
+            bottom_axis=ft.ChartAxis(
+                labels=[
+                    ft.ChartAxisLabel(
+                        value=i,
+                        label=ft.Container(
+                            ft.Text(f"Cliente {i+1}", size=12),
+                            padding=1
+                        )
+                    ) for i, deuda in enumerate(deudas)
+                ],
+                labels_size=35,
+            ),
+            horizontal_grid_lines=ft.ChartGridLines(
+                color=ft.colors.GREY_300,
+                width=1,
+                dash_pattern=[3, 3]
+            ),
+            tooltip_bgcolor=ft.colors.with_opacity(0.5, ft.colors.GREY_300),
+            max_y=max_value,
+            interactive=True,
+            height=200
+        )
+        return chart
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     chart_container = ft.Container(
         content=crear_grafico_barras(),
         padding=25,
@@ -171,19 +230,37 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
         width=500,
         height=400
     )
+    
+    chart_container_deudas = ft.Container(
+        content=crear_grafico_deudas(),
+        padding=25,
+        border=ft.border.all(1, ft.colors.GREY_400),
+        border_radius=10,
+        bgcolor=ft.colors.WHITE,
+        width=500,
+        height=400
+    )
 
     contenido = ft.Column([
         ft.Text("Resumen Financiero", size=20, weight="bold"),
-        ft.Row([
-            ft.Column([
-                ft.Text("Balance del Mes Actual", size=16, weight="bold", text_align=ft.TextAlign.CENTER),
-                chart_container,
-            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            ft.Column([
-                ft.Text("Pagos Mensuales del Año", size=16, weight="bold", text_align=ft.TextAlign.CENTER),
-                chart_container_meses,
-            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-        ], alignment=ft.MainAxisAlignment.CENTER)
+        ft.Column([
+            ft.Row([
+                ft.Column([
+                    ft.Text("Balance del Mes Actual", size=16, weight="bold", text_align=ft.TextAlign.CENTER),
+                    chart_container,
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                ft.Column([
+                    ft.Text("Pagos Mensuales del Año", size=16, weight="bold", text_align=ft.TextAlign.CENTER),
+                    chart_container_meses,
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            ], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Row([
+                ft.Column([
+                    ft.Text("Deudas Pendientes por Cliente", size=16, weight="bold", text_align=ft.TextAlign.CENTER),
+                    chart_container_deudas,
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            ], alignment=ft.MainAxisAlignment.CENTER),
+        ], spacing=20),
     ])
 
     return contenido

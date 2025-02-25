@@ -1473,3 +1473,37 @@ def get_pagos_por_mes():
         finally:
             conn.close()
     return []
+
+def get_ultimas_deudas():
+    """Obtiene las últimas deudas de los clientes activos desde la tabla pagos."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                WITH UltimosPagos AS (
+                    SELECT 
+                        cliente_id,
+                        MAX(fecha_pago) as ultima_fecha
+                    FROM pagos
+                    GROUP BY cliente_id
+                )
+                SELECT 
+                    c.nombre,
+                    p.deuda_pendiente
+                FROM clientes c
+                INNER JOIN UltimosPagos up ON c.id = up.cliente_id
+                INNER JOIN pagos p ON up.cliente_id = p.cliente_id 
+                    AND up.ultima_fecha = p.fecha_pago
+                WHERE c.estado = 'Activo' 
+                    AND p.deuda_pendiente > 0
+                ORDER BY p.deuda_pendiente DESC
+                LIMIT 10
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error consultando deudas: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
