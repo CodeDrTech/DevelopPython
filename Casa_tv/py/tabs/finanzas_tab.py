@@ -173,10 +173,16 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
     )
 
     contenido = ft.Column([
-        ft.Text("Datos financieros", size=20, weight="bold"), # type: ignore
+        ft.Text("Resumen Financiero", size=20, weight="bold"),
         ft.Row([
-            chart_container,
-            chart_container_meses
+            ft.Column([
+                ft.Text("Balance del Mes Actual", size=16, weight="bold", text_align=ft.TextAlign.CENTER),
+                chart_container,
+            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            ft.Column([
+                ft.Text("Pagos Mensuales del Año", size=16, weight="bold", text_align=ft.TextAlign.CENTER),
+                chart_container_meses,
+            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
         ], alignment=ft.MainAxisAlignment.CENTER)
     ])
 
