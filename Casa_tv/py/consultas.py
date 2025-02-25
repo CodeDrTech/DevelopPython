@@ -1375,37 +1375,55 @@ def insertar_pago_suplidor(cuenta_id: int, fecha_pago: str, comentarios: str = N
             conn.close()
     return False
 
-def actualizar_pago_suplidor(pago_id: int, fecha_pago: str, monto_pago: float, estado: str, comentarios: str) -> bool:
-    """Actualiza un pago a suplidor existente."""
+def actualizar_pago_suplidor(pago_id: int, fecha_pago: str, comentarios: str = None) -> bool:
+    """
+    Actualiza un pago a suplidor existente.
+    Solo permite modificar la fecha y comentarios.
+    
+    Args:
+        pago_id: ID del pago a actualizar
+        fecha_pago: Nueva fecha del pago
+        comentarios: Nuevos comentarios
+    Returns:
+        bool: True si la actualización fue exitosa
+    """
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('''
                 UPDATE pagos_suplidores 
-                SET fecha_pago = ?, monto_pago = ?, estado = ?, comentarios = ?
+                SET fecha_pago = ?, 
+                    comentarios = ?
                 WHERE id = ?
-            ''', (fecha_pago, monto_pago, estado, comentarios, pago_id))
+            ''', (fecha_pago, comentarios, pago_id))
             conn.commit()
             return True
         except sqlite3.Error as e:
-            print(f"Error actualizando pago suplidor: {e}")
+            print(f"Error actualizando pago: {e}")
             return False
         finally:
             conn.close()
     return False
 
 def eliminar_pago_suplidor(pago_id: int) -> bool:
-    """Elimina un pago a suplidor."""
+    """
+    Elimina un pago de suplidor por su ID.
+    
+    Args:
+        pago_id: ID del pago a eliminar
+    Returns:
+        bool: True si la eliminación fue exitosa
+    """
     conn = connect_to_database()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('DELETE FROM pagos_suplidores WHERE id = ?', (pago_id,))
             conn.commit()
-            return True
+            return cursor.rowcount > 0
         except sqlite3.Error as e:
-            print(f"Error eliminando pago suplidor: {e}")
+            print(f"Error eliminando pago: {e}")
             return False
         finally:
             conn.close()

@@ -11,7 +11,13 @@ from tabs.vencimientos_tab import crear_tabla_vencimientos
 def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     """Crea el tab para gestionar pagos a suplidores."""
     
+    # Estados de pago disponibles
+    ESTADOS_PAGO = ["Pendiente", "Pagado", "Cancelado"]
     
+    def cerrar_dialogo(dlg):
+        """Cierra un diálogo modal."""
+        dlg.open = False
+        page.update()
     
     def actualizar_vencimientos():
             """Updates the vencimientos tab content"""
@@ -131,6 +137,101 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def mostrar_dialogo_editar(e, pago):
+        """Muestra diálogo para editar un pago existente."""
+        txt_fecha = ft.TextField(
+            label="Fecha de pago",
+            value=pago[3],
+            read_only=True
+        )
+
+        def mostrar_fecha(e):
+            date_picker = ft.DatePicker(
+                on_change=lambda e: cambiar_fecha(e, txt_fecha)
+            )
+            page.overlay.append(date_picker)
+            date_picker.open = True
+            page.update()
+
+        def cambiar_fecha(e, txt_field):
+            if e.control.value:
+                fecha = e.control.value.date()
+                txt_field.value = fecha.strftime("%Y-%m-%d")
+                page.update()
+
+        txt_fecha.on_click = mostrar_fecha
+
+        txt_comentarios = ft.TextField(
+            label="Comentarios",
+            value=pago[10] if pago[10] else "",
+            multiline=True,
+            min_lines=3,
+            max_lines=3,
+            width=400
+        )
+
+        def guardar(e):
+            try:
+                if actualizar_pago_suplidor(pago[0], txt_fecha.value, txt_comentarios.value):
+                    mostrar_mensaje("Pago actualizado exitosamente", page)
+                    dlg_modal.open = False
+                    actualizar_vencimientos()
+                    filtrar_tabla(dropdown_correos.value)  # Actualizar la tabla con el filtro actual
+                else:
+                    mostrar_mensaje("Error al actualizar el pago", page)
+            except Exception as ex:
+                mostrar_mensaje(f"Error: {str(ex)}", page)
+            page.update()
+
+        dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(f"Editar Pago - {pago[1]}"),
+            content=ft.Column([
+                txt_fecha,
+                txt_comentarios
+            ], spacing=10),
+            actions=[
+                ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal)),
+                ft.TextButton("Guardar", on_click=guardar)
+            ]
+        )
+
+        page.overlay.append(dlg_modal)
+        dlg_modal.open = True
+        page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def mostrar_dialogo_eliminar(e, pago):
+        """Muestra diálogo de confirmación para eliminar un pago."""
+        dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Confirmar eliminación"),
+            content=ft.Text(
+                f"¿Está seguro que desea eliminar el pago?\n"
+                f"Servicio: {pago[1]}\n"
+                f"Fecha: {convertir_formato_fecha(pago[3])}"
+            ),
+            actions=[
+                ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(dlg_modal)),
+                ft.TextButton("Eliminar", on_click=lambda e: eliminar_y_cerrar(dlg_modal, pago[0]))
+            ]
+        )
+        page.overlay.append(dlg_modal)
+        dlg_modal.open = True
+        page.update()
+
+    def eliminar_y_cerrar(dlg, pago_id):
+        """Elimina el pago y cierra el diálogo."""
+        if eliminar_pago_suplidor(pago_id):
+            mostrar_mensaje("Pago eliminado exitosamente", page)
+            dlg.open = False
+            actualizar_vencimientos()
+            filtrar_tabla(dropdown_correos.value)  # Actualizar la tabla con el filtro actual
+        else:
+            mostrar_mensaje("Error al eliminar el pago", page)
+        page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def filtrar_tabla(correo_seleccionado=None):
         """Actualiza la tabla con los pagos actuales."""
         pagos = get_estado_pagos_suplidores()
@@ -144,6 +245,7 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
             edit_button = ft.IconButton(
                 icon=ft.icons.EDIT,
                 tooltip="Editar",
+                on_click=lambda e, p=pago: mostrar_dialogo_editar(e, p)
                 
             )
             
@@ -151,6 +253,7 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
                 icon=ft.icons.DELETE,
                 icon_color="red",
                 tooltip="Eliminar",
+                on_click=lambda e, p=pago: mostrar_dialogo_eliminar(e, p)
                 
             )
             
