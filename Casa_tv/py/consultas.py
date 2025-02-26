@@ -1507,3 +1507,27 @@ def get_ultimas_deudas():
         finally:
             conn.close()
     return []
+
+def get_top_pagos_mes():
+    """Obtiene el top 10 de pagos del mes actual."""
+    conn = connect_to_database()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT 
+                    c.nombre,
+                    p.monto_pagado
+                FROM pagos p
+                INNER JOIN clientes c ON p.cliente_id = c.id
+                WHERE strftime('%Y-%m', p.fecha_pago) = strftime('%Y-%m', 'now')
+                ORDER BY p.monto_pagado DESC
+                LIMIT 10
+            ''')
+            return cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"Error consultando pagos del mes: {e}")
+            return []
+        finally:
+            conn.close()
+    return []
