@@ -14,8 +14,18 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     def crear_grafico_barras():
         deuda_total, pagos_mes, ganancia = calcular_datos_financieros()
-        max_value = max(deuda_total, pagos_mes, abs(ganancia)) * 1.1
+        max_value = max(deuda_total, pagos_mes, abs(ganancia))
+        max_value = ((max_value // 5000) + 1) * 5000
 
+        def format_to_mil(value):
+            """Convert number to 'mil' format, handling negative values"""
+            abs_value = abs(value)
+            if abs_value >= 1000:
+                formatted = f"{int(abs_value/1000)} mil"
+            else:
+                formatted = str(abs_value)
+            return f"-{formatted}" if value < 0 else formatted
+        
         chart = ft.BarChart(
             bar_groups=[
                 ft.BarChartGroup(
@@ -61,11 +71,10 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
             border=ft.border.all(1, ft.colors.GREY_400),
             left_axis=ft.ChartAxis(
                 labels=[
-                    ft.ChartAxisLabel(value=0, label=ft.Text("$0")),
-                    ft.ChartAxisLabel(value=max_value/2, label=ft.Text(f"${max_value/2:,.0f}")),
-                    ft.ChartAxisLabel(value=max_value, label=ft.Text(f"${max_value:,.0f}")),
+                    ft.ChartAxisLabel(value=i, label=ft.Text(format_to_mil(i)))
+                    for i in range(int(-max_value), int(max_value) + 5000, 5000)
                 ],
-                labels_size=35
+                labels_size=50
             ),
             bottom_axis=ft.ChartAxis(
                 labels=[
@@ -75,7 +84,7 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
                     ),
                     ft.ChartAxisLabel(
                         value=1,
-                        label=ft.Container(ft.Text("Pagado Mes"), padding=1)
+                        label=ft.Container(ft.Text("Pagado"), padding=1)
                     ),
                     ft.ChartAxisLabel(
                         value=2,
@@ -101,9 +110,19 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
         pagos_mensuales = get_pagos_por_mes()
         valores = [pago[1] for pago in pagos_mensuales]
         max_value = max(valores) * 1.1 if valores else 1000
+        max_value = ((max_value // 5000) + 1) * 5000
+        
+        def format_to_mil(value):
+            """Convert number to 'mil' format"""
+            abs_value = abs(value)
+            if abs_value >= 1000:
+                formatted = f"{int(abs_value/1000)} mil"
+            else:
+                formatted = str(abs_value)
+            return f"-{formatted}" if value < 0 else formatted
 
-        meses = ["ENE-", "FEB-", "MAR-", "ABR-", "MAY-", "JUN-", 
-                 "JUL-", "AGO-", "SEP-", "OCT-", "NOV-", "DIC-"]
+        meses = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", 
+                 "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"]
 
         chart = ft.BarChart(
             bar_groups=[
@@ -124,9 +143,8 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
             border=ft.border.all(1, ft.colors.GREY_400),
             left_axis=ft.ChartAxis(
                 labels=[
-                    ft.ChartAxisLabel(value=0, label=ft.Text("$0")),
-                    ft.ChartAxisLabel(value=max_value/2, label=ft.Text(f"${max_value/2:,.0f}")),
-                    ft.ChartAxisLabel(value=max_value, label=ft.Text(f"${max_value:,.0f}")),
+                    ft.ChartAxisLabel(value=i, label=ft.Text(format_to_mil(i)))
+                    for i in range(0, int(max_value) + 5000, 5000)
                 ],
                 labels_size=35
             ),
@@ -157,7 +175,7 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
         if not deudas:
             return ft.Text("No hay deudas pendientes", size=16, color=ft.colors.GREY_600)
             
-        max_value = max(deuda[1] for deuda in deudas) * 1.1
+        max_value = 500
 
         chart = ft.BarChart(
             bar_groups=[
@@ -166,10 +184,10 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
                     bar_rods=[
                         ft.BarChartRod(
                             from_y=0,
-                            to_y=deuda[1],
+                            to_y=min(deuda[1], max_value),
                             width=30,
                             color=ft.colors.RED_300,
-                            tooltip=f"{deuda[0]}",
+                            tooltip=deuda[0],
                             border_radius=0,
                         ),
                     ],
@@ -178,9 +196,8 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
             border=ft.border.all(1, ft.colors.GREY_400),
             left_axis=ft.ChartAxis(
                 labels=[
-                    ft.ChartAxisLabel(value=0, label=ft.Text("$0")),
-                    ft.ChartAxisLabel(value=max_value/2, label=ft.Text(f"${max_value/2:,.0f}")),
-                    ft.ChartAxisLabel(value=max_value, label=ft.Text(f"${max_value:,.0f}")),
+                    ft.ChartAxisLabel(value=i, label=ft.Text(f"${i}"))
+                    for i in range(0, max_value + 100, 100)
                 ],
                 labels_size=35,
                 title=ft.Text("Deuda ($)"),
@@ -191,7 +208,7 @@ def crear_tab_finanzas(page: ft.Page, mainTab: ft.Tabs):
                     ft.ChartAxisLabel(
                         value=i,
                         label=ft.Container(
-                            ft.Text(f"Cliente {i+1}", size=12),
+                            ft.Text(f"$ {deuda[1]}", size=12),
                             padding=1
                         )
                     ) for i, deuda in enumerate(deudas)
