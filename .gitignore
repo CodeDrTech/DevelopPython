@@ -110,6 +110,7 @@ Ventas\ Selact/*.db
 Ventas\ Selact/*.png
 Ventas\ Selact/*.txt
 Ventas\ Selact/Archivos Horas extras/
+Ventas\ Selact/Android/
 
 # Carpetas de sistema y configuración
 .vscode/
