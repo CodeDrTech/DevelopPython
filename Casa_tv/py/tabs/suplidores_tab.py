@@ -1,8 +1,12 @@
 import flet as ft
 import datetime
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib
+
 from utils import mostrar_mensaje, convertir_formato_fecha, get_estado_color_suplidores
 from consultas import (
-    get_pagos_suplidores, get_cuentas, insertar_pago_suplidor,
+    get_pagos_suplidores, obtener_credenciales, insertar_pago_suplidor,
     actualizar_pago_suplidor, eliminar_pago_suplidor, get_estado_pagos_suplidores, get_correos_unicos
 )
 from tabs.vencimientos_tab import crear_tabla_vencimientos
@@ -243,6 +247,94 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
         page.update()
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def enviar_correo_suplidores(pagos_filtrados, page):
+        """Envía por correo la lista de pagos a suplidores."""
+        credenciales = obtener_credenciales()
+        sender_email = credenciales[0]
+        sender_password = credenciales[1]
+        receiver_email = credenciales[2]
+        
+        pagos_filtrados = [
+            pago for pago in pagos_filtrados 
+            if not (str(pago[9]) in ['1234', '0000'] and 
+                    pago[9] is not None)
+        ]
+    
+        if not pagos_filtrados:
+            mostrar_mensaje("No hay pagos para mostrar después del filtrado", page)
+            return
+        
+        asunto = 'Estado de Pagos a Suplidores'
+        
+        # Create table header
+        body = """
+        <html>
+        <head>
+            <style>
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+                .estado-pagado { color: green; }
+                .estado-cerca { color: blue; }
+                .estado-pendiente { color: orange; }
+            </style>
+        </head>
+        <body>
+            <h2>Lista de Pagos a Suplidores</h2>
+            <table>
+                <tr>
+                    <th>Servicio</th>
+                    <th>Correo</th>
+                    <th>Último Pago</th>
+                    <th>Próximo Pago</th>
+                    <th>Cuota</th>
+                    <th>Estado</th>
+                    <th>Tarjeta</th>
+                    <th>Comentarios</th>
+                </tr>
+        """
+        
+        # Add table rows
+        for pago in pagos_filtrados:
+            estado_class = f"estado-{pago[7].lower().replace(' ', '-')}"
+            body += f"""
+                <tr>
+                    <td>{pago[1]}</td>
+                    <td>{pago[2]}</td>
+                    <td>{convertir_formato_fecha(pago[4])}</td>
+                    <td>{convertir_formato_fecha(pago[5])}</td>
+                    <td>${pago[8]:,.2f}</td>
+                    <td class="{estado_class}">{pago[7]}</td>
+                    <td>{'*'+str(pago[9]) if pago[9] else '-'}</td>
+                    <td>{pago[10] or ''}</td>
+                </tr>
+            """
+        
+        # Close table and HTML
+        body += """
+            </table>
+        </body>
+        </html>
+        """
+
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = asunto
+        message.attach(MIMEText(body, 'html'))
+
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(sender_email, sender_password)
+            text = message.as_string()
+            server.sendmail(sender_email, receiver_email, text)
+            server.quit()
+            mostrar_mensaje("Correo enviado con éxito", page)
+        except Exception as ex:
+            mostrar_mensaje(f"Error al enviar el correo: {str(ex)}", page)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def filtrar_tabla(correo_seleccionado=None, estado_seleccionado=None):
         """Actualiza la tabla con los pagos filtrados por correo y estado."""
         pagos = get_estado_pagos_suplidores()
@@ -316,10 +408,21 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
 
     # Create main content
     contenido = ft.Column([
-        ft.Text("Pagos a Suplidores", size=20, weight="bold"), # type: ignore
+        ft.Text("Pagos a Suplidores", size=20, weight="bold"),
         ft.Row([
             dropdown_correos,
-            dropdown_estados
+            dropdown_estados,
+            ft.ElevatedButton(
+                "Enviar por correo",
+                icon=ft.icons.EMAIL,
+                on_click=lambda e: enviar_correo_suplidores(
+                    [pago for pago in get_estado_pagos_suplidores()
+                     if (dropdown_correos.value == "Todos los correos" or pago[2] == dropdown_correos.value) and
+                        (dropdown_estados.value == "Todos los estados" or pago[7] == dropdown_estados.value)
+                    ],
+                    page
+                )
+            )
         ], spacing=20),
         tabla_container
     ])
