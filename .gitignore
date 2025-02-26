@@ -4,6 +4,8 @@ Contratos/Scripts/
 Contratos/Include/
 Contratos/pyvenv.cfg
 
+Android/.venv/
+
 
 # Horas extras
 Horas_web/data/data_web.db
