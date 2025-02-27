@@ -60,14 +60,14 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     total_pagado = get_total_pagos_mes_actual_suplidores()
     
     txt_total_pendiente = ft.Text(
-        f"Total a pagar: ${total_pendiente:,.2f}",
+        f"Total a pagar: ${total_pendiente:,}",
         size=16,
         weight="bold",
         color=ft.colors.RED
     )
     
     txt_total_pagado = ft.Text(
-        f"Pagado este mes: ${total_pagado:,.2f}",
+        f"Pagado este mes: ${total_pagado:,}",
         size=16,
         weight="bold",
         color=ft.colors.GREEN
@@ -143,6 +143,11 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
                     mostrar_mensaje("Pago registrado exitosamente", page)
                     dlg_modal.open = False
                     actualizar_vencimientos()
+                    
+                    # Update the total paid this month
+                    total_pagado = get_total_pagos_mes_actual_suplidores()
+                    txt_total_pagado.value = f"Pagado este mes: ${total_pagado:,}"
+                    
                     filtrar_tabla(dropdown_correos.value)  # Actualizar la tabla con el filtro actual
                 else:
                     mostrar_mensaje("Error al registrar el pago", page)
