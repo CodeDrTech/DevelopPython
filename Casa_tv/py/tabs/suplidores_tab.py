@@ -6,7 +6,7 @@ import smtplib
 
 from utils import mostrar_mensaje, convertir_formato_fecha, get_estado_color_suplidores
 from consultas import (
-    get_total_pagos_pendientes, get_total_pagos_mes_actual, obtener_credenciales, insertar_pago_suplidor,
+    get_total_pagos_pendientes, get_total_pagos_mes_actual_suplidores, obtener_credenciales, insertar_pago_suplidor,
     actualizar_pago_suplidor, eliminar_pago_suplidor, get_estado_pagos_suplidores, get_correos_unicos
 )
 from tabs.vencimientos_tab import crear_tabla_vencimientos
@@ -57,7 +57,7 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     
     # Create the text elements
     total_pendiente = get_total_pagos_pendientes()
-    total_pagado = get_total_pagos_mes_actual()
+    total_pagado = get_total_pagos_mes_actual_suplidores()
     
     txt_total_pendiente = ft.Text(
         f"Total a pagar: ${total_pendiente:,.2f}",

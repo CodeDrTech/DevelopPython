@@ -1553,7 +1553,7 @@ def get_total_pagos_pendientes():
                 conn.close()
         return 0
 
-def get_total_pagos_mes_actual():
+def get_total_pagos_mes_actual_suplidores():
         """Obtiene el total de pagos realizados en el mes actual"""
         conn = connect_to_database()
         if conn:
