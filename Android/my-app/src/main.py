@@ -69,7 +69,7 @@ def main(page: ft.Page):
 
     def get_weather(e):
         try:
-            API_KEY = "##"
+            API_KEY = ""
             city = city_input.value
             url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
             
