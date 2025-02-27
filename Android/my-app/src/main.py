@@ -69,7 +69,7 @@ def main(page: ft.Page):
 
     def get_weather(e):
         try:
-            API_KEY = "####"
+            API_KEY = "a543b2f4761925dcfcc311d0d836bfad"
             city = city_input.value
             url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
             
@@ -98,12 +98,21 @@ def main(page: ft.Page):
             shape=ft.RoundedRectangleBorder(radius=10),
         )
     )
+    
+    search_button2 = ft.ElevatedButton(
+        "Search",
+        icon=ft.Icons.PAYMENT,  # Updated from icons to Icons
+        on_click=get_weather,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=15),
+        )
+    )
 
     # Layout
     page.add(
         ft.Stack([circle]),
         ft.Container(height=20),
-        ft.Row([city_input, search_button], alignment=ft.MainAxisAlignment.CENTER),
+        ft.Row([city_input, search_button, search_button2], alignment=ft.MainAxisAlignment.CENTER),
         ft.Container(height=20),
         weather_card
     )
