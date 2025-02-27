@@ -1531,3 +1531,44 @@ def get_top_pagos_mes():
         finally:
             conn.close()
     return []
+
+
+def get_total_pagos_pendientes():
+        """Obtiene el total de pagos pendientes (cuentas sin tarjeta 1234)"""
+        conn = connect_to_database()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT SUM(costo) 
+                    FROM cuentas 
+                    WHERE tarjeta IS NULL OR tarjeta != '1234'
+                ''')
+                result = cursor.fetchone()[0]
+                return result if result else 0
+            except sqlite3.Error as e:
+                print(f"Error consultando pagos pendientes: {e}")
+                return 0
+            finally:
+                conn.close()
+        return 0
+
+def get_total_pagos_mes_actual():
+        """Obtiene el total de pagos realizados en el mes actual"""
+        conn = connect_to_database()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT COALESCE(SUM(monto_pago), 0)
+                    FROM pagos_suplidores
+                    WHERE strftime('%Y-%m', fecha_pago) = strftime('%Y-%m', 'now')
+                ''')
+                result = cursor.fetchone()[0]
+                return result if result else 0
+            except sqlite3.Error as e:
+                print(f"Error consultando pagos del mes: {e}")
+                return 0
+            finally:
+                conn.close()
+        return 0

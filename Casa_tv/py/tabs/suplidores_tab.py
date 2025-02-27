@@ -6,7 +6,7 @@ import smtplib
 
 from utils import mostrar_mensaje, convertir_formato_fecha, get_estado_color_suplidores
 from consultas import (
-    get_pagos_suplidores, obtener_credenciales, insertar_pago_suplidor,
+    get_total_pagos_pendientes, get_total_pagos_mes_actual, obtener_credenciales, insertar_pago_suplidor,
     actualizar_pago_suplidor, eliminar_pago_suplidor, get_estado_pagos_suplidores, get_correos_unicos
 )
 from tabs.vencimientos_tab import crear_tabla_vencimientos
@@ -36,7 +36,8 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
         enable_filter=True,
         enable_search=True,
         max_menu_height=200,
-        options=[ft.dropdown.Option("Todos los correos")] + [
+        value="Todos los correos",
+        options=[ ft.dropdown.Option("Todos los correos"), ] + [
             ft.dropdown.Option(correo) for correo in get_correos_unicos()
         ],
         on_change=lambda e: filtrar_tabla(e.control.value)
@@ -45,12 +46,31 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
     dropdown_estados = ft.Dropdown(
         label="Filtrar por estado",
         width=300,
+        value="Todos los estados",
         options=[
             ft.dropdown.Option("Todos los estados"),
             ft.dropdown.Option("Pagado"),
             ft.dropdown.Option("Cerca"),
             ft.dropdown.Option("Pago pendiente")
         ]
+    )
+    
+    # Create the text elements
+    total_pendiente = get_total_pagos_pendientes()
+    total_pagado = get_total_pagos_mes_actual()
+    
+    txt_total_pendiente = ft.Text(
+        f"Total a pagar: ${total_pendiente:,.2f}",
+        size=16,
+        weight="bold",
+        color=ft.colors.RED
+    )
+    
+    txt_total_pagado = ft.Text(
+        f"Pagado este mes: ${total_pagado:,.2f}",
+        size=16,
+        weight="bold",
+        color=ft.colors.GREEN
     )
     
     # Contenedor para la tabla
@@ -422,8 +442,10 @@ def crear_tab_pagos_suplidores(page: ft.Page, mainTab: ft.Tabs):
                     ],
                     page
                 )
-            )
-        ], spacing=20),
+            ),
+            txt_total_pendiente,
+            txt_total_pagado,
+        ], spacing=20),        
         tabla_container
     ])
 
