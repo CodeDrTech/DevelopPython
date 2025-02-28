@@ -1,6 +1,5 @@
 import flet as ft
 import requests
-import datetime
 from math import sin, cos, radians
 
 def main(page: ft.Page):
