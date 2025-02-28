@@ -2,41 +2,25 @@ import flet as ft
 from core.database.consultas import get_vencimientos
 
 def create_vencimientos_view(page: ft.Page):
-    print("Creating vencimientos view...")
+    
     """Vista de vencimientos adaptada para móvil."""
     
-    
-    container = ft.Container(
-        padding=10,
-        content=ft.Column([
-            # Header with title and refresh button
-            ft.Row([
-                ft.Text("Vencimientos", size=20, weight="bold"),
-                ft.IconButton(
-                    icon=ft.Icons.REFRESH,
-                    on_click=lambda _: print("Refresh clicked")
-                )
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-            
-            # Divider
-            ft.Divider(),
-            
-            # Simple list of cards
-            ft.ListView(
-                height=400,  # Fixed height
-                spacing=10,
-                auto_scroll=True
-            )
-        ])
-    )
-    
-    list_view = container.content.controls[2]
+    content = ft.Column([
+        ft.Text("Vencimientos", size=24, weight="bold"),
+        ft.Divider(),
+    ])  
     
     def mostrar_mensaje(mensaje: str):
         snack = ft.SnackBar(content=ft.Text(mensaje), duration=3000)
         page.overlay.append(snack)
         snack.open = True
         page.update()
+        
+    content = ft.Column(
+        scroll=ft.ScrollMode.AUTO,  # Make it scrollable
+        height=page.window.height - 180,  # Fixed height with room for navigation
+        spacing=10
+    )
     
     # Contenedor principal con scroll
     main_container = ft.Container(
@@ -53,78 +37,48 @@ def create_vencimientos_view(page: ft.Page):
     progress_ring = ft.ProgressRing()
     main_container.content.controls.append(progress_ring)
     
-    vencimientos_list = ft.ListView(
-        expand=1,
-        spacing=10,
-        padding=10,
-        height=500
-    )
-    
-    # Cargar datos de vencimientos
-    vencimientos = get_vencimientos()
-    print(f"Loaded {len(vencimientos)} vencimientos")
-    
-    
-    # Crear tarjetas de vencimientos
-    vencimientos_list = ft.ListView(
-        spacing=10,
-        padding=20,
-        height=page.window.height - 180,  # Fixed height with room for navigation
-        auto_scroll=True
-    )
-    
-    # Add cards to the list
-    for v in vencimientos:
-        vencimientos_list.controls.append(
-            ft.Card(
-                content=ft.Container(
-                    padding=10,
-                    content=ft.Column([
-                        ft.Text(v[0], weight="bold"),
-                        ft.Text(v[1]),
-                        ft.Text(v[2]),
-                        ft.Text(v[3], 
-                            color=ft.colors.RED if v[3] == "En corte"
-                            else ft.colors.ORANGE if v[3] == "Pendiente"
-                            else ft.colors.BLUE if v[3] == "Cerca"
-                            else ft.colors.GREEN
-                        )
-                    ])
-                )
-            )
-        )
-    
-    return ft.Column([
+    content.controls.append(
         ft.Row([
             ft.Text("Vencimientos", size=20, weight="bold"),
             ft.IconButton(
                 icon=ft.Icons.REFRESH,
-                on_click=lambda _: print("Refresh clicked")
+                on_click=lambda _: mostrar_mensaje("Actualizando vencimientos...")
             )
-        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-        vencimientos_list
-    ])
-
-    # Botón de actualizar
-    refresh_button = ft.IconButton(
-        icon=ft.Icons.REFRESH,
-        icon_size=30,
-        on_click=lambda _: mostrar_mensaje("Actualizando vencimientos...")
+        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
     )
+    
+    content.controls.append(ft.Divider())
+    
+    # Cargar datos de vencimientos
+    vencimientos = get_vencimientos()
+    
+    
+    # Add cards to the list
+    for v in vencimientos:
+        card = ft.Card(
+            content=ft.Container(
+                padding=10,
+                content=ft.Column([
+                    ft.Text(v[0], size=16, weight="bold"),
+                    ft.Text(f"Cliente: {v[1]}"),
+                    ft.Text(f"Vence: {v[2]}"),
+                    ft.Container(
+                        padding=5,
+                        border_radius=5,
+                        bgcolor=ft.Colors.RED if v[3] == "En corte"
+                               else ft.Colors.ORANGE if v[3] == "Pendiente"
+                               else ft.Colors.BLUE if v[3] == "Cerca"
+                               else ft.Colors.GREEN,
+                        content=ft.Text(v[3], color=ft.Colors.WHITE)
+                    )
+                ], spacing=5)
+            )
+        )
+        content.controls.append(card)    
+    
 
-    # Mostrar contenido
-    main_container.content.controls = [
-        ft.Container(
-            content=ft.Row([
-                ft.Text("Vencimientos", size=20, weight="bold"),
-                ft.IconButton(
-                    icon=ft.Icons.REFRESH,
-                    on_click=lambda _: print("Refresh clicked")
-                )
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-            padding=ft.padding.only(bottom=10)
-        ),
-        vencimientos_list,
-    ]
-
-    return main_container
+    return ft.Container(
+        content=content,
+        padding=10,
+        expand=False  # Important: don't expand to fill all space
+    )

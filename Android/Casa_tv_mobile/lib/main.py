@@ -106,17 +106,17 @@ def main(page: ft.Page):
             ),
         ],
         on_change=change_tab
-    )
-
-    
+    )   
     main_view.content = create_vencimientos_view(page)
     
     page.add(
         ft.Column([
-            main_view,
-            ft.Container(expand=True),
-            navigation
-        ], expand=True)
+            ft.Container(
+                content=main_view,
+                expand=True
+            ),
+            navigation  # Navigation bar at the bottom
+        ], spacing=0, expand=True)
     )
     page.update()
 
