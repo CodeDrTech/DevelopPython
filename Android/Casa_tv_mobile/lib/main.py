@@ -2,19 +2,14 @@ import flet as ft
 
 
 
+from core.database.backup import DatabaseBackup
 from core.database.database import connect_to_database
 from features.reports.finance_view import create_finance_view
 from features.payments.vencimientos_view import create_vencimientos_view
 def main(page: ft.Page):
-    try:
-        conn = connect_to_database()
-        if conn:
-            conn.close()
-            print("Database connection successful")
-        else:
-            print("Could not connect to database")
-    except Exception as e:
-        print(f"Error connecting to database: {e}")
+    conn = connect_to_database()
+    if conn:
+        conn.close()
     
     page.title = "Casa TV Mobile"
     page.theme_mode = ft.ThemeMode.LIGHT
@@ -28,12 +23,63 @@ def main(page: ft.Page):
             main_view.content = create_finance_view(page)
             page.drawer.open = False
             page.update()
+        elif selected_index == 4:  # Índice para el nuevo botón de backup
+            handle_backup(e)
+            page.drawer.open = False
+            page.update()
     
     main_view = ft.Container(padding=10)
     
     def open_drawer(e):
             page.drawer.open = True
             page.update()
+    
+    def show_message(message: str):
+        """Shows a message in SnackBar"""
+        snack = ft.SnackBar(content=ft.Text(message), duration=5000)
+        page.overlay.append(snack)
+        snack.open = True
+        page.update()
+    
+    def show_share_options(backup_path: str):
+        dlg = ft.AlertDialog(
+            title=ft.Text("Backup Creado"),
+            content=ft.Column(
+                controls=[
+                    ft.Text(f"Backup guardado en:\n{backup_path}"),
+                    ft.Text("El archivo está listo para ser compartido"),
+                    ft.ElevatedButton(
+                        text="Compartir",
+                        icon=ft.Icons.SHARE,
+                        on_click=lambda _: page.launch_url(f"file://{backup_path}")
+                    )
+                ],
+                spacing=10
+            ),
+            actions=[
+                ft.TextButton(
+                    text="Cerrar",
+                    on_click=lambda e: close_dlg(e, dlg)
+                )
+            ]
+        )
+        page.dialog = dlg
+        dlg.open = True
+        page.update()
+
+    def close_dlg(e, dlg):
+        dlg.open = False
+        page.update()
+    
+    def handle_backup(e):
+        backup_manager = DatabaseBackup()
+        success, result = backup_manager.create_backup()
+        
+        if success:
+            show_message("Backup creado exitosamente")
+            show_share_options(result)
+        else:
+            show_message(f"Error: {result}")
     
     # Create drawer with 4 additional menu items.
     page.drawer = ft.NavigationDrawer(
@@ -65,6 +111,11 @@ def main(page: ft.Page):
                 icon=ft.Icons.MONETIZATION_ON_OUTLINED,
                 label="Finanzas",
                 selected_icon=ft.Icons.MONETIZATION_ON
+            ),
+            ft.NavigationDrawerDestination(
+                icon=ft.Icons.BACKUP_OUTLINED,
+                label="Crear Backup",
+                selected_icon=ft.Icons.BACKUP
             ),
         ],
         on_change=drawer_selected
