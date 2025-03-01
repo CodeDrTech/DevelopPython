@@ -1,19 +1,26 @@
 import flet as ft
-import sys
-import os
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+
+from core.database.database import connect_to_database
 from features.reports.finance_view import create_finance_view
-
 from features.payments.vencimientos_view import create_vencimientos_view
-
 def main(page: ft.Page):
+    try:
+        conn = connect_to_database()
+        if conn:
+            conn.close()
+            print("Database connection successful")
+        else:
+            print("Could not connect to database")
+    except Exception as e:
+        print(f"Error connecting to database: {e}")
+    
     page.title = "Casa TV Mobile"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 0
     page.window.width = 400
-
+    
     
     def drawer_selected(e):
         selected_index = e.control.selected_index

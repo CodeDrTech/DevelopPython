@@ -223,11 +223,23 @@ def get_total_pagos_mes_actual():
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT COALESCE(SUM(p.monto_pagado), 0) as total_pagado
-                FROM pagos p
-                INNER JOIN clientes c ON p.cliente_id = c.id
-                WHERE strftime('%Y-%m', p.fecha_pago) = strftime('%Y-%m', 'now')
-                AND c.estado = 'Activo';
+                WITH mes_actual AS (
+                SELECT MIN(fecha_pago) as fecha_min, 
+                    MAX(CASE 
+                        WHEN date(fecha_pago) <= date('now', 'localtime') 
+                        THEN fecha_pago 
+                        ELSE date('now', 'localtime') 
+                    END) as fecha_max
+                FROM pagos
+                WHERE strftime('%Y-%m', fecha_pago) = strftime('%Y-%m', 'now', 'localtime')
+            )
+            SELECT COALESCE(SUM(p.monto_pagado), 0) as total_pagado
+            FROM pagos p
+            INNER JOIN clientes c ON p.cliente_id = c.id
+            CROSS JOIN mes_actual m
+            WHERE p.fecha_pago >= m.fecha_min 
+            AND p.fecha_pago <= m.fecha_max
+            AND c.estado = 'Activo';
             ''')
             total = cursor.fetchone()[0]
             return total
