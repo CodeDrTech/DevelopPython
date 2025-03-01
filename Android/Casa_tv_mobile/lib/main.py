@@ -1,5 +1,5 @@
 import flet as ft
-
+import os
 
 
 from core.database.backup import DatabaseBackup
@@ -35,23 +35,24 @@ def main(page: ft.Page):
             page.update()
     
     def show_message(message: str):
-        """Shows a message in SnackBar"""
-        snack = ft.SnackBar(content=ft.Text(message), duration=5000)
+        snack = ft.SnackBar(
+            content=ft.Text(message),
+            duration=3000  # Increased duration to 10 seconds
+        )
         page.overlay.append(snack)
         snack.open = True
         page.update()
     
-    def show_share_options(backup_path: str):
+    def show_share_dialog(backup_path: str):
         dlg = ft.AlertDialog(
             title=ft.Text("Backup Creado"),
             content=ft.Column(
                 controls=[
-                    ft.Text(f"Backup guardado en:\n{backup_path}"),
-                    ft.Text("El archivo está listo para ser compartido"),
+                    ft.Text("¿Deseas compartir el backup?"),
                     ft.ElevatedButton(
-                        text="Compartir",
-                        icon=ft.Icons.SHARE,
-                        on_click=lambda _: page.launch_url(f"file://{backup_path}")
+                        text="Abrir para compartir",
+                        icon=ft.icons.SHARE,
+                        on_click=lambda _: page.launch_url(f"content://{backup_path}")
                     )
                 ],
                 spacing=10
@@ -76,8 +77,9 @@ def main(page: ft.Page):
         success, result = backup_manager.create_backup()
         
         if success:
+            backup_path = result.split("guardado en ")[-1]
             show_message("Backup creado exitosamente")
-            show_share_options(result)
+            show_share_dialog(os.path.join(backup_path, "database.db"))
         else:
             show_message(f"Error: {result}")
     
