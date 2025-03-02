@@ -1,11 +1,14 @@
 import flet as ft
 import os
+
+from core.utils.date_utils import convertir_formato_fecha
 from core.database.consultas import get_estado_pagos
 from core.database.backup import DatabaseBackup
 
 def create_vencimientos_view(page: ft.Page):    
     """Vista de vencimientos adaptada para móvil."""
-    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     def handle_backup(e):
         backup_manager = DatabaseBackup()
         success, result = backup_manager.create_backup()
@@ -57,7 +60,8 @@ def create_vencimientos_view(page: ft.Page):
         page.overlay.append(snack)
         snack.open = True
         page.update()
-    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Cargar datos de pagos
     pagos = get_estado_pagos()
     
@@ -88,9 +92,111 @@ def create_vencimientos_view(page: ft.Page):
                 content=ft.Container(
                     padding=10,
                     content=ft.Column([
+                        ft.Text(p[1], size=16, weight="bold"),  # Nombre del servicio
+                        ft.Text(f"Cliente: {p[1]}"),            # Nombre del cliente
+                        ft.Text(f"Próximo pago: {convertir_formato_fecha(p[4])}"),       # Fecha próximo pago
+                        ft.Text(f"Pago mensual: ${p[8]}"),     # Pago mensual
+                        ft.Container(
+                            padding=5,
+                            border_radius=5,
+                            bgcolor=ft.Colors.RED if p[7] == "En corte"
+                                   else ft.Colors.ORANGE if p[7] == "Pendiente"
+                                   else ft.Colors.BLUE if p[7] == "Cerca"
+                                   else ft.Colors.GREEN,
+                            content=ft.Text(p[7], color=ft.Colors.WHITE)  # Estado
+                        )
+                    ], spacing=5)
+                )
+            )
+            cards_container.controls.append(card)
+        
+        page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Estados disponibles para filtrar
+    estados = ["Todos", "En corte", "Pendiente", "Cerca", "Al día"]    
+    
+    # Dropdown para filtrar por cliente
+    search_box = ft.TextField(
+        label="Buscar cliente",
+        hint_text="Escribe para filtrar",
+        prefix_icon=ft.Icons.SEARCH,
+        on_change=lambda e: filter_clients(e.control.value),
+        expand=True
+    )
+    
+    estado_dropdown = ft.Dropdown(
+        label="Estado",
+        width=120,
+        options=[ft.dropdown.Option(estado) for estado in estados],
+        value="Todos",
+        on_change=lambda e: apply_filters(search_box.value, e.control.value)
+    )
+    
+    def apply_filters(search_text, estado_seleccionado="Todos"):
+        # Limpiar tarjetas existentes
+        cards_container.controls.clear()
+        
+        # Aplicar filtros
+        filtered_pagos = pagos
+        
+        # Filtrar por texto de búsqueda
+        if search_text:
+            search_text = search_text.lower()
+            filtered_pagos = [p for p in filtered_pagos if search_text in p[1].lower()]
+        
+        # Filtrar por estado
+        if estado_seleccionado != "Todos":
+            filtered_pagos = [p for p in filtered_pagos if p[7] == estado_seleccionado]
+        
+        # Crear tarjetas para cada pago que coincida
+        for p in filtered_pagos:
+            card = ft.Card(
+                content=ft.Container(
+                    padding=10,
+                    content=ft.Column([
+                        ft.Text(p[1], size=16, weight="bold"),  # Nombre del servicio
+                        ft.Text(f"Cliente: {p[1]}"),            # Nombre del cliente
+                        ft.Text(f"Próximo pago: {convertir_formato_fecha(p[4])}"),       # Fecha próximo pago
+                        ft.Text(f"Pago mensual: ${p[8]}"),     # Pago mensual
+                        ft.Container(
+                            padding=5,
+                            border_radius=5,
+                            bgcolor=ft.Colors.RED if p[7] == "En corte"
+                                   else ft.Colors.ORANGE if p[7] == "Pendiente"
+                                   else ft.Colors.BLUE if p[7] == "Cerca"
+                                   else ft.Colors.GREEN,
+                            content=ft.Text(p[7], color=ft.Colors.WHITE)  # Estado
+                        )
+                    ], spacing=5)
+                )
+            )
+            cards_container.controls.append(card)
+        
+        page.update()
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+    def filter_clients(search_text):
+        if not search_text:
+            actualizar_tarjetas("Todos")
+            return
+            
+        search_text = search_text.lower()
+        # Buscar coincidencias parciales en los nombres de clientes
+        matching_clients = [p for p in pagos if search_text in p[1].lower()]
+        
+        # Limpiar tarjetas existentes
+        cards_container.controls.clear()
+        
+        # Crear tarjetas para cada pago que coincida
+        for p in matching_clients:
+            card = ft.Card(
+                content=ft.Container(
+                    padding=10,
+                    content=ft.Column([
                         ft.Text(p[10], size=16, weight="bold"),  # Nombre del servicio
                         ft.Text(f"Cliente: {p[1]}"),            # Nombre del cliente
-                        ft.Text(f"Próximo pago: {p[2]}"),       # Fecha próximo pago
+                        ft.Text(f"Próximo pago: {convertir_formato_fecha(p[4])}"),       # Fecha próximo pago
                         ft.Text(f"Cuota mensual: ${p[8]}"),     # Pago mensual
                         ft.Container(
                             padding=5,
@@ -107,20 +213,8 @@ def create_vencimientos_view(page: ft.Page):
             cards_container.controls.append(card)
         
         page.update()
-    
-    # Dropdown para filtrar por cliente
-    dropdown_clientes = ft.Dropdown(
-        width=300,
-        label="Filtrar por cliente",
-        options=[ft.dropdown.Option(nombre) for nombre in nombres_clientes],
-        value="Todos",
-        editable=True,
-        max_menu_height=200,
-        enable_filter=True,
-        enable_search=True,
-        on_change=lambda e: actualizar_tarjetas(e.control.value)
-    )
-    
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
     content = ft.Column(
         scroll=ft.ScrollMode.AUTO,
         height=page.window.height - 180,
@@ -144,12 +238,17 @@ def create_vencimientos_view(page: ft.Page):
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
     )
     
-    content.controls.append(dropdown_clientes)
+    content.controls.append(
+        ft.Row([
+            search_box,
+            estado_dropdown
+        ], spacing=10)
+    )
     content.controls.append(ft.Divider())
     content.controls.append(cards_container)
     
     # Cargar tarjetas iniciales
-    actualizar_tarjetas()
+    apply_filters("", "Todos")
 
     return ft.Container(
         content=content,
