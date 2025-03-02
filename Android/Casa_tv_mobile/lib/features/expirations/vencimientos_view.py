@@ -77,7 +77,13 @@ def create_vencimientos_view(page: ft.Page):
         spacing=10,
     )
     
-    def actualizar_tarjetas(cliente_seleccionado="Todos"):
+    def actualizar_tarjetas(cliente_seleccionado="Todos"):        
+        """
+        Actualiza las tarjetas de la vista de vencimientos según el cliente seleccionado.
+
+        Args:
+            cliente_seleccionado (str, optional): Nombre del cliente a filtrar. Defaults to "Todos".
+        """        
         # Limpiar tarjetas existentes
         cards_container.controls.clear()
         
@@ -93,20 +99,20 @@ def create_vencimientos_view(page: ft.Page):
                     padding=10,
                     content=ft.Column([
                         ft.Text(p[1], size=16, weight="bold"),  # Nombre del servicio
-                        ft.Text(f"Cliente: {p[1]}"),            # Nombre del cliente
+                        ft.Text(f"{p[10]}"),            # Nombre del cliente
                         ft.Text(f"Próximo pago: {convertir_formato_fecha(p[4])}"),       # Fecha próximo pago
                         ft.Text(f"Pago mensual: ${p[8]}"),     # Pago mensual
                         ft.Container(
                             padding=5,
                             border_radius=5,
                             bgcolor=ft.Colors.RED if p[7] == "En corte"
-                                   else ft.Colors.ORANGE if p[7] == "Pendiente"
+                                   else ft.Colors.ORANGE if p[7] == "Pago pendiente"
                                    else ft.Colors.BLUE if p[7] == "Cerca"
                                    else ft.Colors.GREEN,
                             content=ft.Text(p[7], color=ft.Colors.WHITE)  # Estado
                         )
                     ], spacing=5)
-                )
+                ), shadow_color=ft.Colors.BLUE_100
             )
             cards_container.controls.append(card)
         
@@ -114,7 +120,7 @@ def create_vencimientos_view(page: ft.Page):
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
     # Estados disponibles para filtrar
-    estados = ["Todos", "En corte", "Pendiente", "Cerca", "Al día"]    
+    estados = ["Todos", "En corte", "Pago pendiente", "Cerca", "Al día"]    
     
     # Dropdown para filtrar por cliente
     search_box = ft.TextField(
@@ -156,20 +162,20 @@ def create_vencimientos_view(page: ft.Page):
                     padding=10,
                     content=ft.Column([
                         ft.Text(p[1], size=16, weight="bold"),  # Nombre del servicio
-                        ft.Text(f"Cliente: {p[1]}"),            # Nombre del cliente
+                        ft.Text(f"{p[10]}"),            # Nombre del cliente
                         ft.Text(f"Próximo pago: {convertir_formato_fecha(p[4])}"),       # Fecha próximo pago
                         ft.Text(f"Pago mensual: ${p[8]}"),     # Pago mensual
                         ft.Container(
                             padding=5,
                             border_radius=5,
                             bgcolor=ft.Colors.RED if p[7] == "En corte"
-                                   else ft.Colors.ORANGE if p[7] == "Pendiente"
+                                   else ft.Colors.ORANGE if p[7] == "Pago pendiente"
                                    else ft.Colors.BLUE if p[7] == "Cerca"
                                    else ft.Colors.GREEN,
                             content=ft.Text(p[7], color=ft.Colors.WHITE)  # Estado
                         )
                     ], spacing=5)
-                )
+                ), shadow_color=ft.Colors.BLUE_100
             )
             cards_container.controls.append(card)
         
@@ -194,21 +200,21 @@ def create_vencimientos_view(page: ft.Page):
                 content=ft.Container(
                     padding=10,
                     content=ft.Column([
-                        ft.Text(p[10], size=16, weight="bold"),  # Nombre del servicio
-                        ft.Text(f"Cliente: {p[1]}"),            # Nombre del cliente
+                        ft.Text(p[1], size=16, weight="bold"),  # Nombre del servicio
+                        ft.Text(f"{p[10]}"),            # Nombre del cliente
                         ft.Text(f"Próximo pago: {convertir_formato_fecha(p[4])}"),       # Fecha próximo pago
                         ft.Text(f"Cuota mensual: ${p[8]}"),     # Pago mensual
                         ft.Container(
                             padding=5,
                             border_radius=5,
                             bgcolor=ft.Colors.RED if p[7] == "En corte"
-                                   else ft.Colors.ORANGE if p[7] == "Pendiente"
+                                   else ft.Colors.ORANGE if p[7] == "Pago pendiente"
                                    else ft.Colors.BLUE if p[7] == "Cerca"
                                    else ft.Colors.GREEN,
                             content=ft.Text(p[7], color=ft.Colors.WHITE)  # Estado
                         )
                     ], spacing=5)
-                )
+                ), shadow_color=ft.Colors.BLUE_100
             )
             cards_container.controls.append(card)
         

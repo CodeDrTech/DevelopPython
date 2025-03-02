@@ -5,6 +5,8 @@ import os
 from core.database.database import connect_to_database
 from features.finance.finance_view import create_finance_view
 from features.expirations.vencimientos_view import create_vencimientos_view
+from features.clients.clients_view import create_clients_view
+
 def main(page: ft.Page):
     conn = connect_to_database()
     if conn:
@@ -79,6 +81,9 @@ def main(page: ft.Page):
         selected_index = e.control.selected_index
         if selected_index == 0:            
             main_view.content = create_vencimientos_view(page)
+            page.update()
+        elif selected_index == 1:
+            main_view.content = create_clients_view(page)
             page.update()
         
     

@@ -179,8 +179,8 @@ def get_estado_pagos():
                 c.inicio AS fecha_inicio,                            -- índice 2
                 COALESCE(up.ultima_fecha_pago, c.inicio) AS fecha_base,  -- índice 3
                 DATE(COALESCE(up.ultima_fecha_pago, c.inicio), 
-                    '+' || (c.frecuencia / 30) || ' months') AS proximo_pago,  -- índice 4
-                c.saldo_pendiente,                                    -- índice 5 (cambiado de c.frecuencia)
+                    '+' || c.frecuencia || ' days') AS proximo_pago,  -- índice 4 (Corregido)
+                c.saldo_pendiente,                                   -- índice 5
                 ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) - 1) AS dias_transcurridos,  -- índice 6
                 CASE 
                     WHEN ROUND(JULIANDAY('now') - JULIANDAY(COALESCE(up.ultima_fecha_pago, c.inicio)) - 1) > 33 
