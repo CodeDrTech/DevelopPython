@@ -4,8 +4,8 @@ import os
 
 from core.database.backup import DatabaseBackup
 from core.database.database import connect_to_database
-from features.reports.finance_view import create_finance_view
-from features.payments.vencimientos_view import create_vencimientos_view
+from features.finance.finance_view import create_finance_view
+from features.expirations.vencimientos_view import create_vencimientos_view
 def main(page: ft.Page):
     conn = connect_to_database()
     if conn:
