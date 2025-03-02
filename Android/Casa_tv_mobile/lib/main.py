@@ -19,14 +19,11 @@ def main(page: ft.Page):
     
     def drawer_selected(e):
         selected_index = e.control.selected_index
-        if selected_index == 3:  # Index for Finanzas in drawer
+        if selected_index == 3:  # Index for Finanzas in drawer.
             main_view.content = create_finance_view(page)
             page.drawer.open = False
             page.update()
-        elif selected_index == 4:  # Índice para el nuevo botón de backup
-            handle_backup(e)
-            page.drawer.open = False
-            page.update()
+        
     
     main_view = ft.Container(padding=10)
     
@@ -34,54 +31,6 @@ def main(page: ft.Page):
             page.drawer.open = True
             page.update()
     
-    def show_message(message: str):
-        snack = ft.SnackBar(
-            content=ft.Text(message),
-            duration=3000  # Increased duration to 10 seconds
-        )
-        page.overlay.append(snack)
-        snack.open = True
-        page.update()
-    
-    def show_share_dialog(backup_path: str):
-        dlg = ft.AlertDialog(
-            title=ft.Text("Backup Creado"),
-            content=ft.Column(
-                controls=[
-                    ft.Text("¿Deseas compartir el backup?"),
-                    ft.ElevatedButton(
-                        text="Abrir para compartir",
-                        icon=ft.icons.SHARE,
-                        on_click=lambda _: page.launch_url(f"content://{backup_path}")
-                    )
-                ],
-                spacing=10
-            ),
-            actions=[
-                ft.TextButton(
-                    text="Cerrar",
-                    on_click=lambda e: close_dlg(e, dlg)
-                )
-            ]
-        )
-        page.dialog = dlg
-        dlg.open = True
-        page.update()
-
-    def close_dlg(e, dlg):
-        dlg.open = False
-        page.update()
-    
-    def handle_backup(e):
-        backup_manager = DatabaseBackup()
-        success, result = backup_manager.create_backup()
-        
-        if success:
-            backup_path = result.split("guardado en ")[-1]
-            show_message("Backup creado exitosamente")
-            show_share_dialog(os.path.join(backup_path, "database.db"))
-        else:
-            show_message(f"Error: {result}")
     
     # Create drawer with 4 additional menu items.
     page.drawer = ft.NavigationDrawer(
@@ -113,11 +62,6 @@ def main(page: ft.Page):
                 icon=ft.Icons.MONETIZATION_ON_OUTLINED,
                 label="Finanzas",
                 selected_icon=ft.Icons.MONETIZATION_ON
-            ),
-            ft.NavigationDrawerDestination(
-                icon=ft.Icons.BACKUP_OUTLINED,
-                label="Crear Backup",
-                selected_icon=ft.Icons.BACKUP
             ),
         ],
         on_change=drawer_selected
